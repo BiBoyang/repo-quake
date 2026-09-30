@@ -51,6 +51,7 @@ run_one() { # <host> <prompt_file> <workdir> <out>
     kimi)  (cd "$wd" && kimi -p "$(cat "$pf")" --output-format text) > "$out" 2>&1 ;;
     codex) (cd "$wd" && codex exec --skip-git-repo-check --sandbox workspace-write "$(cat "$pf")" < /dev/null) > "$out" 2>&1 ;;
     codexkf) (cd "$wd" && codex exec --skip-git-repo-check --sandbox workspace-write -c model_provider=kimi -m kimi-for-coding "$(cat "$pf")" < /dev/null) > "$out" 2>&1 ;;
+    kimik3) (cd "$wd" && kimi -m kimi-code/k3-256k -p "$(cat "$pf")" --output-format text) > "$out" 2>&1 ;;
   esac
   echo "$?" > "$out.exitcode"
 }

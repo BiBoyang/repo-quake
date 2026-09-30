@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL",
+  "errors": [
+    {
+      "id": "H4",
+      "msg": "agent.py: SyntaxError: unterminated triple-quoted string literal (detected at line 30)"
+    }
+  ],
+  "warnings": []
+}
