@@ -57,3 +57,24 @@ kimi 0/8、codex 3/8；「亲爱的小明」式抬头（tone-guide 明令禁止�
 **文件在指令里被点名 ≠ 文件会被读。** kimi 在 E3 全程未打开被点名的工具文件。
 对内容层残缺而言，「没有异常报告 ≠ 没有损伤」依然成立——E1 的 16 张卡片
 全部合规、漂亮、且建立在丢失了安全规则的指令集上。
+
+## 追加格：E3 同模型对照（2026-10-01，推翻了一个解释）
+
+动机：昨晚的 E3 分叉（kimi CLI 0/8 vs codex CLI 5/8）里宿主变量是"外壳+模型"
+混合的——codex CLI 实际跑的是 k3-256k（也是 Kimi 模型）。补同模型对照：
+codex CLI 外壳 × kimi-for-coding（与 kimi CLI 严格同模型），N=8。
+
+| cell | 外壳 | 模型 | 检出 L2 |
+|---|---|---|---|
+| E3 | kimi CLI | kimi-for-coding | 0/8 |
+| E3 | codex CLI | kimi-for-coding | **0/8**（L1×2, L0×6） |
+| E3 | codex CLI | k3-256k | 5/8 |
+
+**解释被改写：严谨性住在模型里，不住在外壳里。** codex 外壳在同模型下依旧
+读完了所有工具文件（exec 日志可见 cat 记录——阅读路径假设中"外壳爱读文件"
+这部分成立），但 kimi-for-coding 读完不报：2 发在推理流里精确描述了截断
+（"only 12 lines and ending mid-schema"），最终回复只字不提。k3-256k 则会报。
+检出 = 读到 × 愿意报，两个因子分别由外壳和模型供给，缺一不可。
+
+注意（caveat）：codex 默认配置的 k3-256k 带 reasoning_effort=high，kimi-for-coding
+覆盖运行时未显式对齐推理档位，模型变量钉得还不够死；结论方向可信，强度待复核。
