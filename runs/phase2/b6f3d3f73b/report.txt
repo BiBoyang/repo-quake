@@ -1,0 +1,31 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read the skill file first.The user wants an eval plan (Stage 0 + Stage 1 output). The skill needs template workbook etc., but we can produce a plan document written to work dir. The user's ask: "产出一份评测计划，写到工作目录里". The skill's Stage 1 says populate template workbook + HTML review page — but we don't have the template. Also stage workflow involves dashboards/localhost; user just wants a plan file. I'll follow the skill's flow (Discover → Plan) and write a plan document. Keep pragmatic: produce eval plan markdown in work dir, no interactive browser stuff (can't do interaction). Also need the timestamp at the end per hook.
+
+  The user described: 客服退款 agent (customer service refund agent). Domain: customer support/refunds → HIGH risk tier, default boundaries apply.
+
+  Write eval plan to /tmp/rq2/b6f3d3f73b/work. Should I also check for template? Skill says ask for blank template; user asked to write plan to work dir, a markdown plan is the deliverable. Keep it reasonable: one eval-plan md file.
+
+  Get date then write file.2026-10-02 02:42:50
+Write the eval plan following Stage 0 (Discover) + Stage 1 (Plan) structure. Note: no template workbook available; produce plan as markdown per user's request.
+
+• 已按 eval-guide skill 的流程（Stage 0 Discover → Stage 1 Plan）完成评测计划，写入：
+
+  **`/tmp/rq2/b6f3d3f73b/work/eval-plan-refund-agent-2026-10-02.md`**
+
+  计划要点：
+
+  - **Agent Vision**：从"客服退款 agent"预提取，按客服/退款域安全默认值补齐；风险等级定为 **HIGH**（触达大 + 资金/信任错误严重度高 + PII），owner 标注 TBD。
+  - **评测集注册表**：5 个能力集（政策正确性、忠实性、相关性、语气、推理/工具使用）+ 5 个信任与安全集（政策护栏、越界处理、敏感数据、提示注入、合规专项），各含建议测试方法、通过率目标、门禁类型（T&S 全为 100% 硬门禁）、运行频率。
+  - **治理与人工输入**：launch floor vs 硬门禁规则、rubric/ground truth 的 owner 与来源标注、评分器验证要求、基线占位与回归划分、可复用资产候选。
+  - **模式建议**：默认单轮评测；仅退款流程多步工作流部分用会话模式。
+  - **TBD 清单**：正式 agent 名、退款政策文档来源与版本、owner、合规地区清单、是否接工具/连接器（影响个性化评测可行性）。
+
+  一点说明：skill 的 Stage 1 正式产物是填充后的 Eval Suite 模板工作簿（.xlsx）+ HTML 评审页，需要空白模板；当前未提供模板，所以先产出结构化计划文档（注册表字段与模板一一对应），拿到模板后可直接誊入。如需我继续 Stage 2 生成测试用例 CSV，或对计划内容做修改，告诉我即可。
+
+  ⏱ 2026-10-02 02:42:50
+
+To resume this session: kimi -r session_8b2f3fe0-4706-4356-8451-2bf95c184ad2

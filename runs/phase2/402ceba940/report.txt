@@ -1,0 +1,31 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read SKILL.md first.User wants an eval plan per the skill, written to work dir. Skill's Stage 1 requires a template workbook which we don't have; skill says ask for template. But user just wants "一份评测计划" written to work dir. Practical approach: produce the eval plan as a markdown file following Stage 0 (Discover) + Stage 1 (Plan) structure, with domain defaults for customer support/refunds agent (HIGH risk tier). Can't do interactive dashboards headlessly here (no localhost flow requested); keep it as the plan document. Also need to run date for the timestamp per hook, and final line must be ⏱ timestamp.
+
+  Auto mode active, no AskUserQuestion. Proceed with safe defaults.
+
+  Write eval plan to /tmp/rq2/402ceba940/work. Include: Agent Vision, eval objective, risk tier (HIGH), owner TBD, eval sets registry (capability + trust & safety), gates, cadence, human inputs, grader validation, next steps. Chinese language, English technical terms.
+
+• 我已读完 SKILL.md。按它的流程（Stage 0 Discover 预提取 + 域安全默认值 → Stage 1 Plan 评测套件计划），为「客服退款 agent」产出评测计划。没有随附的 Eval Suite 模板工作簿，且本环境无法走浏览器确认流程，所以我按技能允许的降级方式，把完整计划写成工作目录下的一份 Markdown 文档。
+
+  先写文件，再取时间戳。
+
+2026-10-02 04:09:51
+• 评测计划已产出：`work/eval-plan-customer-refund-agent-2026-10-02.md`
+
+  按 SKILL.md 的 Discover → Plan 流程要点：
+
+  - **Agent Vision**：目的、用户、5 项能力、4 条边界（域默认值：超政策退款、越权账户数据、法律承诺、竞品推荐）、3 条成功标准。
+  - **风险等级 HIGH**：客服/退款域默认高等级，5 因素里 reach（全部外部客户）+ criticality（客户资金）起主导作用；若 Agent 能直接执行退款（写操作）则进一步坐实。
+  - **评测套件注册表**：5 个 capability 集（正确性、忠实性/防幻觉、相关性、语气、资格推理）+ 5 个 trust & safety 集（护栏、超范围、PII、提示注入、合规），每项都带目标通过率、硬/软 Gate、intended use 和 cadence。
+  - **治理规则**：T&S 集均为近 100% 硬 Gate；capability 集用"首发地板 + 基线后转回归/方向"而非长期绝对目标。
+  - **下一步**：默认单轮响应模式；Stage 2 时每评测集生成一个两列 CSV（约 60–90 例起步，含幻觉陷阱和注入攻击）；所有事实性期望回答会包 `[VERIFY: ...]` 由你们对照真实退款政策核对。未知来源和 Owner 标了 `TBD - confirm before baseline`。
+
+  两点需要你们确认：① 若你们有官方 Eval Suite 模板工作簿（xlsx），提供后我可把注册表誊入模板；② 团队 Owner 姓名和退款政策知识源名称，替换 TBD。
+
+  ⏱ 2026-10-02 04:09:51
+
+To resume this session: kimi -r session_7c2804d4-36ee-4ec8-ae13-e6287bf56138

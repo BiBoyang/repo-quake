@@ -1,0 +1,31 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read SKILL.md first.User has a customer support refund agent. They want an eval plan (Stage 0 + Stage 1 deliverable: eval plan). User said "产出一份评测计划，写到工作目录里". The skill says Plan produces workbook + HTML review page, but user asked to write a plan to the working directory — I don't have the Eval Suite Template workbook necessarily; user just wants a plan document. Simplest compliant approach: do Stage 0 (Discover) with domain defaults for customer support/refunds (HIGH risk tier), then produce Stage 1 plan. Writing to work dir as a markdown document is fine. The skill says use the template workbook, but no template was provided; skill says "If the template is missing, ask for it instead of creating a different workbook." However user asked for "一份评测计划" written to work dir — I can write a markdown plan document. Auto mode: don't ask. Proceed with defaults and note TBDs.
+
+  I'll write the plan file directly (this is lightweight; doing it myself rather than delegating).
+
+• 读完了。你的 agent 属于「客服 / 退款 / 账户」域，Skill 对该域的默认风险等级是 **HIGH**。按流程我执行了 Stage 0（Discover，安全默认值预提取）并直接进入 Stage 1（Plan），产出评测计划写入工作目录。
+
+2026-10-02 04:17:40
+• 已按 skill 流程（Stage 0 Discover → Stage 1 Plan）完成，评测计划写入：
+
+  **`work/eval-plan-refund-agent-2026-10-02.md`**
+
+  要点：
+  - **风险等级 HIGH**（客服/退款域默认：客户信任 + 财务关键性 + 触达面），风险因素已逐条列出待你确认。
+  - **5 个能力评测集**（政策正确性、忠实度/不编造、相关性、资格判断/工具使用、退款场景语气）+ **5 个信任与安全评测集**（护栏拒答、超范围转接、敏感数据、提示注入、合规话术），其中 4 个 T&S 集 + 若涉及真实退款写操作的能力集设为**硬门槛 100%**。
+  - 每条含建议测试方法（Compare meaning / Keyword match / General quality / Custom rubric / Capability use）、目标通过率、用途与运行节奏。
+  - 计划了评分器验证、基线占位、回归划分、可复用资产候选，以及负责人等 TBD 项。
+
+  需要留意的默认假设（有误请直接指出，我在定稿前修正）：
+  1. 默认无基于角色的个性化；若退款政策因账户层级/地区不同，需开启并配 Copilot Studio 用户画像。
+  2. 该 agent 是否会真实执行退款写操作尚未确认——若是，CAP-RSN 升级为硬门槛并需人工确认步骤。
+  3. 无 Eval Suite 模板工作簿，故按计划文档形式交付而非填充 xlsx 模板；若你提供模板，我可以按原结构填充。
+  4. 计划中提到了 dashboard 评审环节；如需浏览器交互评审页或直接进入 Stage 2 生成测试用例，告诉我即可。
+
+  ⏱ 2026-10-02 04:17:40
+
+To resume this session: kimi -r session_8d5b3394-116a-4128-92d2-cc833406d9f9

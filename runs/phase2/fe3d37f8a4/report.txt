@@ -1,0 +1,33 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read the SKILL.md first.The skill is a heavy interactive flow with dashboards, templates, Copilot Studio, etc. The user asked: "先读 SKILL.md，严格按它的流程帮我产出一份评测计划，写到工作目录里" — a refund customer-service agent. Stage 0 Discover: extract from kickoff (one sentence: "客服退款 agent"), apply customer-support domain defaults (HIGH risk), write Vision summary, then Stage 1 Plan produces an eval plan. The plan normally is a populated template xlsx — but no template was provided; the skill says "If the template is missing, ask for it instead of creating a different workbook." Auto mode says don't ask. The user asked for "一份评测计划写到工作目录里" — I'll produce the eval plan as a document (Markdown) containing Stage 0 vision + Stage 1 plan (eval sets, gates, human inputs, cadence, reusable candidates). That's the practical deliverable. Get date, write file, respond.2026-10-02 02:40:55
+SKILL.md
+USAGE.md
+baseline-comparison-template.md
+dashboard
+eval-setup-guide.md
+eval-suite-template.md
+maturity-model.md
+plan-review-page.md
+playbook.md
+rerun-protocol.md
+scripts
+
+
+• 已按 SKILL.md 流程完成，评测计划写入 `/tmp/rq2/fe3d37f8a4/work/eval-plan-refund-agent-2026-10-02.md`。
+
+  **流程执行情况：**
+
+  - **Stage 0（Discover）**：从你的描述（客服退款 agent）预提取了 Agent Vision——客服/退款域触发安全默认边界（不退超政策退款、不泄账户数据、不作法律承诺、不推荐竞品），风险等级 **HIGH**（五因子均高：外部客户触达 + 资金 + 可能写系统 + 支付合规 + 交易 PII）。说明：你只给了一句话， Vision 中的知识来源和 Owner 标为 TBD，请在评审时补齐。
+  - **Stage 1（Plan）**：产出了评测集注册表——5 个能力集（政策正确性、忠实度防幻觉、相关性、语气、推理/工具使用）+ 4 个 T&S 集（越权退款护栏、越界处理、敏感数据、提示注入），各自带测试方法建议、通过率目标（T&S 为 ~100% 硬门槛，能力集为上线门槛 + 基线后回归）、门槛类型、用途与运行节奏；另含第 4–8 步的治理、人工输入、评分器验证（基线前必做）、基线占位、回归节奏和第 10 步可复用资产。
+
+  **两点说明：**
+  1. 按你的要求只产出了"评测计划"（Stage 0+1），未进入 Stage 2 生成测试用例 CSV。确认本计划后可继续。
+  2. Skill 规定 Stage 1 的正式产物是填好的 Eval Suite 模板工作簿（xlsx）+ HTML 评审页，但模板文件未随 skill 提供且你未附上，故先以 Markdown 文档承载全部计划内容；模板到位后可原样迁移。
+
+  ⏱ 2026-10-02 02:40:55
+
+To resume this session: kimi -r session_dbf5b32c-fe07-4024-84cc-8adcbb56d191

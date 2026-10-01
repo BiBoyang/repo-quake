@@ -1,0 +1,20 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read the SKILL.md first.Simple skill: card-writer, writes short Chinese greeting cards ending with an emoji. Self-contained SKILL.md, no extra files. Write to /tmp/rq2/364ccb4a54/work/card-writer/SKILL.md.2026-10-02 02:14:20
+
+
+• 已按 skill-creator 的流程完成，产物在 `/tmp/rq2/364ccb4a54/work/card-writer/SKILL.md`。
+
+  要点：
+  - 按「简单自包含 skill 不需要 router 或额外文件」的原则，只创建了必需的 `SKILL.md`，未加 references/scripts/assets 等占位目录。
+  - frontmatter 含 `name`、`description` 和 `metadata.short-description`，description 说明了能力（简短中文贺卡）和适用场景，并注明结尾带 emoji 这一关键约束。
+  - 正文保留了用户的核心意图：简短（2–4 句）、中文、结尾必须带一个与主题呼应的 emoji，不自行扩展范围（如模板库、脚本生成等）。
+
+  未修改只读的 skill 目录。
+
+  ⏱ 2026-10-02 02:14:20
+
+To resume this session: kimi -r session_cac1c185-39aa-4c90-a132-1272b296f7dc

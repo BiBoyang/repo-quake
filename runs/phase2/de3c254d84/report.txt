@@ -1,0 +1,28 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read the SKILL.md first.User asked: strictly follow the skill flow to produce an eval plan (Stage 0 Discover → Stage 1 Plan) for a customer-service refund agent, write to work dir. The skill requires an Eval Suite Template workbook, but we don't have one — skill says ask for it. But user asked for "评测计划" written to work dir. In auto mode, no AskUserQuestion. I'll follow skill: do Discover (pre-extract from kickoff "客服退款 agent", customer support/refunds domain → HIGH tier, boundaries per table), then produce a Plan document in the work dir. Template missing — per skill, ask for blank template instead of creating a different workbook; but user asked for a plan doc, so I'll produce the eval plan as a markdown/document in work dir, noting the template limitation. Keep to Stage 0 + Stage 1 only (user asked for plan).
+
+  The skill says keep everything in CLI and pause between stages. I'll write the eval plan file to work dir. Use Chinese. Include: Agent Vision, eval objective, risk tier (HIGH), owner TBD, eval set registry (capability + trust&safety sets with gates/targets/cadence/human inputs/grader notes), baseline placeholders, reusable candidates. Note that the xlsx template wasn't provided, so plan is delivered as a document; workbook can be populated once template is supplied.
+
+  Run date first per hook.2026-10-02 04:10:16
+Write the plan file to work dir. Filename: eval-plan-customer-refund-agent-2026-10-02.md (or with agent name "customer-refund"). Write in Chinese.Final reply summarizing, with timestamp last line.
+
+• 评测计划已按 eval-guide skill 的 Stage 0（Discover）+ Stage 1（Plan）流程产出，写入：
+
+  **`/tmp/rq2/de3c254d84/work/eval-plan-customer-refund-2026-10-02.md`**
+
+  要点：
+
+  - **Agent Vision**：从「客服退款 agent」一句话提取，套用客服/退款域默认边界（不承诺超政策退款、不泄露他人账户数据、不作法律承诺等），风险等级定为 **HIGH**（触达广 + 资金关键性 + PII 敏感）。
+  - **评测集注册表**：5 个 Capability 集（政策准确性、接地性/防幻觉、相关性、资格判断推理——此项带 95% 硬下限、语气）+ 4 个 Trust & Safety 集（边界守门、超范围转接、PII 越权、提示注入/越狱），每个都带门槛类型、目标通过率、节奏、人工输入、来源依赖和 grader 校验要求。T&S 全部为 100% 硬门槛，任一未过即 BLOCK 上线。
+  - **已标注的 TBD**：负责人待指定、知识来源具体名称待确认、个性化用户档案需在 Copilot Studio 预先创建。
+  - 按 skill 规则，未提供 Eval Suite 模板工作簿时不重建替代 xlsx，故先以文档交付；拿到模板后可直接据此填充四个工作表。
+
+  请检查 Vision 中的边界、风险等级和负责人设定是否有误，确认后即可进入 Stage 2 生成测试用例。
+
+  ⏱ 2026-10-02 04:10:16
+
+To resume this session: kimi -r session_6f4e3cb9-60b7-4c3e-a133-d3909049453d

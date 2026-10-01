@@ -1,0 +1,26 @@
+{
+  "errors": [
+    "assets/font.ttf: referenced by SKILL.md but missing on disk",
+    "assets/frontend-template: referenced by SKILL.md, SKILL.md but missing on disk",
+    "assets/logo.png: referenced by SKILL.md but missing on disk",
+    "assets/slides.pptx: referenced by SKILL.md but missing on disk",
+    "references/api_docs.md: referenced by SKILL.md but missing on disk",
+    "references/aws.md: referenced by SKILL.md but missing on disk",
+    "references/openai_yaml.md: referenced by SKILL.md, SKILL.md but missing on disk",
+    "references/policies.md: referenced by SKILL.md but missing on disk",
+    "references/schema.md: referenced by SKILL.md, SKILL.md but missing on disk",
+    "scripts/rotate_pdf.py: referenced by SKILL.md, SKILL.md but missing on disk"
+  ],
+  "warnings": [
+    "SKILL.md: name 'skill-creator' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [
+    "scripts/generate_openai_yaml.py: never referenced from any .md (orphan attachment?)",
+    "scripts/init_skill.py: never referenced from any .md (orphan attachment?)",
+    "scripts/quick_validate.py: never referenced from any .md (orphan attachment?)",
+    "assets/skill-creator-small.svg: never referenced from any .md (orphan attachment?)",
+    "assets/skill-creator.png: never referenced from any .md (orphan attachment?)"
+  ],
+  "skill_dir": "/tmp/rq2/ba5033733f/skill",
+  "verdict": "FAIL"
+}

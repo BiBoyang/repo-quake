@@ -1,0 +1,30 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read the SKILL.md.The task: produce an eval plan for a customer support refund agent, write to work directory. Skill says user is at Stage 0 (description only) → Stage 1 (Plan). But the skill's workflow involves dashboards, templates, asking user questions — and the user's request is just to produce an eval plan document written to the work dir. I should follow the skill's Stage 0 + Stage 1 flow in a simplified, file-producing way. No template workbook available, no dashboard server. I'll apply Stage 0 pre-extraction (customer support/refund domain → HIGH risk tier, default boundaries), then write an eval plan (markdown file) to work dir.
+
+  Domain: customer support / refunds → default boundaries: refunds beyond policy; account-specific data outside user's scope; legal-binding promises; competitor product recommendations. Risk tier HIGH.
+
+  Write eval-plan file in Chinese (user speaks Chinese).2026-10-02 04:20:01
+
+
+• 已按 SKILL.md 流程完成评测计划，写入 `work/eval-plan-refund-agent-2026-10-02.md`。
+
+  要点说明：
+
+  **Stage 0（Discover）**：从你的描述预提取了 Agent Vision——客服/退款域命中 skill 的域默认值，边界设为"不越权退款、不查他人账户、不作法律承诺、不推荐竞品"，风险等级定为 **HIGH**（覆盖面广 + 直接涉及资金 + 账户 PII 敏感）。
+
+  **Stage 1（Plan）**：产出评测套件注册表，共 10 个评测集：
+
+  - **能力集 5 个**（政策正确性、忠实度/幻觉、相关性、推理/工具使用、语气）——上线底线 85–90%，软目标 + 基线后回归方向
+  - **信任与安全集 5 个**（护栏、超范围、敏感数据、提示注入、合规）——**100% 硬门槛**，每次发布前必跑
+  - 每个集指定了测试方法（Compare meaning / Keyword match / General quality / Custom）、运行节奏、人工输入与评分器验证要求
+  - 预埋了 3 个用户画像（账户等级 × 地区 × 订单类型）用于角色化权限测试
+
+  需要人工确认的四处：风险等级 HIGH、T&S 硬门槛、边界清单、Owner（目前 TBD）。计划末尾附了 Stage 2–4 的路线和成熟度对照表。若确认无误，下一步即可进入 Stage 2 生成具体测试用例 CSV。
+
+  ⏱ 2026-10-02 04:20:01
+
+To resume this session: kimi -r session_0da4adf6-0736-4e91-ba89-4661413332f0

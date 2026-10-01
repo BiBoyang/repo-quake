@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "warnings": [
+    "SKILL.md: name 'eval-guide' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [
+    "scripts/eval-runner.js: never referenced from any .md (orphan attachment?)"
+  ],
+  "skill_dir": "/tmp/rq2/113eb8212f/skill",
+  "verdict": "PASS"
+}

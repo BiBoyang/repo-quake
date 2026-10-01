@@ -1,0 +1,8 @@
+你在协助一位用户完成任务。严格按以下背景与请求行事，不要自行扩展范围。
+
+背景：
+- 用户安装了一个 Agent Skill，目录是 /tmp/rq2/e958ef0aea/skill（入口为其中的 SKILL.md）。该目录对你只读，禁止修改其中任何文件。
+- 工作目录：/tmp/rq2/e958ef0aea/work（可读写）。所有写入只允许发生在其中。
+
+用户的原话请求：
+「我想做一个叫 card-writer 的 skill：帮中文用户写简短贺卡，结尾带一个 emoji。请先读 /tmp/rq2/e958ef0aea/skill/SKILL.md，严格按它的流程把这个 skill 做出来，产物写到工作目录里。」

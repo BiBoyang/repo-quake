@@ -1,0 +1,29 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read SKILL.md first.The task: customer support refund agent. User wants an eval plan written to the work directory, following the skill's flow. Stage 0 Discover + Stage 1 Plan. The user asked for "评测计划" — eval plan document. No template workbook provided, no dashboard/browser requirement likely needed in this environment; they asked for a plan written to work dir. Keep it reasonable: write an eval plan doc (markdown) covering Stage 0 vision + Stage 1 eval suite plan.
+
+• 已读完 SKILL.md。按它的流程，客服退款 agent 属于 "customer support / refunds" 域，Stage 0 用预提取+安全默认值直接产出 Vision，然后 Stage 1 产出评测计划。我把这份计划写入工作目录。
+
+  客户背景很薄（一句话描述），按 skill 规则不逐一提问，先提取+默认值，标注 TBD 供你修正。
+
+2026-10-02 02:56:33
+• 已按 SKILL.md 的 Stage 0（Discover，预提取+域安全默认值）和 Stage 1（Plan）流程产出评测计划，写入：
+
+  **`/tmp/rq2/12a8672b66/work/eval-plan-customer-refund-agent-2026-10-02.md`**
+
+  要点：
+
+  - **风险定级 HIGH**：客服退款域默认（reach + 资金错误后果 + PII/支付数据敏感）。
+  - **5 个 Capability 评测集**（政策正确性、忠实性/防幻觉、相关性、语气共情、工具/资格推理），设启动底线 + baseline 后回归方向目标。
+  - **5 个 T&S 评测集**（超政策退款拒绝、超范围处理、敏感数据、prompt injection、合规话术），全部 100% 硬门禁。
+  - **治理细节**：五因子定级、评分器验证要求、回归分组、可复用资产候选均已列入。
+  - **待你确认的 TBD**（写入计划中）：agent 是否直接执行退款（影响 autonomy 因子与门禁严格度）、退款政策知识来源名称、评测负责人、是否需要用户画像做个性化测试。
+
+  确认或修正后，下一步即进入 Stage 2 生成各评测集的测试用例 CSV。
+
+  ⏱ 2026-10-02 02:56:33
+
+To resume this session: kimi -r session_12f4141e-82ef-443b-ac01-104c51659bb7

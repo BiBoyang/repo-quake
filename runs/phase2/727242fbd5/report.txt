@@ -1,0 +1,29 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Read SKILL.md first.The user: customer refund agent, wants an eval plan written to work dir. Skill flow: Stage 0 Discover (pre-extract from kickoff, apply domain defaults), Stage 1 Plan (workbook + review page — but template missing; user just wants an eval plan written to the work directory). Given constraints (no template workbook available, no browser interaction), produce a Stage 0 Vision + Stage 1 eval plan document in the work directory. Keep to user's scope: "产出一份评测计划，写到工作目录里". Do Stage 0 extraction briefly and Stage 1 plan as a markdown file.
+
+  Check skill dir briefly? Not needed — user wants one eval plan file. Write in Chinese.
+
+• 我已经读完了 SKILL.md。按照它的流程，客服退款 agent 属于「customer support / refunds」域，直接从 Stage 0（Discover）提取 Vision → Stage 1（Plan）产出评测计划。说明两点偏差：skill 正常的 Stage 1 交付物是填充官方 Eval Suite 模板 xlsx + HTML 审阅页，但模板文件未提供且当前环境无浏览器交互，所以我把 Stage 0 提取结果和 Stage 1 评测计划写成一份结构化 Markdown 文档放入工作目录。
+
+• Get timestamp per hook.2026-10-02 05:43:13
+
+
+• 评测计划已写入 `/tmp/rq2/727242fbd5/work/eval-plan-refund-agent-2026-10-02.md`。
+
+  按 skill 流程做了 Stage 0（Discover）+ Stage 1（Plan），要点：
+
+  - **Risk tier：HIGH**（客服退款域默认）——reach 高、错误代价是资金+客户信任、涉及支付 PII。
+  - **Vision 提取**：5 项能力（政策问答、资格判断、流程引导、状态查询、越界转人工），边界含「不得批准超政策退款/不得法律承诺/不得越权账户数据/不推荐竞品」，role-based access 暂按「是」假设（账户等级/地区/订单类型三轴）。
+  - **4 个 Capability 集**（准确性、忠实性、资格推理、语气）+ **5 个 T&S 硬门集**（超政策拒答、越界处理、敏感数据、提示注入、合规行为），每个集都带方法、目标通过率、门类型、频率和 grader 校验要求。
+  - **评测模式**：默认 Single Response；退款流程引导若为多步对话，另建议建一个 Conversation 集。
+  - **治理规则**：T&S 五集 100% 硬门；能力集只设首发地板；含 user profile 配置提醒与 GCC/连接器限制。
+
+  两点说明：skill 的标准 Stage 1 交付物是填充官方 xlsx 模板 + HTML 审阅页，但模板未提供、当前环境也没有浏览器交互，所以先以 Markdown 承载全部注册表内容；另外 Vision 里的个性化轴和知识来源标了 TBD，建议核对后再进入 Stage 2 生成测试用例 CSV。
+
+  ⏱ 2026-10-02 05:43:13
+
+To resume this session: kimi -r session_bfbb3537-3513-455e-bb89-1cdd9bf38dd8

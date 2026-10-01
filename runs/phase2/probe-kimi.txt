@@ -1,0 +1,22 @@
+kimi version 2.1.1
+• UserPromptSubmit hook
+
+  【时间戳约定】本轮回复结束前，先运行 date "+%Y-%m-%d %H:%M:%S" 获取当前时间，并在回复正文最后一行单独附上时间戳，格式为：⏱ 后面跟上该时间。
+
+• Answer from knowledge, no tools.
+
+• **1. Anthropic 的 skill-creator**
+
+  知道，但只知道大概，细节不确定：
+
+  - 它是 Anthropic 官方在 agent-skills（anthropics/skills）仓库里发布的一个 skill，用途是"创建/初始化新 Agent Skill"，即引导模型按规范写出 SKILL.md、附件、脚本等。
+  - 我对其 SKILL.md 的具体章节没有可靠记忆，大致会涉及：skill 的用途说明、何时触发、输出结构要求（SKILL.md + 可选 references/、scripts/、assets/）、SKILL.md 本身的写作规范（YAML frontmatter 的 name/description、正文用第三人称、progressive disclosure 原则）、以及初始化和打包新 skill 的工作流程。
+  - scripts/ 目录里的脚本我不确定具体清单。印象中这类 skill 会带一个初始化/脚手架脚本（类似 `init_skill.py` 或打包脚本），但我不能确定名字和内容，不想编造。
+
+  **2. GitHub 上微软账号下的 eval-guide 仓库**
+
+  不了解。我没有关于 microsoft/eval-guide 这个仓库的可靠信息——不确定它是否存在、内容是什么，还是较新/较小众的仓库。只知道微软 GitHub 组织下有不少 agent 相关的开源项目（如 AutoGen、Semantic Kernel 等），但这个具体仓库我说不上来。
+
+  两点都建议以仓库实际内容为准，不要采信我上面的猜测性描述。
+
+To resume this session: kimi -r session_ec1a1398-075f-4bd9-9d60-e77b2ef2ec29

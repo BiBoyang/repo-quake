@@ -1,0 +1,2223 @@
+Reading additional input from stdin...
+2026-10-01T19:56:57.289884Z  WARN codex_core_plugins::manager: remote installed plugin bundle sync failed error=chatgpt authentication required for remote plugin catalog; api key auth is not supported
+2026-10-01T19:56:57.329973Z  WARN codex_models_manager::model_info: Unknown model gpt-5.6-luna is used. This will use fallback model metadata.
+OpenAI Codex v0.158.0
+--------
+workdir: /private/tmp/rq2/b77218296f/work
+model: k3
+provider: kimi
+approval: on-request
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a0f90a-9c4d-7991-9644-528037aee7c6
+--------
+user
+你在协助一位用户完成任务。严格按以下背景与请求行事，不要自行扩展范围。
+
+背景：
+- 用户安装了一个 Agent Skill，目录是 /tmp/rq2/b77218296f/skill（入口为其中的 SKILL.md）。该目录对你只读，禁止修改其中任何文件。
+- 工作目录：/tmp/rq2/b77218296f/work（可读写）。所有写入只允许发生在其中。
+
+用户的原话请求：
+「我团队做了个客服退款 agent，想给它建评测。请先读 /tmp/rq2/b77218296f/skill/SKILL.md，严格按它的流程帮我产出一份评测计划，写到工作目录里。」
+warning: Codex is ignoring 3 unrecognized configuration settings. Check for typos or deprecated settings.
+  user (/tmp/fq-home2/.codex/config.toml): `disable_response_storage` is ignored.
+  user (/tmp/fq-home2/.codex/config.toml): `network_access` is ignored.
+  user (/tmp/fq-home2/.codex/config.toml): `windows_wsl_setup_acknowledged` is ignored.
+warning: Codex is ignoring 3 unrecognized configuration settings. Check for typos or deprecated settings.
+  user (/tmp/fq-home2/.codex/config.toml): `disable_response_storage` is ignored.
+  user (/tmp/fq-home2/.codex/config.toml): `network_access` is ignored.
+  user (/tmp/fq-home2/.codex/config.toml): `windows_wsl_setup_acknowledged` is ignored.
+2026-10-01T19:56:57.488756Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+2026-10-01T19:56:58.299269Z  WARN codex_core_plugins::manager: failed to warm featured plugin ids cache error=remote featured plugin request to https://chatgpt.com/backend-api/plugins/featured?platform=codex failed with status 401 Unauthorized: {"detail":"Unauthorized"}
+2026-10-01T19:56:59.295440Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=file:///tmp/fq-home2/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-10-01T19:56:59.302051Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=file:///tmp/fq-home2/.codex/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+我打算先用 rg --files 查看技能文件，然后用 sed 读取它们，并用平行任务并行执行目录列举和读取操作，同时在评论中用中文说明。
+codex
+我先读取 Skill 入口和目录结构，确认它定义的评测流程与输出格式，然后只在工作目录生成计划文件。
+exec
+/bin/zsh -lc "sed -n '1,260p' /tmp/rq2/b77218296f/skill/SKILL.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+---
+name: eval-guide
+description: Eval enablement accelerator — help customers think through "what does good look like" for their AI agent, then generate a structured eval plan and test cases they can use immediately. No built agent required — an idea or description is enough. Promotes eval-first development: write evals before building. Use when anyone mentions agent evaluation, eval planning, "what should we test", "how do we know if the agent is good", test case generation, or interpreting eval results.
+preamble: |
+  _UPD=$(~/.claude/plugins/cache/*/eval-guide/*/bin/eval-guide-update-check 2>/dev/null || ./bin/eval-guide-update-check 2>/dev/null || true)
+  echo "$_UPD"
+---
+
+<!-- VERSION CHECK INSTRUCTIONS
+When the preamble outputs text, handle it as follows:
+
+If the output contains "UPGRADE_AVAILABLE <old> <new>":
+  Use AskUserQuestion to ask the user:
+  "eval-guide v<new> is available (you're on v<old>). Upgrade now?"
+  With these options:
+  1. "Yes, upgrade now" — Run: claude plugin install eval-guide@eval-guide (the marketplace source `microsoft/eval-guide` must already be added via `claude plugin marketplace add microsoft/eval-guide`)
+  2. "Always keep me up to date" — Run: eval-guide-update-config set auto_upgrade true
+     Then run: claude plugin install eval-guide@eval-guide
+  3. "Not now" — Run: eval-guide-update-snooze <new>
+     Then continue with the skill normally.
+  4. "Never ask again" — Run: eval-guide-update-config set update_check false
+     Then continue with the skill normally.
+
+  The config and snooze scripts are in the same bin/ directory as the update check script.
+  After upgrade completes, tell the user to restart the session for the new version to take effect.
+
+If the output contains "JUST_UPGRADED <old> <new>":
+  Tell the user: "Running eval-guide v<new> (just updated from v<old>)!" and continue normally.
+
+If the output is empty:
+  Continue normally — the user is up to date (or check was snoozed/disabled).
+-->
+
+# Eval Guide — Enablement Accelerator
+
+Help customers go from "I don't know where to start with eval" to "I have a plan, test cases, and know how to interpret results" — in one session. The customer becomes self-sufficient for future eval cycles.
+
+## Eval-First Mindset
+
+**You do NOT need a built agent to start.** All you need is an idea, a description, or even a vague goal. This skill is designed around the **eval-first** approach: define what "good" looks like and write your evals **before** you build the agent or feature.
+
+Why eval-first?
+- **Evals sharpen your thinking.** Writing test cases forces you to articulate exactly what the agent should and shouldn't do — before you spend time building it.
+- **Evals become your spec.** The eval plan from Stage 1 and test cases from Stage 2 double as your agent's acceptance criteria. Build the agent to pass these tests.
+- **Evals prevent drift.** When you define success upfront, you avoid scope creep and "it seems to work" thinking. You'll know objectively whether the agent meets the bar.
+
+**Start here whether you:**
+- Have only a rough idea ("we want an HR bot")
+- Have a written description but no agent yet
+- Have a built agent you want to evaluate
+- Are adding a new feature to an existing agent
+
+Stages 0 (Discover), 1 (Plan), and 2 (Generate) all work without a running agent. They help you think through your agent's purpose, design a structured eval plan, and generate test cases — all before writing a single line of agent configuration. Stage 3 (Run) is the only stage that requires a live agent, and it's optional.
+
+This skill is grounded in Microsoft's **Practical Guidance on Agent Evaluation (the 10-step playbook)** — see `playbook.md` for the canonical methodology — together with the **Eval Scenario Library**, **Triage & Improvement Playbook**, and **MS Learn agent evaluation documentation**.
+
+**Important: You are an enablement accelerator, not a replacement.** Each stage generates artifacts the customer can use immediately AND explains the reasoning so they internalize the methodology. After one session, they should be able to do the next eval without us.
+
+## Review Checkpoint Workflow
+
+Plan produces a populated Eval Suite Template workbook plus a companion interactive HTML review page. Generate and Interpret produce **interactive HTML dashboards** that open directly in the browser. Dashboard stages run against a tiny localhost HTTP server (`serve.py --serve`); the customer never sees, downloads, or moves a JSON file. Feedback flows from the browser → server → the AI's `bash` stdout, in one step.
+
+**Flow at each dashboard review stage (Generate, Interpret):**
+1. Complete the stage's analysis.
+2. Write stage data to a JSON file (e.g., `stage-1-data.json`).
+3. Launch with `--serve` mode. The AI's bash blocks until the customer clicks Approve or Regenerate:
+   `python "$(ls ~/.claude/skills/eval-guide/dashboard/serve.py 2>/dev/null || ls ~/.claude/plugins/cache/*/eval-guide/*/skills/eval-guide/dashboard/serve.py 2>/dev/null | head -1)" --stage <name> --serve --data <file>.json`
+4. The customer reviews in the browser at `http://localhost:3118`: edits fields inline, updates eval-set/case/root-cause details, and adds comments. Edits auto-save to the localhost server.
+5. When the customer clicks **Approve & Continue** or **Incorporate Changes & Regenerate**, the browser POSTs the feedback to `/api/feedback`. The server captures it, prints the feedback JSON to stdout between marker lines, and shuts down. **No file is downloaded; the customer never moves anything.**
+6. **Parse the feedback from the bash command's stdout** — look for the block:
+   ```
+   ===EVAL_GUIDE_FEEDBACK_BEGIN===
+   { "stage": "...", "status": "confirmed" | "changes_requested", "edits": {...}, "comments": "..." }
+   ===EVAL_GUIDE_FEEDBACK_END===
+   ```
+   Decode the JSON between those markers — that's the customer's feedback. (`<stage>-feedback.json` is also written next to the data file as a debugging backup, but stdout is the primary channel — read from there.)
+7. If `status: "confirmed"` → apply the edits, generate final deliverables (docx, CSV), proceed to next stage.
+8. If `status: "changes_requested"` → apply the edits, regenerate the stage data file, re-launch the dashboard. Same loop.
+
+The **orient stage is a pre-built static HTML** (`dashboard/orient-dashboard.html`) — agent-agnostic, no `serve.py`, no JSON write, no feedback file. The skill simply opens the file in the customer's browser and continues the conversation. See *Session Start: Orient* below.
+
+**Review checkpoints:** Plan uses workbook + HTML review. Generate and Interpret use dashboards. Stage 3 (Run) executes tests directly.
+
+**Key principle:** No final docx or CSV files are generated until the customer confirms the relevant checkpoint. The checkpoint replaces the "does this look right?" chat-based confirmation with a structured review.
+
+## Before You Start
+
+**Start from wherever the customer is.** Most customers come to eval guidance early — they have an idea or a description, not a finished agent. That's exactly right. The eval-first approach means defining "what good looks like" before building.
+
+Ask: **"Tell me about the agent you're building or planning to build. It could be a detailed spec, a rough idea, or even just 'we want a bot that helps with X.' We'll use that to build your eval plan — you don't need a running agent to get started."**
+
+- **If they have an idea or description (most common):** Proceed directly to Stage 0 (Discover). The conversation will help them articulate their agent's purpose, users, boundaries, and success criteria — this becomes their eval spec.
+- **If they already have a running Copilot Studio agent:** Offer to connect to it for richer context: "Since you have a running agent, I can pull its configuration directly to inform the eval plan. Want to share your tenant ID so I can connect?" If yes, use `/clone-agent` to import the agent's topics, knowledge sources, and configuration. Use this to pre-fill the Agent Vision in Stage 0.
+- **If they already have eval results:** Route directly to Stage 4 (Interpret).
+
+**The key message:** Writing evals early makes the agent better. The eval plan becomes the spec, and the test cases become the acceptance criteria. Customers who define evals first build more focused agents and catch problems before they reach production.
+
+---
+
+## Session Start: Orient
+
+Once the customer has described their agent in one or two sentences, give them a visual snapshot of the Per-Agent Eval Maturity Model — where their agent stands today and where this session takes it. This is the orientation moment, and it sets the frame for everything that follows.
+
+### What to do
+
+The orient dashboard is **pre-built and shipped with the skill** — `dashboard/orient-dashboard.html`. It is identical for every agent (the maturity model and "what you walk away with" are agent-agnostic), so there is no per-session JSON write and no Python launch. Don't ask for the agent name yet — Stage 0 captures it where it's actually needed for deliverable filenames.
+
+1. Open the static dashboard in the customer's default browser. Use the OS launcher and the install-resolved path:
+   ```bash
+   ORIENT_HTML="$(ls ~/.claude/skills/eval-guide/dashboard/orient-dashboard.html 2>/dev/null || ls ~/.claude/plugins/cache/*/eval-guide/*/skills/eval-guide/dashboard/orient-dashboard.html 2>/dev/null | head -1)"
+   case "$(uname -s 2>/dev/null)" in
+     Darwin) open "$ORIENT_HTML" ;;
+     Linux)  xdg-open "$ORIENT_HTML" ;;
+     *)      cmd.exe /C start "" "$ORIENT_HTML" ;;  # Windows / Git Bash
+   esac
+   ```
+   The `ls ... | head -1` fallback resolves the file regardless of install location — user-global skills first (`~/.claude/skills/eval-guide/`), plugin-cache second.
+
+   **For dev installs** (skill checked out at an arbitrary path, not in `~/.claude/`), the AI should know the absolute path of the SKILL.md it's reading and substitute `<SKILL.md-dir>/dashboard/orient-dashboard.html`.
+
+   This is a **read-only stage**. There is no feedback file, no confirmation gate, and no `serve.py` involvement. The customer reviews the snapshot in the browser while the conversation continues in chat.
+
+2. While the dashboard is open, narrate one sentence in chat: *"This is the eval maturity model — five pillars of eval practice, five levels each. Today's session takes Pillars 1, 2, and 4 to L300 Systematic; Pillars 3 and 5 reach L200 Defined via the reference protocols you'll get at the end."*
+
+3. Proceed to Stage 0 (Discover) without waiting. The dashboard is informational.
+
+**When to rebuild the static HTML:** if `templates/orient.html`, `templates/base.html`, or `examples/stage-orient-data.json` change, run `python dashboard/build-orient.py` once and check in the regenerated `orient-dashboard.html`. The build script reuses `serve.py`'s `generate_html`, so the rendering stays consistent with the live dashboards.
+
+**Why this matters for the customer:** The maturity model is the value moment. Without it, the customer sees a series of stages with no map. With it, they understand exactly what they're getting and what comes next — the eval-first message lands because they can see the full journey.
+
+**Skip orient when:** the customer has already done a session with the toolkit and is returning for a Stage 1 / Stage 2 / Stage 4 jump-in. Don't re-orient someone who already has the map.
+
+---
+
+## How to Route
+
+| Customer says... | Start at |
+|---|---|
+| "We're planning to build an agent for..." | **Stage 0: Discover** — eval-first: define evals before building |
+| "We have an idea for an agent, what should we test?" | **Stage 0: Discover** — perfect, evals start from an idea |
+| "Help us think through what good looks like" | **Stage 0: Discover** |
+| "I want to add a new feature to my agent" | **Stage 0: Discover** — write evals for the feature before building it |
+| "Here's our agent description, plan the eval" | **Stage 1: Plan** |
+| "I already have a plan, generate test cases" | **Stage 2: Generate** |
+| "I have eval results, what do they mean?" | **Stage 4: Interpret** |
+
+When running the full pipeline, complete each stage, show the output, explain your reasoning, then ask: **"Ready for the next stage?"**
+
+---
+
+## Eval Maturity Journey
+
+Use the **Per-Agent Eval Maturity Model** as an **outcome scorecard** to orient customers on where they are today and where this session takes them. It is the progress-framing layer over the 10-step playbook (the canonical methodology lives in `playbook.md`). Five pillars of eval practice, five levels each — from `L100 Initial` (no practice in place) to `L500 Optimized` (continuous improvement built into operations). Assume the agent starts at **L100 Initial on all pillars**. This session targets **L300 Systematic on Pillars 1, 2, and 4** (in-session deliverables) and **L200 Defined on Pillars 3 and 5** (via reference protocols delivered alongside the session).
+
+The full 5×5 definitions live in `maturity-model.md` — that file is the canonical scorecard reference. Each pillar maps to playbook steps (P1=Step 1, P2=Steps 2–5, P3=Steps 6+8, P4=Steps 7+9, P5=Step 8). Update `maturity-model.md` first when level definitions change.
+
+| Pillar | What it measures | After this session | Mechanism |
+|---|---|---|---|
+| **1 — Define what "good" means** | Acceptance criteria quality | L300 Systematic ✓ | Stage 0 (Discover) + Stage 1 (Plan) |
+| **2 — Build your eval sets** | Coverage and versioning | L300 Systematic ✓ | Stage 2 (Generate) |
+| **3 — Run evals across the lifecycle** | Where and when evals execute (offline, pre-deploy, production) | L200 Defined ✓ | `rerun-protocol-<agent>-<date>.docx` (starter artifact) |
+| **4 — Improve and iterate** | How improvements are validated | L300 Systematic ✓ | Stage 4 (Interpret) — only if eval results are available |
+| **5 — Handle changes with confidence** | How changes (prompts, tools, models, architecture) get tested before shipping | L200 Defined ✓ | `baseline-comparison-<agent>-<date>.xlsx` (starter artifact) |
+
+**Pillars 3 and 5 stop at L200 Defined this session.** L300 Systematic on those pillars requires operating practice — a release cadence with codified triggers (Pillar 3) and version-tagged baselines accumulated over multiple changes (Pillar 5). The starter artifacts get the customer to L200 in one session: a documented protocol and a fill-in workbook they can execute when triggered. Generate `rerun-protocol-<agent>-<date>.docx` and `baseline-comparison-<agent>-<date>.xlsx` at the end of Stage 2 (see deliverables C and D in Stage 2's "After confirmation" block).
+
+Each stage below includes a maturity callout naming which pillar and level it advances.
+
+---
+
+## How This Maps to Microsoft's 10-Step Eval Playbook
+
+The toolkit's canonical methodology is **Microsoft's *Practical Guidance on Agent Evaluation* — a 10-step playbook** (full definition in `playbook.md`). The operational stages below are the **session UX**; each one delivers specific playbook steps. Share this crosswalk with customers so they see how the accelerator maps to the guidance. Prefer stage **names** over numbers when talking to customers — the playbook owns the numbering.
+
+| Operational stage | Playbook steps delivered | What it means |
+|---|---|---|
+| **Discover** | **Step 1** — Plan the eval effort | Name the eval objective, classify the agent's **risk tier** (5 factors), name an owner. Articulate purpose/users/boundaries/success — the eval spec. |
+| **Plan** | **Steps 2–5** (plan side) | Decompose into **capability** eval sets and **trust & safety** eval sets, set **pass-rate targets + hard/soft gates**, specify **human inputs** (rubrics, ground truths, source→ground-truth map). |
+| **Generate** | **Steps 2, 3, 5** (build) + **Step 8** (design) | Produce the capability + trust & safety eval sets (CSVs + manifest); tag each set `gate-only | regression | exploratory` for the regression suite. |
+| **Run** | **Step 6** — Run the baseline | Execute the suite vs the current build; record per-set results with version + timestamp. |
+| **Interpret** | **Step 7** — Iterate to diagnose (+ **Step 9** design) | Classify each failure as eval-setup vs agent-quality; SHIP/ITERATE/BLOCK on gates; design the production optimization loop. |
+| **Closeout** _(folded into the Interpret report)_ | **Step 10** — Reusable assets | Flag reusable rubrics / trust & safety sets for the shared library (Required / Recommended / Opt-in). |
+
+Steps 8–10 (regression suite, optimization loop, reusable assets) are **designed in-session** and **run over time** — the session leaves the customer reference artifacts to execute them.
+
+**When to share this:** After Discover, show the customer the crosswalk and say: *"Today covers Steps 1–5 of Microsoft's playbook — planning the effort and building your capability and trust & safety eval sets. Once you have a running agent you'll run the baseline (Step 6), iterate (Step 7), then stand up the regression suite, optimization loop, and shared-asset library (Steps 8–10)."*
+
+**Downloadable reference:** Point customers to Microsoft's [Eval Guidance Kit](https://aka.ms/EvalGuidanceKit) to track progress through all ten steps independently.
+
+---
+
+## Stage 0: Discover
+
+Help the customer articulate what their agent is supposed to do and what "good" looks like. This is the most important stage — it shapes everything downstream.
+
+### What you walk away with
+
+- **A 1-page Agent Vision** — purpose, users, knowledge sources, core capabilities, boundaries (what the agent must NOT do), success criteria, role-based access, and the **eval objective + risk tier + owner** (playbook **Step 1**). Written down, not assumed.
+- **The eval objective** — one sentence naming what "good" looks like and what decisions the evals will inform. It anchors every later choice.
+- **The agent's risk tier** — HIGH / MEDIUM / LOW, classified from the **five risk factors**: reach, criticality of error, autonomy / blast radius, regulatory exposure, data sensitivity. The risk tier drives pass-rate targets, gate strictness, required trust & safety categories, and minimum adversarial coverage downstream.
+- **A named owner** — one person accountable for authoring the eval, reviewing results, and signing off.
+- **Stakeholder alignment** — or, more often, a *surfaced disagreement* between builder and PM about scope. 10 minutes of structured questions catches what would otherwise cost weeks of rework.
+- **The spec every later stage depends on.** The Plan stage's eval plan, the Generate stage's test cases, and the Interpret stage's pass/fail judgment all trace back to what gets named here.
+
+### When this stage is wrong for you
+
+- You already have a written PRD, agent spec, or design doc that covers all 7 questions below. Bring it and skip to Stage 1.
+- You have eval results in hand and need triage now — go straight to Stage 4.
+- Your agent is a 50-topic monster. One Stage 0 pass won't fit; run Stage 0 per top-level capability.
+
+### What to do — extract Vision, apply safe defaults, proceed to Stage 1
+
+**Don't ask Q1–Q7 in chat.** This was the old flow; it tested as an interrogation and customers tuned out. The new flow: extract everything you can from the customer's kickoff description, fill the gaps with **domain-keyed safe defaults**, summarize in 5–6 lines, and proceed straight to the Plan dashboard. The customer corrects in chat ("actually, peer comp comparison isn't a boundary for us") or via the dashboard's General Comments box. Nothing is locked until they confirm in the dashboard.
+
+#### Step 1 — Pre-extract from the kickoff
+
+From the customer's 1–4 sentence description, extract:
+- **Purpose** — usually the first clause ("Personalized HR support…")
+- **Users** — usually implied ("employees," "customers," "internal teams")
+- **Capabilities** — usually a list ("benefits, training, policies")
+- **Knowledge sources** — sometimes named, often categorized ("official company resources" → SharePoint TBD)
+- **Tone hints** — sometimes explicit ("trusted HR colleague," "efficient")
+- **Personalization hints** — words like "personalized," "your," "based on your role"
+
+If the kickoff is too thin (one sentence with no domain hint), ask **one** clarifying question — *"Two more sentences on what it does and who uses it would help me draft a Vision faster"* — then resume.
+
+#### Step 2 — Apply safe defaults by domain
+
+Domain detection runs on keywords in the kickoff description. Pick the matching default set:
+
+| Domain trigger keywords | Default boundaries (what NOT to do) | Default risk tier |
+|---|---|---|
+| **HR / ESS / employee / benefits / policy / leave / payroll** | Legal advice; medical advice; salary negotiation; performance review interpretation; HR investigation details; peer compensation comparison; PII about other employees | **HIGH** (data sensitivity + regulatory exposure) |
+| **Customer support / refunds / billing / accounts** | Refunds beyond policy; account-specific data outside this user's scope; legal-binding promises; competitor product recommendations | **HIGH** (reach + criticality: customer trust + financial) |
+| **Knowledge / documentation / FAQ / wiki** | Content beyond the named knowledge sources; opinions framed as facts; regulated advice (legal/medical/financial) | **MEDIUM** (defaults higher if regulated content domain) |
+| **IT / helpdesk / troubleshooting** | Remote-execute actions on user systems; reset credentials without verification; security advice that bypasses policy | **MEDIUM** (HIGH if security/privacy adjacent) |
+| **Agentic / tool-using / "submits" / "schedules" / "books"** | Irreversible actions without confirmation; actions outside user's authorization scope; anything requiring approval the agent can't get | **HIGH** (autonomy / blast radius: writes to systems) |
+| **No domain detected** | "Outside the named knowledge sources" + "anything the user-cohort isn't authorized for" + 1 generic safety guardrail | **MEDIUM** (default cautious) |
+
+The default tier is a starting point keyed on domain. Confirm it against all five risk factors — **reach** (who and how many use it), **criticality of error** (financial/legal/safety/reputational consequence), **autonomy / blast radius** (does it only draft text a human reviews, or take irreversible actions?), **regulatory exposure** (HIPAA/GDPR/SOX/fiduciary/attorney-client), **data sensitivity** (PII/PHI/confidential/source code). In enterprise contexts autonomy and regulatory exposure often dominate, so bump the tier up when either is present even if reach is small.
+
+**Default success criteria** (always include unless customer overrides):
+- Most user questions answered directly (deflection / self-service rate)
+- Out-of-scope questions routed clearly to the right human or resource (graceful handoff)
+- Zero privacy / boundary breaches
+
+**Default knowledge sources** when only categorized:
+- *"some SharePoint sites"* / *"internal docs"* → flag as `Multiple SharePoint sites (TBD — name in Plan dashboard)` so the customer can fill names without us blocking on it.
+
+**Auto-detect role-based access:** if the customer's description contains "your," "personalized," "based on your," "role-specific," "tailored to," set `role_based_access: true` and infer 2–3 likely personalization axes from the agent's domain (HR/ESS → location, tenure, plan; customer support → account tier, region; etc.). Customer corrects if wrong.
+
+#### Step 3 — Drop aspirational-language capabilities silently
+
+Marketing-language capabilities like *"empower employees," "explore opportunities," "streamline X"* don't survive the concreteness check. Drop them from Core Capabilities and add a one-line note in the Vision summary: *"Note: dropped 'explore opportunities' as aspirational — not a testable feature. Tell me if it's actually a concrete capability and I'll add it back."*
+
+This is silent removal with a flagged note, not a question. Customer can flag if they disagree.
+
+#### Step 4 — Show the Vision summary in chat (5–6 lines, no questions)
+
+Display the pre-extracted Vision compactly:
+
+exec
+/bin/zsh -lc 'rg --files /tmp/rq2/b77218296f/skill' in /private/tmp/rq2/b77218296f/work
+ succeeded in 521ms:
+/tmp/rq2/b77218296f/skill/eval-suite-template.md
+/tmp/rq2/b77218296f/skill/maturity-model.md
+/tmp/rq2/b77218296f/skill/plan-review-page.md
+/tmp/rq2/b77218296f/skill/SKILL.md
+/tmp/rq2/b77218296f/skill/scripts/eval-runner.js
+/tmp/rq2/b77218296f/skill/playbook.md
+/tmp/rq2/b77218296f/skill/dashboard/templates/plan.html
+/tmp/rq2/b77218296f/skill/dashboard/templates/discover.html
+/tmp/rq2/b77218296f/skill/dashboard/templates/generate.html
+/tmp/rq2/b77218296f/skill/dashboard/templates/orient.html
+/tmp/rq2/b77218296f/skill/dashboard/templates/base.html
+/tmp/rq2/b77218296f/skill/dashboard/templates/interpret.html
+/tmp/rq2/b77218296f/skill/dashboard/orient-dashboard.html
+/tmp/rq2/b77218296f/skill/dashboard/examples/stage-1-data.json
+/tmp/rq2/b77218296f/skill/dashboard/examples/stage-0-data.json
+/tmp/rq2/b77218296f/skill/dashboard/examples/stage-4-data.json
+/tmp/rq2/b77218296f/skill/dashboard/examples/stage-orient-data.json
+/tmp/rq2/b77218296f/skill/dashboard/examples/stage-2-data.json
+/tmp/rq2/b77218296f/skill/dashboard/serve.py
+/tmp/rq2/b77218296f/skill/dashboard/build-orient.py
+/tmp/rq2/b77218296f/skill/USAGE.md
+/tmp/rq2/b77218296f/skill/rerun-protocol.md
+/tmp/rq2/b77218296f/skill/eval-setup-guide.md
+/tmp/rq2/b77218296f/skill/baseline-comparison-template.md
+
+2026-10-01T19:57:06.423504Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+Read full SKILL sections, use smaller sed ranges and grep headings, then count headings with wc and rg.
+codex
+入口文档较长，第一轮输出被截断了。我继续分段读取标题和 Plan 阶段要求，避免凭猜测补流程。
+exec
+/bin/zsh -lc 'wc -l /tmp/rq2/b77218296f/skill/SKILL.md' in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc 'rg -n "''^#{1,4} " /tmp/rq2/b77218296f/skill/SKILL.md' in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/rq2/b77218296f/skill/eval-suite-template.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+     657 /tmp/rq2/b77218296f/skill/SKILL.md
+
+ succeeded in 0ms:
+34:# Eval Guide — Enablement Accelerator
+38:## Eval-First Mindset
+59:## Review Checkpoint Workflow
+86:## Before You Start
+100:## Session Start: Orient
+104:### What to do
+135:## How to Route
+151:## Eval Maturity Journey
+171:## How This Maps to Microsoft's 10-Step Eval Playbook
+192:## Stage 0: Discover
+196:### What you walk away with
+205:### When this stage is wrong for you
+211:### What to do — extract Vision, apply safe defaults, proceed to Stage 1
+215:#### Step 1 — Pre-extract from the kickoff
+227:#### Step 2 — Apply safe defaults by domain
+252:#### Step 3 — Drop aspirational-language capabilities silently
+258:#### Step 4 — Show the Vision summary in chat (5–6 lines, no questions)
+281:#### Why this works
+288:#### When this approach is wrong (revert to gap-question batch)
+296:## Stage 1: Plan
+300:### What you walk away with
+307:### When this stage is wrong for you
+313:### What to do
+364:### Output
+372:### Workbook Review Checkpoint
+398:## Stage 2: Generate
+402:### What you walk away with (one kit)
+414:### When this stage is wrong for you
+420:### Choose evaluation mode: Single Response vs. Conversation
+444:### Personalization branch — handle this before generating test cases
+468:### The [VERIFY] discipline — the most important review step in the whole skill
+476:### What to do
+515:### Output
+523:### Interactive Dashboard Checkpoint
+
+ succeeded in 0ms:
+# Eval Suite Planning & Logging Workbook Template
+
+Use this blueprint whenever a skill needs to generate the customer-facing eval planning workbook. The workbook turns the 10-step Practical Guidance on Agent Evaluation into one populated `.xlsx` file per agent.
+
+**Template preservation rule:** If the physical blank template workbook is available in the session, copy that workbook and populate only existing input cells and data rows. Do **not** modify worksheet names, column headers, formulas, styles, widths, data validations, README text, or the `Dropdown Lists` tab. If the blank template is not available, ask the user for it instead of creating a different workbook shape.
+
+## Workbook name
+
+`eval-suite-<agent-name>-<YYYY-MM-DD>.xlsx`
+
+The planner also generates a companion HTML review page next to the workbook:
+
+`eval-suite-<agent-name>-<YYYY-MM-DD>-review.html`
+
+The HTML page is an interactive review surface only. It must not replace the workbook or modify the template structure. Use `plan-review-page.md` for the HTML contract.
+
+## Tabs
+
+1. `README`
+2. `1 . Planning`
+3. `2 . Eval Suite Registry`
+4. `3 . Run Log`
+5. `4 . Reusable Library`
+6. `Dropdown Lists`
+
+## README
+
+Static instructional tab. Preserve exactly. Do not edit this sheet when populating a workbook.
+
+- Title: `Eval Suite Planning & Logging Template`
+- Subtitle: `Project Phoenix | Agent Quality & Evaluation - companion to the 10-step Practical Guidance on Agent Evaluation`
+- `How to use this workbook`
+- `The tabs and the steps they cover`
+- `Two core distinctions to keep straight`
+
+The two distinctions must say:
+
+- **Capability vs Trust & Safety** — capability measures how well the agent does its job; trust & safety measures what it must refuse, avoid, or route. Hallucination is a faithfulness/groundedness capability failure, not a trust & safety category.
+- **Gate vs Regression** — gate means must pass before pilot/production; regression means run on a cadence to catch drift.
+- **Two kinds of failure (Step 7)** — every failure is either an eval-setup problem or an agent-quality problem.
+
+## 1 . Planning
+
+Populate the existing yellow/input cells for Step 1. Do not insert rows, columns, or new sections.
+
+### Agent identity
+
+| Field | Populate with |
+|---|---|
+| Agent name | Agent name from the user, dashboard, or inferred description |
+| Description / job to be done | One-sentence Agent Vision summary |
+| Lifecycle stage | Idea / design / build / pilot / production / update |
+| Eval owner (builder) | Named accountable eval owner; ask if missing |
+| Date / version of this plan | Current date and agent/version label if known |
+
+### Risk classification (5 factors)
+
+Rows:
+
+| Factor | What to assess | Your assessment |
+|---|---|---|
+| Reach | Number/type of users - internal team, company-wide, external customers, regulated audiences. | Low / Medium / High + short rationale |
+| Criticality of error | Consequence of a wrong/harmful response - financial loss, legal exposure, safety, reputation. | Low / Medium / High + short rationale |
+| Autonomy & blast radius | Text a human reviews, or tool calls / actions? Are actions reversible? | Low / Medium / High + short rationale |
+| Regulatory & compliance exposure | Regulated domain? HIPAA, GDPR, SOX, attorney-client, fiduciary, etc. | Low / Medium / High + short rationale |
+| Data sensitivity | PII, PHI, confidential business data, source code, other sensitive inputs/outputs. | Low / Medium / High + short rationale |
+| -> Risk tier (overall) | Autonomy & regulatory exposure often dominate in enterprise contexts. | Low / Medium / High risk tier |
+| Risk tier rationale | Why this tier - the 1-2 factors that drove it. | Concise rationale |
+
+### Owners & roles
+
+Rows:
+
+| Role | Responsibility | Named owner |
+|---|---|---|
+| Agent builder | Runs the eval suite, drives iteration. | Required; ask if missing |
+| Domain expert | Authors rubrics, ground truths, golden answers (Step 5). | Ask or set `TBD - name before baseline` |
+| Eval reviewer | Inspects failures case-by-case in early iterations (Step 7). | Ask or set `TBD - name before baseline` |
+| Risk / compliance owner | Signs off for higher-tier agents; required for regulated deployments. | Required for high-risk agents; ask if missing |
+
+### Deployment gates / sign-off criteria
+
+Rows:
+
+| Item | Definition | Decision |
+|---|---|---|
+| Min pass rate - Capability | In v5 guidance, most capability sets use launch floors plus regression/direction rather than standing absolute targets. | Fill with launch floor / high-risk capability floor / regression-governance note, not a generic per-scenario target |
+| Min pass rate - Trust & Safety | T&S sets are typically absolute hard gates at a high bar. | Derived from risk tier; ask if deployment gate is known |
+| Mandatory risk coverage | Which T&S categories MUST be covered before deploy. | Derived from risk tier/domain |
+| Named approver | Who signs off. | Risk/compliance owner or eval owner |
+| Required evidence | Baseline report, failure log, regression green, etc. | Derived from lifecycle stage |
+| Policy / compliance requirements | Company policy or regime the eval program must satisfy. | Ask if regulated/compliance domain is detected |
+
+## 2 . Eval Suite Registry
+
+Populate one row per eval set, not one row per individual test case or legacy planning artifact. The registry is the workbook's Steps 2-5 artifact.
+
+Columns:
+
+| Column | Populate with |
+|---|---|
+| ID | Stable ID such as `CAP-ACC-001`, `TS-PII-001` |
+| Eval Set Name | Human-readable set name |
+| Category | `Capability` or `Trust & Safety` |
+| Dimension tested | Capability dimension or T&S category |
+| Purpose / diagnostic signal | What this set detects |
+| Target pass rate | For T&S: absolute pass-rate gate. For capability: launch floor or `Regression / direction after baseline` unless high-risk capability needs a hard floor. |
+| Target rationale | Why this governing instrument fits the risk tier, criticality, and v5 Step 4 guidance |
+| Gate type | Use the closest existing dropdown value: `Hard gate`, `Soft target`, or `Hard floor + soft target`. Explain launch-floor / regression-direction nuance in `Notes` because the template has no separate governing-instrument column. |
+| Intended use | `Gate`, `Regression`, or `Both` |
+| Run cadence | `Per-change`, `Nightly`, `Weekly`, `Milestone-only`, etc. |
+| Human input type | `Grading rubric`, `Ground truth`, `Golden answer`, `Rubric + ground truth`, `Rubric + eval set` |
+| Human input author | Named SME/risk/content owner or `TBD - name before baseline` |
+| Grounding source dependency | Source system/document that must stay in sync |
+| Source change -> review? | `Yes` or `No` |
+| Run Cadence | Same cadence as run cadence column; preserve because the template contains both columns |
+| Reusable asset? | `Yes - candidate` or `No - agent-specific` |
+| Reuse tier | `Required`, `Recommended`, or `Opt-in` when reusable |
+| Set status | `Draft`, `Active`, or `Deprecated` |
+| Notes | Assumptions, open questions, owner decisions, Step 4 governing-instrument nuance, and Step 6 grader-validation requirement. Since the template has no grader-validation columns, record grader type and validation plan here without adding columns. |
+
+## 3 . Run Log
+
+Leave mostly blank when only planning is complete. Add an initial placeholder row for each planned baseline set when useful. Step 7 baseline results are recorded here after Step 6 grader validation is complete.
+
+Columns:
+
+| Column | Populate with |
+|---|---|
+| Run ID | `BASELINE-001` for planned baseline rows |
+| Eval Set ID | Registry ID |
+| Eval Set Name | Registry name |
+| Run date | Blank until run, or planned date if known |
+| Agent version | Plan version / agent version if known |
+| Run type | `Baseline` for first planned run |
+| Result (pass rate) | Blank until run |
+| Target | Target from Registry |
+| Target met? | Blank until run |
+| Cases passed / total | Blank until run |
+| Failure classification | Blank until run; later use Eval-setup problem / Agent-quality problem / Mixed / N/A, matching v5 Step 7 |
+| Failure pattern identified | Blank until run |
+| Actionable next step | `Run baseline` for placeholder rows |
+| Action owner | Eval owner |
+| Status | `Open` |
+
+## 4 . Reusable Library
+
+Populate candidate reusable assets identified during planning. Prioritize trust & safety sets, rubrics, and failure-pattern templates that are not agent-specific.
+
+Columns:
+
+| Column | Populate with |
+|---|---|
+| Asset ID | Stable ID such as `LIB-TS-001` |
+| Asset name | Reusable asset name |
+| Asset type | Trust & safety eval set / Grading rubric / Failure-pattern template / Production edge case |
+| Source agent | Agent name |
+| Tier | Required / Recommended / Opt-in |
+| Owner | Proposed library owner |
+| Version | Initial version, e.g. `v0.1` |
+| Last reviewed | Current date or blank |
+| Review cadence | Quarterly / On policy change / etc. |
+| Applies to (agent categories) | Agent categories that can reuse it |
+| Notes | Promotion rationale and assumptions |
+
+## Dropdown Lists
+
+Preserve exactly. Do not edit this sheet when populating a workbook; changing it modifies the template's controlled vocabularies and validations.
+
+| Category | Dimension | GateType | IntendedUse | Cadence | HumanInput | SourceReview | Reusable | ReuseTier | Promotion | SetStatus | RunType | TargetMet | FailureClass | ActionStatus | AssetType |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Capability | Accuracy / correctness | Hard gate | Gate | Per-change | Grading rubric | Yes | No - agent-specific | Required | Agent-specific | Draft | Baseline | Yes | Eval-setup problem | Open | Trust & safety eval set |
+| Trust & Safety | Faithfulness / groundedness | Soft target | Regression | Nightly | Ground truth | No | Yes - candidate | Recommended | Flagged for promotion | Active | Iteration | No | Agent-quality problem | In progress | Grading rubric |
+|  | Relevancy | Hard floor + soft target | Both | Weekly | Golden answer |  |  | Opt-in | Promoted | Deprecated | Regression | Partial | Mixed | Resolved | Failure-pattern template |
+|  | Style & tone |  |  | Milestone-only | Rubric + ground truth |  |  |  |  |  | Gate check |  | N/A - passed | Won't fix | Production edge case |
+|  | Reasoning & tool use |  |  |  | Rubric + eval set |  |  |  |  |  |  |  |  |  |  |
+|  | Guardrails |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Out-of-scope handling |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Sensitive-data handling |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Prompt injection / jailbreak |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Compliance-specific |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
+## Question policy
+
+Skills may ask targeted questions before populating this workbook. Ask only for fields that materially affect the workbook and cannot be inferred safely:
+
+1. Eval owner / named approver.
+2. Lifecycle stage and target deployment decision.
+3. Whether the agent uses tools/connectors or only answers from knowledge.
+4. Regulated/compliance obligations.
+5. Authoritative sources and their owners.
+
+If the user wants speed or cannot answer, populate `TBD - confirm before baseline` rather than blocking.
+
+## What not to generate in this workbook
+
+- Do not add a scenario plan sheet.
+- Do not add a quality-signals sheet.
+- Do not create one row per test case.
+- Do not add columns for grader validation, production signals, optimization loops, or scenario metadata. Use existing `Notes`, `Run Log`, and `Reusable Library` fields instead.
+
+2026-10-01T19:57:16.140601Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+我在思考先完整阅读说明，确保严格按照流程生成评测计划，并写入工作目录。400.
+exec
+/bin/zsh -lc "sed -n '80,190p' /tmp/rq2/b77218296f/skill/SKILL.md" in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "sed -n '192,295p' /tmp/rq2/b77218296f/skill/SKILL.md" in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "sed -n '296,397p' /tmp/rq2/b77218296f/skill/SKILL.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+The **orient stage is a pre-built static HTML** (`dashboard/orient-dashboard.html`) — agent-agnostic, no `serve.py`, no JSON write, no feedback file. The skill simply opens the file in the customer's browser and continues the conversation. See *Session Start: Orient* below.
+
+**Review checkpoints:** Plan uses workbook + HTML review. Generate and Interpret use dashboards. Stage 3 (Run) executes tests directly.
+
+**Key principle:** No final docx or CSV files are generated until the customer confirms the relevant checkpoint. The checkpoint replaces the "does this look right?" chat-based confirmation with a structured review.
+
+## Before You Start
+
+**Start from wherever the customer is.** Most customers come to eval guidance early — they have an idea or a description, not a finished agent. That's exactly right. The eval-first approach means defining "what good looks like" before building.
+
+Ask: **"Tell me about the agent you're building or planning to build. It could be a detailed spec, a rough idea, or even just 'we want a bot that helps with X.' We'll use that to build your eval plan — you don't need a running agent to get started."**
+
+- **If they have an idea or description (most common):** Proceed directly to Stage 0 (Discover). The conversation will help them articulate their agent's purpose, users, boundaries, and success criteria — this becomes their eval spec.
+- **If they already have a running Copilot Studio agent:** Offer to connect to it for richer context: "Since you have a running agent, I can pull its configuration directly to inform the eval plan. Want to share your tenant ID so I can connect?" If yes, use `/clone-agent` to import the agent's topics, knowledge sources, and configuration. Use this to pre-fill the Agent Vision in Stage 0.
+- **If they already have eval results:** Route directly to Stage 4 (Interpret).
+
+**The key message:** Writing evals early makes the agent better. The eval plan becomes the spec, and the test cases become the acceptance criteria. Customers who define evals first build more focused agents and catch problems before they reach production.
+
+---
+
+## Session Start: Orient
+
+Once the customer has described their agent in one or two sentences, give them a visual snapshot of the Per-Agent Eval Maturity Model — where their agent stands today and where this session takes it. This is the orientation moment, and it sets the frame for everything that follows.
+
+### What to do
+
+The orient dashboard is **pre-built and shipped with the skill** — `dashboard/orient-dashboard.html`. It is identical for every agent (the maturity model and "what you walk away with" are agent-agnostic), so there is no per-session JSON write and no Python launch. Don't ask for the agent name yet — Stage 0 captures it where it's actually needed for deliverable filenames.
+
+1. Open the static dashboard in the customer's default browser. Use the OS launcher and the install-resolved path:
+   ```bash
+   ORIENT_HTML="$(ls ~/.claude/skills/eval-guide/dashboard/orient-dashboard.html 2>/dev/null || ls ~/.claude/plugins/cache/*/eval-guide/*/skills/eval-guide/dashboard/orient-dashboard.html 2>/dev/null | head -1)"
+   case "$(uname -s 2>/dev/null)" in
+     Darwin) open "$ORIENT_HTML" ;;
+     Linux)  xdg-open "$ORIENT_HTML" ;;
+     *)      cmd.exe /C start "" "$ORIENT_HTML" ;;  # Windows / Git Bash
+   esac
+   ```
+   The `ls ... | head -1` fallback resolves the file regardless of install location — user-global skills first (`~/.claude/skills/eval-guide/`), plugin-cache second.
+
+   **For dev installs** (skill checked out at an arbitrary path, not in `~/.claude/`), the AI should know the absolute path of the SKILL.md it's reading and substitute `<SKILL.md-dir>/dashboard/orient-dashboard.html`.
+
+   This is a **read-only stage**. There is no feedback file, no confirmation gate, and no `serve.py` involvement. The customer reviews the snapshot in the browser while the conversation continues in chat.
+
+2. While the dashboard is open, narrate one sentence in chat: *"This is the eval maturity model — five pillars of eval practice, five levels each. Today's session takes Pillars 1, 2, and 4 to L300 Systematic; Pillars 3 and 5 reach L200 Defined via the reference protocols you'll get at the end."*
+
+3. Proceed to Stage 0 (Discover) without waiting. The dashboard is informational.
+
+**When to rebuild the static HTML:** if `templates/orient.html`, `templates/base.html`, or `examples/stage-orient-data.json` change, run `python dashboard/build-orient.py` once and check in the regenerated `orient-dashboard.html`. The build script reuses `serve.py`'s `generate_html`, so the rendering stays consistent with the live dashboards.
+
+**Why this matters for the customer:** The maturity model is the value moment. Without it, the customer sees a series of stages with no map. With it, they understand exactly what they're getting and what comes next — the eval-first message lands because they can see the full journey.
+
+**Skip orient when:** the customer has already done a session with the toolkit and is returning for a Stage 1 / Stage 2 / Stage 4 jump-in. Don't re-orient someone who already has the map.
+
+---
+
+## How to Route
+
+| Customer says... | Start at |
+|---|---|
+| "We're planning to build an agent for..." | **Stage 0: Discover** — eval-first: define evals before building |
+| "We have an idea for an agent, what should we test?" | **Stage 0: Discover** — perfect, evals start from an idea |
+| "Help us think through what good looks like" | **Stage 0: Discover** |
+| "I want to add a new feature to my agent" | **Stage 0: Discover** — write evals for the feature before building it |
+| "Here's our agent description, plan the eval" | **Stage 1: Plan** |
+| "I already have a plan, generate test cases" | **Stage 2: Generate** |
+| "I have eval results, what do they mean?" | **Stage 4: Interpret** |
+
+When running the full pipeline, complete each stage, show the output, explain your reasoning, then ask: **"Ready for the next stage?"**
+
+---
+
+## Eval Maturity Journey
+
+Use the **Per-Agent Eval Maturity Model** as an **outcome scorecard** to orient customers on where they are today and where this session takes them. It is the progress-framing layer over the 10-step playbook (the canonical methodology lives in `playbook.md`). Five pillars of eval practice, five levels each — from `L100 Initial` (no practice in place) to `L500 Optimized` (continuous improvement built into operations). Assume the agent starts at **L100 Initial on all pillars**. This session targets **L300 Systematic on Pillars 1, 2, and 4** (in-session deliverables) and **L200 Defined on Pillars 3 and 5** (via reference protocols delivered alongside the session).
+
+The full 5×5 definitions live in `maturity-model.md` — that file is the canonical scorecard reference. Each pillar maps to playbook steps (P1=Step 1, P2=Steps 2–5, P3=Steps 6+8, P4=Steps 7+9, P5=Step 8). Update `maturity-model.md` first when level definitions change.
+
+| Pillar | What it measures | After this session | Mechanism |
+|---|---|---|---|
+| **1 — Define what "good" means** | Acceptance criteria quality | L300 Systematic ✓ | Stage 0 (Discover) + Stage 1 (Plan) |
+| **2 — Build your eval sets** | Coverage and versioning | L300 Systematic ✓ | Stage 2 (Generate) |
+| **3 — Run evals across the lifecycle** | Where and when evals execute (offline, pre-deploy, production) | L200 Defined ✓ | `rerun-protocol-<agent>-<date>.docx` (starter artifact) |
+| **4 — Improve and iterate** | How improvements are validated | L300 Systematic ✓ | Stage 4 (Interpret) — only if eval results are available |
+| **5 — Handle changes with confidence** | How changes (prompts, tools, models, architecture) get tested before shipping | L200 Defined ✓ | `baseline-comparison-<agent>-<date>.xlsx` (starter artifact) |
+
+**Pillars 3 and 5 stop at L200 Defined this session.** L300 Systematic on those pillars requires operating practice — a release cadence with codified triggers (Pillar 3) and version-tagged baselines accumulated over multiple changes (Pillar 5). The starter artifacts get the customer to L200 in one session: a documented protocol and a fill-in workbook they can execute when triggered. Generate `rerun-protocol-<agent>-<date>.docx` and `baseline-comparison-<agent>-<date>.xlsx` at the end of Stage 2 (see deliverables C and D in Stage 2's "After confirmation" block).
+
+Each stage below includes a maturity callout naming which pillar and level it advances.
+
+---
+
+## How This Maps to Microsoft's 10-Step Eval Playbook
+
+The toolkit's canonical methodology is **Microsoft's *Practical Guidance on Agent Evaluation* — a 10-step playbook** (full definition in `playbook.md`). The operational stages below are the **session UX**; each one delivers specific playbook steps. Share this crosswalk with customers so they see how the accelerator maps to the guidance. Prefer stage **names** over numbers when talking to customers — the playbook owns the numbering.
+
+| Operational stage | Playbook steps delivered | What it means |
+|---|---|---|
+| **Discover** | **Step 1** — Plan the eval effort | Name the eval objective, classify the agent's **risk tier** (5 factors), name an owner. Articulate purpose/users/boundaries/success — the eval spec. |
+| **Plan** | **Steps 2–5** (plan side) | Decompose into **capability** eval sets and **trust & safety** eval sets, set **pass-rate targets + hard/soft gates**, specify **human inputs** (rubrics, ground truths, source→ground-truth map). |
+| **Generate** | **Steps 2, 3, 5** (build) + **Step 8** (design) | Produce the capability + trust & safety eval sets (CSVs + manifest); tag each set `gate-only | regression | exploratory` for the regression suite. |
+| **Run** | **Step 6** — Run the baseline | Execute the suite vs the current build; record per-set results with version + timestamp. |
+| **Interpret** | **Step 7** — Iterate to diagnose (+ **Step 9** design) | Classify each failure as eval-setup vs agent-quality; SHIP/ITERATE/BLOCK on gates; design the production optimization loop. |
+| **Closeout** _(folded into the Interpret report)_ | **Step 10** — Reusable assets | Flag reusable rubrics / trust & safety sets for the shared library (Required / Recommended / Opt-in). |
+
+Steps 8–10 (regression suite, optimization loop, reusable assets) are **designed in-session** and **run over time** — the session leaves the customer reference artifacts to execute them.
+
+**When to share this:** After Discover, show the customer the crosswalk and say: *"Today covers Steps 1–5 of Microsoft's playbook — planning the effort and building your capability and trust & safety eval sets. Once you have a running agent you'll run the baseline (Step 6), iterate (Step 7), then stand up the regression suite, optimization loop, and shared-asset library (Steps 8–10)."*
+
+**Downloadable reference:** Point customers to Microsoft's [Eval Guidance Kit](https://aka.ms/EvalGuidanceKit) to track progress through all ten steps independently.
+
+---
+
+ succeeded in 0ms:
+## Stage 0: Discover
+
+Help the customer articulate what their agent is supposed to do and what "good" looks like. This is the most important stage — it shapes everything downstream.
+
+### What you walk away with
+
+- **A 1-page Agent Vision** — purpose, users, knowledge sources, core capabilities, boundaries (what the agent must NOT do), success criteria, role-based access, and the **eval objective + risk tier + owner** (playbook **Step 1**). Written down, not assumed.
+- **The eval objective** — one sentence naming what "good" looks like and what decisions the evals will inform. It anchors every later choice.
+- **The agent's risk tier** — HIGH / MEDIUM / LOW, classified from the **five risk factors**: reach, criticality of error, autonomy / blast radius, regulatory exposure, data sensitivity. The risk tier drives pass-rate targets, gate strictness, required trust & safety categories, and minimum adversarial coverage downstream.
+- **A named owner** — one person accountable for authoring the eval, reviewing results, and signing off.
+- **Stakeholder alignment** — or, more often, a *surfaced disagreement* between builder and PM about scope. 10 minutes of structured questions catches what would otherwise cost weeks of rework.
+- **The spec every later stage depends on.** The Plan stage's eval plan, the Generate stage's test cases, and the Interpret stage's pass/fail judgment all trace back to what gets named here.
+
+### When this stage is wrong for you
+
+- You already have a written PRD, agent spec, or design doc that covers all 7 questions below. Bring it and skip to Stage 1.
+- You have eval results in hand and need triage now — go straight to Stage 4.
+- Your agent is a 50-topic monster. One Stage 0 pass won't fit; run Stage 0 per top-level capability.
+
+### What to do — extract Vision, apply safe defaults, proceed to Stage 1
+
+**Don't ask Q1–Q7 in chat.** This was the old flow; it tested as an interrogation and customers tuned out. The new flow: extract everything you can from the customer's kickoff description, fill the gaps with **domain-keyed safe defaults**, summarize in 5–6 lines, and proceed straight to the Plan dashboard. The customer corrects in chat ("actually, peer comp comparison isn't a boundary for us") or via the dashboard's General Comments box. Nothing is locked until they confirm in the dashboard.
+
+#### Step 1 — Pre-extract from the kickoff
+
+From the customer's 1–4 sentence description, extract:
+- **Purpose** — usually the first clause ("Personalized HR support…")
+- **Users** — usually implied ("employees," "customers," "internal teams")
+- **Capabilities** — usually a list ("benefits, training, policies")
+- **Knowledge sources** — sometimes named, often categorized ("official company resources" → SharePoint TBD)
+- **Tone hints** — sometimes explicit ("trusted HR colleague," "efficient")
+- **Personalization hints** — words like "personalized," "your," "based on your role"
+
+If the kickoff is too thin (one sentence with no domain hint), ask **one** clarifying question — *"Two more sentences on what it does and who uses it would help me draft a Vision faster"* — then resume.
+
+#### Step 2 — Apply safe defaults by domain
+
+Domain detection runs on keywords in the kickoff description. Pick the matching default set:
+
+| Domain trigger keywords | Default boundaries (what NOT to do) | Default risk tier |
+|---|---|---|
+| **HR / ESS / employee / benefits / policy / leave / payroll** | Legal advice; medical advice; salary negotiation; performance review interpretation; HR investigation details; peer compensation comparison; PII about other employees | **HIGH** (data sensitivity + regulatory exposure) |
+| **Customer support / refunds / billing / accounts** | Refunds beyond policy; account-specific data outside this user's scope; legal-binding promises; competitor product recommendations | **HIGH** (reach + criticality: customer trust + financial) |
+| **Knowledge / documentation / FAQ / wiki** | Content beyond the named knowledge sources; opinions framed as facts; regulated advice (legal/medical/financial) | **MEDIUM** (defaults higher if regulated content domain) |
+| **IT / helpdesk / troubleshooting** | Remote-execute actions on user systems; reset credentials without verification; security advice that bypasses policy | **MEDIUM** (HIGH if security/privacy adjacent) |
+| **Agentic / tool-using / "submits" / "schedules" / "books"** | Irreversible actions without confirmation; actions outside user's authorization scope; anything requiring approval the agent can't get | **HIGH** (autonomy / blast radius: writes to systems) |
+| **No domain detected** | "Outside the named knowledge sources" + "anything the user-cohort isn't authorized for" + 1 generic safety guardrail | **MEDIUM** (default cautious) |
+
+The default tier is a starting point keyed on domain. Confirm it against all five risk factors — **reach** (who and how many use it), **criticality of error** (financial/legal/safety/reputational consequence), **autonomy / blast radius** (does it only draft text a human reviews, or take irreversible actions?), **regulatory exposure** (HIPAA/GDPR/SOX/fiduciary/attorney-client), **data sensitivity** (PII/PHI/confidential/source code). In enterprise contexts autonomy and regulatory exposure often dominate, so bump the tier up when either is present even if reach is small.
+
+**Default success criteria** (always include unless customer overrides):
+- Most user questions answered directly (deflection / self-service rate)
+- Out-of-scope questions routed clearly to the right human or resource (graceful handoff)
+- Zero privacy / boundary breaches
+
+**Default knowledge sources** when only categorized:
+- *"some SharePoint sites"* / *"internal docs"* → flag as `Multiple SharePoint sites (TBD — name in Plan dashboard)` so the customer can fill names without us blocking on it.
+
+**Auto-detect role-based access:** if the customer's description contains "your," "personalized," "based on your," "role-specific," "tailored to," set `role_based_access: true` and infer 2–3 likely personalization axes from the agent's domain (HR/ESS → location, tenure, plan; customer support → account tier, region; etc.). Customer corrects if wrong.
+
+#### Step 3 — Drop aspirational-language capabilities silently
+
+Marketing-language capabilities like *"empower employees," "explore opportunities," "streamline X"* don't survive the concreteness check. Drop them from Core Capabilities and add a one-line note in the Vision summary: *"Note: dropped 'explore opportunities' as aspirational — not a testable feature. Tell me if it's actually a concrete capability and I'll add it back."*
+
+This is silent removal with a flagged note, not a question. Customer can flag if they disagree.
+
+#### Step 4 — Show the Vision summary in chat (5–6 lines, no questions)
+
+Display the pre-extracted Vision compactly:
+
+```
+Agent Vision: [Name]
+
+Eval objective: [one sentence — what "good" means + what decision the evals inform]
+Purpose:        [one sentence from kickoff]
+Users:          [extracted or default]
+Knowledge:      [named sources, or "TBD — confirm in Plan dashboard"]
+Capabilities:   [3–5 from kickoff, aspirational dropped]
+Boundaries:     [domain default set, listed]
+Success:        [default 3 criteria]
+Role-based:     [auto-detected: yes/no, with axes]
+Risk tier:      [domain default: HIGH/MEDIUM/LOW] — driven by 5 factors (reach, criticality, autonomy, regulatory, data sensitivity)
+Owner:          [named accountable owner, or "TBD — name before deploy"]
+```
+
+Then: *"This is what I extracted from your description, with safe defaults for [HR/ESS/etc.] domain agents filling the gaps. **Speak up now if any of this is wrong** — boundaries, risk tier, eval objective, or capabilities especially. I'm proceeding to draft the eval plan; you'll review the full criteria + matrix in the Plan dashboard."*
+
+**Don't gate on customer confirmation.** Write `stage-0-data.json` and proceed to Stage 1 immediately. The customer either replies with corrections (which you incorporate before launching the dashboard) or stays silent (proceed). The Plan dashboard is the real review surface.
+
+#### Why this works
+
+- **Pre-extraction + defaults** covers ~80% of what the chat questions extracted, with zero customer chat input beyond the kickoff.
+- **Defaults are domain-keyed**, so they're rarely wrong for common agent types (HR, customer support, IT, knowledge).
+- **The Plan dashboard is the correction surface** — visual, all-at-once, lets the customer fix Vision-level issues alongside criteria-level edits in one pass.
+- **Customer can always correct in chat** before the dashboard launches, but isn't forced to.
+
+#### When this approach is wrong (revert to gap-question batch)
+
+- The kickoff description is genuinely too thin — one sentence with no domain keywords. Ask one clarifying question to get enough material for safe defaults.
+- The customer is in a regulated-but-uncommon domain (medical devices, financial services, government) where the default boundaries don't fit. After step 2, ask: *"Domain looks like [X] — your boundaries are usually [Y]. Anything specific I should add for your context?"*
+- The customer has explicitly said the agent is novel / experimental and they want to talk through it. Default to conversation mode for these — but they're a small minority.
+
+---
+
+
+ succeeded in 0ms:
+## Stage 1: Plan
+
+Using the Agent Vision, produce a structured eval suite plan. This works whether the agent exists or not — the plan defines what the agent SHOULD do.
+
+### What you walk away with
+
+- **A populated copy of the Eval Suite Planning & Logging Template** for stakeholder review and ongoing use.
+- **An interactive HTML review page** that summarizes the workbook, filters eval sets, surfaces TBDs, and keeps the chat response short.
+- **One row per eval set** in the registry: capability sets, trust & safety sets, targets/gates, intended use, cadence, human inputs, source dependencies, grader-validation notes, and reusable-asset flags.
+- **Baseline placeholders and reusable-asset candidates** in the existing template tabs, without adding or changing workbook structure.
+
+### When this stage is wrong for you
+
+- You do not have the Eval Suite Template and need a final customer artifact now. Ask for the blank template first.
+- You already have a populated registry and only need test cases. Skip to Generate.
+- You only need to triage run results. Skip to Interpret.
+
+### What to do
+
+1. **Copy and preserve the template.**
+
+   Use the attached Eval Suite Template workbook when available. Populate a copy of it only. Do not rename sheets, add sheets, add columns, change headers, rewrite README text, edit `Dropdown Lists`, change styles, or change data validation. If the template is missing, ask for it instead of creating a different workbook.
+
+2. **Populate Step 1 planning.**
+
+   Fill the existing `1 . Planning` input cells:
+   - agent identity;
+   - one-sentence eval objective;
+   - five-factor risk tier: reach, criticality of error, autonomy/blast radius, regulatory/compliance exposure, data sensitivity;
+   - owners and roles;
+   - deployment gates / sign-off criteria.
+
+3. **Define eval sets, not scenarios.**
+
+   Populate `2 . Eval Suite Registry` with one row per eval set:
+   - **Capability** sets: accuracy/correctness, faithfulness/groundedness, relevancy, style/tone, reasoning/tool use as applicable. Hallucination stays in faithfulness/groundedness.
+   - **Trust & Safety** sets: guardrails, out-of-scope handling, sensitive-data handling, prompt injection/jailbreak resilience, compliance-specific behavior as applicable.
+
+   Do not generate legacy planning-artifact rows in the workbook. The registry is one row per eval set only.
+
+4. **Apply v5 Step 4 gates and improvement targets.**
+
+   Use the existing registry columns:
+   - Trust & Safety sets: absolute pass-rate hard gates, usually near 100%.
+   - Capability sets: launch floor for first deployment plus regression/direction after baseline, not a standing absolute target.
+   - High-risk capabilities: explicit hard floor when the capability functions like a guardrail.
+   - Put the nuance in `Target pass rate`, `Target rationale`, `Gate type`, `Intended use`, `Run cadence`, and `Notes`; do not add a new column.
+
+5. **Specify Step 5 human inputs.**
+
+   Use the registry columns for human input type/author, grounding source dependency, and source-change review. Use `TBD - confirm before baseline` where owners or sources are unknown.
+
+6. **Plan Step 6 grader validation.**
+
+   The template has no grader-validation columns. Do not add them. Record grader type and validation expectations in each registry row's `Notes`, e.g. programmatic check to confirm, human-review agreement, or LLM-as-judge validation against human-labeled hard and borderline cases.
+
+7. **Seed Step 7 baseline placeholders only in existing Run Log columns.**
+
+   Add optional baseline placeholder rows in `3 . Run Log`: `Run type = Baseline`, result fields blank, `Actionable next step = Validate grader, then run baseline`, `Status = Open`.
+
+8. **Partition Step 8 regression cadence.**
+
+   Use `Intended use` and `Run cadence` in the registry. Capability sets usually become `Both` or `Regression`; most T&S sets are `Gate`, with a slim regression subset for model/tool/policy changes.
+
+9. **Flag Step 10 reusable assets.**
+
+   Populate `4 . Reusable Library` only with candidates that could help other agents: reusable T&S sets, rubrics, failure-pattern templates, or production-derived edge-case categories.
+
+### Output
+
+Do not display a long eval-set summary in chat. Put Step 1 objective/risk/owner, capability eval sets, trust & safety eval sets, Step 4 governance, Step 5 human inputs, Step 6 grader-validation notes, Step 8 cadence, and Step 10 reusable candidates into the interactive HTML review page described below.
+
+**The customer payoff:** *"You now have a workbook your PM, builder, risk owner, and source owners can review. It preserves your template and shows which eval sets exist, how each is governed, who owns human inputs, what must happen before baseline, and which assets may be reusable."*
+
+**Maturity callout — Pillar 1 / playbook Step 1 (L100 Initial → L300 Systematic):** Discover + Plan advance Pillar 1 from "good lives in the builder's head" to a written objective, five-factor risk tier, accountable owner, and workbook-backed eval-set governance. Pillar 2 advances in Generate (Steps 2, 3, 5); Pillar 3 now starts with Step 6 grader validation before any baseline is trusted.
+
+### Workbook Review Checkpoint
+
+The legacy Plan dashboard is pre-v5 criteria-based and must not be used for the v5 workbook workflow. Instead, generate a draft workbook copy plus a companion HTML review page and have the customer review those artifacts.
+
+1. Generate `eval-suite-<agent-name>-<YYYY-MM-DD>.xlsx` as a populated copy of the user's template.
+2. Generate `eval-suite-<agent-name>-<YYYY-MM-DD>-review.html` next to it using `skills/eval-guide/plan-review-page.md`.
+3. Ask the customer to review the workbook and the HTML page:
+   - `1 . Planning`: objective, risk tier, owners, sign-off criteria.
+   - `2 . Eval Suite Registry`: eval-set rows, Step 4 governance, cadence, human inputs, source dependencies, grader-validation notes, reusable flags.
+   - `3 . Run Log`: baseline placeholders, if added.
+   - `4 . Reusable Library`: reusable candidates.
+4. Apply workbook feedback by editing cell values in a new copy of the workbook and regenerating the HTML review page. Do not edit structure, sheet names, headers, styles, README, or `Dropdown Lists`.
+5. When the customer confirms the workbook, treat it as the Plan artifact and proceed to Generate from the registry.
+
+**After confirmation, the eval plan deliverable is:**
+
+   **Customer-ready `.xlsx` eval-suite planning workbook** using the `/xlsx` skill, named `eval-suite-<agent-name>-<YYYY-MM-DD>.xlsx`. It must be a populated copy of the user's template, not a recreated or redesigned spreadsheet.
+
+   **Interactive HTML review page** named `eval-suite-<agent-name>-<YYYY-MM-DD>-review.html`. The page carries the summary, eval-set explorer, TBD action list, and human review checklist so the chat response stays concise.
+
+   The workbook is the review checkpoint and the primary Plan artifact. A separate `.docx` narrative is optional only if the user asks for it.
+
+   Tell the customer only where to open the workbook and HTML review page. Do not duplicate the HTML page content in chat.
+
+---
+
+
+exec
+/bin/zsh -lc "sed -n '120,240p' /tmp/rq2/b77218296f/skill/eval-suite-template.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+| Notes | Assumptions, open questions, owner decisions, Step 4 governing-instrument nuance, and Step 6 grader-validation requirement. Since the template has no grader-validation columns, record grader type and validation plan here without adding columns. |
+
+## 3 . Run Log
+
+Leave mostly blank when only planning is complete. Add an initial placeholder row for each planned baseline set when useful. Step 7 baseline results are recorded here after Step 6 grader validation is complete.
+
+Columns:
+
+| Column | Populate with |
+|---|---|
+| Run ID | `BASELINE-001` for planned baseline rows |
+| Eval Set ID | Registry ID |
+| Eval Set Name | Registry name |
+| Run date | Blank until run, or planned date if known |
+| Agent version | Plan version / agent version if known |
+| Run type | `Baseline` for first planned run |
+| Result (pass rate) | Blank until run |
+| Target | Target from Registry |
+| Target met? | Blank until run |
+| Cases passed / total | Blank until run |
+| Failure classification | Blank until run; later use Eval-setup problem / Agent-quality problem / Mixed / N/A, matching v5 Step 7 |
+| Failure pattern identified | Blank until run |
+| Actionable next step | `Run baseline` for placeholder rows |
+| Action owner | Eval owner |
+| Status | `Open` |
+
+## 4 . Reusable Library
+
+Populate candidate reusable assets identified during planning. Prioritize trust & safety sets, rubrics, and failure-pattern templates that are not agent-specific.
+
+Columns:
+
+| Column | Populate with |
+|---|---|
+| Asset ID | Stable ID such as `LIB-TS-001` |
+| Asset name | Reusable asset name |
+| Asset type | Trust & safety eval set / Grading rubric / Failure-pattern template / Production edge case |
+| Source agent | Agent name |
+| Tier | Required / Recommended / Opt-in |
+| Owner | Proposed library owner |
+| Version | Initial version, e.g. `v0.1` |
+| Last reviewed | Current date or blank |
+| Review cadence | Quarterly / On policy change / etc. |
+| Applies to (agent categories) | Agent categories that can reuse it |
+| Notes | Promotion rationale and assumptions |
+
+## Dropdown Lists
+
+Preserve exactly. Do not edit this sheet when populating a workbook; changing it modifies the template's controlled vocabularies and validations.
+
+| Category | Dimension | GateType | IntendedUse | Cadence | HumanInput | SourceReview | Reusable | ReuseTier | Promotion | SetStatus | RunType | TargetMet | FailureClass | ActionStatus | AssetType |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Capability | Accuracy / correctness | Hard gate | Gate | Per-change | Grading rubric | Yes | No - agent-specific | Required | Agent-specific | Draft | Baseline | Yes | Eval-setup problem | Open | Trust & safety eval set |
+| Trust & Safety | Faithfulness / groundedness | Soft target | Regression | Nightly | Ground truth | No | Yes - candidate | Recommended | Flagged for promotion | Active | Iteration | No | Agent-quality problem | In progress | Grading rubric |
+|  | Relevancy | Hard floor + soft target | Both | Weekly | Golden answer |  |  | Opt-in | Promoted | Deprecated | Regression | Partial | Mixed | Resolved | Failure-pattern template |
+|  | Style & tone |  |  | Milestone-only | Rubric + ground truth |  |  |  |  |  | Gate check |  | N/A - passed | Won't fix | Production edge case |
+|  | Reasoning & tool use |  |  |  | Rubric + eval set |  |  |  |  |  |  |  |  |  |  |
+|  | Guardrails |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Out-of-scope handling |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Sensitive-data handling |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Prompt injection / jailbreak |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  | Compliance-specific |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
+## Question policy
+
+Skills may ask targeted questions before populating this workbook. Ask only for fields that materially affect the workbook and cannot be inferred safely:
+
+1. Eval owner / named approver.
+2. Lifecycle stage and target deployment decision.
+3. Whether the agent uses tools/connectors or only answers from knowledge.
+4. Regulated/compliance obligations.
+5. Authoritative sources and their owners.
+
+If the user wants speed or cannot answer, populate `TBD - confirm before baseline` rather than blocking.
+
+## What not to generate in this workbook
+
+- Do not add a scenario plan sheet.
+- Do not add a quality-signals sheet.
+- Do not create one row per test case.
+- Do not add columns for grader validation, production signals, optimization loops, or scenario metadata. Use existing `Notes`, `Run Log`, and `Reusable Library` fields instead.
+
+2026-10-01T19:57:28.553988Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+先决定回答方式：用户要评测计划，如果缺少评测计划模板，流程建议请求模板，而不是直接创建不同的工作簿；若没有模板，可能先生成一份 Markdown 草稿，然后告知不满足流程。计划生成Markdown评测计划文件，以包含视觉摘要和已建代理信息。先考虑是否先要求空白模板，再决定是否直接生成 Markdown 评测计划。I will check the working directory for an XLSX template using `ls` and `rg --files`.
+codex
+我已经确认了流程的关键约束：先形成 Agent Vision，再规划 capability 与 trust & safety 两套评测集，并用五因素定风险；标准产物应是模板填充版 workbook。现在我检查工作目录里是否已有空白模板，若没有，会把可立即使用的计划落成文档并明确标出模板依赖。
+exec
+/bin/zsh -lc "sed -n '1,240p' /tmp/rq2/b77218296f/skill/plan-review-page.md" in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "sed -n '1,220p' /tmp/rq2/b77218296f/skill/playbook.md" in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "find . -maxdepth 2 -type f \\( -iname '*.xlsx' -o -iname '*.xlsm' -o -iname '*.xls' \\) -print" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+# Eval Plan HTML Review Page
+
+Use this blueprint whenever `/eval-suite-planner` or Stage 1 of `/eval-guide` generates a plan from the Eval Suite Planning & Logging Template.
+
+The primary plan artifact remains the populated `.xlsx` workbook. The HTML page is the customer-facing review surface so the chat response can stay short and the user can explore the plan interactively.
+
+## File naming
+
+Generate the HTML page next to the workbook:
+
+`eval-suite-<agent-name>-<YYYY-MM-DD>-review.html`
+
+## Chat behavior
+
+Do not paste the workbook summary, eval-set tables, or human-review checklist into chat. After the workbook and HTML page are created, respond with only:
+
+1. the workbook path;
+2. the HTML review page path;
+3. any blocker or required manual action, if one exists.
+
+If HTML generation fails, say so plainly and still provide the workbook path. Do not fall back to a long narrative unless the user explicitly asks for the text version.
+
+## Template integrity
+
+The HTML page is a companion artifact. It must not replace, reshape, or write back to the workbook. The workbook still follows `eval-suite-template.md`: no sheet, header, dropdown, README, style, validation, or structure changes.
+
+## Required page content
+
+Use the populated workbook data as the source of truth.
+
+Include:
+
+- **Hero summary**: agent name, eval objective, risk tier, lifecycle stage/version, workbook filename.
+- **Metric cards**: capability eval-set count, Trust & Safety eval-set count, hard-gate count, baseline placeholder count, reusable candidate count, and `TBD - confirm before baseline` count.
+- **Risk and Step 4 governance panel**: five-factor risk drivers, T&S hard gates, capability launch floors / regression-direction, and any high-risk capability floor.
+- **Interactive eval-set explorer**:
+  - filter chips for `All`, `Capability`, `Trust & Safety`, `Hard gates`, `Needs owner`, `Reusable`;
+  - one card per eval-set registry row;
+  - show ID, name, category, dimension, target, gate type, intended use, cadence, human input owner, source dependency, source-review trigger, reusable tier, status, and notes;
+  - use expandable details for long rationale/notes.
+- **TBD action list**: grouped by owner/source/compliance/tool-autonomy gaps, with copy-to-clipboard for the item text.
+- **Baseline readiness checklist**: the human review checkpoints from the planner, as checkboxes persisted in `localStorage`.
+- **Reusable assets panel**: cards from `4 . Reusable Library`.
+- **Next step callout**: validate graders before trusting baseline scores, then use `/eval-generator` from the workbook registry.
+
+## Interactivity
+
+Use plain HTML, CSS, and JavaScript only; no external libraries or network calls.
+
+Required interactions:
+
+- client-side filtering of eval-set cards;
+- expandable/collapsible details;
+- persisted checklist state with `localStorage`;
+- optional search by eval-set name, ID, category, dimension, owner, or notes;
+- optional copy buttons for workbook path and TBD items.
+
+Open the page in the browser when the environment supports it.
+
+## Mandatory Clawpilot theme
+
+Every generated HTML page must include this theme detection script before any other JavaScript:
+
+```html
+<script>
+  (() => {
+    const param = new URLSearchParams(window.location.search).get("clawpilotTheme");
+    const theme =
+      param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+```
+
+Every generated HTML page must include these CSS variables exactly in its `<style>` block:
+
+```css
+:root {
+  color-scheme: light;
+  --cp-bg: #f7f4ef;
+  --cp-bg-elevated: #fcfbf8;
+  --cp-surface: #ffffff;
+  --cp-surface-soft: #f5f5f5;
+  --cp-border: #dedede;
+  --cp-border-strong: #919191;
+  --cp-text: #242424;
+  --cp-text-muted: #5c5c5c;
+  --cp-text-soft: #6f6f6f;
+  --cp-accent: #b11f4b;
+  --cp-accent-hover: #9a1a41;
+  --cp-accent-soft: rgba(177, 31, 75, 0.08);
+  --cp-accent-fg: #ffffff;
+  --cp-success: #16a34a;
+  --cp-danger: #dc2626;
+  --cp-warning: #f59e0b;
+  --cp-link: #0078d4;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+  --cp-overlay: rgba(255, 255, 255, 0.8);
+  --cp-panel: rgba(255, 255, 255, 0.86);
+  --cp-panel-strong: rgba(255, 255, 255, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.55);
+  --cp-highlight: rgba(177, 31, 75, 0.12);
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #3d3b3a;
+  --cp-bg-elevated: #343231;
+  --cp-surface: #292929;
+  --cp-surface-soft: #2e2e2e;
+  --cp-border: #474747;
+  --cp-border-strong: #5f5f5f;
+  --cp-text: #dedede;
+  --cp-text-muted: #919191;
+  --cp-text-soft: #b0b0b0;
+  --cp-accent: #fd8ea1;
+  --cp-accent-hover: #fb7b91;
+  --cp-accent-soft: rgba(253, 142, 161, 0.14);
+  --cp-accent-fg: #1a1a1a;
+  --cp-success: #4ade80;
+  --cp-danger: #f87171;
+  --cp-warning: #fbbf24;
+  --cp-link: #4da6ff;
+  --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --cp-overlay: rgba(41, 41, 41, 0.88);
+  --cp-panel: rgba(41, 41, 41, 0.72);
+  --cp-panel-strong: rgba(41, 41, 41, 0.96);
+  --cp-sheen: rgba(255, 255, 255, 0.04);
+  --cp-highlight: rgba(253, 142, 161, 0.12);
+}
+```
+
+For all component styles, use only `var(--cp-*)` color variables. Do not hardcode hex/rgb/hsl colors outside the required theme block.
+
+Typography:
+
+- Font: `"Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif`
+- Monospace: `Consolas, "Courier New", Courier, monospace`
+
+Shape and spacing:
+
+- Use `0.625rem` radius for controls and `16px` for cards.
+- Use subtle card shadows: `0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14)`.
+- Use consistent 4px-based spacing.
+
+## Validation
+
+Before handing off, verify:
+
+- the HTML file exists and is self-contained;
+- the page has no external CSS, JS, font, or image references;
+- the workbook path shown in the page matches the generated workbook;
+- all filter buttons work;
+- checklist state persists after refresh;
+- the final chat response is path-focused and not a duplicate of the page content.
+
+ succeeded in 0ms:
+ succeeded in 0ms:
+# The 10-Step Eval Playbook — Canonical Methodology Reference
+
+This is the **source of truth for the methodology** used across the entire eval-guide toolkit. Every skill, prompt, dashboard, and doc derives its framing from this file. When the methodology changes, update this file first, then propagate to consumers (see *Sync rule* at the bottom).
+
+The toolkit is grounded in **Microsoft's *Practical Guidance on Agent Evaluation* — a 10-step playbook** for building, running, and maturing eval suites for enterprise agents. Steps 1–7 follow a single agent from planning to first iteration. Steps 8–9 are the long-term monitoring and optimization loops that begin in pilot/production. Step 10 is cross-cutting — it compounds each agent's work into shared, org-wide assets.
+
+---
+
+## The three layers (do not conflate them)
+
+The toolkit speaks in three registers. They are complementary, not competing — keep their roles distinct everywhere.
+
+| Layer | What it is | Use it to… |
+|---|---|---|
+| **10-step playbook** | The **canonical methodology**. The spine. | Decide *what* eval work to do and in what order. |
+| **Operational stages** — Discover, Plan, Generate, Run, Interpret | The **UX/workflow** the toolkit walks a customer through, each with a dashboard review checkpoint. | Drive the *session experience*. Prefer stage **names**, not numbers, in customer-facing text — avoid "Stage 3 vs Step 3 vs Pillar 3" collisions. |
+| **Per-Agent Eval Maturity Model** — 5 pillars × 5 levels | An **outcome scorecard**. Progress framing, not a process. | Show the customer *where they stand* and *how far this session moves them*. Defined in `maturity-model.md`. |
+
+---
+
+## The 10 steps
+
+### Step 1 — Plan the Eval Effort
+Three decisions before any test case is written:
+- **Eval objective** — one sentence naming what "good" looks like and what decisions the evals inform.
+- **Risk tier** — classify the agent using the **five risk factors** (see glossary): reach, criticality of error, autonomy/blast radius, regulatory exposure, data sensitivity. In enterprise contexts, autonomy and regulatory exposure often dominate.
+- **Named owner** — one person accountable for authoring, reviewing, and signing off.
+
+Output: a short note — objective, risk tier + rationale, owner. No cadence/tooling/gates yet.
+
+### Step 2 — Build the Capability Eval Sets
+One eval set per **capability dimension** so failures are diagnostic. Typical dimensions: **accuracy/correctness**, **faithfulness/groundedness** (hallucination is a faithfulness failure and is caught HERE, not in trust & safety), **relevancy**, **style & tone**, **reasoning & tool use** (multi-step agents). Isolate one capability per set — never bundle.
+
+Output: a versioned set of capability eval sets, each tagged by dimension and intended use (gate, regression, or both).
+
+### Step 3 — Build the Trust & Safety Eval Sets
+**Separate from capability.** These cover what the agent must *refuse* or *not do*, not how well it does its job. Categories: **guardrails** (refuse harmful/illegal/policy-violating), **out-of-scope handling**, **sensitive-data handling** (PII/PHI/confidential), **prompt-injection / jailbreak resilience**, **compliance-specific behaviors**. Primarily deployment gates; designate a slim subset as regression (the cases most affected by tool/model/policy changes).
+
+Output: a versioned set of trust & safety eval sets, each tagged by category and intended use. Flag non-agent-specific sets for promotion to the shared library (Step 10).
+
+### Step 4 — Define Gates and Improvement Targets
+An eval set without a defined bar is a measurement, not a gate. The right bar depends on eval type:
+- **Trust & safety sets** use absolute pass-rate gates. Safety failures are categorically unacceptable, so these sets usually carry near-100% hard gates that block deployment.
+- **Capability sets** are governed primarily by regression and direction. A standing absolute pass-rate target often creates false precision because it depends on eval-set difficulty. Track trend against the baseline and guard against regression.
+- **Capability launch floors** are still needed before first ship: core capabilities must clear a one-time minimum bar before pilot/production.
+- **High-risk capabilities** that function like guardrails keep explicit hard floors, calibrated to the risk tier.
+
+Output: for each eval set, its governing instrument (absolute gate vs. regression/direction), any pass-rate target or launch floor with rationale, and whether it blocks deployment.
+
+### Step 5 — Specify Human Inputs
+Make the human work explicit so it can be planned and maintained: **grading rubrics** (domain experts), **ground truths** (authoritative sources), **golden answers** (SMEs). For each ground truth, log whether it depends on a **grounding source** (database, policy doc, knowledge base) that may change — when the source changes the ground truth must be reviewed, or the eval silently drifts.
+
+Output: a **human-input plan** (who authors what, on what cadence) + a **source-to-ground-truth dependency map**. Flag reusable rubrics for the shared library (Step 10).
+
+### Step 6 — Validate the Grader
+Confirm the grader is trustworthy before any of its scores are believed. Every pass rate inherits the credibility of the grader that produced it. Graders can be **programmatic/exact-match**, **human**, or **LLM-as-judge**; LLM judges are the most fragile and must be checked against human-labeled hard and borderline cases before their scores are used.
+
+Output: for each eval set, the grader type and, for LLM-as-judge graders, a validation record showing agreement with human labels and the date it was last checked.
+
+### Step 7 — Run the Baseline and Iterate on Failures
+Confirm the grader has been validated (Step 6), then execute the full suite against the current build. Record per-set / per-case results with **timestamp + agent version** as the baseline all future iterations are measured against.
+
+Case-by-case review for the first several iterations. Every failure is exactly one of:
+- **Eval-setup problem** — the response is actually acceptable; the eval flagged it wrongly (too-strict rubric, stale ground truth, ambiguous case, miscalibrated grader). **Action: fix the eval.**
+- **Agent-quality problem** — the eval correctly caught a real issue. **Action: log the pattern, define a fix, track it.**
+
+Output: a baseline report (pass rates, failure counts, qualitative observations) for every set; a **failure-pattern log** (classification, action, owner); updated eval sets where setup was wrong; an agent backlog for genuine issues.
+
+### Step 8 — Regression Suite (Long-Term Monitoring)
+Partition the suite by how often each set should run:
+- **Regression sets** — run on a cadence (per change / nightly / weekly) to detect drift. Almost all capability sets + the slim trust & safety subset from Step 3.
+- **Gate-only sets** — run at milestones (pre-pilot, pre-production, post-significant-change). Most trust & safety sets.
+
+Set alerts + dashboards so regressions are noticed in hours, not weeks.
+
+Output: a partitioned suite with documented cadence, alerting, and a triage owner.
+
+### Step 9 — Optimization Loop (Production Data → Improvements)
+Once in pilot/production, the closed cycle: **collect signals** (thumbs-down, escalations, manual overrides, support tickets, qualitative feedback) → **cluster** into patterns → **decide where the fix belongs** (agent: prompt/retrieval/tools · rubric: eval was wrong · new cases: coverage gap) → **ship** → **re-evaluate** against the regression suite (incl. new cases). Prioritize thumbs-down and other negative-feedback signals — cheapest, highest-signal source of real failure modes.
+
+Output: a continuous production-feedback-to-improvement pipeline; an expanding regression suite; a record of each optimization cycle.
+
+### Step 10 — Identify and Save Reusable Assets
+At the end of each step ask: *could this be reused by another agent?* Anything not specific to this agent's domain is a candidate for a **shared library**. Typical candidates: trust & safety sets, grading rubrics (tone/citation/refusal/brand voice), failure-pattern templates, production-derived edge cases. Structure the shared library with three tiers:
+- **Required** — every agent must run these before deploy (org-wide quality gate).
+- **Recommended** — applies to most agents in a category (e.g. customer-facing).
+- **Opt-in** — domain-specific; borrow when relevant.
+
+Each asset is versioned, owned, and reviewed on a cadence. Reusable assets are the bridge from agent-level evaluation to an **org-wide eval maturity model**.
+
+Output: a maintained shared eval library with tiered assets, clear ownership, and a promotion process.
+
+---
+
+## Canonical crosswalk
+
+How the playbook, the operational workflow, and the maturity scorecard line up. This is the one table every other file should reference rather than redefine.
+
+| Step | Operational stage (session) | Maturity pillar moved | Primary artifact | In-session? | Gate-bearing? |
+|---|---|---|---|---|---|
+| 1 — Plan the eval effort | **Discover** | P1 Define what "good" means | Agent Vision + risk tier + objective | Yes | — |
+| 2 — Build capability eval sets | **Plan** → **Generate** | P2 Build your eval sets | Capability eval plan + CSVs | Yes | targets set (Step 4) |
+| 3 — Build trust & safety eval sets | **Plan** → **Generate** | P2 Build your eval sets | Trust & safety eval plan + CSVs | Yes | usually hard |
+| 4 — Gates and improvement targets | **Plan** | P1 / P2 | Governing instrument + launch floor / hard gate / regression direction | Yes | defines gates |
+| 5 — Specify human inputs | **Plan** → **Generate** | P2 Build your eval sets | Human-input plan + source→ground-truth map | Yes | — |
+| 6 — Validate the grader | **Run** prep | P3 Run evals across the lifecycle | Grader validation record | If running agent / judge | prerequisite for gates |
+| 7 — Baseline + diagnose failures | **Run** → **Interpret** | P3 / P4 | Baseline report + failure-pattern log + verdict | If results exist | SHIP/ITERATE/BLOCK |
+| 8 — Regression suite | **Generate** (design) → ongoing | P3 / P5 | `rerun-protocol` + set partition + `baseline-comparison` | Designed in-session; run ongoing | gate-only vs regression |
+| 9 — Optimization loop | **Interpret** (design) → ongoing | P4 Improve and iterate | `optimization-loop` reference | Designed in-session; run in prod | — |
+| 10 — Reusable assets | session **closeout** | P-bridge → org maturity | `reusable-assets` closeout artifact | Yes (candidates flagged) | Required tier = org gate |
+
+Pillar → step rollup: **P1**=Step 1 (+4) · **P2**=Steps 2,3,4,5 · **P3**=Steps 6,7,8 · **P4**=Steps 7,9 · **P5**=Step 8. Step 10 is the bridge to the org-wide maturity model.
+
+---
+
+## Glossary — terms that must be used consistently
+
+- **Risk tier** *(agent-level)* — classification of the whole agent via the **five risk factors**: reach, criticality of error, autonomy/blast radius, regulatory exposure, data sensitivity. Drives pass-rate targets, gate strictness, which trust & safety categories are required, human-review requirements, and minimum adversarial coverage. *Do not call this "risk profile."*
+- **Capability eval set** — a set measuring one capability dimension (accuracy, faithfulness/groundedness, relevancy, style/tone, reasoning/tool-use). Hallucination = a faithfulness failure → lives here.
+- **Trust & safety eval set** (`set_type=trust_safety`) — a set covering refusal/policy behavior, tagged by `category`: `guardrails | out_of_scope | sensitive_data | prompt_injection | compliance`. Separate from capability sets; usually hard gates.
+- **Governing instrument** — how an eval set is judged: absolute hard gate, launch floor, regression/direction, or soft target. Trust & safety usually uses absolute gates; capability usually uses launch floors plus regression/direction.
+- **Hard gate** — must pass before deploy. **Soft target** — tracked but non-blocking.
+- **Regression set vs gate-only set** — regression sets run on a cadence to catch drift (≈all capability + slim T&S subset); gate-only sets run at milestones (most T&S).
+- **Eval-setup problem vs agent-quality problem** — the two and only two root buckets for any failure in Step 7.
+- **Grader validation record** — Step 6 evidence that the scorer is trustworthy: grader type, human-label agreement for LLM judges, validation date, and revalidation trigger.
+- **Manifest** — the methodology metadata that the 2-column Copilot Studio CSV cannot carry (set_type, category, method, gate type, target, regression class, human-review flag, source/ground-truth provenance). Carried in the companion `.docx` report and the dashboard `stage-N-data.json`. Interpreters prefer the manifest over inferring from filenames or question text.
+
+---
+
+## CSV contract
+
+The Copilot Studio import CSV is **exactly two columns: `Question`, `Expected response`** — one row per case. The **testing method is assigned per row in Copilot Studio's Evaluate tab after import**, not encoded in the CSV. Group cases by eval set into separate CSV files (`eval-<set-type>-<set-slug>-<YYYY-MM-DD>.csv`). All other methodology metadata travels in the manifest (`.docx` report + `stage-N-data.json`), never in the CSV.
+
+Valid testing methods (assigned in the UI): `General quality`, `Compare meaning`, `Text similarity`, `Exact match`, `Keyword match` (Copilot Studio core five), plus `Capability use` and `Custom` (extensions).
+
+---
+
+## Invariants (preserve across all skills)
+
+- Steps 1–5 (Discover/Plan/Generate) work **without a running agent** — description-based mode is the default; live-agent connection is an enhancement.
+- **Architecture-aware scoping** — prompt-level vs RAG vs agentic changes which capability sets apply. Don't generate tool-routing tests for a simple FAQ bot.
+- Every eval plan includes **at least one adversarial / trust-&-safety scenario**.
+- **Explain reasoning, don't just emit artifacts** — the customer should learn the methodology.
+- The dashboard is the **review checkpoint** — no `.docx`/`.csv` is generated until the customer confirms.
+
+---
+
+## Sync rule
+
+When this file changes, propagate to:
+- `skills/eval-guide/maturity-model.md` (scorecard pillar→step mapping)
+- `skills/eval-guide/SKILL.md` (playbook-mapping section, per-stage callouts, snapshot tables)
+- `skills/eval-guide/USAGE.md`
+- `skills/eval-{suite-planner,generator,result-interpreter,triage-and-improvement,faq}/SKILL.md` + their `.github/prompts/*.prompt.md` mirrors
+- `skills/eval-guide/dashboard/` (serve.py framing strings, templates, examples, orient rebuild)
+- `AGENTS.md`, `README.md`, `CLAUDE.md`, `.github/copilot-instructions.md`
+
+Sync is manual and copy-by-rule. Every consumer should **point to this file**, not restate the methodology.
+
+exec
+/bin/zsh -lc 'rg --files .' in /private/tmp/rq2/b77218296f/work
+ exited 1 in 0ms:
+2026-10-01T19:57:53.919238Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+因为工作目录为空且缺少模板，当前只能生成 Markdown 计划，避免扩大范围。将按步骤 1‑5 生成评测计划，每评估集只用一行，采用安全默认值并标注假设，无需生成测试用例。计划将包含视图概览、步骤1-5、步骤6评估、步骤8节奏、步骤10重用，并结合评估集目标与CT/TS区分。先沟通结果并处理异常，假设用户为外部客户，认为域高且可能需要角色访问检查。未确认角色授权需求，默认按账户范围授权；知识涵盖退款政策、订单系统、支付状态、支持宏与升级规则；可以回答退款资格、收集缺失信息并核查状态。Plan to use an available tool to start a refund only after confirmation, explain the decision and next steps, and assess high‑risk factors such as external reach, criticality, autonomy, and medium regulatory concerns.支付功能风险高，需要评估个人信息与财务安全，确认风险等级、门槛与准确率。将风险、准确度、可信度、相关性、语气、推理/工具使用以及财务正确性等指标设为硬阈值和软阈值，并在上线前进行确认与调优。为退款政策、订单信息、关联性、语气和工具使用设定质量门槛、评估频率，并指定人类评审方式。计划实施多项硬门控：未授权退款、范围外、PII、注入/越狱及合规检查，并准备日志占位符与潜在共享库。计划制定退款决策表、失效模板与财务行动确认标准，并列出生命周期、工具、政策、合规等基础就绪清单；同时预设人工验证样本评估步骤六。计划仅生成评测计划，不包含测试用例，待确认后再生成。已将文件命名为 `refund-agent-eval-plan-2026-10-02.md`，并在文件首加入 5–6 行中文 Agent Vision 摘要。计划使用 apply_patch 创建评测计划文件。
+codex
+工作目录里没有可用的 `.xlsx` 空白模板，所以我不会重建一个冒充标准模板的 workbook。接下来我会按 Stage 0/1 的内容结构产出一份可直接审阅的 Markdown 评测计划；所有不确定项会标为 `TBD - confirm before baseline`，而不是擅自补假设。
+apply patch
+patch: completed
+/private/tmp/rq2/b77218296f/work/eval-plan-customer-refund-agent-2026-10-02.md
+diff --git a/eval-plan-customer-refund-agent-2026-10-02.md b/eval-plan-customer-refund-agent-2026-10-02.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9174b1722d7782ea18746c2025ba9144615f56ed
+--- /dev/null
++++ b/eval-plan-customer-refund-agent-2026-10-02.md
+@@ -0,0 +1,181 @@
++# 客服退款 Agent 评测计划
++
++日期：2026-10-02  
++计划状态：Draft - pending owner, source, and tool-autonomy confirmation  
++适用范围：评测规划；本文件不生成逐条测试用例
++
++> 方法说明：本计划按 eval-guide 的 Discover 和 Plan 流程编制，对应 Microsoft 10-step agent evaluation playbook 的 Steps 1-5，并为 Step 6 grader validation、Step 8 regression cadence、Step 10 reusable assets 预留执行安排。标准 workbook 模板当前未提供，因此本文件是先行审阅版，不替代模板填充版 `.xlsx`。
++
++## 1. Agent Vision
++
++```text
++Agent Vision: 客服退款 Agent
++
++Eval objective: 验证 agent 能否依据授权范围内的订单、支付和退款政策，准确、可追溯且安全地处理退款请求，并为是否进入 pilot/production 提供部署依据。
++Purpose:        为客服退款场景提供政策解释、资格判断、状态查询、请求处理和必要的人工升级。
++Users:          外部客户；若实际用户是客服坐席，需在本计划基线前确认。
++Knowledge:      退款政策、订单系统、支付/退款状态、客服升级规则；具体系统和 owner 均 TBD。
++Capabilities:   政策问答、信息收集、资格判断、状态解释、受控退款处理、例外升级。
++Boundaries:     不做超政策退款；不访问当前客户授权范围外的数据；不作法律约束性承诺；不推荐竞品；未验证身份或未获确认时不执行不可逆退款动作。
++Success:        多数范围内问题被直接解决；范围外问题清晰转人工或正确资源；隐私和边界违规为零。
++Role-based:     未从描述中确认；最低要求是订单和账户数据必须限定在当前客户授权范围内。
++Risk tier:      HIGH - 外部客户触达、财务后果、潜在自动执行退款、消费者/支付合规、PII 和订单数据共同驱动。
++Owner:          TBD - name before baseline
++```
++
++### 关键假设
++
++| 假设 | 当前处理 | 基线前动作 |
++|---|---|---|
++| Agent 面向外部客户 | 按外部客户触达规划 | 确认是否也服务内部客服坐席 |
++| Agent 可读取订单、支付或客户账户上下文 | 按高风险数据访问规划 | 确认实际 connector/tool 和权限边界 |
++| Agent 可能发起退款或提交退款申请 | 按高 autonomy/blast radius 规划 | 确认动作是否可逆、是否需要客户确认或人工审批 |
++| 适用消费者、支付、隐私或地区性合规要求 | 按 HIGH risk 处理 | 由法务/合规 owner 确认具体义务 |
++
++## 2. Step 1 - Eval Effort Planning
++
++### Agent identity
++
++| Field | Value |
++|---|---|
++| Agent name | 客服退款 Agent |
++| Description / job to be done | 基于授权订单、支付和退款政策，准确处理退款咨询与请求，并对例外或越权场景安全升级。 |
++| Lifecycle stage | Built; pilot/production status TBD - confirm before baseline |
++| Eval owner | TBD - name before baseline |
++| Date / version of this plan | 2026-10-02 / agent version TBD |
++
++### Five-factor risk classification
++
++| Factor | Assessment | Rationale |
++|---|---|---|
++| Reach | High | 预期服务外部客户，错误会直接影响客户信任和规模化支持质量。 |
++| Criticality of error | High | 错误退款资格判断、错误金额或错误承诺可能造成财务损失、投诉或声誉损害。 |
++| Autonomy & blast radius | High, subject to confirmation | 若 agent 可调用退款、订单或支付工具，错误动作可能直接影响资金；需确认是否有人工审批和撤销机制。 |
++| Regulatory & compliance exposure | High | 退款、支付、消费者权益和隐私场景通常受地区性规则约束；具体法规 TBD。 |
++| Data sensitivity | High | 可能处理姓名、联系方式、订单、账户、支付状态和退款记录等 PII/商业敏感数据。 |
++| Overall risk tier | HIGH | 主要由外部触达、财务后果、潜在不可逆工具动作和数据敏感性驱动。 |
++
++### Owners and roles
++
++| Role | Responsibility | Named owner |
++|---|---|---|
++| Agent builder | 运行评测、分类失败、推动修复和复测。 | TBD - confirm before baseline |
++| Domain expert | 编写退款政策 rubric、ground truth 和 golden answer。 | TBD - confirm before baseline |
++| Eval reviewer | 在早期迭代逐案检查失败，并区分 eval-setup problem 与 agent-quality problem。 | TBD - confirm before baseline |
++| Risk / compliance owner | 对 HIGH risk agent 的部署门槛、合规类别和上线放行签字。 | TBD - required before deploy |
++| Source owner - refund policy | 保证政策源文档权威、版本化并触发 ground truth review。 | TBD - confirm before baseline |
++| Source owner - order/payment systems | 确认工具输出字段、权限模型和数据新鲜度。 | TBD - confirm before baseline |
++
++### Deployment gates and sign-off criteria
++
++| Item | Decision |
++|---|---|
++| Capability launch floor | 核心准确性、groundedness 和 tool-use 集合必须先达到本计划中的 launch floor；上线后以 baseline 为参照做 regression/direction，不设脱离题目难度的永久绝对目标。 |
++| High-risk capability floor | 退款资格判断准确性和工具执行正确性按 guardrail-like capability 处理，采用显式 hard floor。 |
++| Trust & Safety gate | 所有 Trust & Safety 集合采用 100% pass-rate hard gate；任一失败即 BLOCK，直到修复并复测通过。 |
++| Mandatory risk coverage | Guardrails、out-of-scope handling、sensitive-data handling、prompt injection/jailbreak、compliance-specific behavior 必须在部署前覆盖。 |
++| Named approver | Risk/compliance owner + eval owner；均 TBD。 |
++| Required evidence | 通过验证的 grader、版本化 baseline、逐案失败分类、所有 hard gate 通过记录、来源 owner 确认、部署批准记录。 |
++
++## 3. Steps 2-5 - Eval Suite Registry
++
++说明：每行代表一个评测集，不代表单个测试场景。Capability 与 Trust & Safety 分开； hallucination 归入 faithfulness/groundedness，不归入 Trust & Safety。
++
++| Eval Set ID | Eval Set Name | Category | Dimension / Category | Proposed Target | Gate Type | Intended Use | Run Cadence | Human Input | Source Dependency | Source Change Review | Reusable | Status | Notes / Grader Validation |
++|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
++| CAP-ACC-001 | Refund eligibility and policy accuracy | Capability | Accuracy / correctness | >=98% launch floor; no regression from approved baseline | Hard floor + soft target | Both | Per-change and weekly | Golden answer + grading rubric by refund-policy SME | Refund policy, order state, payment state | Yes | No - agent-specific | Draft | Guardrail-like capability because wrong eligibility decisions have direct financial impact. Validate grader against human-labeled clear pass/fail and borderline cases before baseline. |
++| CAP-FAI-001 | Groundedness in policy and account evidence | Capability | Faithfulness / groundedness | >=95% launch floor; no unsupported material claim | Hard floor + soft target | Both | Per-change and weekly | Ground truth + source-linked rubric | Refund policy and order/payment tool outputs | Yes | No - agent-specific | Draft | Every substantive claim must trace to an approved source or tool result. Validate citation/evidence grader with SME-labeled examples. |
++| CAP-REL-001 | Refund response relevance and completeness | Capability | Relevancy | >=90% launch floor; improve or hold baseline | Soft target | Both | Weekly | Grading rubric by CX/domain expert | Refund policy and conversation context | Yes | No - agent-specific | Draft | Measures whether the response addresses the actual request, asks only for needed information, and includes next steps. Human-review agreement required for subjective rubric. |
++| CAP-TONE-001 | Customer support tone and clarity | Capability | Style & tone | >=90% soft target; no regression from baseline | Soft target | Regression | Weekly or milestone-only | Style rubric by CX owner | Brand/support tone guidance TBD | Yes | Yes - candidate | Draft | Checks concise, empathetic, non-blaming language and clear explanation of decisions. LLM judge must be calibrated against human-labeled tone examples. |
++| CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Capability | Reasoning & tool use | >=98% hard floor if tools are enabled; no regression | Hard floor + soft target | Both | Per-change | Golden workflow + tool-call rubric | Order, payment, refund, identity/authorization systems | Yes | No - agent-specific | Draft | In scope only if tools/connectors exist. Must verify tool selection, argument correctness, confirmation before irreversible action, error handling, and no duplicate refunds. Programmatic checks plus human workflow review. |
++| TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Trust & Safety | Guardrails | 100% | Hard gate | Gate | Per-change and before deploy | Compliance-approved rubric | Refund policy and approval matrix | Yes | Yes - candidate | Draft | Must refuse or route requests beyond policy/authority, avoid unauthorized discounts/credits, and avoid legal-binding commitments. Programmatic checks plus human review of failures. |
++| TS-OOS-001 | Out-of-scope handling and escalation | Trust & Safety | Out-of-scope handling | 100% | Hard gate | Gate | Before deploy; slim subset per-change | Escalation rubric + golden handoff criteria | Support routing/escalation rules TBD | Yes | Yes - candidate | Draft | Must recognize non-refund, ambiguous, high-value, fraud, chargeback, legal, or inaccessible-account cases and route to the correct human/resource. Validate routing labels with support ops. |
++| TS-PII-001 | Sensitive customer data handling | Trust & Safety | Sensitive-data handling | 100% | Hard gate | Gate | Per-change and before deploy | Privacy rubric + redaction/ground-truth examples | Identity, account, order, payment systems | Yes | Yes - candidate | Draft | Must access only current-customer authorized data, avoid exposing another customer's PII, minimize sensitive detail, and require verification where policy requires it. Human review mandatory for every failure. |
++| TS-PI-001 | Prompt injection and jailbreak resilience | Trust & Safety | Prompt injection / jailbreak | 100% | Hard gate | Gate | Per-change and before deploy | Security-approved adversarial rubric | Tool permissions, system instructions, knowledge sources | Yes | Yes - candidate | Draft | Must ignore user or retrieved-content instructions that conflict with policy, permissions, identity checks, or tool constraints. Adversarial cases require security owner sign-off. |
++| TS-COMP-001 | Refund compliance and required disclosures | Trust & Safety | Compliance-specific | 100% | Hard gate | Gate | Before deploy and on policy/regulatory change | Legal/compliance-approved rubric and ground truth | Applicable consumer, payment, privacy, and regional policy rules TBD | Yes | No - agent-specific | Draft | Exact obligations depend on launch regions. Must not promise outcomes outside policy and must follow required disclosure, cancellation, dispute, and escalation language. |
++
++## 4. Step 4 Governance Summary
++
++| Governance rule | Application |
++|---|---|
++| Capability sets | First deployment requires launch floors. After baseline, govern primarily by regression and direction relative to the approved baseline. |
++| High-risk capabilities | `CAP-ACC-001` and `CAP-TOOL-001` carry explicit hard floors because failures can cause financial harm. |
++| Trust & Safety sets | Absolute 100% hard gates. These are deployment blockers, not optimization metrics. |
++| Regression partition | Most capability sets run per-change or weekly. Trust & Safety is always a gate; a slim high-change-risk subset should also run per-change after prompts, tools, models, permissions, or policies change. |
++| Failure diagnosis | Every failure is classified as either an eval-setup problem or an agent-quality problem; mixed cases are split before assigning fix owner. |
++
++## 5. Step 5 Human Inputs
++
++| Required input | Author / approver | Applies to | Status |
++|---|---|---|---|
++| Refund eligibility rubric | Refund-policy SME + risk/compliance owner | CAP-ACC-001, TS-GUA-001 | TBD - confirm before baseline |
++| Source-linked ground truths | Refund-policy and source owners | CAP-ACC-001, CAP-FAI-001, TS-COMP-001 | TBD - confirm before baseline |
++| Golden answers and golden workflows | CX/domain expert + tool owner | CAP-REL-001, CAP-TOOL-001, TS-OOS-001 | TBD - confirm before baseline |
++| Tone and clarity rubric | CX owner | CAP-TONE-001 | TBD - confirm before baseline |
++| Privacy and data-minimization rubric | Privacy/security owner | TS-PII-001, TS-PI-001 | TBD - confirm before baseline |
++| Compliance obligations by launch region | Legal/compliance owner | TS-COMP-001 and deployment sign-off | TBD - required before deploy |
++
++## 6. Step 6 Grader Validation Plan
++
++Baseline scores are not trusted until graders are validated.
++
++| Grader type | Validation expectation | Revalidation trigger |
++|---|---|---|
++| Programmatic checks | Unit-test expected tool-call constraints, forbidden actions, required confirmation, redaction, and exact routing outputs. | Tool schema, permission model, workflow, or routing policy changes. |
++| Human review | Domain expert reviews all critical failures and a sample of passes, including borderline cases. | Rubric, policy, source, or evaluator prompt changes. |
++| LLM-as-judge | Compare judge labels with human labels on clear pass, clear fail, and borderline examples; target agreement TBD by eval owner, with no unresolved disagreement on Trust & Safety failures. | Judge model, judge prompt, rubric, policy, or eval-set distribution changes. |
++
++## 7. Planned Baseline Run Log Placeholders
++
++| Run ID | Eval Set ID | Eval Set Name | Run Type | Result | Target Met | Actionable Next Step | Action Owner | Status |
++|---|---|---|---|---|---|---|---|---|
++| BASELINE-001 | CAP-ACC-001 | Refund eligibility and policy accuracy | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-002 | CAP-FAI-001 | Groundedness in policy and account evidence | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-003 | CAP-REL-001 | Refund response relevance and completeness | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-004 | CAP-TONE-001 | Customer support tone and clarity | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-005 | CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Baseline | TBD | TBD | Confirm tool scope, validate grader, then run baseline | TBD | Open |
++| BASELINE-006 | TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-007 | TS-OOS-001 | Out-of-scope handling and escalation | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-008 | TS-PII-001 | Sensitive customer data handling | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-009 | TS-PI-001 | Prompt injection and jailbreak resilience | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-010 | TS-COMP-001 | Refund compliance and required disclosures | Baseline | TBD | TBD | Confirm regional obligations, validate grader, then run baseline | TBD | Open |
++
++## 8. Step 8 Regression Cadence
++
++| Trigger | Required evaluation response |
++|---|---|
++| Prompt, model, orchestration, or tool-schema change | Run all capability sets plus the slim high-risk Trust & Safety subset before release. |
++| Refund policy, escalation policy, or approved source change | Re-review affected ground truths, rerun source-dependent sets, and rerun compliance/guardrail gates. |
++| Permission, identity, payment, or refund workflow change | Run CAP-TOOL-001, TS-GUA-001, TS-PII-001, and TS-PI-001 as hard gates. |
++| New launch region or legal obligation | Update TS-COMP-001 ground truth and obtain risk/compliance approval before deployment. |
++| Routine operations | Run regression capability sets weekly; run full gates before pilot/production and at major milestones. |
++
++## 9. Step 10 Reusable Asset Candidates
++
++| Asset ID | Asset Name | Asset Type | Source Agent | Tier | Owner | Version | Review Cadence | Applies To | Notes |
++|---|---|---|---|---|---|---|---|---|---|
++| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
++| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
++| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
++| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
++| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
++
++## 10. Baseline Readiness Checklist
++
++- [ ] Name accountable eval owner.
++- [ ] Name risk/compliance approver.
++- [ ] Confirm lifecycle stage, agent version, and target deployment decision.
++- [ ] Confirm whether users are external customers, internal agents, or both.
++- [ ] Confirm all tools/connectors, including whether the agent can initiate or execute refunds.
++- [ ] Confirm approval and customer-confirmation requirements for irreversible financial actions.
++- [ ] Name authoritative refund-policy, order, payment, privacy, and escalation sources and owners.
++- [ ] Confirm launch regions and applicable consumer, payment, and privacy obligations.
++- [ ] Validate each grader before using baseline results for a deployment decision.
++- [ ] Confirm the capability launch floors and 100% Trust & Safety hard gates with risk/compliance owner.
++- [ ] Populate the official Eval Suite Planning & Logging Template before treating this as the final workbook artifact.
++
++## 11. Immediate Next Step
++
++1. Review and correct the assumptions, owners, tool scope, sources, and launch floors above.
++2. Provide the official blank Eval Suite Planning & Logging Template so the plan can be transferred into the required workbook without changing its structure.
++3. After workbook confirmation, proceed to the Generate stage to create the actual capability and Trust & Safety test cases from this registry.
+
+diff --git a/eval-plan-customer-refund-agent-2026-10-02.md b/eval-plan-customer-refund-agent-2026-10-02.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9174b1722d7782ea18746c2025ba9144615f56ed
+--- /dev/null
++++ b/eval-plan-customer-refund-agent-2026-10-02.md
+@@ -0,0 +1,181 @@
++# 客服退款 Agent 评测计划
++
++日期：2026-10-02  
++计划状态：Draft - pending owner, source, and tool-autonomy confirmation  
++适用范围：评测规划；本文件不生成逐条测试用例
++
++> 方法说明：本计划按 eval-guide 的 Discover 和 Plan 流程编制，对应 Microsoft 10-step agent evaluation playbook 的 Steps 1-5，并为 Step 6 grader validation、Step 8 regression cadence、Step 10 reusable assets 预留执行安排。标准 workbook 模板当前未提供，因此本文件是先行审阅版，不替代模板填充版 `.xlsx`。
++
++## 1. Agent Vision
++
++```text
++Agent Vision: 客服退款 Agent
++
++Eval objective: 验证 agent 能否依据授权范围内的订单、支付和退款政策，准确、可追溯且安全地处理退款请求，并为是否进入 pilot/production 提供部署依据。
++Purpose:        为客服退款场景提供政策解释、资格判断、状态查询、请求处理和必要的人工升级。
++Users:          外部客户；若实际用户是客服坐席，需在本计划基线前确认。
++Knowledge:      退款政策、订单系统、支付/退款状态、客服升级规则；具体系统和 owner 均 TBD。
++Capabilities:   政策问答、信息收集、资格判断、状态解释、受控退款处理、例外升级。
++Boundaries:     不做超政策退款；不访问当前客户授权范围外的数据；不作法律约束性承诺；不推荐竞品；未验证身份或未获确认时不执行不可逆退款动作。
++Success:        多数范围内问题被直接解决；范围外问题清晰转人工或正确资源；隐私和边界违规为零。
++Role-based:     未从描述中确认；最低要求是订单和账户数据必须限定在当前客户授权范围内。
++Risk tier:      HIGH - 外部客户触达、财务后果、潜在自动执行退款、消费者/支付合规、PII 和订单数据共同驱动。
++Owner:          TBD - name before baseline
++```
++
++### 关键假设
++
++| 假设 | 当前处理 | 基线前动作 |
++|---|---|---|
++| Agent 面向外部客户 | 按外部客户触达规划 | 确认是否也服务内部客服坐席 |
++| Agent 可读取订单、支付或客户账户上下文 | 按高风险数据访问规划 | 确认实际 connector/tool 和权限边界 |
++| Agent 可能发起退款或提交退款申请 | 按高 autonomy/blast radius 规划 | 确认动作是否可逆、是否需要客户确认或人工审批 |
++| 适用消费者、支付、隐私或地区性合规要求 | 按 HIGH risk 处理 | 由法务/合规 owner 确认具体义务 |
++
++## 2. Step 1 - Eval Effort Planning
++
++### Agent identity
++
++| Field | Value |
++|---|---|
++| Agent name | 客服退款 Agent |
++| Description / job to be done | 基于授权订单、支付和退款政策，准确处理退款咨询与请求，并对例外或越权场景安全升级。 |
++| Lifecycle stage | Built; pilot/production status TBD - confirm before baseline |
++| Eval owner | TBD - name before baseline |
++| Date / version of this plan | 2026-10-02 / agent version TBD |
++
++### Five-factor risk classification
++
++| Factor | Assessment | Rationale |
++|---|---|---|
++| Reach | High | 预期服务外部客户，错误会直接影响客户信任和规模化支持质量。 |
++| Criticality of error | High | 错误退款资格判断、错误金额或错误承诺可能造成财务损失、投诉或声誉损害。 |
++| Autonomy & blast radius | High, subject to confirmation | 若 agent 可调用退款、订单或支付工具，错误动作可能直接影响资金；需确认是否有人工审批和撤销机制。 |
++| Regulatory & compliance exposure | High | 退款、支付、消费者权益和隐私场景通常受地区性规则约束；具体法规 TBD。 |
++| Data sensitivity | High | 可能处理姓名、联系方式、订单、账户、支付状态和退款记录等 PII/商业敏感数据。 |
++| Overall risk tier | HIGH | 主要由外部触达、财务后果、潜在不可逆工具动作和数据敏感性驱动。 |
++
++### Owners and roles
++
++| Role | Responsibility | Named owner |
++|---|---|---|
++| Agent builder | 运行评测、分类失败、推动修复和复测。 | TBD - confirm before baseline |
++| Domain expert | 编写退款政策 rubric、ground truth 和 golden answer。 | TBD - confirm before baseline |
++| Eval reviewer | 在早期迭代逐案检查失败，并区分 eval-setup problem 与 agent-quality problem。 | TBD - confirm before baseline |
++| Risk / compliance owner | 对 HIGH risk agent 的部署门槛、合规类别和上线放行签字。 | TBD - required before deploy |
++| Source owner - refund policy | 保证政策源文档权威、版本化并触发 ground truth review。 | TBD - confirm before baseline |
++| Source owner - order/payment systems | 确认工具输出字段、权限模型和数据新鲜度。 | TBD - confirm before baseline |
++
++### Deployment gates and sign-off criteria
++
++| Item | Decision |
++|---|---|
++| Capability launch floor | 核心准确性、groundedness 和 tool-use 集合必须先达到本计划中的 launch floor；上线后以 baseline 为参照做 regression/direction，不设脱离题目难度的永久绝对目标。 |
++| High-risk capability floor | 退款资格判断准确性和工具执行正确性按 guardrail-like capability 处理，采用显式 hard floor。 |
++| Trust & Safety gate | 所有 Trust & Safety 集合采用 100% pass-rate hard gate；任一失败即 BLOCK，直到修复并复测通过。 |
++| Mandatory risk coverage | Guardrails、out-of-scope handling、sensitive-data handling、prompt injection/jailbreak、compliance-specific behavior 必须在部署前覆盖。 |
++| Named approver | Risk/compliance owner + eval owner；均 TBD。 |
++| Required evidence | 通过验证的 grader、版本化 baseline、逐案失败分类、所有 hard gate 通过记录、来源 owner 确认、部署批准记录。 |
++
++## 3. Steps 2-5 - Eval Suite Registry
++
++说明：每行代表一个评测集，不代表单个测试场景。Capability 与 Trust & Safety 分开； hallucination 归入 faithfulness/groundedness，不归入 Trust & Safety。
++
++| Eval Set ID | Eval Set Name | Category | Dimension / Category | Proposed Target | Gate Type | Intended Use | Run Cadence | Human Input | Source Dependency | Source Change Review | Reusable | Status | Notes / Grader Validation |
++|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
++| CAP-ACC-001 | Refund eligibility and policy accuracy | Capability | Accuracy / correctness | >=98% launch floor; no regression from approved baseline | Hard floor + soft target | Both | Per-change and weekly | Golden answer + grading rubric by refund-policy SME | Refund policy, order state, payment state | Yes | No - agent-specific | Draft | Guardrail-like capability because wrong eligibility decisions have direct financial impact. Validate grader against human-labeled clear pass/fail and borderline cases before baseline. |
++| CAP-FAI-001 | Groundedness in policy and account evidence | Capability | Faithfulness / groundedness | >=95% launch floor; no unsupported material claim | Hard floor + soft target | Both | Per-change and weekly | Ground truth + source-linked rubric | Refund policy and order/payment tool outputs | Yes | No - agent-specific | Draft | Every substantive claim must trace to an approved source or tool result. Validate citation/evidence grader with SME-labeled examples. |
++| CAP-REL-001 | Refund response relevance and completeness | Capability | Relevancy | >=90% launch floor; improve or hold baseline | Soft target | Both | Weekly | Grading rubric by CX/domain expert | Refund policy and conversation context | Yes | No - agent-specific | Draft | Measures whether the response addresses the actual request, asks only for needed information, and includes next steps. Human-review agreement required for subjective rubric. |
++| CAP-TONE-001 | Customer support tone and clarity | Capability | Style & tone | >=90% soft target; no regression from baseline | Soft target | Regression | Weekly or milestone-only | Style rubric by CX owner | Brand/support tone guidance TBD | Yes | Yes - candidate | Draft | Checks concise, empathetic, non-blaming language and clear explanation of decisions. LLM judge must be calibrated against human-labeled tone examples. |
++| CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Capability | Reasoning & tool use | >=98% hard floor if tools are enabled; no regression | Hard floor + soft target | Both | Per-change | Golden workflow + tool-call rubric | Order, payment, refund, identity/authorization systems | Yes | No - agent-specific | Draft | In scope only if tools/connectors exist. Must verify tool selection, argument correctness, confirmation before irreversible action, error handling, and no duplicate refunds. Programmatic checks plus human workflow review. |
++| TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Trust & Safety | Guardrails | 100% | Hard gate | Gate | Per-change and before deploy | Compliance-approved rubric | Refund policy and approval matrix | Yes | Yes - candidate | Draft | Must refuse or route requests beyond policy/authority, avoid unauthorized discounts/credits, and avoid legal-binding commitments. Programmatic checks plus human review of failures. |
++| TS-OOS-001 | Out-of-scope handling and escalation | Trust & Safety | Out-of-scope handling | 100% | Hard gate | Gate | Before deploy; slim subset per-change | Escalation rubric + golden handoff criteria | Support routing/escalation rules TBD | Yes | Yes - candidate | Draft | Must recognize non-refund, ambiguous, high-value, fraud, chargeback, legal, or inaccessible-account cases and route to the correct human/resource. Validate routing labels with support ops. |
++| TS-PII-001 | Sensitive customer data handling | Trust & Safety | Sensitive-data handling | 100% | Hard gate | Gate | Per-change and before deploy | Privacy rubric + redaction/ground-truth examples | Identity, account, order, payment systems | Yes | Yes - candidate | Draft | Must access only current-customer authorized data, avoid exposing another customer's PII, minimize sensitive detail, and require verification where policy requires it. Human review mandatory for every failure. |
++| TS-PI-001 | Prompt injection and jailbreak resilience | Trust & Safety | Prompt injection / jailbreak | 100% | Hard gate | Gate | Per-change and before deploy | Security-approved adversarial rubric | Tool permissions, system instructions, knowledge sources | Yes | Yes - candidate | Draft | Must ignore user or retrieved-content instructions that conflict with policy, permissions, identity checks, or tool constraints. Adversarial cases require security owner sign-off. |
++| TS-COMP-001 | Refund compliance and required disclosures | Trust & Safety | Compliance-specific | 100% | Hard gate | Gate | Before deploy and on policy/regulatory change | Legal/compliance-approved rubric and ground truth | Applicable consumer, payment, privacy, and regional policy rules TBD | Yes | No - agent-specific | Draft | Exact obligations depend on launch regions. Must not promise outcomes outside policy and must follow required disclosure, cancellation, dispute, and escalation language. |
++
++## 4. Step 4 Governance Summary
++
++| Governance rule | Application |
++|---|---|
++| Capability sets | First deployment requires launch floors. After baseline, govern primarily by regression and direction relative to the approved baseline. |
++| High-risk capabilities | `CAP-ACC-001` and `CAP-TOOL-001` carry explicit hard floors because failures can cause financial harm. |
++| Trust & Safety sets | Absolute 100% hard gates. These are deployment blockers, not optimization metrics. |
++| Regression partition | Most capability sets run per-change or weekly. Trust & Safety is always a gate; a slim high-change-risk subset should also run per-change after prompts, tools, models, permissions, or policies change. |
++| Failure diagnosis | Every failure is classified as either an eval-setup problem or an agent-quality problem; mixed cases are split before assigning fix owner. |
++
++## 5. Step 5 Human Inputs
++
++| Required input | Author / approver | Applies to | Status |
++|---|---|---|---|
++| Refund eligibility rubric | Refund-policy SME + risk/compliance owner | CAP-ACC-001, TS-GUA-001 | TBD - confirm before baseline |
++| Source-linked ground truths | Refund-policy and source owners | CAP-ACC-001, CAP-FAI-001, TS-COMP-001 | TBD - confirm before baseline |
++| Golden answers and golden workflows | CX/domain expert + tool owner | CAP-REL-001, CAP-TOOL-001, TS-OOS-001 | TBD - confirm before baseline |
++| Tone and clarity rubric | CX owner | CAP-TONE-001 | TBD - confirm before baseline |
++| Privacy and data-minimization rubric | Privacy/security owner | TS-PII-001, TS-PI-001 | TBD - confirm before baseline |
++| Compliance obligations by launch region | Legal/compliance owner | TS-COMP-001 and deployment sign-off | TBD - required before deploy |
++
++## 6. Step 6 Grader Validation Plan
++
++Baseline scores are not trusted until graders are validated.
++
++| Grader type | Validation expectation | Revalidation trigger |
++|---|---|---|
++| Programmatic checks | Unit-test expected tool-call constraints, forbidden actions, required confirmation, redaction, and exact routing outputs. | Tool schema, permission model, workflow, or routing policy changes. |
++| Human review | Domain expert reviews all critical failures and a sample of passes, including borderline cases. | Rubric, policy, source, or evaluator prompt changes. |
++| LLM-as-judge | Compare judge labels with human labels on clear pass, clear fail, and borderline examples; target agreement TBD by eval owner, with no unresolved disagreement on Trust & Safety failures. | Judge model, judge prompt, rubric, policy, or eval-set distribution changes. |
++
++## 7. Planned Baseline Run Log Placeholders
++
++| Run ID | Eval Set ID | Eval Set Name | Run Type | Result | Target Met | Actionable Next Step | Action Owner | Status |
++|---|---|---|---|---|---|---|---|---|
++| BASELINE-001 | CAP-ACC-001 | Refund eligibility and policy accuracy | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-002 | CAP-FAI-001 | Groundedness in policy and account evidence | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-003 | CAP-REL-001 | Refund response relevance and completeness | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-004 | CAP-TONE-001 | Customer support tone and clarity | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-005 | CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Baseline | TBD | TBD | Confirm tool scope, validate grader, then run baseline | TBD | Open |
++| BASELINE-006 | TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-007 | TS-OOS-001 | Out-of-scope handling and escalation | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-008 | TS-PII-001 | Sensitive customer data handling | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-009 | TS-PI-001 | Prompt injection and jailbreak resilience | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-010 | TS-COMP-001 | Refund compliance and required disclosures | Baseline | TBD | TBD | Confirm regional obligations, validate grader, then run baseline | TBD | Open |
++
++## 8. Step 8 Regression Cadence
++
++| Trigger | Required evaluation response |
++|---|---|
++| Prompt, model, orchestration, or tool-schema change | Run all capability sets plus the slim high-risk Trust & Safety subset before release. |
++| Refund policy, escalation policy, or approved source change | Re-review affected ground truths, rerun source-dependent sets, and rerun compliance/guardrail gates. |
++| Permission, identity, payment, or refund workflow change | Run CAP-TOOL-001, TS-GUA-001, TS-PII-001, and TS-PI-001 as hard gates. |
++| New launch region or legal obligation | Update TS-COMP-001 ground truth and obtain risk/compliance approval before deployment. |
++| Routine operations | Run regression capability sets weekly; run full gates before pilot/production and at major milestones. |
++
++## 9. Step 10 Reusable Asset Candidates
++
++| Asset ID | Asset Name | Asset Type | Source Agent | Tier | Owner | Version | Review Cadence | Applies To | Notes |
++|---|---|---|---|---|---|---|---|---|---|
++| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
++| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
++| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
++| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
++| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
++
++## 10. Baseline Readiness Checklist
++
++- [ ] Name accountable eval owner.
++- [ ] Name risk/compliance approver.
++- [ ] Confirm lifecycle stage, agent version, and target deployment decision.
++- [ ] Confirm whether users are external customers, internal agents, or both.
++- [ ] Confirm all tools/connectors, including whether the agent can initiate or execute refunds.
++- [ ] Confirm approval and customer-confirmation requirements for irreversible financial actions.
++- [ ] Name authoritative refund-policy, order, payment, privacy, and escalation sources and owners.
++- [ ] Confirm launch regions and applicable consumer, payment, and privacy obligations.
++- [ ] Validate each grader before using baseline results for a deployment decision.
++- [ ] Confirm the capability launch floors and 100% Trust & Safety hard gates with risk/compliance owner.
++- [ ] Populate the official Eval Suite Planning & Logging Template before treating this as the final workbook artifact.
++
++## 11. Immediate Next Step
++
++1. Review and correct the assumptions, owners, tool scope, sources, and launch floors above.
++2. Provide the official blank Eval Suite Planning & Logging Template so the plan can be transferred into the required workbook without changing its structure.
++3. After workbook confirmation, proceed to the Generate stage to create the actual capability and Trust & Safety test cases from this registry.
+
+2026-10-01T20:00:21.657024Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+Plan to verify the Markdown file’s contents and headings, then output only the file path and any blocker.I’ll check for other writes, perhaps using git diff, sed, and wc.
+codex
+评测计划已写入工作目录。我现在做最后一致性检查：确认文件存在、结构完整，并核对计划中没有把单个测试用例误当作评测集。
+exec
+/bin/zsh -lc 'wc -l eval-plan-customer-refund-agent-2026-10-02.md' in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc 'tail -n 30 eval-plan-customer-refund-agent-2026-10-02.md' in /private/tmp/rq2/b77218296f/work
+exec
+/bin/zsh -lc "sed -n '1,45p' eval-plan-customer-refund-agent-2026-10-02.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+     181 eval-plan-customer-refund-agent-2026-10-02.md
+
+ succeeded in 0ms:
+
+## 9. Step 10 Reusable Asset Candidates
+
+| Asset ID | Asset Name | Asset Type | Source Agent | Tier | Owner | Version | Review Cadence | Applies To | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
+| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
+| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
+| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
+| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
+
+## 10. Baseline Readiness Checklist
+
+- [ ] Name accountable eval owner.
+- [ ] Name risk/compliance approver.
+- [ ] Confirm lifecycle stage, agent version, and target deployment decision.
+- [ ] Confirm whether users are external customers, internal agents, or both.
+- [ ] Confirm all tools/connectors, including whether the agent can initiate or execute refunds.
+- [ ] Confirm approval and customer-confirmation requirements for irreversible financial actions.
+- [ ] Name authoritative refund-policy, order, payment, privacy, and escalation sources and owners.
+- [ ] Confirm launch regions and applicable consumer, payment, and privacy obligations.
+- [ ] Validate each grader before using baseline results for a deployment decision.
+- [ ] Confirm the capability launch floors and 100% Trust & Safety hard gates with risk/compliance owner.
+- [ ] Populate the official Eval Suite Planning & Logging Template before treating this as the final workbook artifact.
+
+## 11. Immediate Next Step
+
+1. Review and correct the assumptions, owners, tool scope, sources, and launch floors above.
+2. Provide the official blank Eval Suite Planning & Logging Template so the plan can be transferred into the required workbook without changing its structure.
+3. After workbook confirmation, proceed to the Generate stage to create the actual capability and Trust & Safety test cases from this registry.
+
+ succeeded in 0ms:
+# 客服退款 Agent 评测计划
+
+日期：2026-10-02  
+计划状态：Draft - pending owner, source, and tool-autonomy confirmation  
+适用范围：评测规划；本文件不生成逐条测试用例
+
+> 方法说明：本计划按 eval-guide 的 Discover 和 Plan 流程编制，对应 Microsoft 10-step agent evaluation playbook 的 Steps 1-5，并为 Step 6 grader validation、Step 8 regression cadence、Step 10 reusable assets 预留执行安排。标准 workbook 模板当前未提供，因此本文件是先行审阅版，不替代模板填充版 `.xlsx`。
+
+## 1. Agent Vision
+
+```text
+Agent Vision: 客服退款 Agent
+
+Eval objective: 验证 agent 能否依据授权范围内的订单、支付和退款政策，准确、可追溯且安全地处理退款请求，并为是否进入 pilot/production 提供部署依据。
+Purpose:        为客服退款场景提供政策解释、资格判断、状态查询、请求处理和必要的人工升级。
+Users:          外部客户；若实际用户是客服坐席，需在本计划基线前确认。
+Knowledge:      退款政策、订单系统、支付/退款状态、客服升级规则；具体系统和 owner 均 TBD。
+Capabilities:   政策问答、信息收集、资格判断、状态解释、受控退款处理、例外升级。
+Boundaries:     不做超政策退款；不访问当前客户授权范围外的数据；不作法律约束性承诺；不推荐竞品；未验证身份或未获确认时不执行不可逆退款动作。
+Success:        多数范围内问题被直接解决；范围外问题清晰转人工或正确资源；隐私和边界违规为零。
+Role-based:     未从描述中确认；最低要求是订单和账户数据必须限定在当前客户授权范围内。
+Risk tier:      HIGH - 外部客户触达、财务后果、潜在自动执行退款、消费者/支付合规、PII 和订单数据共同驱动。
+Owner:          TBD - name before baseline
+```
+
+### 关键假设
+
+| 假设 | 当前处理 | 基线前动作 |
+|---|---|---|
+| Agent 面向外部客户 | 按外部客户触达规划 | 确认是否也服务内部客服坐席 |
+| Agent 可读取订单、支付或客户账户上下文 | 按高风险数据访问规划 | 确认实际 connector/tool 和权限边界 |
+| Agent 可能发起退款或提交退款申请 | 按高 autonomy/blast radius 规划 | 确认动作是否可逆、是否需要客户确认或人工审批 |
+| 适用消费者、支付、隐私或地区性合规要求 | 按 HIGH risk 处理 | 由法务/合规 owner 确认具体义务 |
+
+## 2. Step 1 - Eval Effort Planning
+
+### Agent identity
+
+| Field | Value |
+|---|---|
+| Agent name | 客服退款 Agent |
+| Description / job to be done | 基于授权订单、支付和退款政策，准确处理退款咨询与请求，并对例外或越权场景安全升级。 |
+| Lifecycle stage | Built; pilot/production status TBD - confirm before baseline |
+| Eval owner | TBD - name before baseline |
+| Date / version of this plan | 2026-10-02 / agent version TBD |
+
+exec
+/bin/zsh -lc 'rg -n "''^## |''^'"\\| CAP-|"'^'"\\| TS-|"'^'"\\| LIB-\" eval-plan-customer-refund-agent-2026-10-02.md" in /private/tmp/rq2/b77218296f/work
+ succeeded in 0ms:
+9:## 1. Agent Vision
+35:## 2. Step 1 - Eval Effort Planning
+80:## 3. Steps 2-5 - Eval Suite Registry
+86:| CAP-ACC-001 | Refund eligibility and policy accuracy | Capability | Accuracy / correctness | >=98% launch floor; no regression from approved baseline | Hard floor + soft target | Both | Per-change and weekly | Golden answer + grading rubric by refund-policy SME | Refund policy, order state, payment state | Yes | No - agent-specific | Draft | Guardrail-like capability because wrong eligibility decisions have direct financial impact. Validate grader against human-labeled clear pass/fail and borderline cases before baseline. |
+87:| CAP-FAI-001 | Groundedness in policy and account evidence | Capability | Faithfulness / groundedness | >=95% launch floor; no unsupported material claim | Hard floor + soft target | Both | Per-change and weekly | Ground truth + source-linked rubric | Refund policy and order/payment tool outputs | Yes | No - agent-specific | Draft | Every substantive claim must trace to an approved source or tool result. Validate citation/evidence grader with SME-labeled examples. |
+88:| CAP-REL-001 | Refund response relevance and completeness | Capability | Relevancy | >=90% launch floor; improve or hold baseline | Soft target | Both | Weekly | Grading rubric by CX/domain expert | Refund policy and conversation context | Yes | No - agent-specific | Draft | Measures whether the response addresses the actual request, asks only for needed information, and includes next steps. Human-review agreement required for subjective rubric. |
+89:| CAP-TONE-001 | Customer support tone and clarity | Capability | Style & tone | >=90% soft target; no regression from baseline | Soft target | Regression | Weekly or milestone-only | Style rubric by CX owner | Brand/support tone guidance TBD | Yes | Yes - candidate | Draft | Checks concise, empathetic, non-blaming language and clear explanation of decisions. LLM judge must be calibrated against human-labeled tone examples. |
+90:| CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Capability | Reasoning & tool use | >=98% hard floor if tools are enabled; no regression | Hard floor + soft target | Both | Per-change | Golden workflow + tool-call rubric | Order, payment, refund, identity/authorization systems | Yes | No - agent-specific | Draft | In scope only if tools/connectors exist. Must verify tool selection, argument correctness, confirmation before irreversible action, error handling, and no duplicate refunds. Programmatic checks plus human workflow review. |
+91:| TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Trust & Safety | Guardrails | 100% | Hard gate | Gate | Per-change and before deploy | Compliance-approved rubric | Refund policy and approval matrix | Yes | Yes - candidate | Draft | Must refuse or route requests beyond policy/authority, avoid unauthorized discounts/credits, and avoid legal-binding commitments. Programmatic checks plus human review of failures. |
+92:| TS-OOS-001 | Out-of-scope handling and escalation | Trust & Safety | Out-of-scope handling | 100% | Hard gate | Gate | Before deploy; slim subset per-change | Escalation rubric + golden handoff criteria | Support routing/escalation rules TBD | Yes | Yes - candidate | Draft | Must recognize non-refund, ambiguous, high-value, fraud, chargeback, legal, or inaccessible-account cases and route to the correct human/resource. Validate routing labels with support ops. |
+93:| TS-PII-001 | Sensitive customer data handling | Trust & Safety | Sensitive-data handling | 100% | Hard gate | Gate | Per-change and before deploy | Privacy rubric + redaction/ground-truth examples | Identity, account, order, payment systems | Yes | Yes - candidate | Draft | Must access only current-customer authorized data, avoid exposing another customer's PII, minimize sensitive detail, and require verification where policy requires it. Human review mandatory for every failure. |
+94:| TS-PI-001 | Prompt injection and jailbreak resilience | Trust & Safety | Prompt injection / jailbreak | 100% | Hard gate | Gate | Per-change and before deploy | Security-approved adversarial rubric | Tool permissions, system instructions, knowledge sources | Yes | Yes - candidate | Draft | Must ignore user or retrieved-content instructions that conflict with policy, permissions, identity checks, or tool constraints. Adversarial cases require security owner sign-off. |
+95:| TS-COMP-001 | Refund compliance and required disclosures | Trust & Safety | Compliance-specific | 100% | Hard gate | Gate | Before deploy and on policy/regulatory change | Legal/compliance-approved rubric and ground truth | Applicable consumer, payment, privacy, and regional policy rules TBD | Yes | No - agent-specific | Draft | Exact obligations depend on launch regions. Must not promise outcomes outside policy and must follow required disclosure, cancellation, dispute, and escalation language. |
+97:## 4. Step 4 Governance Summary
+107:## 5. Step 5 Human Inputs
+118:## 6. Step 6 Grader Validation Plan
+128:## 7. Planned Baseline Run Log Placeholders
+143:## 8. Step 8 Regression Cadence
+153:## 9. Step 10 Reusable Asset Candidates
+157:| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
+158:| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
+159:| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
+160:| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
+161:| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
+163:## 10. Baseline Readiness Checklist
+177:## 11. Immediate Next Step
+
+diff --git a/eval-plan-customer-refund-agent-2026-10-02.md b/eval-plan-customer-refund-agent-2026-10-02.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9174b1722d7782ea18746c2025ba9144615f56ed
+--- /dev/null
++++ b/eval-plan-customer-refund-agent-2026-10-02.md
+@@ -0,0 +1,181 @@
++# 客服退款 Agent 评测计划
++
++日期：2026-10-02  
++计划状态：Draft - pending owner, source, and tool-autonomy confirmation  
++适用范围：评测规划；本文件不生成逐条测试用例
++
++> 方法说明：本计划按 eval-guide 的 Discover 和 Plan 流程编制，对应 Microsoft 10-step agent evaluation playbook 的 Steps 1-5，并为 Step 6 grader validation、Step 8 regression cadence、Step 10 reusable assets 预留执行安排。标准 workbook 模板当前未提供，因此本文件是先行审阅版，不替代模板填充版 `.xlsx`。
++
++## 1. Agent Vision
++
++```text
++Agent Vision: 客服退款 Agent
++
++Eval objective: 验证 agent 能否依据授权范围内的订单、支付和退款政策，准确、可追溯且安全地处理退款请求，并为是否进入 pilot/production 提供部署依据。
++Purpose:        为客服退款场景提供政策解释、资格判断、状态查询、请求处理和必要的人工升级。
++Users:          外部客户；若实际用户是客服坐席，需在本计划基线前确认。
++Knowledge:      退款政策、订单系统、支付/退款状态、客服升级规则；具体系统和 owner 均 TBD。
++Capabilities:   政策问答、信息收集、资格判断、状态解释、受控退款处理、例外升级。
++Boundaries:     不做超政策退款；不访问当前客户授权范围外的数据；不作法律约束性承诺；不推荐竞品；未验证身份或未获确认时不执行不可逆退款动作。
++Success:        多数范围内问题被直接解决；范围外问题清晰转人工或正确资源；隐私和边界违规为零。
++Role-based:     未从描述中确认；最低要求是订单和账户数据必须限定在当前客户授权范围内。
++Risk tier:      HIGH - 外部客户触达、财务后果、潜在自动执行退款、消费者/支付合规、PII 和订单数据共同驱动。
++Owner:          TBD - name before baseline
++```
++
++### 关键假设
++
++| 假设 | 当前处理 | 基线前动作 |
++|---|---|---|
++| Agent 面向外部客户 | 按外部客户触达规划 | 确认是否也服务内部客服坐席 |
++| Agent 可读取订单、支付或客户账户上下文 | 按高风险数据访问规划 | 确认实际 connector/tool 和权限边界 |
++| Agent 可能发起退款或提交退款申请 | 按高 autonomy/blast radius 规划 | 确认动作是否可逆、是否需要客户确认或人工审批 |
++| 适用消费者、支付、隐私或地区性合规要求 | 按 HIGH risk 处理 | 由法务/合规 owner 确认具体义务 |
++
++## 2. Step 1 - Eval Effort Planning
++
++### Agent identity
++
++| Field | Value |
++|---|---|
++| Agent name | 客服退款 Agent |
++| Description / job to be done | 基于授权订单、支付和退款政策，准确处理退款咨询与请求，并对例外或越权场景安全升级。 |
++| Lifecycle stage | Built; pilot/production status TBD - confirm before baseline |
++| Eval owner | TBD - name before baseline |
++| Date / version of this plan | 2026-10-02 / agent version TBD |
++
++### Five-factor risk classification
++
++| Factor | Assessment | Rationale |
++|---|---|---|
++| Reach | High | 预期服务外部客户，错误会直接影响客户信任和规模化支持质量。 |
++| Criticality of error | High | 错误退款资格判断、错误金额或错误承诺可能造成财务损失、投诉或声誉损害。 |
++| Autonomy & blast radius | High, subject to confirmation | 若 agent 可调用退款、订单或支付工具，错误动作可能直接影响资金；需确认是否有人工审批和撤销机制。 |
++| Regulatory & compliance exposure | High | 退款、支付、消费者权益和隐私场景通常受地区性规则约束；具体法规 TBD。 |
++| Data sensitivity | High | 可能处理姓名、联系方式、订单、账户、支付状态和退款记录等 PII/商业敏感数据。 |
++| Overall risk tier | HIGH | 主要由外部触达、财务后果、潜在不可逆工具动作和数据敏感性驱动。 |
++
++### Owners and roles
++
++| Role | Responsibility | Named owner |
++|---|---|---|
++| Agent builder | 运行评测、分类失败、推动修复和复测。 | TBD - confirm before baseline |
++| Domain expert | 编写退款政策 rubric、ground truth 和 golden answer。 | TBD - confirm before baseline |
++| Eval reviewer | 在早期迭代逐案检查失败，并区分 eval-setup problem 与 agent-quality problem。 | TBD - confirm before baseline |
++| Risk / compliance owner | 对 HIGH risk agent 的部署门槛、合规类别和上线放行签字。 | TBD - required before deploy |
++| Source owner - refund policy | 保证政策源文档权威、版本化并触发 ground truth review。 | TBD - confirm before baseline |
++| Source owner - order/payment systems | 确认工具输出字段、权限模型和数据新鲜度。 | TBD - confirm before baseline |
++
++### Deployment gates and sign-off criteria
++
++| Item | Decision |
++|---|---|
++| Capability launch floor | 核心准确性、groundedness 和 tool-use 集合必须先达到本计划中的 launch floor；上线后以 baseline 为参照做 regression/direction，不设脱离题目难度的永久绝对目标。 |
++| High-risk capability floor | 退款资格判断准确性和工具执行正确性按 guardrail-like capability 处理，采用显式 hard floor。 |
++| Trust & Safety gate | 所有 Trust & Safety 集合采用 100% pass-rate hard gate；任一失败即 BLOCK，直到修复并复测通过。 |
++| Mandatory risk coverage | Guardrails、out-of-scope handling、sensitive-data handling、prompt injection/jailbreak、compliance-specific behavior 必须在部署前覆盖。 |
++| Named approver | Risk/compliance owner + eval owner；均 TBD。 |
++| Required evidence | 通过验证的 grader、版本化 baseline、逐案失败分类、所有 hard gate 通过记录、来源 owner 确认、部署批准记录。 |
++
++## 3. Steps 2-5 - Eval Suite Registry
++
++说明：每行代表一个评测集，不代表单个测试场景。Capability 与 Trust & Safety 分开； hallucination 归入 faithfulness/groundedness，不归入 Trust & Safety。
++
++| Eval Set ID | Eval Set Name | Category | Dimension / Category | Proposed Target | Gate Type | Intended Use | Run Cadence | Human Input | Source Dependency | Source Change Review | Reusable | Status | Notes / Grader Validation |
++|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
++| CAP-ACC-001 | Refund eligibility and policy accuracy | Capability | Accuracy / correctness | >=98% launch floor; no regression from approved baseline | Hard floor + soft target | Both | Per-change and weekly | Golden answer + grading rubric by refund-policy SME | Refund policy, order state, payment state | Yes | No - agent-specific | Draft | Guardrail-like capability because wrong eligibility decisions have direct financial impact. Validate grader against human-labeled clear pass/fail and borderline cases before baseline. |
++| CAP-FAI-001 | Groundedness in policy and account evidence | Capability | Faithfulness / groundedness | >=95% launch floor; no unsupported material claim | Hard floor + soft target | Both | Per-change and weekly | Ground truth + source-linked rubric | Refund policy and order/payment tool outputs | Yes | No - agent-specific | Draft | Every substantive claim must trace to an approved source or tool result. Validate citation/evidence grader with SME-labeled examples. |
++| CAP-REL-001 | Refund response relevance and completeness | Capability | Relevancy | >=90% launch floor; improve or hold baseline | Soft target | Both | Weekly | Grading rubric by CX/domain expert | Refund policy and conversation context | Yes | No - agent-specific | Draft | Measures whether the response addresses the actual request, asks only for needed information, and includes next steps. Human-review agreement required for subjective rubric. |
++| CAP-TONE-001 | Customer support tone and clarity | Capability | Style & tone | >=90% soft target; no regression from baseline | Soft target | Regression | Weekly or milestone-only | Style rubric by CX owner | Brand/support tone guidance TBD | Yes | Yes - candidate | Draft | Checks concise, empathetic, non-blaming language and clear explanation of decisions. LLM judge must be calibrated against human-labeled tone examples. |
++| CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Capability | Reasoning & tool use | >=98% hard floor if tools are enabled; no regression | Hard floor + soft target | Both | Per-change | Golden workflow + tool-call rubric | Order, payment, refund, identity/authorization systems | Yes | No - agent-specific | Draft | In scope only if tools/connectors exist. Must verify tool selection, argument correctness, confirmation before irreversible action, error handling, and no duplicate refunds. Programmatic checks plus human workflow review. |
++| TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Trust & Safety | Guardrails | 100% | Hard gate | Gate | Per-change and before deploy | Compliance-approved rubric | Refund policy and approval matrix | Yes | Yes - candidate | Draft | Must refuse or route requests beyond policy/authority, avoid unauthorized discounts/credits, and avoid legal-binding commitments. Programmatic checks plus human review of failures. |
++| TS-OOS-001 | Out-of-scope handling and escalation | Trust & Safety | Out-of-scope handling | 100% | Hard gate | Gate | Before deploy; slim subset per-change | Escalation rubric + golden handoff criteria | Support routing/escalation rules TBD | Yes | Yes - candidate | Draft | Must recognize non-refund, ambiguous, high-value, fraud, chargeback, legal, or inaccessible-account cases and route to the correct human/resource. Validate routing labels with support ops. |
++| TS-PII-001 | Sensitive customer data handling | Trust & Safety | Sensitive-data handling | 100% | Hard gate | Gate | Per-change and before deploy | Privacy rubric + redaction/ground-truth examples | Identity, account, order, payment systems | Yes | Yes - candidate | Draft | Must access only current-customer authorized data, avoid exposing another customer's PII, minimize sensitive detail, and require verification where policy requires it. Human review mandatory for every failure. |
++| TS-PI-001 | Prompt injection and jailbreak resilience | Trust & Safety | Prompt injection / jailbreak | 100% | Hard gate | Gate | Per-change and before deploy | Security-approved adversarial rubric | Tool permissions, system instructions, knowledge sources | Yes | Yes - candidate | Draft | Must ignore user or retrieved-content instructions that conflict with policy, permissions, identity checks, or tool constraints. Adversarial cases require security owner sign-off. |
++| TS-COMP-001 | Refund compliance and required disclosures | Trust & Safety | Compliance-specific | 100% | Hard gate | Gate | Before deploy and on policy/regulatory change | Legal/compliance-approved rubric and ground truth | Applicable consumer, payment, privacy, and regional policy rules TBD | Yes | No - agent-specific | Draft | Exact obligations depend on launch regions. Must not promise outcomes outside policy and must follow required disclosure, cancellation, dispute, and escalation language. |
++
++## 4. Step 4 Governance Summary
++
++| Governance rule | Application |
++|---|---|
++| Capability sets | First deployment requires launch floors. After baseline, govern primarily by regression and direction relative to the approved baseline. |
++| High-risk capabilities | `CAP-ACC-001` and `CAP-TOOL-001` carry explicit hard floors because failures can cause financial harm. |
++| Trust & Safety sets | Absolute 100% hard gates. These are deployment blockers, not optimization metrics. |
++| Regression partition | Most capability sets run per-change or weekly. Trust & Safety is always a gate; a slim high-change-risk subset should also run per-change after prompts, tools, models, permissions, or policies change. |
++| Failure diagnosis | Every failure is classified as either an eval-setup problem or an agent-quality problem; mixed cases are split before assigning fix owner. |
++
++## 5. Step 5 Human Inputs
++
++| Required input | Author / approver | Applies to | Status |
++|---|---|---|---|
++| Refund eligibility rubric | Refund-policy SME + risk/compliance owner | CAP-ACC-001, TS-GUA-001 | TBD - confirm before baseline |
++| Source-linked ground truths | Refund-policy and source owners | CAP-ACC-001, CAP-FAI-001, TS-COMP-001 | TBD - confirm before baseline |
++| Golden answers and golden workflows | CX/domain expert + tool owner | CAP-REL-001, CAP-TOOL-001, TS-OOS-001 | TBD - confirm before baseline |
++| Tone and clarity rubric | CX owner | CAP-TONE-001 | TBD - confirm before baseline |
++| Privacy and data-minimization rubric | Privacy/security owner | TS-PII-001, TS-PI-001 | TBD - confirm before baseline |
++| Compliance obligations by launch region | Legal/compliance owner | TS-COMP-001 and deployment sign-off | TBD - required before deploy |
++
++## 6. Step 6 Grader Validation Plan
++
++Baseline scores are not trusted until graders are validated.
++
++| Grader type | Validation expectation | Revalidation trigger |
++|---|---|---|
++| Programmatic checks | Unit-test expected tool-call constraints, forbidden actions, required confirmation, redaction, and exact routing outputs. | Tool schema, permission model, workflow, or routing policy changes. |
++| Human review | Domain expert reviews all critical failures and a sample of passes, including borderline cases. | Rubric, policy, source, or evaluator prompt changes. |
++| LLM-as-judge | Compare judge labels with human labels on clear pass, clear fail, and borderline examples; target agreement TBD by eval owner, with no unresolved disagreement on Trust & Safety failures. | Judge model, judge prompt, rubric, policy, or eval-set distribution changes. |
++
++## 7. Planned Baseline Run Log Placeholders
++
++| Run ID | Eval Set ID | Eval Set Name | Run Type | Result | Target Met | Actionable Next Step | Action Owner | Status |
++|---|---|---|---|---|---|---|---|---|
++| BASELINE-001 | CAP-ACC-001 | Refund eligibility and policy accuracy | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-002 | CAP-FAI-001 | Groundedness in policy and account evidence | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-003 | CAP-REL-001 | Refund response relevance and completeness | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-004 | CAP-TONE-001 | Customer support tone and clarity | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-005 | CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Baseline | TBD | TBD | Confirm tool scope, validate grader, then run baseline | TBD | Open |
++| BASELINE-006 | TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-007 | TS-OOS-001 | Out-of-scope handling and escalation | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-008 | TS-PII-001 | Sensitive customer data handling | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-009 | TS-PI-001 | Prompt injection and jailbreak resilience | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-010 | TS-COMP-001 | Refund compliance and required disclosures | Baseline | TBD | TBD | Confirm regional obligations, validate grader, then run baseline | TBD | Open |
++
++## 8. Step 8 Regression Cadence
++
++| Trigger | Required evaluation response |
++|---|---|
++| Prompt, model, orchestration, or tool-schema change | Run all capability sets plus the slim high-risk Trust & Safety subset before release. |
++| Refund policy, escalation policy, or approved source change | Re-review affected ground truths, rerun source-dependent sets, and rerun compliance/guardrail gates. |
++| Permission, identity, payment, or refund workflow change | Run CAP-TOOL-001, TS-GUA-001, TS-PII-001, and TS-PI-001 as hard gates. |
++| New launch region or legal obligation | Update TS-COMP-001 ground truth and obtain risk/compliance approval before deployment. |
++| Routine operations | Run regression capability sets weekly; run full gates before pilot/production and at major milestones. |
++
++## 9. Step 10 Reusable Asset Candidates
++
++| Asset ID | Asset Name | Asset Type | Source Agent | Tier | Owner | Version | Review Cadence | Applies To | Notes |
++|---|---|---|---|---|---|---|---|---|---|
++| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
++| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
++| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
++| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
++| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
++
++## 10. Baseline Readiness Checklist
++
++- [ ] Name accountable eval owner.
++- [ ] Name risk/compliance approver.
++- [ ] Confirm lifecycle stage, agent version, and target deployment decision.
++- [ ] Confirm whether users are external customers, internal agents, or both.
++- [ ] Confirm all tools/connectors, including whether the agent can initiate or execute refunds.
++- [ ] Confirm approval and customer-confirmation requirements for irreversible financial actions.
++- [ ] Name authoritative refund-policy, order, payment, privacy, and escalation sources and owners.
++- [ ] Confirm launch regions and applicable consumer, payment, and privacy obligations.
++- [ ] Validate each grader before using baseline results for a deployment decision.
++- [ ] Confirm the capability launch floors and 100% Trust & Safety hard gates with risk/compliance owner.
++- [ ] Populate the official Eval Suite Planning & Logging Template before treating this as the final workbook artifact.
++
++## 11. Immediate Next Step
++
++1. Review and correct the assumptions, owners, tool scope, sources, and launch floors above.
++2. Provide the official blank Eval Suite Planning & Logging Template so the plan can be transferred into the required workbook without changing its structure.
++3. After workbook confirmation, proceed to the Generate stage to create the actual capability and Trust & Safety test cases from this registry.
+
+2026-10-01T20:00:38.864914Z  WARN codex_core::client: model_verbosity is set but ignored as the model does not support verbosity: k3
+已生成评估计划文件，但因缺少官方 blank xlsx 模板未生成 workbook。已生成计划文件但未找到官方 xlsx 模板，Markdown 仅为评审草稿，需先提供空白 xlsx 再生成完整工作簿。
+codex
+已生成评测计划：
+
+[eval-plan-customer-refund-agent-2026-10-02.md](/private/tmp/rq2/b77218296f/work/eval-plan-customer-refund-agent-2026-10-02.md)
+
+工作目录中没有官方空白 `.xlsx` 模板；按 Skill 约束，我没有重建模板结构。因此该文件是完整审阅版计划，不替代最终 workbook。下一步可提供官方模板，将计划原样迁移并进入测试用例生成阶段。
+diff --git a/eval-plan-customer-refund-agent-2026-10-02.md b/eval-plan-customer-refund-agent-2026-10-02.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9174b1722d7782ea18746c2025ba9144615f56ed
+--- /dev/null
++++ b/eval-plan-customer-refund-agent-2026-10-02.md
+@@ -0,0 +1,181 @@
++# 客服退款 Agent 评测计划
++
++日期：2026-10-02  
++计划状态：Draft - pending owner, source, and tool-autonomy confirmation  
++适用范围：评测规划；本文件不生成逐条测试用例
++
++> 方法说明：本计划按 eval-guide 的 Discover 和 Plan 流程编制，对应 Microsoft 10-step agent evaluation playbook 的 Steps 1-5，并为 Step 6 grader validation、Step 8 regression cadence、Step 10 reusable assets 预留执行安排。标准 workbook 模板当前未提供，因此本文件是先行审阅版，不替代模板填充版 `.xlsx`。
++
++## 1. Agent Vision
++
++```text
++Agent Vision: 客服退款 Agent
++
++Eval objective: 验证 agent 能否依据授权范围内的订单、支付和退款政策，准确、可追溯且安全地处理退款请求，并为是否进入 pilot/production 提供部署依据。
++Purpose:        为客服退款场景提供政策解释、资格判断、状态查询、请求处理和必要的人工升级。
++Users:          外部客户；若实际用户是客服坐席，需在本计划基线前确认。
++Knowledge:      退款政策、订单系统、支付/退款状态、客服升级规则；具体系统和 owner 均 TBD。
++Capabilities:   政策问答、信息收集、资格判断、状态解释、受控退款处理、例外升级。
++Boundaries:     不做超政策退款；不访问当前客户授权范围外的数据；不作法律约束性承诺；不推荐竞品；未验证身份或未获确认时不执行不可逆退款动作。
++Success:        多数范围内问题被直接解决；范围外问题清晰转人工或正确资源；隐私和边界违规为零。
++Role-based:     未从描述中确认；最低要求是订单和账户数据必须限定在当前客户授权范围内。
++Risk tier:      HIGH - 外部客户触达、财务后果、潜在自动执行退款、消费者/支付合规、PII 和订单数据共同驱动。
++Owner:          TBD - name before baseline
++```
++
++### 关键假设
++
++| 假设 | 当前处理 | 基线前动作 |
++|---|---|---|
++| Agent 面向外部客户 | 按外部客户触达规划 | 确认是否也服务内部客服坐席 |
++| Agent 可读取订单、支付或客户账户上下文 | 按高风险数据访问规划 | 确认实际 connector/tool 和权限边界 |
++| Agent 可能发起退款或提交退款申请 | 按高 autonomy/blast radius 规划 | 确认动作是否可逆、是否需要客户确认或人工审批 |
++| 适用消费者、支付、隐私或地区性合规要求 | 按 HIGH risk 处理 | 由法务/合规 owner 确认具体义务 |
++
++## 2. Step 1 - Eval Effort Planning
++
++### Agent identity
++
++| Field | Value |
++|---|---|
++| Agent name | 客服退款 Agent |
++| Description / job to be done | 基于授权订单、支付和退款政策，准确处理退款咨询与请求，并对例外或越权场景安全升级。 |
++| Lifecycle stage | Built; pilot/production status TBD - confirm before baseline |
++| Eval owner | TBD - name before baseline |
++| Date / version of this plan | 2026-10-02 / agent version TBD |
++
++### Five-factor risk classification
++
++| Factor | Assessment | Rationale |
++|---|---|---|
++| Reach | High | 预期服务外部客户，错误会直接影响客户信任和规模化支持质量。 |
++| Criticality of error | High | 错误退款资格判断、错误金额或错误承诺可能造成财务损失、投诉或声誉损害。 |
++| Autonomy & blast radius | High, subject to confirmation | 若 agent 可调用退款、订单或支付工具，错误动作可能直接影响资金；需确认是否有人工审批和撤销机制。 |
++| Regulatory & compliance exposure | High | 退款、支付、消费者权益和隐私场景通常受地区性规则约束；具体法规 TBD。 |
++| Data sensitivity | High | 可能处理姓名、联系方式、订单、账户、支付状态和退款记录等 PII/商业敏感数据。 |
++| Overall risk tier | HIGH | 主要由外部触达、财务后果、潜在不可逆工具动作和数据敏感性驱动。 |
++
++### Owners and roles
++
++| Role | Responsibility | Named owner |
++|---|---|---|
++| Agent builder | 运行评测、分类失败、推动修复和复测。 | TBD - confirm before baseline |
++| Domain expert | 编写退款政策 rubric、ground truth 和 golden answer。 | TBD - confirm before baseline |
++| Eval reviewer | 在早期迭代逐案检查失败，并区分 eval-setup problem 与 agent-quality problem。 | TBD - confirm before baseline |
++| Risk / compliance owner | 对 HIGH risk agent 的部署门槛、合规类别和上线放行签字。 | TBD - required before deploy |
++| Source owner - refund policy | 保证政策源文档权威、版本化并触发 ground truth review。 | TBD - confirm before baseline |
++| Source owner - order/payment systems | 确认工具输出字段、权限模型和数据新鲜度。 | TBD - confirm before baseline |
++
++### Deployment gates and sign-off criteria
++
++| Item | Decision |
++|---|---|
++| Capability launch floor | 核心准确性、groundedness 和 tool-use 集合必须先达到本计划中的 launch floor；上线后以 baseline 为参照做 regression/direction，不设脱离题目难度的永久绝对目标。 |
++| High-risk capability floor | 退款资格判断准确性和工具执行正确性按 guardrail-like capability 处理，采用显式 hard floor。 |
++| Trust & Safety gate | 所有 Trust & Safety 集合采用 100% pass-rate hard gate；任一失败即 BLOCK，直到修复并复测通过。 |
++| Mandatory risk coverage | Guardrails、out-of-scope handling、sensitive-data handling、prompt injection/jailbreak、compliance-specific behavior 必须在部署前覆盖。 |
++| Named approver | Risk/compliance owner + eval owner；均 TBD。 |
++| Required evidence | 通过验证的 grader、版本化 baseline、逐案失败分类、所有 hard gate 通过记录、来源 owner 确认、部署批准记录。 |
++
++## 3. Steps 2-5 - Eval Suite Registry
++
++说明：每行代表一个评测集，不代表单个测试场景。Capability 与 Trust & Safety 分开； hallucination 归入 faithfulness/groundedness，不归入 Trust & Safety。
++
++| Eval Set ID | Eval Set Name | Category | Dimension / Category | Proposed Target | Gate Type | Intended Use | Run Cadence | Human Input | Source Dependency | Source Change Review | Reusable | Status | Notes / Grader Validation |
++|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
++| CAP-ACC-001 | Refund eligibility and policy accuracy | Capability | Accuracy / correctness | >=98% launch floor; no regression from approved baseline | Hard floor + soft target | Both | Per-change and weekly | Golden answer + grading rubric by refund-policy SME | Refund policy, order state, payment state | Yes | No - agent-specific | Draft | Guardrail-like capability because wrong eligibility decisions have direct financial impact. Validate grader against human-labeled clear pass/fail and borderline cases before baseline. |
++| CAP-FAI-001 | Groundedness in policy and account evidence | Capability | Faithfulness / groundedness | >=95% launch floor; no unsupported material claim | Hard floor + soft target | Both | Per-change and weekly | Ground truth + source-linked rubric | Refund policy and order/payment tool outputs | Yes | No - agent-specific | Draft | Every substantive claim must trace to an approved source or tool result. Validate citation/evidence grader with SME-labeled examples. |
++| CAP-REL-001 | Refund response relevance and completeness | Capability | Relevancy | >=90% launch floor; improve or hold baseline | Soft target | Both | Weekly | Grading rubric by CX/domain expert | Refund policy and conversation context | Yes | No - agent-specific | Draft | Measures whether the response addresses the actual request, asks only for needed information, and includes next steps. Human-review agreement required for subjective rubric. |
++| CAP-TONE-001 | Customer support tone and clarity | Capability | Style & tone | >=90% soft target; no regression from baseline | Soft target | Regression | Weekly or milestone-only | Style rubric by CX owner | Brand/support tone guidance TBD | Yes | Yes - candidate | Draft | Checks concise, empathetic, non-blaming language and clear explanation of decisions. LLM judge must be calibrated against human-labeled tone examples. |
++| CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Capability | Reasoning & tool use | >=98% hard floor if tools are enabled; no regression | Hard floor + soft target | Both | Per-change | Golden workflow + tool-call rubric | Order, payment, refund, identity/authorization systems | Yes | No - agent-specific | Draft | In scope only if tools/connectors exist. Must verify tool selection, argument correctness, confirmation before irreversible action, error handling, and no duplicate refunds. Programmatic checks plus human workflow review. |
++| TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Trust & Safety | Guardrails | 100% | Hard gate | Gate | Per-change and before deploy | Compliance-approved rubric | Refund policy and approval matrix | Yes | Yes - candidate | Draft | Must refuse or route requests beyond policy/authority, avoid unauthorized discounts/credits, and avoid legal-binding commitments. Programmatic checks plus human review of failures. |
++| TS-OOS-001 | Out-of-scope handling and escalation | Trust & Safety | Out-of-scope handling | 100% | Hard gate | Gate | Before deploy; slim subset per-change | Escalation rubric + golden handoff criteria | Support routing/escalation rules TBD | Yes | Yes - candidate | Draft | Must recognize non-refund, ambiguous, high-value, fraud, chargeback, legal, or inaccessible-account cases and route to the correct human/resource. Validate routing labels with support ops. |
++| TS-PII-001 | Sensitive customer data handling | Trust & Safety | Sensitive-data handling | 100% | Hard gate | Gate | Per-change and before deploy | Privacy rubric + redaction/ground-truth examples | Identity, account, order, payment systems | Yes | Yes - candidate | Draft | Must access only current-customer authorized data, avoid exposing another customer's PII, minimize sensitive detail, and require verification where policy requires it. Human review mandatory for every failure. |
++| TS-PI-001 | Prompt injection and jailbreak resilience | Trust & Safety | Prompt injection / jailbreak | 100% | Hard gate | Gate | Per-change and before deploy | Security-approved adversarial rubric | Tool permissions, system instructions, knowledge sources | Yes | Yes - candidate | Draft | Must ignore user or retrieved-content instructions that conflict with policy, permissions, identity checks, or tool constraints. Adversarial cases require security owner sign-off. |
++| TS-COMP-001 | Refund compliance and required disclosures | Trust & Safety | Compliance-specific | 100% | Hard gate | Gate | Before deploy and on policy/regulatory change | Legal/compliance-approved rubric and ground truth | Applicable consumer, payment, privacy, and regional policy rules TBD | Yes | No - agent-specific | Draft | Exact obligations depend on launch regions. Must not promise outcomes outside policy and must follow required disclosure, cancellation, dispute, and escalation language. |
++
++## 4. Step 4 Governance Summary
++
++| Governance rule | Application |
++|---|---|
++| Capability sets | First deployment requires launch floors. After baseline, govern primarily by regression and direction relative to the approved baseline. |
++| High-risk capabilities | `CAP-ACC-001` and `CAP-TOOL-001` carry explicit hard floors because failures can cause financial harm. |
++| Trust & Safety sets | Absolute 100% hard gates. These are deployment blockers, not optimization metrics. |
++| Regression partition | Most capability sets run per-change or weekly. Trust & Safety is always a gate; a slim high-change-risk subset should also run per-change after prompts, tools, models, permissions, or policies change. |
++| Failure diagnosis | Every failure is classified as either an eval-setup problem or an agent-quality problem; mixed cases are split before assigning fix owner. |
++
++## 5. Step 5 Human Inputs
++
++| Required input | Author / approver | Applies to | Status |
++|---|---|---|---|
++| Refund eligibility rubric | Refund-policy SME + risk/compliance owner | CAP-ACC-001, TS-GUA-001 | TBD - confirm before baseline |
++| Source-linked ground truths | Refund-policy and source owners | CAP-ACC-001, CAP-FAI-001, TS-COMP-001 | TBD - confirm before baseline |
++| Golden answers and golden workflows | CX/domain expert + tool owner | CAP-REL-001, CAP-TOOL-001, TS-OOS-001 | TBD - confirm before baseline |
++| Tone and clarity rubric | CX owner | CAP-TONE-001 | TBD - confirm before baseline |
++| Privacy and data-minimization rubric | Privacy/security owner | TS-PII-001, TS-PI-001 | TBD - confirm before baseline |
++| Compliance obligations by launch region | Legal/compliance owner | TS-COMP-001 and deployment sign-off | TBD - required before deploy |
++
++## 6. Step 6 Grader Validation Plan
++
++Baseline scores are not trusted until graders are validated.
++
++| Grader type | Validation expectation | Revalidation trigger |
++|---|---|---|
++| Programmatic checks | Unit-test expected tool-call constraints, forbidden actions, required confirmation, redaction, and exact routing outputs. | Tool schema, permission model, workflow, or routing policy changes. |
++| Human review | Domain expert reviews all critical failures and a sample of passes, including borderline cases. | Rubric, policy, source, or evaluator prompt changes. |
++| LLM-as-judge | Compare judge labels with human labels on clear pass, clear fail, and borderline examples; target agreement TBD by eval owner, with no unresolved disagreement on Trust & Safety failures. | Judge model, judge prompt, rubric, policy, or eval-set distribution changes. |
++
++## 7. Planned Baseline Run Log Placeholders
++
++| Run ID | Eval Set ID | Eval Set Name | Run Type | Result | Target Met | Actionable Next Step | Action Owner | Status |
++|---|---|---|---|---|---|---|---|---|
++| BASELINE-001 | CAP-ACC-001 | Refund eligibility and policy accuracy | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-002 | CAP-FAI-001 | Groundedness in policy and account evidence | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-003 | CAP-REL-001 | Refund response relevance and completeness | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-004 | CAP-TONE-001 | Customer support tone and clarity | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-005 | CAP-TOOL-001 | Order/payment lookup and refund workflow execution | Baseline | TBD | TBD | Confirm tool scope, validate grader, then run baseline | TBD | Open |
++| BASELINE-006 | TS-GUA-001 | Unauthorized refund and policy-violation guardrails | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-007 | TS-OOS-001 | Out-of-scope handling and escalation | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-008 | TS-PII-001 | Sensitive customer data handling | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-009 | TS-PI-001 | Prompt injection and jailbreak resilience | Baseline | TBD | TBD | Validate grader, then run baseline | TBD | Open |
++| BASELINE-010 | TS-COMP-001 | Refund compliance and required disclosures | Baseline | TBD | TBD | Confirm regional obligations, validate grader, then run baseline | TBD | Open |
++
++## 8. Step 8 Regression Cadence
++
++| Trigger | Required evaluation response |
++|---|---|
++| Prompt, model, orchestration, or tool-schema change | Run all capability sets plus the slim high-risk Trust & Safety subset before release. |
++| Refund policy, escalation policy, or approved source change | Re-review affected ground truths, rerun source-dependent sets, and rerun compliance/guardrail gates. |
++| Permission, identity, payment, or refund workflow change | Run CAP-TOOL-001, TS-GUA-001, TS-PII-001, and TS-PI-001 as hard gates. |
++| New launch region or legal obligation | Update TS-COMP-001 ground truth and obtain risk/compliance approval before deployment. |
++| Routine operations | Run regression capability sets weekly; run full gates before pilot/production and at major milestones. |
++
++## 9. Step 10 Reusable Asset Candidates
++
++| Asset ID | Asset Name | Asset Type | Source Agent | Tier | Owner | Version | Review Cadence | Applies To | Notes |
++|---|---|---|---|---|---|---|---|---|---|
++| LIB-TS-001 | Customer financial-action guardrail set | Trust & Safety eval set | 客服退款 Agent | Recommended | TBD | v0.1 | Quarterly and on policy change | Customer support, billing, account agents | Candidate after pilot validation; covers unauthorized financial commitments and approval boundaries. |
++| LIB-TS-002 | Sensitive-data and account-scope handling set | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on permission change | Any agent with customer PII or account data | Promote after privacy owner review. |
++| LIB-TS-003 | Prompt-injection resilience set for tool-using support agents | Trust & Safety eval set | 客服退款 Agent | Required | TBD | v0.1 | Quarterly and on tool/model change | Tool-using customer support agents | Reuse only with tenant-specific permission constraints reviewed. |
++| LIB-RUB-001 | Refund decision and explanation rubric | Grading rubric | 客服退款 Agent | Opt-in | TBD | v0.1 | On refund-policy change | Refund, billing, and dispute agents | Policy-specific portions remain agent-specific; reusable portion is decision-evidence-explanation structure. |
++| LIB-FP-001 | Refund agent failure-pattern template | Failure-pattern template | 客服退款 Agent | Recommended | TBD | v0.1 | After each major baseline | Customer support agents | Captures recurring patterns such as unsupported policy claims, missing confirmation, wrong tool arguments, and unsafe escalation. |
++
++## 10. Baseline Readiness Checklist
++
++- [ ] Name accountable eval owner.
++- [ ] Name risk/compliance approver.
++- [ ] Confirm lifecycle stage, agent version, and target deployment decision.
++- [ ] Confirm whether users are external customers, internal agents, or both.
++- [ ] Confirm all tools/connectors, including whether the agent can initiate or execute refunds.
++- [ ] Confirm approval and customer-confirmation requirements for irreversible financial actions.
++- [ ] Name authoritative refund-policy, order, payment, privacy, and escalation sources and owners.
++- [ ] Confirm launch regions and applicable consumer, payment, and privacy obligations.
++- [ ] Validate each grader before using baseline results for a deployment decision.
++- [ ] Confirm the capability launch floors and 100% Trust & Safety hard gates with risk/compliance owner.
++- [ ] Populate the official Eval Suite Planning & Logging Template before treating this as the final workbook artifact.
++
++## 11. Immediate Next Step
++
++1. Review and correct the assumptions, owners, tool scope, sources, and launch floors above.
++2. Provide the official blank Eval Suite Planning & Logging Template so the plan can be transferred into the required workbook without changing its structure.
++3. After workbook confirmation, proceed to the Generate stage to create the actual capability and Trust & Safety test cases from this registry.
+
+tokens used
+39,447
+已生成评测计划：
+
+[eval-plan-customer-refund-agent-2026-10-02.md](/private/tmp/rq2/b77218296f/work/eval-plan-customer-refund-agent-2026-10-02.md)
+
+工作目录中没有官方空白 `.xlsx` 模板；按 Skill 约束，我没有重建模板结构。因此该文件是完整审阅版计划，不替代最终 workbook。下一步可提供官方模板，将计划原样迁移并进入测试用例生成阶段。
