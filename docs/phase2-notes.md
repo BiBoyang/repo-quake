@@ -84,3 +84,21 @@ TODO/fence，不看正文完整性）。
 PR 形态建议：给上游 anthropics/skills 提 quick_validate.py 补丁——非空断言 +
 引用存活性检查（可直接引用 Claude 版 validate_path_references 的实现作先例），
 理由栏附本仓库 runs/phase2 与最小复现命令。
+
+## eval-guide 上游可提 issue（2026-10-02 中午确认，main = 7a22a89 为最新提交）
+
+**A. 文档路径失效（doc bug）。** SKILL.md:127 与 dashboard/build-orient.py 头部
+注释（6-12 行）引用的 `templates/orient.html`、`templates/base.html`、
+`examples/stage-orient-data.json` 均不存在；真实位置在 `dashboard/templates/`、
+`dashboard/examples/`（build-orient.py:31 的代码是对的，文档/注释停留在
+目录迁移前）。最小验证：`ls` 对比 + build-orient.py 代码路径。
+
+**B. 2/5 个 skill 的 frontmatter 不是合法 YAML。** eval-guide 与
+eval-suite-planner 的 description 为未加引号的 plain scalar，内含
+": "（如 "…development: write evals…"），PyYAML 直接拒绝解析
+（"mapping values are not allowed here"，eval-guide 在 description 第 289 列）。
+skill-guard（宽松解析）PASS 了它——我们自己的证人也有这个盲区，记一笔。
+影响面：任何用严格 YAML 解析器的工具链（含 Claude 版 quick_validate）都
+无法解析这两个 skill 的元数据。修法：description 加引号或改 block scalar。
+
+两者皆适合一个 focused PR（或先 issue 问维护者偏好）。证据命令均已存档。
