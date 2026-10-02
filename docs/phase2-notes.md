@@ -102,3 +102,13 @@ skill-guard（宽松解析）PASS 了它——我们自己的证人也有这个�
 无法解析这两个 skill 的元数据。修法：description 加引号或改 block scalar。
 
 两者皆适合一个 focused PR（或先 issue 问维护者偏好）。证据命令均已存档。
+
+## PR 已提交（2026-10-02 下午）
+
+- anthropics/skills PR #1949：https://github.com/anthropics/skills/pull/1949
+  （quick_validate.py 非空断言 + 链接式引用存活性检查；fork: BiBoyang/skills-1）
+- microsoft/eval-guide PR #16：https://github.com/microsoft/eval-guide/pull/16
+  （orient 资源路径补 dashboard/ 前缀 + 两个 skill description 加引号；fork: BiBoyang/eval-guide）
+- 两份 PR 均经过独立核验（内部 subagent + 用户外部 agent 双通道）后提交。
+- 过程备注：GitHub GraphQL/部分 HTTPS 链路当日下午持续抖动（TLS handshake timeout），
+  PR B 改走 REST API 创建成功；push 重试约 4 次。
