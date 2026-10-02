@@ -60,3 +60,27 @@ skill-creator 直接 FAIL 9 个假阳性错误。后果：对这个靶子证人�
   Stage 3 Run / Stage 4 Interpret 整段丢失）。
 - F2：skillcreator 删 references/openai_yaml.md（SKILL.md 第 92 行点名）；
   evalguide 删 playbook.md（SKILL.md 第 55 行称为 canonical methodology）。
+
+## skill-creator quick_validate.py 盲区的三变体确认（2026-10-02 中午，上游钉版）
+
+三变体：Anthropic 上游（anthropics/skills@main，quick_validate.py 最后更新
+2026-02-06 1ed29a03，102 行）、Codex 分发版（127 行 minimal）、Claude Code
+分发版（223 行，社区增强 fork，含 validate_path_references）。
+
+**确认一：空 frontmatter 静默放行（三变体全部）。**
+精确边界：YAML `name:`（空值→None）会被类型检查意外挡下（"got NoneType"）；
+而 `name: ""`（引号空串）三变体全部报 "Skill is valid!"。根因：上游 63/78 行
+所有格式校验都在 `if name:` / `if description:` 真值守卫后面，空串跳过一切检查，
+且无「非空」断言。phase2 的 F4 格（mutate.sh 写引号空串）正是打在这个盲区上。
+
+**确认二：引用存活性零检查（上游 + Codex 版）。**
+上游与 Codex 版均无 validate_path_references；最小复现：SKILL.md 引用
+不存在的 references/guide.md → 上游报 "Skill is valid!"。Claude 版有社区补丁。
+（skill-guard 对同一格 FAIL。）
+
+**确认三：截断无检测。** F1 截断件三变体全 PASS（脚本只查 frontmatter 与
+TODO/fence，不看正文完整性）。
+
+PR 形态建议：给上游 anthropics/skills 提 quick_validate.py 补丁——非空断言 +
+引用存活性检查（可直接引用 Claude 版 validate_path_references 的实现作先例），
+理由栏附本仓库 runs/phase2 与最小复现命令。
