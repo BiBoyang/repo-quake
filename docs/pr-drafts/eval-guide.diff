@@ -1,0 +1,31 @@
+diff -ruN /Users/boyang/repo-quake/vendor/eval-guide/skills/eval-guide/SKILL.md repo/skills/eval-guide/SKILL.md
+--- /Users/boyang/repo-quake/vendor/eval-guide/skills/eval-guide/SKILL.md	2026-10-02 01:59:53
++++ repo/skills/eval-guide/SKILL.md	2026-10-02 13:06:38
+@@ -1,6 +1,6 @@
+ ---
+ name: eval-guide
+-description: Eval enablement accelerator — help customers think through "what does good look like" for their AI agent, then generate a structured eval plan and test cases they can use immediately. No built agent required — an idea or description is enough. Promotes eval-first development: write evals before building. Use when anyone mentions agent evaluation, eval planning, "what should we test", "how do we know if the agent is good", test case generation, or interpreting eval results.
++description: 'Eval enablement accelerator — help customers think through "what does good look like" for their AI agent, then generate a structured eval plan and test cases they can use immediately. No built agent required — an idea or description is enough. Promotes eval-first development: write evals before building. Use when anyone mentions agent evaluation, eval planning, "what should we test", "how do we know if the agent is good", test case generation, or interpreting eval results.'
+ preamble: |
+   _UPD=$(~/.claude/plugins/cache/*/eval-guide/*/bin/eval-guide-update-check 2>/dev/null || ./bin/eval-guide-update-check 2>/dev/null || true)
+   echo "$_UPD"
+@@ -124,7 +124,7 @@
+ 
+ 3. Proceed to Stage 0 (Discover) without waiting. The dashboard is informational.
+ 
+-**When to rebuild the static HTML:** if `templates/orient.html`, `templates/base.html`, or `examples/stage-orient-data.json` change, run `python dashboard/build-orient.py` once and check in the regenerated `orient-dashboard.html`. The build script reuses `serve.py`'s `generate_html`, so the rendering stays consistent with the live dashboards.
++**When to rebuild the static HTML:** if `dashboard/templates/orient.html`, `dashboard/templates/base.html`, or `dashboard/examples/stage-orient-data.json` change, run `python dashboard/build-orient.py` once and check in the regenerated `orient-dashboard.html`. The build script reuses `serve.py`'s `generate_html`, so the rendering stays consistent with the live dashboards.
+ 
+ **Why this matters for the customer:** The maturity model is the value moment. Without it, the customer sees a series of stages with no map. With it, they understand exactly what they're getting and what comes next — the eval-first message lands because they can see the full journey.
+ 
+diff -ruN /Users/boyang/repo-quake/vendor/eval-guide/skills/eval-suite-planner/SKILL.md repo/skills/eval-suite-planner/SKILL.md
+--- /Users/boyang/repo-quake/vendor/eval-guide/skills/eval-suite-planner/SKILL.md	2026-10-02 01:59:53
++++ repo/skills/eval-suite-planner/SKILL.md	2026-10-02 13:06:38
+@@ -1,6 +1,6 @@
+ ---
+ name: eval-suite-planner
+-description: Plan standalone — populates the Eval Suite Planning & Logging Template from an Agent Vision or plain-English agent description. Grounded in Practical Guidance on Agent Evaluation v5: Step 1 planning, Steps 2-3 eval-set decomposition, Step 4 gates/improvement targets, Step 5 human inputs, Step 6 grader-validation planning, Step 7 baseline placeholders, Step 8 regression partitioning, and Step 10 reusable-asset candidates. Output is a template-preserving `.xlsx` workbook plus an interactive HTML review page. Use before generating test cases or running evals.
++description: 'Plan standalone — populates the Eval Suite Planning & Logging Template from an Agent Vision or plain-English agent description. Grounded in Practical Guidance on Agent Evaluation v5: Step 1 planning, Steps 2-3 eval-set decomposition, Step 4 gates/improvement targets, Step 5 human inputs, Step 6 grader-validation planning, Step 7 baseline placeholders, Step 8 regression partitioning, and Step 10 reusable-asset candidates. Output is a template-preserving `.xlsx` workbook plus an interactive HTML review page. Use before generating test cases or running evals.'
+ ---
+ 
+ ## Purpose
