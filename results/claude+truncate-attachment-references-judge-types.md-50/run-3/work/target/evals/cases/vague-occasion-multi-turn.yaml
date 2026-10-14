@@ -1,0 +1,36 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: vague-occasion-multi-turn
+# 用例标题，展示在用例列表与报告中。
+title: 场合不明时先追问，补充信息后再生成
+# 用例背景：覆盖 SKILL.md「Identify the occasion. If unclear, ask.」。
+description: |
+  首轮只给「帮我写张贺卡」，信息不足以定调；Skill 应当追问或列出可选场合，
+  而不是凭空假设。第二轮补充生日与收件人后，应产出对应贺卡。
+
+input:
+  # 多轮对话使用 turns 替代 input.prompt。
+  turns:
+    - role: user
+      content: "帮我写张贺卡。"
+      post_condition:
+        # 首轮必须出现追问或场合枚举，否则整条用例 FAIL。
+        must_contain_any: ["生日", "感谢", "鼓励", "道歉", "?", "？"]
+        on_fail: fail
+    - role: user
+      content: "是生日贺卡，送给我妹妹小雨。"
+
+expect:
+  # 门槛检查：第二轮补充的信息要落到贺卡里。
+  must_contain:
+    - "小雨"
+
+judge:
+  # 判分方式：按轮次断言，确认第二轮才交付成稿。
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 2
+        contains_all: ["小雨"]
+    - turn_response_not_contains:
+        turn: 2
+        not_contains: ["亲爱的", "作为 AI"]

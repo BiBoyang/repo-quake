@@ -1,0 +1,23 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: unclear-occasion-asks
+# 用例标题，展示在用例列表与报告中
+title: 场合不明：先追问而不是编造
+# 用例背景：覆盖的核心行为
+description: |
+  用户没有说明贺卡场合与收件人，验证 Skill 按
+  "Identify the occasion. If unclear, ask." 的规则先追问，
+  而不是直接编造一张卡片。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分方式：确定性关键词规则
+  type: rule_based
+  # 所有断言均满足才判 PASS
+  success:
+    # 追问澄清的典型信号：问号或礼貌询问用语
+    - output_contains:
+        any: ["？", "?", "请问"]

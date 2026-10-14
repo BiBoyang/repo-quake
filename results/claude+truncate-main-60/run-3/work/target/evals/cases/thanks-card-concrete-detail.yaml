@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-card-concrete-detail
+# 在用例列表和报告中展示的简短标题。
+title: 感谢卡片说明具体事由，而不是泛泛致谢
+# 该用例覆盖的行为说明。
+description: |
+  验证 Skill 在感谢场景下遵守 tone-guide：措辞温暖但不夸张，并且围绕用户给出的
+  具体事件（陪用户改方案到凌晨）展开，避免“谢谢你一直以来的帮助”这类空泛感谢。
+  收件人名字由 expect 先行把关。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    帮我写张小卡片谢谢同事张姐。上周我负责的方案出了问题，她陪我一起改到凌晨两点，
+    真的帮了大忙。
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_contain:
+    - "张姐"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # 只有全部 success 断言都满足才判 PASS。
+  success:
+    # 出现明确的感谢措辞。
+    - output_contains:
+        any: ["感谢", "谢谢", "多谢", "辛苦了"]
+    # 至少提到一个用户给出的具体细节，避免空泛感谢。
+    - output_contains:
+        any: ["方案", "凌晨", "陪我", "加班", "熬夜", "那天", "帮我"]

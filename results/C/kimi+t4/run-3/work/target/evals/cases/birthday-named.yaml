@@ -1,0 +1,37 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-named
+# 用例摘要，显示在用例列表和报告中
+title: 生日贺卡必须包含收件人名字
+# 该用例覆盖的行为背景
+description: |
+  用户给出场合（生日）和收件人名字时，
+  Skill 应直接在贺卡正文中写出该名字，且遵守格式规则：
+  中文输出、正文简短、结尾恰好一个 emoji。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我朋友小雨明天过生日，帮我写一张生日贺卡送给她。
+
+# 零成本预检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["小雨"]
+    - output_matches:
+        all:
+          # 正文含中文字符（输入是中文，卡片也必须是中文）
+          - '\p{Han}'
+          # 篇幅上限：整体不超过 120 个字符（语气指南要求 80 字内，留有余量）
+          - '(?s)^.{1,120}$'
+          # 结尾是 emoji（\s* 容忍末尾换行）
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{FE0F}]\s*$'
+    - exit_code: 0

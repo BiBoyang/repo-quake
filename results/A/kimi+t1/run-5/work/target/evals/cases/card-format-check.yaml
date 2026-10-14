@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: card-format-check
+# 用例标题，展示在用例列表与报告中
+title: 贺卡格式应完全符合 tone-guide 硬性要求
+description: |
+  tone-guide 的确定性格式要求：中文不超过 80 字、
+  恰好一个 emoji 且位于消息末尾、不含 markdown 符号、
+  不以 Dear/亲爱的 开头、整段不被引号包裹。
+  这些检查完全确定，用 script judge 精确判定，比 LLM 评审便宜且稳定。
+
+input:
+  # 单轮用例：发送给 Agent 的用户 prompt
+  prompt: |
+    帮我写一张感谢卡给王老师，谢谢她这学期对我的耐心指导。
+
+# 判分前的零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "王老师"
+  exit_code: 0
+
+judge:
+  # 判分策略: rule_based | agent_judge | script
+  type: script
+  # 判分脚本路径，相对 Skill 根目录；退出码 0 = PASS，非 0 = FAIL
+  script_path: evals/fixtures/scripts/check-card-format.sh
+  timeout_seconds: 30

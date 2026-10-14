@@ -1,0 +1,31 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致。
+id: thanks-tone-quality
+# 用例摘要，展示在用例列表和报告中。
+title: 感谢贺卡应具体、真诚、不夸张
+# 该用例覆盖的行为说明。
+description: |
+  语义评估：感谢卡要感谢具体的事情（送粥），语气温暖但不夸张，
+  且满足长度与"只输出卡片正文"的格式要求。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    上周我感冒，邻居王阿姨每天给我送粥，我想写张卡片谢谢她。
+
+# 零成本预判检查；不通过则跳过 judge。
+expect:
+  must_contain:
+    - "王阿姨"
+
+judge:
+  # 评分策略：语气与内容质量需要语义判断，用 agent_judge。
+  # 可选: rule_based | agent_judge | script。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "卡片明确提到送粥这件具体的事，而不是泛泛的感谢"
+    - "语气温暖真诚，没有夸张吹捧"
+    - "长度为 1-3 句话，不超过 80 个汉字"
+    - "只输出卡片正文，没有解释、标题、署名或引号"
+    - "包含收卡人称呼（王阿姨）"
+  pass_threshold: 0.7

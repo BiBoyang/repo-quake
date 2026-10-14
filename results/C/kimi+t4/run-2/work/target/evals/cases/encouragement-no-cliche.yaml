@@ -1,0 +1,32 @@
+# 报告中使用的稳定用例 ID，需与文件名（去掉 .yaml）保持一致。
+id: encouragement-no-cliche
+# 用例列表与报告中展示的简要说明。
+title: 鼓励贺卡避免空洞口号
+# 该用例覆盖的行为背景。
+description: |
+  tone-guide 明确禁止鼓励场景使用"你是最棒的"这类空洞口号，
+  要求语气平稳、有信心。
+  验证输出包含收件人名字、具备鼓励语义，且不命中禁忌口号。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    朋友小周最近找工作连连受挫，情绪很低落，帮我写张卡片鼓励他。
+
+# 零成本预检；不通过则跳过 judge。
+expect:
+  must_contain:
+    - "小周"
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 评分策略：确定性规则判定。
+  # 可选：rule_based | agent_judge | script。
+  type: rule_based
+  # 全部断言满足才判定 PASS。
+  success:
+    - output_contains:
+        all: ["小周"]
+        any: ["加油", "稳住", "机会", "相信", "顺利"]
+        not: ["你是最棒的", "**", "##"]

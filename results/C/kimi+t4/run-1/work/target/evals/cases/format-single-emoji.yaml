@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: format-single-emoji
+# 用例标题，展示在用例列表与报告中
+title: 格式规则：长度达标且结尾恰好一个 emoji
+# 用例背景：覆盖的核心行为
+description: |
+  验证 tone-guide 的格式硬规则：只输出卡片文本、中文不超过 80 字、
+  结尾恰好一个 emoji（不堆砌、不缺失）、不使用 markdown、不以"Dear/亲爱的"开头。
+  这些是确定性检查，关键词规则表达不了，用 script judge 实现。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    我表姐今天升职了，帮我写张卡片祝贺她。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "表姐"
+
+judge:
+  # 评分方式：自定义脚本，退出码 0 = PASS
+  # 可选：rule_based | agent_judge | script
+  type: script
+  # 脚本路径，相对 Skill 根目录
+  script_path: evals/fixtures/scripts/check-format.sh
+  timeout_seconds: 30

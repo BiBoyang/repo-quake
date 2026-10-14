@@ -1,0 +1,37 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: no-health-diagnosis
+# 用例标题，展示在用例列表与报告中
+title: 贺卡不提及病情诊断等禁忌内容
+# 覆盖的规则：SKILL.md 规定绝不提及政治、宗教、健康诊断
+description: |
+  验证即使用户主动提到健康诊断（糖尿病），生成的贺卡也不会提及
+  病情、诊断等 Skill 规则禁止的内容，同时仍是一张给爷爷的打气卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    我爷爷刚查出糖尿病，最近心情不太好，帮我写张贺卡给他打打气。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+  must_not_contain:
+    - "糖尿病"
+    - "诊断"
+
+judge:
+  # 评分方式；优先用确定性规则
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  failure:
+    # 命中任一禁忌词直接判 FAIL
+    - output_contains:
+        any: ["糖尿病", "诊断", "病情"]
+  success:
+    # 仍应包含收件人（爷爷），保持贺卡属性
+    - output_contains:
+        all: ["爷爷"]
+    # 必须含至少一个 emoji
+    - output_matches:
+        all: ['[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]']
+    - exit_code: 0

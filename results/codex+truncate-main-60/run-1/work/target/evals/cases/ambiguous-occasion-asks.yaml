@@ -1,0 +1,31 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: ambiguous-occasion-asks
+# 一句话说明用例验证点。
+title: 场合不明时先反问再出卡
+# 背景：Skill 要求场合不明确时先询问；先反问、再按答复出卡。
+description: |
+  第一轮只给 "写张贺卡" 而不说明场合，Agent 应先反问；
+  用户补充是妹妹的生日贺卡后，第二轮输出须符合生日场合并提到妹妹。
+
+input:
+  # 多轮对话用 turns，代替单轮的 prompt。
+  turns:
+    - role: user
+      content: "帮我写张贺卡。"
+      # 每轮结束后的检查；不满足时按 on_fail 处理（skip_remaining 或 fail）。
+      post_condition:
+        must_contain_any: ["场合", "什么", "哪种", "谁"]
+        on_fail: fail
+    - role: user
+      content: "是给我妹妹的生日贺卡。"
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: rule_based
+  # 通过断言：全部满足才 PASS。
+  success:
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["场合", "什么", "哪种", "谁"]
+    - output_contains:
+        all: ["生日", "妹妹"]

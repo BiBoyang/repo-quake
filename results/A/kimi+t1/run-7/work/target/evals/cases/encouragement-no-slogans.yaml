@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogans
+# 用例标题
+title: 鼓励贺卡避免空洞口号
+# 用例背景：覆盖 tone-guide 中「鼓励场景避免空洞口号」的规则
+description: |
+  验证鼓励场景的贺卡语气平稳自信，不出现 tone-guide 明令禁止的
+  空洞口号，如「你最棒」或 "you are the best"。
+
+input:
+  # 单轮用户提示
+  prompt: |
+    我朋友下周要参加一个很重要的面试，帮我写张贺卡给他打打气。
+
+# 零成本预检查
+expect:
+  must_not_contain:
+    - "你最棒"
+    - "you are the best"
+    - "You are the best"
+
+judge:
+  # 评分策略
+  type: rule_based
+  # 通过断言：空洞口号一律不得出现
+  success:
+    - output_contains:
+        not: ["你最棒", "you are the best", "You are the best"]

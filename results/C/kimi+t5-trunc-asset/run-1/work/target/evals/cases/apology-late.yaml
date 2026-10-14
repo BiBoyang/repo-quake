@@ -1,0 +1,24 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-late
+# 用例标题，展示在列表与报告中
+title: 道歉卡应直接认错且贴合事由
+# 覆盖点： apology 场合语气规则
+description: |
+  tone-guide 规定道歉场合「真诚、直接认错、不过度解释」，
+  用例验证约会迟到的道歉卡包含道歉表达并提及迟到事由。
+
+input:
+  prompt: |
+    我昨晚约会迟到了一个小时，女朋友很生气，帮我写张道歉卡给她。
+
+expect:
+  must_contain:
+    - "迟到"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["迟到"]
+        any: ["对不起", "抱歉"]
+    - exit_code: 0

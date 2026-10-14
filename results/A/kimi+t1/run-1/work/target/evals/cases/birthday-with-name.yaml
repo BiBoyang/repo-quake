@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日卡片包含收件人名字
+description: |
+  SKILL.md 规则：用户提供了收件人名字时，卡片必须包含该名字。
+
+input:
+  # 单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    我闺蜜小雨下周生日，帮我写一张生日卡片，轻松一点，别太正式。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小雨"]
+        not: ["Dear", "**"]
+    # 至少出现一个 emoji 类符号（So = Unicode Symbol, other）
+    - output_matches:
+        any: ["\\p{So}"]

@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: birthday-card-basic
+# 用例标题，展示在用例列表与报告中。
+title: 生日场合直接产出简短贺卡正文
+# 用例背景：覆盖主路径「明确场合 -> 直接生成」，不需要追问。
+description: |
+  用户给出明确的生日场合、收件人姓名和具体事由，验证 Skill 能直接产出
+  1-3 句、只含正文、结尾带一个 emoji 的贺卡，并且带上收件人姓名。
+
+input:
+  # 发送给 Agent 的用户提示，贴近真实用户的口吻。
+  prompt: |
+    帮我写一张生日贺卡，送给我的同事小林，他最近刚升职，工作特别拼。
+
+expect:
+  # 门槛检查：命中姓名、排除抬头与元话语，未通过则跳过 judge。
+  must_contain:
+    - "小林"
+  must_not_contain:
+    - "亲爱的"
+    - "Dear"
+
+judge:
+  # 判分方式：关键词与正则即可判定时优先 rule_based。
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小林"]
+    - output_matches:
+        # 正文结尾应当有 emoji。
+        all: ["\\p{So}\\s*$"]
+        # 不使用 markdown 标题/加粗，也不使用「亲爱的」抬头。
+        not: ["(?m)^#", "\\*\\*", "亲爱的"]

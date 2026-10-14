@@ -1,0 +1,26 @@
+# 用例 ID，保持与文件名（去掉 .yaml）一致
+id: apology-admits-fault
+# 用例的一句话摘要，展示在列表与报告中
+title: 道歉卡直接承认过错
+# 覆盖点：tone-guide 要求道歉"诚恳、直白承认错误、不过度解释"
+description: |
+  用户为忘记好友生日而道歉，期望卡片中出现明确的歉意表达
+  （"抱歉"或"对不起"），符合道歉场合的语气规则。
+input:
+  # 发送给 Agent 的用户提示，尽量贴近真实用户口吻
+  prompt: |
+    帮我写一张道歉卡，我上周忘了好朋友阿哲的生日，想认真道个歉。
+
+expect:
+  must_contain:
+    - "阿哲"
+
+judge:
+  # 评分方式
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["阿哲"]
+    - output_contains:
+        any: ["抱歉", "对不起"]

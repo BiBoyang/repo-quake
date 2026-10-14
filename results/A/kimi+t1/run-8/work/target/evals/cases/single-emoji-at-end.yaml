@@ -1,0 +1,21 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致。
+id: single-emoji-at-end
+# 用例摘要，展示在用例列表和报告中。
+title: 卡片末尾应有且仅有一个 emoji
+# 该用例覆盖的行为说明。
+description: |
+  格式约束：输出恰好一个 emoji 且位于消息最末尾。
+  该规则完全确定性，用 script judge 判定，避免 LLM 评审成本。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    给我最好的朋友写一句生日祝福。
+
+judge:
+  # 评分策略：自定义脚本，退出码 0 判 PASS。
+  # 可选: rule_based | agent_judge | script。
+  type: script
+  # 判定脚本路径，相对 Skill 根目录。
+  script_path: evals/fixtures/scripts/check-single-emoji.sh
+  timeout_seconds: 30

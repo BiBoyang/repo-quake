@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-empty-slogan
+# 用例简要说明，展示在用例列表和报告中
+title: 鼓励卡应具体真诚，避免空洞口号和替用户承诺
+# 该用例覆盖的行为背景
+description: |
+  tone-guide：鼓励场景要沉稳自信，避免 "you are the best" 式空洞口号；
+  且不得替用户承诺未来行动（例如 "我会一直陪着你"）。
+  具体事件（面试）应体现在卡片中，以体现"具体而非空泛"。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我朋友明天要参加一场很重要的面试，现在特别紧张，帮我写一句鼓励他的话。
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  type: rule_based
+  success:
+    # 应提及具体事件（面试）；不得出现空洞口号或替用户做的承诺
+    - output_contains:
+        all: ["面试"]
+        not: ["你是最棒的", "我会一直"]
+    # 中文贺卡应简短（80 字以内，留少量余量）且以一个 emoji 收尾
+    - output_matches:
+        all:
+          - '(?s)^.{1,100}$'
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{2764}]\x{FE0F}?\s*$'

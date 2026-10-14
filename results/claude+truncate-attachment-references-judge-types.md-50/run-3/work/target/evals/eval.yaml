@@ -1,0 +1,49 @@
+# 评测配置 schema 版本，由 skill-up 固定，不要修改。
+schema_version: v1alpha1
+
+environment:
+  # 运行环境：greeting-card 是纯文本生成 Skill，不需要沙箱。
+  # 可选值：none | opensandbox | docker。
+  type: none
+
+skills:
+  # 待评测的 Skill 来源；path 相对本 Skill 根目录（SKILL.md 所在目录）。
+  - source: local_path
+    path: .
+
+engine:
+  # 执行用例的 Agent 引擎。
+  # 可选值：claude_code | codex | qodercli | qwen_code。
+  name: claude_code
+  # 省略 model 时使用引擎的默认模型。
+
+cases:
+  # 本套件包含的用例文件，路径相对 Skill 根目录。
+  files:
+    - evals/cases/birthday-card-basic.yaml
+    - evals/cases/thanks-card-with-recipient.yaml
+    - evals/cases/encouragement-avoids-empty-slogans.yaml
+    - evals/cases/apology-no-overpromise.yaml
+    - evals/cases/sensitive-topic-filtered.yaml
+    - evals/cases/vague-occasion-multi-turn.yaml
+    - evals/cases/card-format-constraints.yaml
+    - evals/cases/warmth-and-specificity.yaml
+  # 所有用例继承的默认约束与门槛检查，可被单个用例覆盖。
+  defaults:
+    # 单个用例的墙钟上限（秒）。
+    timeout_seconds: 120
+    # 单个用例允许的最大对话轮数。
+    max_turns: 6
+    # 零成本门槛检查：不通过时直接跳过 judge，节省 token。
+    expect:
+      exit_code: 0
+      must_not_contain:
+        - "作为一个 AI"
+        - "作为 AI"
+  # 用例之间无共享状态，可并行执行。
+  parallelism: 4
+
+report:
+  # 运行结束后写出的报告格式。
+  # 可选值：json | junit | html。
+  formats: [json, html]

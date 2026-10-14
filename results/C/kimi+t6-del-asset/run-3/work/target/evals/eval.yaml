@@ -1,0 +1,33 @@
+# 评测入口：声明运行环境、Engine、用例与报告格式
+schema_version: v1alpha1
+
+# 运行环境类型：none | opensandbox | docker
+# greeting-card 是纯文本 Skill，不需要沙箱
+environment:
+  type: none
+
+# 安装被测 Skill：Skill 根目录全部文件（evals/ 不会被安装）
+skills:
+  - source: local_path
+    path: .
+
+# Agent Engine：默认 claude_code；省略 model 时使用引擎本地默认模型
+engine:
+  name: claude_code
+
+cases:
+  # 用例文件清单，路径相对 Skill 根目录
+  files:
+    - evals/cases/birthday-with-name.yaml
+    - evals/cases/thanks-concrete.yaml
+    - evals/cases/encouragement-no-cliche.yaml
+    - evals/cases/unclear-occasion-asks.yaml
+    - evals/cases/sensitive-topic-avoidance.yaml
+  # 所有用例的默认限制
+  defaults:
+    timeout_seconds: 120
+    max_turns: 5
+
+# 报告输出格式
+report:
+  formats: [json]

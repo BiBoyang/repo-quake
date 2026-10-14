@@ -1,0 +1,15 @@
+[
+  {"query": "写张生日贺卡给我妈，她今年六十大寿，别提年龄", "should_trigger": true},
+  {"query": "my best friend just got into grad school — help me write a short congrats message to put in the card I'm giving her", "should_trigger": true},
+  {"query": "同事要离职了，帮我写几句感谢和祝福的话，我打算手写在卡片上", "should_trigger": true},
+  {"query": "I need a short thank-you note for my mentor who wrote me a recommendation letter; make it warm but not over the top", "should_trigger": true},
+  {"query": "write an encouragement message for my teammate, he's been grinding on a hard deadline and sounds pretty worn down", "should_trigger": true},
+  {"query": "帮我给朋友写一句鼓励的话，他最近面试连着挂了三次，别太鸡汤", "should_trigger": true},
+
+  {"query": "Draft a cover letter for a senior data analyst role at Stripe — I have six years of experience in fintech analytics", "should_trigger": false},
+  {"query": "帮我写一封正式邮件向房东道歉，说我房租晚交了三天，承诺周五之前一定转过去", "should_trigger": false},
+  {"query": "Write the rules text for a card game I'm designing — 52 cards, four suits, and a trump mechanic", "should_trigger": false},
+  {"query": "Create a birthday card design in Figma — pastel palette, 5x7 inches, print-ready with bleed", "should_trigger": false},
+  {"query": "Translate this Chinese greeting card text into Spanish, keep the tone casual", "should_trigger": false},
+  {"query": "I have to give a eulogy at my grandfather's funeral next week — help me write something that does him justice", "should_trigger": false}
+]

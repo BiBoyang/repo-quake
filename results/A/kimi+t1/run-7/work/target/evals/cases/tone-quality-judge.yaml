@@ -1,0 +1,35 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: tone-quality-judge
+# 用例标题
+title: 贺卡整体语气与格式的语义评估
+# 用例背景：确定性规则覆盖不了的软性质量，用 agent_judge 兜底
+description: |
+  对生日贺卡做语义级质检：语气、篇幅、emoji 数量与位置、
+  无抬头/署名/markdown 等。agent_judge 成本最高，全套件仅保留此一条。
+
+input:
+  # 单轮用户提示
+  prompt: |
+    帮我妈妈写一张生日贺卡，她这周日过生日，我想谢谢她一直以来对我的照顾。
+
+# 零成本预检查：先挡住明显不合格的输出，节省 judge token
+expect:
+  must_not_contain:
+    - "Dear"
+    - "**"
+
+judge:
+  # 评分策略：语义判断只能交给 LLM 评审
+  type: agent_judge
+  # judge 使用的模型
+  model: anthropic/claude-sonnet-4-6
+  # 评审细则：尽量具体、可验证
+  criteria:
+    - "输出只有贺卡正文，没有解释、问候抬头（如 Dear 或「亲爱的」）、署名或引号包裹"
+    - "语气温暖真诚，适合送给母亲的生日场景"
+    - "篇幅为 1-3 句话，中文不超过 80 字"
+    - "恰好有一个 emoji，且位于整条消息的末尾"
+    - "未使用 markdown 格式"
+    - "未提及政治、宗教或健康诊断"
+  # 全部细则满足才算通过
+  pass_threshold: 1.0

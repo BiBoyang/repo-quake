@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-steady-not-slogans
+# 在用例列表和报告中展示的简短标题。
+title: 鼓励卡片语气沉稳，不使用空洞口号
+# 该用例覆盖的行为说明。
+description: |
+  验证 Skill 在鼓励场景下遵守 tone-guide：语气沉稳、自信，避免“你是最棒的”
+  这类空洞口号，并且要结合用户给出的具体处境（备考压力大），而不是泛泛祝福。
+  该用例依赖语义判断，因此使用 agent_judge。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    我同事小陈最近在准备一个很难的资格考试，他说压力大得有点撑不住了。
+    帮我写句话鼓励他一下。
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_contain:
+    - "小陈"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # 需要语义判断的评分细则，尽量具体、可验证。
+  criteria:
+    - "语气沉稳、真诚，符合鼓励场景，没有使用“你是最棒的”“你是最优秀的”这类空洞口号"
+    - "内容结合了用户给出的具体处境（准备资格考试、压力大），而不是泛泛的祝福"
+    - "只输出卡片正文，没有解释、标题、署名或 markdown 格式，且结尾恰好一个 emoji"
+    - "没有替用户承诺未来的行动（例如“我会一直陪着你”）"
+  pass_threshold: 0.7

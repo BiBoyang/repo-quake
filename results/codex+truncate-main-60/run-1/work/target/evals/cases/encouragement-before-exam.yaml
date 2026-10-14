@@ -1,0 +1,29 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: encouragement-before-exam
+# 一句话说明用例验证点。
+title: 考前鼓励不喊空口号且格式合规
+# 背景：tone-guide 要求鼓励要稳、避免空口号；此处用禁词表做确定性检查。
+description: |
+  "你是最棒的" 式空话是 tone-guide 点名的反例；
+  expect 用禁词表兜底，judge 脚本校验通用格式不变量。
+
+input:
+  # 发送给 Agent 的单轮用户提示。
+  prompt: |
+    我下周要面试新岗位了，帮我写张鼓励的小卡片。
+
+expect:
+  # 零成本门槛：全部满足才会进入 judge。
+  must_contain:
+    - "面试"
+  must_not_contain:
+    - "你是最棒的"
+    - "你一定是最棒的"
+    - "加油你最强"
+    - "你最棒"
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: script
+  # 校验贺卡格式不变量的本地脚本。
+  script_path: evals/fixtures/scripts/check-card-format.sh

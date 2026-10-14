@@ -1,0 +1,34 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日贺卡：包含收件人名字与具体细节
+# 用例背景：覆盖的核心行为
+description: |
+  验证 Skill 能识别生日场景，按 tone-guide 写出欢快的祝福语，
+  并在用户提供收件人名字（小雨）与具体事件（换新工作）时写进卡片。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    小雨下周过生日，她最近刚换了新工作。帮我给她写一张生日贺卡。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分方式：确定性关键词规则
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # 所有断言均满足才判 PASS
+  success:
+    - output_contains:
+        all: ["小雨"]
+        any: ["生日", "生日快乐"]
+        not: ["Dear"]
+    # 语气规则：具体细节优先于泛泛祝福
+    - output_contains:
+        any: ["新工作", "工作"]

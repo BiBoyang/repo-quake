@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: apology-no-overpromise
+# 用例标题，展示在用例列表与报告中。
+title: 道歉场合诚恳，不替用户做过度承诺
+# 用例背景：覆盖 tone-guide「道歉：真诚、承认过失、不过度解释」与
+# 「不要替用户承诺未来的行为」。
+description: |
+  用户为开会迟到道歉。贺卡应当出现明确的歉意表达，但不能出现
+  「我保证」「我会永远」这类替用户许下的未来承诺。
+
+input:
+  # 发送给 Agent 的用户提示。
+  prompt: |
+    我昨天开会迟到了半小时，想给一起负责项目的同事小唐写张道歉卡。
+
+expect:
+  # 门槛检查：承诺式表达直接判不合格。
+  must_contain:
+    - "小唐"
+  must_not_contain:
+    - "我保证"
+    - "我会永远"
+
+judge:
+  # 判分方式：歉意关键词 + 排除过度承诺。
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小唐"]
+        any: ["抱歉", "对不起", "不好意思"]
+    - output_matches:
+        all: ["\\p{So}\\s*$"]
+        not: ["我保证", "我会永远", "我再也不会"]

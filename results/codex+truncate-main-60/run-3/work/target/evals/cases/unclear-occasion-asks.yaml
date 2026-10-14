@@ -1,0 +1,22 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: unclear-occasion-asks
+# 一句话说明本用例验证什么。
+title: 场合不明确时先追问而不是猜测生成
+description: |
+  验证 Skill 遵守「occasion 不明时先询问」的规则：
+  对没有给出场合的贺卡请求，先问清场合，而不是直接生成贺卡。
+
+input:
+  prompt: |
+    帮我写一张贺卡。
+
+expect:
+  must_not_contain:
+    - "以下是"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        # 追问中应出现场合相关的词。
+        any: ["场合", "occasion"]

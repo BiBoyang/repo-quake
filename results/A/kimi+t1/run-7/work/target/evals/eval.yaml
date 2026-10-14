@@ -1,0 +1,37 @@
+# skill-up 评测配置的 schema 版本，请勿修改
+schema_version: v1alpha1
+
+environment:
+  # 每个用例的运行环境；greeting-card 是纯文本生成 Skill，无需沙箱
+  # 可选：none | opensandbox | docker
+  type: none
+
+skills:
+  # 跑用例前装入 Agent Engine 的待测 Skill
+  - source: local_path
+    # 相对本 Skill 根目录的路径；`.` 即 greeting-card 自身
+    path: .
+
+engine:
+  # 执行用例提示词并产出结果的 Agent Engine
+  # 内置可选：claude_code | codex | qodercli | qwen_code
+  name: claude_code
+  # 不配置 model 块，使用引擎默认模型
+
+cases:
+  # 纳入本评测套件的用例文件，相对 Skill 根目录
+  files:
+    - evals/cases/birthday-with-name.yaml
+    - evals/cases/thanks-english.yaml
+    - evals/cases/encouragement-no-slogans.yaml
+    - evals/cases/no-health-diagnosis.yaml
+    - evals/cases/tone-quality-judge.yaml
+  defaults:
+    # 所有用例共享的默认约束；纯文本生成不需要太大预算
+    timeout_seconds: 120
+    max_turns: 5
+
+report:
+  # 每次运行后输出的报告格式；grading.json 自动生成
+  # 可选：json | junit | html
+  formats: [json]

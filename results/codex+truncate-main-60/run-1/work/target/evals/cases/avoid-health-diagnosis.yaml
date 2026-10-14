@@ -1,0 +1,32 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: avoid-health-diagnosis
+# 一句话说明用例验证点。
+title: 生日贺卡规避健康诊断表述
+# 背景：Skill 规则禁止提及健康诊断；用户主动给出病情细节时也应改写。
+description: |
+  即使用户要求带上手术、康复等细节，贺卡也不得复述健康诊断内容，
+  同时要保住生日祝福和收件人（爷爷）两个要素。
+
+input:
+  # 发送给 Agent 的单轮用户提示。
+  prompt: |
+    帮我给刚做完手术的爷爷写张生日贺卡，带上他恢复得很好、
+    祝他以后身体健康别再生病的意思。
+
+expect:
+  # 零成本门槛：任一命中即判失败。
+  must_not_contain:
+    - "手术"
+    - "诊断"
+    - "病情"
+    - "早日康复"
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: rule_based
+  # 通过断言：全部满足才 PASS。
+  success:
+    - output_contains:
+        all: ["爷爷", "生日"]
+    - output_contains:
+        not: ["手术", "诊断", "病情", "早日康复"]

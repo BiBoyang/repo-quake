@@ -1,0 +1,39 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogan
+# 用例列表和报告中展示的简短说明
+title: 鼓励卡片不用空洞口号、不代替用户承诺
+# 该用例覆盖的行为背景
+description: |
+  覆盖 tone-guide 的 encouragement 规则：语气平稳自信，
+  禁止 "你是最棒的" 这类空洞口号（Common mistakes），
+  也不代替用户承诺未来行为（如 "I will always be there"）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我朋友老周下周要参加一个很重要的面试，他最近特别没信心。
+    帮我写张卡片鼓励他一下。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 评分策略；本用例使用确定性规则
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部 success 断言满足才判 PASS
+  success:
+    # 确实是一张针对该场景的鼓励卡
+    - output_contains:
+        any: ["面试", "老周"]
+    # 空洞口号黑名单（子串匹配，覆盖标点变体）
+    - output_contains:
+        not: ["你最棒", "你是最棒的", "天下第一"]
+    # 不代替用户承诺未来行为
+    - output_contains:
+        not: ["我会一直", "我永远", "我永远不会"]
+    # 结尾必须是 emoji（兼容 ❤️ 这类带 VS16 的写法）
+    - output_matches:
+        all: ['\p{So}\x{FE0F}?\s*$']

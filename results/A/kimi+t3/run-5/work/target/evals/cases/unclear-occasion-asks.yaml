@@ -1,0 +1,16 @@
+id: unclear-occasion-asks
+title: 场合不明确时先向用户提问
+description: |
+  覆盖规则：Identify the occasion. If unclear, ask.
+  用户只说"写张卡片"时，Skill 应先询问场合或对象，而不是直接产出成品卡片。
+
+input:
+  prompt: |
+    帮我写张卡片。
+
+judge:
+  type: rule_based
+  success:
+    # 追问中应涉及场合或收件对象
+    - output_contains:
+        any: ["场合", "谁", "送给", "祝福"]

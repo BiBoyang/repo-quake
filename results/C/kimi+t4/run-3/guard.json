@@ -1,0 +1,12 @@
+{
+  "errors": [
+    "SKILL.md: required frontmatter field 'name' is empty",
+    "SKILL.md: required frontmatter field 'description' is empty"
+  ],
+  "warnings": [],
+  "info": [
+    "scripts/todo.py: referenced by evals/fixtures/skills/sample-with-evals/SKILL.md but missing (secondary doc — not gated; may be a hypothetical example)"
+  ],
+  "skill_dir": "results/C/kimi+t4/run-3/skill",
+  "verdict": "FAIL"
+}

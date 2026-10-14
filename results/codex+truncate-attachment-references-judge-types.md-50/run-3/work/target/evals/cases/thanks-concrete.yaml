@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-concrete
+# 用例列表与报告中展示的简短说明。
+title: 感谢卡应具体提及被感谢的事项
+# 覆盖的行为背景：tone-guide 要求感谢要具体，说明感谢的是什么。
+description: |
+  验证 Skill 写感谢卡时具体提及"搬家"这一被感谢事项，
+  而不是空泛的客套话。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    朋友上周帮我搬了家，帮我写张感谢卡发给他。
+
+expect:
+  must_contain:
+    - "搬家"
+
+judge:
+  # 评分策略。选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须提及具体事项"搬家"，并表达感谢；不得堆砌多个 emoji。
+    - output_contains:
+        all: ["搬家"]
+        any: ["谢谢", "感谢"]
+        not: ["你是最棒的"]
+    # 结尾恰好一个 emoji：不允许出现第二个 emoji。
+    - output_matches:
+        all: ["[🙏❤️😊🎉🌟🍀💐]$"]
+        not: ["(?s)[🙏❤️😊🎉🌟🍀💐].*[🙏❤️😊🎉🌟🍀💐]"]

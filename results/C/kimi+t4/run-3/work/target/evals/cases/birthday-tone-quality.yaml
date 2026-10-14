@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-tone-quality
+# 用例摘要，显示在用例列表和报告中
+title: 生日贺卡的语气与质感（语义评审）
+# 该用例覆盖的行为背景
+description: |
+  语气温暖、细节具体这类质量要求无法用关键词判定，
+  需要 agent_judge 做语义评估。这是本套评测唯一的 agent_judge 用例，
+  用于覆盖 rule_based 够不着的"写得好不好"维度；跑不起时可整用例删除。
+
+# 零成本预检查先行：连名字都没有就不必花 token 评审了
+expect:
+  must_contain:
+    - "阿哲"
+
+input:
+  prompt: |
+    给我大学同学阿哲写张生日贺卡，我们去年还一起爬过黄山。
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: agent_judge
+  # judge 使用的模型（额外消耗 token，跑不起可改用 rule_based）
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "贺卡语气温暖真诚，符合生日场合，没有套话堆砌"
+    - "利用了用户给出的具体细节（阿哲、黄山），不是泛泛的祝福"
+    - "只输出贺卡正文：没有称呼头、署名、引号或 markdown 格式"
+    - "正文为 1-3 句话，恰好一个 emoji 且位于结尾"
+  pass_threshold: 0.7

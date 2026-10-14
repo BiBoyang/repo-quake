@@ -1,0 +1,25 @@
+# 中文感谢 case 的稳定标识。
+id: chinese-thanks
+title: 中文感谢卡匹配用户语言
+description: |
+  检查中文感谢请求会得到简短的中文卡片，并包含收件人姓名和被感谢的具体行动。
+
+input:
+  # 覆盖语言匹配、姓名和具体细节。
+  prompt: |
+    请给我的同事李梅写一张简短的感谢卡，谢谢她昨晚帮我完成项目。只输出卡片正文。
+
+expect:
+  # 检查中文内容与收件人姓名。
+  must_contain:
+    - 李梅
+    - 项目
+  must_not_contain:
+    - Here is your card
+
+judge:
+  # 使用确定性检查，不需要额外的 judge 模型。
+  type: rule_based
+  success:
+    - output_contains:
+        all: [李梅, 项目]

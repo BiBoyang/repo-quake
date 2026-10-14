@@ -1,0 +1,23 @@
+# 报告中使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例列表与报告中展示的简要说明
+title: 场合不明确时应先追问
+# 该用例覆盖的行为或回归背景
+description: |
+  验证 Skill 在用户未说明场合时不擅自编造，而是先询问场合或对象等信息。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        any: ["场合", "哪种", "什么样", "请问", "送给谁", "生日", "感谢", "鼓励", "道歉"]
+    - output_matches:
+        all: ['\p{Han}']

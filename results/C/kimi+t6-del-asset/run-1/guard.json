@@ -1,0 +1,13 @@
+{
+  "errors": [
+    "assets/eval.yaml.tmpl: referenced by SKILL.md, SKILL.md but missing on disk"
+  ],
+  "warnings": [
+    "SKILL.md: name 'skill-upper' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [
+    "scripts/todo.py: referenced by evals/fixtures/skills/sample-with-evals/SKILL.md but missing (secondary doc — not gated; may be a hypothetical example)"
+  ],
+  "skill_dir": "results/C/kimi+t6-del-asset/run-1/skill",
+  "verdict": "FAIL"
+}

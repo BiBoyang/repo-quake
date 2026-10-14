@@ -1,0 +1,38 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-english
+# 用例摘要，显示在用例列表和报告中
+title: 英文输入产出英文感谢卡
+# 该用例覆盖的行为背景
+description: |
+  语气指南要求匹配用户语言：英文输入必须产出英文卡片，
+  不得混入中文；同时要包含收件人名字、表达感谢，
+  且未要求正式风格时不许以 "Dear" 开头。
+
+input:
+  # 发送给 Agent 的单轮用户提示词（英文，模拟英文用户）
+  prompt: |
+    My colleague Sarah stayed late to help me finish a tough project.
+    Please write a thank-you card for her.
+
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Sarah"]
+        any: ["thank", "Thank", "grateful", "appreciate"]
+    - output_matches:
+        not:
+          # 英文输出中不得出现中文字符
+          - '\p{Han}'
+          # 未要求正式风格时不得以 Dear 开头
+          - '(?i)^\s*dear\b'
+        all:
+          # 结尾是 emoji
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{FE0F}]\s*$'
+    - exit_code: 0

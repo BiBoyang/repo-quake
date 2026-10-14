@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: apology-tone
+# 用例的一句话说明。
+title: 道歉卡语气真诚（语义判分）
+# 背景：道歉语气是否真诚、是否过度解释属于语义质量，关键词无法判定，才使用 agent_judge。
+description: |
+  验证道歉场景的语义质量：直接承认错误、语气真诚克制、
+  不过度解释。这是全套用例中唯一的 agent_judge 用例，
+  其余确定性约束均由 rule_based / script 覆盖。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    我忘了好朋友的生日聚会，帮我写一张道歉卡。
+
+judge:
+  # 判分策略：rule_based | agent_judge | script；agent_judge 成本最高，慎用。
+  type: agent_judge
+  # judge 使用的模型。
+  model: anthropic/claude-sonnet-4-6
+  # 逐条评分标准，尽量具体、可验证。
+  criteria:
+    - "贺卡直接承认了忘记聚会这个错误，而不是回避或找借口"
+    - "语气真诚克制，没有长篇大论或过度解释"
+    - "输出只有卡片正文，没有解释、标题、落款或 markdown 格式"
+  # 通过阈值（0-1）。
+  pass_threshold: 0.7

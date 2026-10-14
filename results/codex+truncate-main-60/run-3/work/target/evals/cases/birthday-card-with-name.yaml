@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: birthday-card-with-name
+# 一句话说明本用例验证什么。
+title: 中文生日贺卡包含收件人姓名并以 emoji 结尾
+description: |
+  验证 Skill 在中文生日场景下写出包含收件人姓名的短贺卡，
+  消息中不出现政治、宗教等禁用话题，且行尾带有 emoji。
+
+input:
+  # 发给 Agent 的用户 prompt，语气贴近真实用户。
+  prompt: |
+    我的朋友小明明天过生日，帮我写一张生日贺卡，用中文。
+
+expect:
+  # 零成本门槛：姓名必须出现，且不输出解释性前言。
+  must_contain:
+    - "小明"
+  must_not_contain:
+    - "以下是"
+    - "##"
+
+judge:
+  # 有明确关键词可判定，使用确定性规则。
+  # 选项: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小明", "生日"]
+        not: ["政治", "宗教"]
+    - output_matches:
+        # 至少有一行以 emoji（Unicode So 类别）结尾。
+        all: ["(?m)\\p{So}\\s*$"]

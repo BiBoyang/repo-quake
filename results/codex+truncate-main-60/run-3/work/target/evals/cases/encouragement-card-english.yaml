@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-card-english
+# 一句话说明本用例验证什么。
+title: 英文鼓励贺卡包含姓名且避免空洞口号
+description: |
+  验证 Skill 能用英文写出鼓励贺卡：包含收件人姓名 Alex，
+  不使用 tone-guide 明确禁止的空洞口号 "you are the best"，
+  不擅自使用 "Dear" 开头，且行尾带 emoji。
+
+input:
+  prompt: |
+    My friend Alex just failed his driving test. Write a short encouragement card for him in English.
+
+expect:
+  must_contain:
+    - "Alex"
+  must_not_contain:
+    - "you are the best"
+    - "Dear"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Alex"]
+        not: ["you are the best"]
+    - output_matches:
+        all: ["(?m)\\p{So}\\s*$"]
+        not: ["(?m)^#", "\\*\\*"]

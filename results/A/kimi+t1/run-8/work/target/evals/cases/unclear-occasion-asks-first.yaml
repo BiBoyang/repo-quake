@@ -1,0 +1,25 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致。
+id: unclear-occasion-asks-first
+# 用例摘要，展示在用例列表和报告中。
+title: 场合不明确时应先追问
+# 该用例覆盖的行为说明。
+description: |
+  用户没有说明贺卡场合时，Skill 应先提问澄清（场合/收卡人），
+  而不是直接生成一张贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分策略。
+  # 可选: rule_based | agent_judge | script。
+  type: rule_based
+  # 全部 success 断言满足才判 PASS。
+  success:
+    - output_contains:
+        any: ["什么场合", "送给谁", "哪位", "谁", "生日", "感谢", "鼓励", "道歉", "场合"]
+    - output_matches:
+        all: ["？|\\?"]
+    - exit_code: 0

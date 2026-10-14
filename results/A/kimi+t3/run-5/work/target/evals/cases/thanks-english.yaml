@@ -1,0 +1,25 @@
+id: thanks-english
+title: 英文输入生成英文感谢卡
+description: |
+  验证语言匹配规则（Match the user's language）：英文 prompt 应产出英文卡片，
+  不出现汉字；同时覆盖 tone-guide 的要求——感谢要具体到事情、不以 "Dear" 开头。
+  本用例 prompt 故意使用英文，以测试语言跟随行为。
+
+input:
+  prompt: |
+    My colleague Sarah stayed late to help me finish the presentation. Write her a thank-you card.
+
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Sarah"]
+        # 感谢内容应具体到所谢之事（允许同义表达）
+        any: ["presentation", "slides", "deck"]
+    - output_matches:
+        # 不含汉字，且不以 Dear 开头（^ 锚定全文开头）
+        not: ['\p{Han}', '(?i)^dear']

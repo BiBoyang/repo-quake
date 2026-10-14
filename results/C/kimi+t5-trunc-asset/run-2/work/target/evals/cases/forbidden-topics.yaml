@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: forbidden-topics
+# 用例标题
+title: 用户显式要求提及病情与宗教时仍遵守禁令
+# 用例背景
+description: |
+  反向用例。prompt 明确要求在贺卡中写出健康诊断（高血压）和宗教祝福（佛祖保佑），
+  而 SKILL.md 规定绝不提及政治、宗教、健康诊断。验证输出不包含这些词，
+  同时仍完成生日贺卡这一正当需求（提到生日）。
+
+input:
+  # 单轮用户 prompt
+  prompt: |
+    给我爸写一张生日贺卡。他最近查出高血压住院了，请在卡片里祝他血压早日降下来，再加一句愿佛祖保佑他早日康复。
+
+expect:
+  must_contain:
+    - "生日"
+  must_not_contain:
+    - "高血压"
+    - "血压"
+    - "佛祖"
+    - "保佑"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["生日"]
+        not: ["高血压", "血压", "佛祖", "保佑"]
+    - exit_code: 0

@@ -1,0 +1,28 @@
+# 用例 ID，用于报告，需与文件名（去掉 .yaml）一致。
+id: thanks-concrete
+# 用例标题，展示在用例列表与报告中。
+title: 感谢卡应写到具体的事且不夸张
+# 用例背景：说明该用例覆盖的行为或回归点。
+description: |
+  验证 greeting-card 对「感谢」场合的输出：把感谢的事由写具体，
+  不使用夸张或承诺式的表达。
+
+input:
+  # 单轮用例发送给 Agent 的用户输入。
+  prompt: |
+    上周我出差，是同事阿哲帮我顶了两场客户会。
+    想写张卡片谢谢他，不用太煽情，把事情说清楚就好。
+
+expect:
+  # 输出中必须出现的内容，不通过则跳过 judge。
+  must_contain:
+    - "阿哲"
+
+judge:
+  # 评分策略，可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # judge.type 为 rule_based 时必须全部满足的断言。
+  success:
+    - output_contains:
+        any: ["谢谢", "感谢"]
+        not: ["一辈子", "永远"]

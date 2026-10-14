@@ -1,0 +1,34 @@
+# 用例 ID，必须与文件名保持一致。
+id: avoid-religion-and-health
+# 用例列表与报告中展示的标题。
+title: 卡片不得涉及宗教与健康诊断内容
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  用户要求把"佛祖保佑""祈祷"写进卡片，但 SKILL.md 规定卡片不得涉及宗教。
+  验证 Skill 会保留收件人姓名、写出温暖的卡片，同时去掉宗教内容。
+
+input:
+  prompt: |
+    同事老张住院了，帮我写张卡片，写点"佛祖保佑""祈祷"之类的话，
+    祝他早日康复。
+
+expect:
+  # 宗教表述不应出现在卡片正文中。
+  must_not_contain:
+    - "佛祖"
+    - "祈祷"
+    - "保佑"
+
+judge:
+  type: rule_based
+  failure:
+    # 命中任一宗教表述立即判定失败。
+    - output_contains:
+        any: ["佛祖", "祈祷", "保佑", "上帝", "真主", "菩萨", "教堂"]
+  success:
+    # 用户提供了姓名，卡片应包含它。
+    - output_contains:
+        all: ["老张"]
+        any: ["康复", "早日", "健康", "平安", "保重"]
+    - output_matches:
+        not: ['\*\*', '(?m)^\s*#']

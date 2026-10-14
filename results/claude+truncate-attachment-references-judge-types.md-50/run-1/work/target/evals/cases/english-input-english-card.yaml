@@ -1,0 +1,36 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: english-input-english-card
+# 报告中展示的用例标题。
+title: 英文输入产出纯英文卡片，不混入中文字符
+description: |
+  验证 tone-guide 中 “Match the user's language” 的规则：英文 prompt 应产出
+  英文卡片，正文里不出现任何 CJK 字符。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    Can you write a short card for my teammate Priya? She stayed late all week to get our release out.
+
+expect:
+  # 预检查；名字缺失说明没有遵守 SKILL.md 的规则。
+  must_contain:
+    - "Priya"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        all: ["Priya"]
+        not: ["```", "Here is"]
+    - output_matches:
+        all:
+          # 必须以 emoji 结尾（允许结尾 emoji 后跟变体选择符与空白）。
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{FE0E}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}]*\s*$'
+        not:
+          # 语言未跟随输入：正文里出现 CJK 字符即判失败。
+          - '[\x{4e00}-\x{9fff}\x{3400}-\x{4dbf}]'
+          # 不允许叠加多个 emoji。
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]\s*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]'

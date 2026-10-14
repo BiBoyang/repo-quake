@@ -1,0 +1,34 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: language-switch
+# 用例标题
+title: 多轮场景：中文贺卡改写成英文
+# 用例背景
+description: |
+  多轮对话用例。第一轮生成中文生日贺卡并包含收件人名字；
+  第二轮要求换成英文，验证输出切换为英文贺卡且不再含中文祝福语。
+
+input:
+  # 多轮对话使用 turns，代替 prompt
+  turns:
+    - role: user
+      content: "帮我给小雨写一张生日贺卡，用中文，两三句话就好。"
+      # 每轮结束后的检查；第一轮失败则整个用例 FAIL（后续轮依赖它）
+      post_condition:
+        must_contain_any: ["小雨"]
+        on_fail: fail
+    - role: user
+      content: "她马上要去国外交换了，把这张卡片换成英文版本吧。"
+
+judge:
+  type: rule_based
+  success:
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["小雨"]
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["birthday", "Birthday", "BIRTHDAY"]
+    - turn_response_not_contains:
+        turn: 2
+        not_contains: ["生日", "祝你"]
+    - exit_code: 0

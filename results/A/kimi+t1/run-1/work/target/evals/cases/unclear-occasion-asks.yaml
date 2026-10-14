@@ -1,0 +1,22 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例标题，展示在用例列表与报告中
+title: 场合不明确时先询问而不是直接生成
+description: |
+  SKILL.md 规定：场合不清晰时要先向用户问清楚，
+  而不是猜一个场合直接输出卡片。
+
+input:
+  prompt: |
+    帮我写张卡片。
+
+expect:
+  must_not_contain:
+    - "生日快乐"
+
+judge:
+  type: rule_based
+  success:
+    # 追问时应提及场合或列举可选场合
+    - output_matches:
+        any: ["场合", "生日", "感谢", "鼓励", "道歉"]

@@ -1,0 +1,30 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例简述，出现在用例列表与报告中
+title: 生日贺卡应包含收件人姓名并以 emoji 结尾
+# 覆盖行为：识别生日场合、使用收件人姓名、卡片正文以 emoji 收尾
+description: |
+  验证 Skill 能为生日场合生成贺卡：包含用户提供的收件人姓名"小雨"，
+  出现生日元素，且卡片正文末尾是一个 emoji（Skill 规则：恰好一个 emoji 放在最后）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我给同事小雨写一张生日贺卡，她这周刚带我们团队赶完一个大项目，辛苦很久了。
+
+# 零成本前置检查；不通过则跳过 judge 直接判 FAIL
+expect:
+  must_contain:
+    - "小雨"
+    - "生日"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小雨", "生日"]
+    - output_matches:
+        # 结尾应是一个 emoji（允许 emoji 变体选择符与末尾空白）
+        all: ['[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]\x{FE0F}?\s*$']

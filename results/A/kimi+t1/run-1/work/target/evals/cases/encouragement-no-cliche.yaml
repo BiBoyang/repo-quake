@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-cliche
+# 用例标题，展示在用例列表与报告中
+title: 鼓励卡片避免空洞口号
+description: |
+  tone-guide 明确点名要避免“你是最棒的”这类空洞口号；
+  同时卡片应与用户提到的具体事件（研究生复试）相关。
+
+input:
+  prompt: |
+    我妹妹明天要参加研究生复试，她很紧张，帮我写几句话鼓励她。
+
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "you are the best"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        not: ["你是最棒的", "you are the best"]
+    # 内容与复试场景相关
+    - output_matches:
+        any: ["复试", "考试", "紧张", "加油"]

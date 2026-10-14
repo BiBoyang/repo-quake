@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete
+# 用例标题
+title: 感谢贺卡点明具体事件与收件人
+# 用例背景
+description: |
+  感谢场景。验证贺卡提及用户给出的具体事件（帮忙搬家）和收件人名字，
+  符合 tone-guide「具体细节优于泛泛祝福」与「感谢要具体」的要求。
+
+input:
+  # 单轮用户 prompt
+  prompt: |
+    上周末阿May请假来帮我搬家，忙了一整天，特别辛苦。帮我给她写一张短短的感谢卡，要提到搬家这件事。
+
+expect:
+  must_contain:
+    - "阿May"
+    - "搬家"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["阿May", "搬家"]
+    - output_matches:
+        all:
+          # 至少一个 emoji
+          - "\\p{So}"
+          # 正文足够短
+          - "(?s)^.{1,100}$"
+    - exit_code: 0

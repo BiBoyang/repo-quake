@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-tone
+# 用例列表和报告中展示的简短说明
+title: 生日卡片的语气与温度（语义评审）
+# 该用例覆盖的行为背景
+description: |
+  温暖、具体、欢快、不说教等质量维度无法写成确定性规则，
+  使用 agent_judge 做语义评审。这是套件中唯一的 agent_judge
+  用例（成本最高，克制使用），格式硬指标已由其他用例覆盖。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写一张生日卡片给我姑姑，她六十岁退休了，正准备开始学画画。
+
+judge:
+  # LLM 语义评审；成本最高，仅用于无法用规则判断的质量维度
+  # 可选: rule_based | agent_judge | script
+  type: agent_judge
+  # 评审模型
+  model: anthropic/claude-sonnet-4-6
+  # 评审标准：尽量具体、可验证
+  criteria:
+    - "卡片语气温暖、欢快，符合 birthday 场合"
+    - "内容具体，呼应了用户提供的细节（姑姑、退休、学画画），而非泛泛祝福"
+    - "没有拿年龄开玩笑（tone-guide 规定避免 age jokes）"
+    - "输出只有卡片正文：没有解释、标题、署名或 markdown 格式"
+  # 通过阈值（0-1）
+  pass_threshold: 0.7

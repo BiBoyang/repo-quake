@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"validate 部分被沙箱阻断（CLI 在授权目录外），产物靠 references 重建；检出不受影响","notes":"明确报告 SKILL.md 截断于 174 行/Step 2，列出缺失步骤"}

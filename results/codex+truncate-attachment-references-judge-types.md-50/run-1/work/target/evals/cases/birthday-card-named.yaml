@@ -1,0 +1,35 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: birthday-card-named
+# 用例一句话摘要，显示在用例列表和报告中。
+title: 生日贺卡应包含收件人名字并以恰好一个 emoji 结尾
+# 用例背景：覆盖生日场合识别、收件人名字引用与结尾单 emoji 格式规则。
+description: |
+  验证 Skill 能识别生日场合、写入用户提供的收件人名字，
+  并遵守 tone-guide 中「恰好一个 emoji 放在结尾」的格式要求。
+
+input:
+  # 发给 Agent 的单轮用户 prompt，语气贴近真实用户。
+  prompt: |
+    帮我给晓雯写一张生日贺卡，她刚拿到驾照。
+
+expect:
+  must_contain:
+    - "晓雯"
+  must_not_contain:
+    - "Dear"
+    - "亲爱的"
+
+judge:
+  # 判定策略：本用例有确定性关键词与格式规则，使用 rule_based。
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  # 所有 success 断言都满足才 PASS。
+  success:
+    - output_contains:
+        all: ["晓雯"]
+    # 结尾恰好一个 emoji：末尾存在 emoji，且全文不出现两个及以上 emoji。
+    - output_matches:
+        any:
+          - "(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"
+        not:
+          - "[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}][\\s\\S]*[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]"

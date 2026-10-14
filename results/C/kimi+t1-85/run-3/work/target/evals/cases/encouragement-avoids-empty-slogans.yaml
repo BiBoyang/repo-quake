@@ -1,0 +1,29 @@
+# 稳定用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-avoids-empty-slogans
+# 用例标题，展示在用例列表和报告中。
+title: 鼓励贺卡不使用空洞口号
+# 背景：tone-guide 规定鼓励场合应沉稳自信、避免空洞口号，并提及具体事件。
+description: |
+  验证鼓励场合的贺卡不包含「你是最棒的」类空洞口号，
+  且体现与用户所述处境（面试受挫）相关的具体表达。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    我朋友最近连续三次面试都失败了，情绪很低落，帮我写一张鼓励他的贺卡。
+
+# 零成本预检；不通过则跳过 judge。
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "you are the best"
+
+judge:
+  # 评分策略。可选: rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        not: ["你是最棒的", "you are the best", "You are the best"]
+    - output_matches:
+        any: ["面试", "失败", "低谷", "挫折", "难关", "机会"]

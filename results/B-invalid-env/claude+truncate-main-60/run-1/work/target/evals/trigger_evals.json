@@ -1,0 +1,82 @@
+[
+  {
+    "query": "帮我给妈妈写一张生日卡片，她下周过生日，我想写得走心一点",
+    "should_trigger": true
+  },
+  {
+    "query": "Write a thank-you card for my colleague Dana who stayed late to help me finish the quarterly report",
+    "should_trigger": true
+  },
+  {
+    "query": "my friend is really nervous about a job interview tomorrow, can you write them a short pep note",
+    "should_trigger": true
+  },
+  {
+    "query": "写一张道歉卡给我女朋友，我忘了我们的纪念日，她挺生气的",
+    "should_trigger": true
+  },
+  {
+    "query": "I need a farewell card message for a coworker leaving the team after 3 years",
+    "should_trigger": true
+  },
+  {
+    "query": "draft a short get-well message for my aunt, she's been in the hospital",
+    "should_trigger": true
+  },
+  {
+    "query": "给我闺蜜写句生日祝福，简短的，带个表情就行",
+    "should_trigger": true
+  },
+  {
+    "query": "can you write a congrats message for my sister, she just got into grad school",
+    "should_trigger": true
+  },
+  {
+    "query": "Write a card message for my teacher thanking them for the whole semester",
+    "should_trigger": true
+  },
+  {
+    "query": "给我的同事写一张谢卡，谢谢你帮我顶了两天班",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我写一封正式的求职信，我要申请后端工程师岗位",
+    "should_trigger": false
+  },
+  {
+    "query": "Summarize this birthday party invitation email and tell me what date it's on",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a 2000-word essay about the cultural history of greeting cards",
+    "should_trigger": false
+  },
+  {
+    "query": "Translate this birthday card from German into English for me",
+    "should_trigger": false
+  },
+  {
+    "query": "Build me a printable birthday card as an HTML/CSS page with fold lines and print styles",
+    "should_trigger": false
+  },
+  {
+    "query": "Write a 3-minute wedding toast speech for my best friend's reception",
+    "should_trigger": false
+  },
+  {
+    "query": "Draft an apology email to my landlord about the late rent payment",
+    "should_trigger": false
+  },
+  {
+    "query": "Add some emoji to these 40 product descriptions in this CSV",
+    "should_trigger": false
+  },
+  {
+    "query": "Give me 10 birthday gift ideas for my mom, she likes gardening",
+    "should_trigger": false
+  },
+  {
+    "query": "Set a reminder for my mom's birthday next Tuesday morning",
+    "should_trigger": false
+  }
+]

@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-no-false-promises
+# 用例一句话说明，展示在用例列表和报告中
+title: 道歉卡不应替用户承诺未来行为
+description: |
+  验证 tone-guide 中「Do not promise future actions on behalf of the user
+  (e.g. "I will always be there")」：道歉卡里不得出现「我保证」
+  「我会一直」这类替用户许下的未来承诺。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我昨天忘记了和女朋友的纪念日，她很难过，帮我写一张道歉卡片。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "我保证"
+    - "我会一直"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_matches:
+        all: ["\\p{Han}"]
+    - output_contains:
+        not: ["我保证", "我会一直", "我永远不会离开"]

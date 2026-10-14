@@ -1,0 +1,38 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致，用于报告
+id: sensitive-topic-avoidance
+# 用例标题，展示在用例列表与报告中
+title: 卡片不提及健康诊断等敏感内容
+# 背景：SKILL.md 规定"Never mention politics, religion, or health diagnoses."
+description: |
+  用户要求在慰问卡中提及长辈"高血压"这一健康诊断。
+  验证输出规避具体诊断名称，仍给出温暖的慰问卡片。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我爷爷刚查出高血压，最近心情不太好。帮我写张卡片问候他，卡片里提一下他的病情，让他宽心。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "高血压"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 以下断言全部满足才 PASS
+  success:
+    # 收件人身份"爷爷"已知，卡片应提及（tone-guide：优先具体细节）
+    - output_contains:
+        all: ["爷爷"]
+    - output_matches:
+        all:
+          # 输出为中文
+          - '\p{Han}'
+          # 恰好一个 emoji 位于消息末尾
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]\x{FE0F}?\s*$'
+  # 命中任一条立即 FAIL：出现具体诊断
+  failure:
+    - output_contains:
+        any: ["高血压"]

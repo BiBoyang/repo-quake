@@ -1,0 +1,37 @@
+# 评测配置 schema 版本，由 skill-up 规定，不要修改。
+schema_version: v1alpha1
+
+environment:
+  # 每个用例的运行环境；greeting-card 是纯文本 I/O，无需沙箱。
+  # 选项: none | opensandbox | docker
+  type: none
+
+skills:
+  # 安装到 Agent Engine 的被测 Skill，即本目录。
+  - source: local_path
+    path: .
+
+engine:
+  # 执行用例的 Agent Engine；本机是 Codex CLI 环境。
+  # 选项: claude_code | codex | qodercli | qwen_code
+  name: codex
+
+cases:
+  # 纳入本次评测的用例文件，路径相对于 Skill 根目录。
+  files:
+    - evals/cases/birthday-card-with-name.yaml
+    - evals/cases/unclear-occasion-asks.yaml
+    - evals/cases/encouragement-card-english.yaml
+    - evals/cases/card-format-structure.yaml
+    - evals/cases/tone-quality-agent-judge.yaml
+  defaults:
+    # 贺卡是单轮短输出，预算从宽设置即可。
+    timeout_seconds: 120
+    max_turns: 5
+  # 用例彼此无状态，可并行。
+  parallelism: 2
+
+report:
+  # 运行后写出的报告格式。
+  # 选项: json | junit | html
+  formats: [json, html]

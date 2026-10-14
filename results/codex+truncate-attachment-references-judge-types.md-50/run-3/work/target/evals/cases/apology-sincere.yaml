@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: apology-sincere
+# 用例列表与报告中展示的简短说明。
+title: 道歉卡应坦然承认过错且不过度解释
+# 覆盖的行为背景：tone-guide 要求道歉要真诚、直接承认过错、不要过度解释。
+description: |
+  验证 Skill 写道歉卡时直接承认"迟到"这一过错、表达歉意，
+  且不以推诿或转折性的措辞开头。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    我今天开会迟到了十分钟，帮我写张道歉卡发到团队群里。
+
+expect:
+  must_contain:
+    - "迟到"
+
+judge:
+  # 评分策略。选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须承认"迟到"并表达歉意；不得以"但是"开头的推诿句式。
+    - output_contains:
+        all: ["迟到"]
+        any: ["抱歉", "对不起", "歉意"]
+        not: ["但是", "可是"]
+    # 结尾恰好一个 emoji。
+    - output_matches:
+        all: ["[🙏😔😊❤️🌹💐]$"]

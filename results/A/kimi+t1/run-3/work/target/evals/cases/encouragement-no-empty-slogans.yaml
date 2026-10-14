@@ -1,0 +1,35 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-empty-slogans
+# 用例标题，展示在用例列表与报告中
+title: 鼓励卡不使用空洞口号
+description: |
+  验证 Skill 在鼓励场合保持平稳、自信的语气，且结合具体事件，
+  不输出 tone-guide 明令禁止的空洞口号（如"你是最棒的"）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我朋友明天要参加一场很重要的面试，他有点紧张，帮我写句话鼓励他。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  # failure 优先：命中任一条立即判 FAIL
+  failure:
+    - output_contains:
+        any: ["你是最棒的", "you are the best"]
+  success:
+    # 结合具体事件（面试）
+    - output_contains:
+        any: ["面试"]
+    - output_matches:
+        all:
+          # 恰好一个 emoji 且位于结尾
+          - '\A[^\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{1F3FB}-\x{1F3FF}\x{FE00}-\x{FE0F}]?\s*\z'
+          # 长度上限：中文 80 字规则 + 余量
+          - '(?s)\A.{1,120}\z'

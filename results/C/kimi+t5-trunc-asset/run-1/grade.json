@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"改用 case-yaml.md 代偿，产物合法","notes":"指出 case.yaml.tmpl 止于 46 行 expect 注释处；引用了目录名佐证（路径泄露见方法学修正）"}

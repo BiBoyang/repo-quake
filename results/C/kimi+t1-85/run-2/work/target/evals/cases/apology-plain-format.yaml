@@ -1,0 +1,33 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: apology-plain-format
+# 用例简述，出现在用例列表与报告中
+title: 道歉卡应只输出卡片正文，不带称呼、落款或 markdown
+# 覆盖行为：格式纯净——不加问候头、不落款、不用引号包裹、不用 markdown
+description: |
+  Skill 规定只输出卡片文本：不加问候头、不落款、不用引号包裹正文、
+  不使用 markdown 格式，且除非用户要求，否则不以 "Dear" 开头。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我忘了姐姐的生日，想写一张道歉卡给她。
+
+# 零成本前置检查；不通过则跳过 judge 直接判 FAIL
+expect:
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        # 应有道歉语气或提到忘了生日这件事
+        any: ["抱歉", "对不起", "生日"]
+    - output_matches:
+        # 不得出现 markdown 标题、加粗，也不得以引号开头
+        not:
+          - '(?m)^#'
+          - '\*\*'
+          - '^["“「]'

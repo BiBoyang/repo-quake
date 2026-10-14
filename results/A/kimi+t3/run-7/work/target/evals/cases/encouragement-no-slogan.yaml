@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogan
+# 用例摘要，显示在用例列表和报告中
+title: 鼓励卡应避免空洞口号、不替用户许诺
+# 该用例覆盖的行为背景
+description: |
+  tone-guide 规定鼓励语气要沉稳自信，避免空洞口号（如 "你是最棒的"），
+  并且不得替用户承诺未来行为（如 "我会一直陪着你"）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我室友明天研究生复试，紧张得睡不着，
+    帮我写几句鼓励的话给他打打气。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        not:
+          - "你是最棒的"
+          - "我会一直陪着你"
+          - "我会一直在你身边"

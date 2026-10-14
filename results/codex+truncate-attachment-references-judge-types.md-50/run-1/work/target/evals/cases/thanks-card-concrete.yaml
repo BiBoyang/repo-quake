@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-card-concrete
+# 用例一句话摘要，显示在用例列表和报告中。
+title: 感谢贺卡应具体提及被感谢的事并包含收件人名字
+# 用例背景：tone-guide 要求感谢要具体、不夸张，Skill 规则要求写入收件人名字。
+description: |
+  验证 Skill 写感谢卡时会带上用户提供的名字，
+  并具体提及被感谢的事件（改发布会 PPT），而非泛泛而谈。
+
+input:
+  # 发给 Agent 的单轮用户 prompt，语气贴近真实用户。
+  prompt: |
+    帮我写一张感谢卡，谢谢同事大鹏上周熬夜帮我改完了发布会 PPT。
+
+expect:
+  must_contain:
+    - "大鹏"
+
+judge:
+  # 判定策略：关键词确定性可判，使用 rule_based。
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["大鹏"]
+        any: ["PPT", "发布会"]
+    # 结尾恰好一个 emoji。
+    - output_matches:
+        any:
+          - "(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"
+        not:
+          - "[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}][\\s\\S]*[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]"

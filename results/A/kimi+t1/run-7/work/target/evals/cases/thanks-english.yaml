@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-english
+# 用例标题
+title: 英文感谢卡语言匹配且内容具体
+# 用例背景：覆盖「匹配用户语言」与「感谢内容要具体」两条规则
+description: |
+  验证英文输入产出英文贺卡（语言匹配），感谢内容具体到所谢之事，
+  并包含用户给出的收信人姓名。英文断言关键词是该用例功能的一部分。
+
+input:
+  # 单轮用户提示（英文输入，测试语言匹配能力）
+  prompt: |
+    Write a thank-you card for my colleague Sarah who covered my shift last Friday.
+
+# 零成本预检查
+expect:
+  must_contain:
+    - "Sarah"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分策略
+  type: rule_based
+  # 通过断言：姓名与具体事由（顶班）都要出现
+  success:
+    - output_contains:
+        all: ["Sarah", "shift"]
+        not: ["Dear", "**"]

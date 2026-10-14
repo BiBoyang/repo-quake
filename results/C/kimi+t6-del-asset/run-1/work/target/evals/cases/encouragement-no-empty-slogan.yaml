@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-no-empty-slogan
+# 用例的一句话说明。
+title: 鼓励卡贴合具体事件且不喊空洞口号
+# 背景：语气指南规定鼓励场合要沉稳自信，禁止"你是最棒的"这类空洞口号。
+description: |
+  验证鼓励场景下贺卡贴合用户给出的具体事件（研究生复试），
+  且不出现语气指南明令禁止的空洞口号。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    我闺蜜下周研究生复试，紧张得睡不着，帮我写张贺卡给她打打气。
+
+# 零成本预检；不通过则跳过 judge。
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 判分策略：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        any: ["复试", "考试", "研究生", "加油"]
+        not: ["你是最棒的"]

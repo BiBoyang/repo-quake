@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: english-thanks-card
+# 用例标题，展示在用例列表与报告中
+title: 英文输入应生成英文感谢卡并提及具体事件
+description: |
+  用户使用英文提问，并给出收卡人（Sarah）与具体事件（上周帮忙顶班）。
+  验证输出为英文、包含收卡人名字、提到被感谢的具体事情，
+  符合 tone-guide「匹配用户语言」与「具体优于泛泛」的要求。
+
+input:
+  # 单轮用例：发送给 Agent 的用户 prompt
+  prompt: |
+    My colleague Sarah covered my shift last week. Please write a thank-you card for her.
+
+# 判分前的零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Sarah"
+  exit_code: 0
+
+judge:
+  # 判分策略: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判 PASS
+  success:
+    - output_contains:
+        all: ["Sarah"]
+        any: ["shift", "covered"]
+    # 输出不应包含任何中文字符（英文提问应得到英文贺卡）
+    - output_matches:
+        not: ["[\\x{4e00}-\\x{9fff}]"]
+    - exit_code: 0

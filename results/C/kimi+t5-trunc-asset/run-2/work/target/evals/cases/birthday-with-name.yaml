@@ -1,0 +1,34 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日贺卡包含收件人名字并带 emoji
+# 用例背景：覆盖的行为与规则
+description: |
+  生日场景基础用例。验证贺卡包含用户提供的收件人名字（SKILL.md 明确要求）、
+  正文简短并至少出现一个 emoji（tone-guide 要求恰好一个且置于末尾）、
+  不带称呼抬头（tone-guide 禁止 greeting header）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我同事小李下周过生日，帮我写一张生日贺卡，两三句话就行，记得在卡片里写上他的名字。
+
+# 零成本预检；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小李"
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小李"]
+        not: ["Dear", "亲爱的"]
+    - output_matches:
+        all:
+          # 至少一个 emoji（So 为 Unicode 符号类）
+          - "\\p{So}"
+          # 正文足够短：不超过 100 个字符（80 字上限加 emoji 占位余量）
+          - "(?s)^.{1,100}$"
+    - exit_code: 0

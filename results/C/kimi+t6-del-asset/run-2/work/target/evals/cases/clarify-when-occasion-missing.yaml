@@ -1,0 +1,22 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: clarify-when-occasion-missing
+# 用例标题，展示在用例列表与报告中
+title: 场合不明时先向用户提问
+# 本用例覆盖的行为背景
+description: |
+  SKILL.md 规定：先识别场合（生日、感谢、鼓励、道歉），不清楚时先询问。
+  本用例只要求"写一张贺卡"而不提供场合，验证 Agent 会追问关键信息，
+  而不是直接生成一张泛用贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    帮我写一张贺卡。
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 全部断言满足才 PASS
+  success:
+    - output_contains:
+        any: ["场合", "送给", "哪位", "请问", "谁"]

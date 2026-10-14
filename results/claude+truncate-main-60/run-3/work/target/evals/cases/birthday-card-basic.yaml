@@ -1,0 +1,26 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: birthday-card-basic
+# 在用例列表和报告中展示的简短标题。
+title: 生日卡片只输出正文，并以单个 emoji 结尾
+# 该用例覆盖的行为说明。
+description: |
+  验证 Skill 在生日场景下遵守 tone-guide 的格式约束：只输出卡片正文，1-3 句、
+  中文不超过 80 字，结尾恰好一个 emoji，不使用 markdown、标题行或署名；
+  同时要围绕用户给出的具体事件（半程马拉松）展开，而不是泛泛祝福。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    帮我给朋友小雨写一句生日祝福。她这周刚跑完人生第一个半程马拉松，特别不容易。
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: script
+  script_path: evals/fixtures/scripts/check-birthday-card.sh
+  timeout_seconds: 30

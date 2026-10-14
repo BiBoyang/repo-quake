@@ -1,0 +1,28 @@
+# 个性化生日 case 的稳定标识。
+id: birthday-personalized
+title: 生日卡包含姓名与具体近况
+description: |
+  检查 Skill 能根据中文请求写出简短的生日卡，包含收件人姓名，
+  并提及用户提供的具体近况。
+
+input:
+  # 同时覆盖场合、姓名、具体细节与只输出正文的要求。
+  prompt: |
+    请用英文为我的妹妹 Maya 写一张温暖的生日卡，她刚开始了一份新工作。
+    保持简短，只输出卡片正文。
+
+expect:
+  # 检查姓名、具体细节和没有包装性前缀。
+  must_contain:
+    - Maya
+    - new job
+  must_not_contain:
+    - Here is your card
+    - Dear
+
+judge:
+  # 使用确定性检查，不需要额外的 judge 模型。
+  type: rule_based
+  success:
+    - output_contains:
+        all: [Maya, new job]

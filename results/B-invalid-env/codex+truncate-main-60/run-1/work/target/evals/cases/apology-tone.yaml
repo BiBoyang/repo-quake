@@ -1,0 +1,28 @@
+# 道歉语气 case 的稳定标识。
+id: apology-tone
+title: 道歉卡承认具体过失并包含姓名
+description: |
+  检查道歉卡会明确承认用户提供的过失，保持简短，不作过度解释，
+  并包含收件人姓名。
+
+input:
+  # 覆盖道歉语气、具体过失、姓名和只输出正文的要求。
+  prompt: |
+    请给 Jordan 写一张简短的道歉卡，为我昨天错过我们的会议道歉。
+    语气真诚，不要过度解释，只输出卡片正文。
+
+expect:
+  # 检查姓名、具体过失和没有包装性前缀或不当承诺。
+  must_contain:
+    - Jordan
+    - 会议
+  must_not_contain:
+    - Here is your card
+    - 我永远都会在你身边
+
+judge:
+  # 使用确定性检查，不需要额外的 judge 模型。
+  type: rule_based
+  success:
+    - output_contains:
+        all: [Jordan, 会议]

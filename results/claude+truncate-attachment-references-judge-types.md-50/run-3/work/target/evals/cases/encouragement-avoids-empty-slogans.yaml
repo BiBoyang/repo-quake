@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-avoids-empty-slogans
+# 用例标题，展示在用例列表与报告中。
+title: 鼓励场合避免空口号，语气沉稳
+# 用例背景：覆盖 tone-guide「鼓励：沉稳自信，避免 you are the best 式空口号」。
+description: |
+  用户为即将面试的朋友求一张鼓励卡。tone-guide 明确把「你是最棒的」
+  一类口号列为要避免的写法，因此这里做确定性排除断言。
+
+input:
+  # 发送给 Agent 的用户提示。
+  prompt: |
+    朋友小周明天有个很重要的面试，想给他写张鼓励卡。
+
+expect:
+  # 门槛检查：空口号直接判不合格。
+  must_contain:
+    - "小周"
+  must_not_contain:
+    - "你是最棒的"
+    - "你最棒"
+
+judge:
+  # 判分方式：确定性排除空口号 + 格式检查。
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小周"]
+    - output_matches:
+        all: ["\\p{So}\\s*$"]
+        not: ["你是最棒的", "你最棒", "无人能敌"]

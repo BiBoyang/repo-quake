@@ -1,0 +1,42 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致，用于报告
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日祝福包含收件人姓名且以单个 emoji 结尾
+# 背景：覆盖"提供收件人姓名必须包含姓名"与 emoji 格式规则
+description: |
+  用户为指定收件人"小敏"请求生日卡片。
+  验证输出包含收件人姓名、使用中文、恰好一个 emoji 位于末尾、不以称呼开头。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我闺蜜小敏明天生日，帮我写一张生日卡片给她。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小敏"
+  must_not_contain:
+    - "Dear"
+    - "亲爱的"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 以下断言全部满足才 PASS
+  success:
+    - output_contains:
+        all: ["小敏", "生日"]
+    - output_matches:
+        all:
+          # 输出为中文
+          - '\p{Han}'
+          # 恰好一个 emoji 位于消息末尾（允许变体选择符与结尾空白）
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]\x{FE0F}?\s*$'
+        not:
+          # 不以称呼开头（tone-guide：除非用户要求正式风格）
+          - '(?i)^\s*dear'
+          - '^\s*亲爱的'
+          # 不堆叠多个 emoji
+          - '(?s)[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}].*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]'

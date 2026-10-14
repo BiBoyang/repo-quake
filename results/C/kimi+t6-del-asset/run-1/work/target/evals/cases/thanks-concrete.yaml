@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-concrete
+# 用例的一句话说明。
+title: 感谢卡提及收件人与具体事件
+# 背景：语气指南要求感谢场合"具体说明为何感谢"，不能泛泛而谈。
+description: |
+  验证感谢场景下贺卡包含收件人（王姐），
+  并提及 prompt 中给出的具体事件（提案/数据错误）。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    上周王姐帮我改出了客户提案里的数据错误，帮我写一张感谢卡给她。
+
+# 零成本预检；不通过则跳过 judge。
+expect:
+  must_contain:
+    - "王姐"
+
+judge:
+  # 判分策略：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        all: ["王姐"]
+        any: ["谢谢", "感谢"]
+    - output_contains:
+        any: ["提案", "数据", "错误", "帮忙", "帮"]

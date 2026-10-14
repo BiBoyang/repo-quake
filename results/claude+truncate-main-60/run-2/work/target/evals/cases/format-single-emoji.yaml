@@ -1,0 +1,25 @@
+# 用例 ID，用于报告，需与文件名（去掉 .yaml）一致。
+id: format-single-emoji
+# 用例标题，展示在用例列表与报告中。
+title: 卡片格式应只有一个 emoji 且位于结尾
+# 用例背景：说明该用例覆盖的行为或回归点。
+description: |
+  用 script judge 校验 tone-guide 的格式硬约束：恰好一个 emoji 且位于正文结尾、
+  不含 markdown 标记、中文 80 字 / 英文 60 词以内、没有正文之外的说明。
+
+input:
+  # 单轮用例发送给 Agent 的用户输入。
+  prompt: |
+    帮我写张感谢卡给邻居王阿姨，她这半年经常帮我收快递。
+
+expect:
+  # 输出中必须出现的内容，不通过则跳过 judge。
+  must_contain:
+    - "王阿姨"
+
+judge:
+  # 评分策略，可选值：rule_based | agent_judge | script。
+  type: script
+  # 判分脚本路径，退出码 0 为 PASS，非 0 为 FAIL。
+  script_path: evals/fixtures/scripts/check-card-format.sh
+  timeout_seconds: 30

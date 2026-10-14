@@ -1,0 +1,35 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例简要说明，展示在用例列表和报告中
+title: 生日贺卡应包含收件人名字、简短且以单个 emoji 结尾
+# 该用例覆盖的行为背景
+description: |
+  SKILL.md 规则：用户提供收件人名字时必须写进卡片；
+  tone-guide 要求中文卡片不超过 80 字、不使用 markdown、恰好一个 emoji 位于末尾。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我闺蜜小雨下周生日，帮我写一张生日贺卡，她最近刚换了新工作。
+
+# 零成本预检；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    # 必须出现收件人名字，且不得出现 markdown 加粗标记
+    - output_contains:
+        all: ["小雨"]
+        not: ["**"]
+    # 中文贺卡应控制在 80 字以内（含标点与 emoji，这里留出少量余量），
+    # 且恰好以一个 emoji 收尾
+    - output_matches:
+        all:
+          - '(?s)^.{1,100}$'
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{2764}]\x{FE0F}?\s*$'

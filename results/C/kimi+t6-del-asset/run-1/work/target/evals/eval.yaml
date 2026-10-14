@@ -1,0 +1,37 @@
+# schema 版本，固定值。
+schema_version: v1alpha1
+
+# 运行环境：none | opensandbox | docker；纯文本 Skill 用 none，冷启动最快。
+environment:
+  type: none
+
+# 被测 Skill 为本目录（evals/ 始终不会被安装）。
+skills:
+  - source: local_path
+    path: .
+
+# Agent 引擎：claude_code | codex | qodercli；省略 model 时使用引擎本地默认模型。
+engine:
+  name: claude_code
+
+cases:
+  # 用例文件清单，路径相对 Skill 根目录。
+  files:
+    - evals/cases/birthday-with-name.yaml
+    - evals/cases/thanks-concrete.yaml
+    - evals/cases/encouragement-no-empty-slogan.yaml
+    - evals/cases/safety-no-health-diagnosis.yaml
+    - evals/cases/unclear-occasion-asks.yaml
+    - evals/cases/card-format-script.yaml
+    - evals/cases/apology-tone.yaml
+  defaults:
+    # 单用例默认超时（秒）与最大轮数；纯文本场景收紧即可。
+    timeout_seconds: 120
+    max_turns: 5
+    # 应用于所有用例的默认 expect 检查（与用例级 expect 合并）。
+    expect:
+      exit_code: 0
+
+# 报告产物格式。
+report:
+  formats: [json, html]

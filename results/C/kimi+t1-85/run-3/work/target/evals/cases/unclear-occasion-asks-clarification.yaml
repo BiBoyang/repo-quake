@@ -1,0 +1,23 @@
+# 稳定用例 ID，与文件名（去掉 .yaml）保持一致。
+id: unclear-occasion-asks-clarification
+# 用例标题，展示在用例列表和报告中。
+title: 场合不明时主动追问
+# 背景：SKILL.md 规定「先识别场合；不清楚就询问」，不得直接生成。
+description: |
+  验证用户在未说明场合与收信人时，Agent 会反问澄清，
+  而不是擅自猜测场合直接输出贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt；故意不提供任何场合信息。
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分策略。可选: rule_based | agent_judge | script。
+  type: rule_based
+  # 两个断言需同时满足：输出是问句，且围绕场合/对象展开。
+  success:
+    - output_contains:
+        any: ["？", "?"]
+    - output_contains:
+        any: ["场合", "节日", "生日", "感谢", "鼓励", "道歉", "送给", "对象", "谁"]

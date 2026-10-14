@@ -1,0 +1,25 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: birthday-card-with-name
+# 一句话说明用例验证点。
+title: 生日贺卡包含收件人姓名且格式合规
+# 背景：Skill 要求提供收件人姓名时必须写入贺卡，输出只能是贺卡正文。
+description: |
+  收件人姓名出现时必须写进贺卡；输出为 1-3 句正文、恰好一个 emoji 结尾，
+  不使用 markdown、不加包裹引号、不以称呼开头。
+
+input:
+  # 发送给 Agent 的单轮用户提示，语气贴近真实用户。
+  prompt: |
+    帮我给同事小王写一张生日贺卡，提一下上次我们一起熬夜做完项目的事。
+
+expect:
+  # 零成本门槛：全部满足才会进入 judge。
+  must_contain:
+    - "生日"
+    - "小王"
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: script
+  # 校验贺卡格式不变量的本地脚本，相对本 Skill 根目录。
+  script_path: evals/fixtures/scripts/check-card-format.sh

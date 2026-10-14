@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-sincere
+# 用例标题，展示在用例列表与报告中
+title: 道歉卡直接表达歉意
+# 覆盖的规则：道歉场合要真诚、直接认错（tone-guide：admit the fault plainly）
+description: |
+  验证道歉卡包含明确的歉意表达（对不起 / 抱歉），
+  且不以 Dear 开头、输出仅卡片正文。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    我把和女朋友的两周年纪念忘得一干二净，她现在特别生气，帮我写张道歉卡。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+
+judge:
+  # 评分方式；优先用确定性规则
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须包含明确的歉意表达
+    - output_contains:
+        any: ["对不起", "抱歉"]
+    # 必须含至少一个 emoji，且不得以 Dear 开头
+    - output_matches:
+        all: ['[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]']
+        not: ['(?i)^\s*dear']
+    - exit_code: 0

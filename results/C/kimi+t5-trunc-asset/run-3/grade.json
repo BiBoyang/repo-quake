@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"改用 references 代偿，validate 通过","notes":"指出 case.yaml.tmpl 46 行、缺失 judge 段，确认 eval.yaml.tmpl 完整"}

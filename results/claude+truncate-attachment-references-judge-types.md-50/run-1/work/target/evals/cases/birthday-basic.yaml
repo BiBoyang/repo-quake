@@ -1,0 +1,36 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: birthday-basic
+# 报告中展示的用例标题。
+title: 生日场合产出中文贺卡，包含收件人姓名且只带一个结尾 emoji
+description: |
+  验证 Skill 能识别“生日”场合，按 tone-guide 写出 1-3 句中文卡片，
+  在用户提供姓名时把姓名写进卡片，并且只输出卡片正文、以单个 emoji 结尾。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    帮我给闺蜜小雅写张生日贺卡，她这周刚换了新工作，最近一直在加班。
+
+expect:
+  # 预检查；不通过时 judge 会被跳过，用于低成本拦掉明显不合格的输出。
+  must_contain:
+    - "小雅"
+  must_not_contain:
+    - "```"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        all: ["小雅"]
+        not: ["```", "以下是", "Here is"]
+    - output_matches:
+        all:
+          # 必须以 emoji 结尾（允许结尾 emoji 后跟变体选择符与空白）。
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{FE0E}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}]*\s*$'
+        not:
+          # 不允许叠加多个 emoji。
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]\s*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]'

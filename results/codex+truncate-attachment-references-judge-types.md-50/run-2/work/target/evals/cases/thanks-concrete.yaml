@@ -1,0 +1,25 @@
+# 用例 ID，保持与文件名（去掉 .yaml）一致
+id: thanks-concrete
+# 用例的一句话摘要，展示在列表与报告中
+title: 感谢卡具体点明被感谢的事情
+# 覆盖点：tone-guide 要求感谢要具体到所谢之事，而非泛泛客套
+description: |
+  用户感谢同事小陈帮忙改发布会 PPT，期望卡片中同时出现
+  收件人与这件具体的事，体现"具体优先于泛泛"的风格规则。
+input:
+  # 发送给 Agent 的用户提示，尽量贴近真实用户口吻
+  prompt: |
+    帮我写一张感谢卡，谢谢同事小陈上周熬夜帮我改完了产品发布会的 PPT。
+
+expect:
+  must_contain:
+    - "小陈"
+    - "PPT"
+
+judge:
+  # 评分方式
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小陈", "PPT"]

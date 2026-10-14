@@ -1,0 +1,36 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: ask-occasion-multiturn
+# 用例摘要，显示在用例列表和报告中
+title: 场合不明时先反问，再按补充信息写卡
+# 该用例覆盖的行为背景
+description: |
+  SKILL.md 规定：场合不明确时先询问用户。
+  第一轮用户只说"写贺卡"，Agent 应反问场合/对象；
+  第二轮补充场合与收件人后，再产出包含收件人信息的卡片。
+
+input:
+  # 多轮对话：用 turns 替代 prompt
+  turns:
+    - role: user
+      content: "帮我写一张贺卡。"
+      post_condition:
+        # 第一轮应反问（输出含问号），否则直接判 FAIL
+        must_contain_any: ["？", "?"]
+        on_fail: fail
+    - role: user
+      content: "是给我妈妈的，她下周过生日。"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 按轮次的断言
+  success:
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["？", "?"]
+    - turn_response_contains:
+        turn: 2
+        # 第二轮卡片应提到收件人（"妈" 同时覆盖 "妈妈"）
+        contains_any: ["妈"]
+    - exit_code: 0

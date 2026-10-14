@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-sincere-quality
+# 用例标题，展示在用例列表与报告中
+title: 道歉卡语气真诚、不推诿
+description: |
+  道歉卡的"真诚度"无法只用关键词判定，改用 agent_judge
+  按 tone-guide 的道歉细则做语义评估；expect 先过滤掉
+  明显不合规（markdown 格式）的输出，节省 judge token。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我忘了女朋友的纪念日，她现在很生气，帮我写一张道歉卡。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "#"
+    - "```"
+
+judge:
+  # 语义质量评估，仅在规则无法判定时使用
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "直接承认错误（忘记纪念日），不找借口、不过度解释"
+    - "语气真诚温和，符合道歉场合"
+    - "不替用户承诺未来行动（不出现「我以后一定……」这类保证）"
+    - "全文 1-3 句话，且恰好一个 emoji 位于结尾"
+  # 达标分数线
+  pass_threshold: 0.7

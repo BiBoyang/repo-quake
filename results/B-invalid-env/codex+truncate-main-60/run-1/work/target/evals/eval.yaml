@@ -1,0 +1,37 @@
+# 评测配置的 schema 版本。
+schema_version: v1alpha1
+
+environment:
+  # 纯文本输入输出使用的运行环境。
+  # 可选值：none | opensandbox | docker。
+  type: none
+
+skills:
+  # 每个 case 中安装到 Agent Engine 的 Skill。
+  - source: local_path
+    path: .
+
+engine:
+  # 运行评测时使用的 Engine。
+  name: claude_code
+
+cases:
+  # 本评测套件包含的 case 文件。
+  files:
+    - evals/cases/birthday-personalized.yaml
+    - evals/cases/chinese-thanks.yaml
+    - evals/cases/ambiguous-occasion.yaml
+    - evals/cases/apology-tone.yaml
+    - evals/cases/restricted-topic.yaml
+  # 所有 case 继承的时限与退出码检查。
+  defaults:
+    timeout_seconds: 120
+    max_turns: 3
+    expect:
+      exit_code: 0
+  # 纯文本 case 以串行方式执行，便于复现。
+  parallelism: 1
+
+report:
+  # 运行后保存机器可读的结果。
+  formats: [json]

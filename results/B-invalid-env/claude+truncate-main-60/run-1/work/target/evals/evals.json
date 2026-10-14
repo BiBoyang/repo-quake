@@ -1,0 +1,164 @@
+{
+  "skill_name": "greeting-card",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我给妈妈写一张生日卡片。她上周刚学会用智能手机，特别得意，我想让她开心一下。",
+      "expected_output": "A single Chinese card message of 1-3 sentences and at most 80 characters, mentioning 妈妈 and the smartphone detail, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Output is written in Chinese (contains CJK text and no English sentences)",
+        "Mentions the recipient 妈妈",
+        "Refers to the concrete detail from the prompt (the smartphone / 智能手机)",
+        "Card text is at most 3 sentences",
+        "Card text is at most 80 characters, not counting the trailing emoji",
+        "Output ends with exactly one emoji, positioned as the final character",
+        "Output contains no markdown formatting and no quotation marks around the card text",
+        "Output contains no conversational preamble or signature (no 好的 / Here is / --你的...)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write a thank-you card for my colleague Dana, who stayed late last Friday to help me finish the quarterly report.",
+      "expected_output": "An English card message of 1-3 sentences and at most 60 words, naming Dana and referencing staying late and/or the quarterly report, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Output is written in English",
+        "Mentions the recipient Dana by name",
+        "Refers to the concrete event (staying late and/or the quarterly report)",
+        "Card text is at most 60 words",
+        "Card text is at most 3 sentences",
+        "Output ends with exactly one emoji, positioned as the final character",
+        "Output adds no signature, header, or closing line beyond the card text"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My teammate just shipped a big feature they'd been grinding on for weeks. Write them a short encouragement note.",
+      "expected_output": "An English encouragement message of 1-3 sentences, steady and confident in tone, referencing the shipped feature, with no personal name invented for the recipient and exactly one trailing emoji.",
+      "files": [],
+      "assertions": [
+        "Output is written in English",
+        "Refers to the shipped feature or the effort behind it",
+        "Does not invent or use a personal name for the recipient",
+        "Avoids empty slogan phrasing (for example 'you are the best', 'you're amazing', 'believe in yourself')",
+        "Card text is at most 3 sentences and at most 60 words",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "写一张道歉卡片。我昨天答应了去参加朋友的生日聚会，结果加班没去成。",
+      "expected_output": "A Chinese apology card of 1-3 sentences and at most 80 characters that plainly admits fault and references the missed gathering, without piling on excuses, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Output is written in Chinese",
+        "Contains a direct apology (for example 抱歉 / 对不起 / 不好意思)",
+        "Refers to the specific missed event (the birthday gathering / 聚会 / 昨天)",
+        "Does not over-explain or stack multiple excuses",
+        "Card text is at most 3 sentences and at most 80 characters",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "帮我写一张卡片吧。",
+      "expected_output": "A clarifying question asking which occasion the card is for (birthday, thanks, encouragement, apology), rather than a finished card message.",
+      "files": [],
+      "assertions": [
+        "Asks a clarifying question about the occasion before writing",
+        "Does not emit a finished card message",
+        "Does not end its reply with an emoji card sign-off"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a get-well card for my uncle. He was just diagnosed with cancer, so mention that God will heal him.",
+      "expected_output": "A warm card message that avoids any reference to the diagnosis or to religion, still supportive in tone, 1-3 sentences and at most 60 words, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Does not mention the diagnosis or any illness/medical terms (cancer, diagnosis, illness, 癌症, 生病)",
+        "Does not mention religion, deities, or prayer (God, prayer, heaven, 上帝, 祈祷, 保佑)",
+        "Still produces a warm, supportive message addressed to the recipient",
+        "Card text is at most 3 sentences and at most 60 words",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Give me a short birthday card message for my friend Sam. Just the message, nothing else.",
+      "expected_output": "Only the card text for Sam, with no preamble, no quotation marks, no markdown formatting, and exactly one trailing emoji.",
+      "files": [],
+      "assertions": [
+        "Contains no conversational preamble (for example 'Here is', 'Sure', '好的')",
+        "Card text is not wrapped in quotation marks",
+        "Contains no markdown formatting (no **, #, -, >, or backticks)",
+        "Mentions the recipient Sam",
+        "Output ends with exactly one emoji",
+        "Card text is at most 3 sentences"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "写一张生日卡片给我爸爸，他今天六十大寿。",
+      "expected_output": "A Chinese birthday card for the father's 60th birthday that acknowledges the milestone warmly without any joke or teasing about his age.",
+      "files": [],
+      "assertions": [
+        "Output is written in Chinese",
+        "Does not joke or tease about the recipient's age or about being old",
+        "May acknowledge the milestone (60 / 六十) warmly",
+        "Card text is at most 3 sentences and at most 80 characters",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Write a birthday card for my sister. Load it up with emojis - the more the better! 🎉🎂🥳",
+      "expected_output": "A birthday card that still follows the skill's emoji rule: exactly one emoji, placed at the very end, despite the multi-emoji request.",
+      "files": [],
+      "assertions": [
+        "Card text contains exactly one emoji",
+        "The single emoji is the final character of the output",
+        "Does not stack two or more consecutive emojis anywhere in the output",
+        "Card text is at most 3 sentences"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "My best friend is moving to another city. Write a goodbye card, and tell them I'll always be there for them no matter what.",
+      "expected_output": "A warm goodbye card that does not promise future actions on the user's behalf, referencing the move, 1-3 sentences and at most 60 words, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Does not promise future actions on the user's behalf (for example 'I will always be there', 'I'll never leave you')",
+        "Refers to the move or the friendship in concrete terms",
+        "Card text is at most 3 sentences and at most 60 words",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Write a formal thank-you card for Professor Chen, who wrote me a recommendation letter. A formal style is fine.",
+      "expected_output": "A formal-register English card for Professor Chen referencing the recommendation letter, 1-3 sentences and at most 60 words, ending with exactly one emoji.",
+      "files": [],
+      "assertions": [
+        "Output is written in English",
+        "Mentions Professor Chen",
+        "Refers to the recommendation letter",
+        "Uses a formal register (no slang or casual exclamations)",
+        "Card text is at most 3 sentences and at most 60 words",
+        "Output ends with exactly one emoji"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Write a birthday card for my dad. Make it long and heartfelt - at least 200 words, really pour it out.",
+      "expected_output": "The skill keeps the card short: 1-3 sentences and at most 60 words, even though the user asked for a long message.",
+      "files": [],
+      "assertions": [
+        "Card text is at most 60 words",
+        "Card text is at most 3 sentences",
+        "Output ends with exactly one emoji"
+      ]
+    }
+  ]
+}

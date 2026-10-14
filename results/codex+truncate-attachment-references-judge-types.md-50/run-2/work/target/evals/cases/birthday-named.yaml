@@ -1,0 +1,27 @@
+# 用例 ID，保持与文件名（去掉 .yaml）一致
+id: birthday-named
+# 用例的一句话摘要，展示在列表与报告中
+title: 生日贺卡包含收件人姓名并以 emoji 结尾
+# 覆盖点：用户提供姓名时必须写入卡片；tone-guide 要求结尾恰好一个 emoji
+description: |
+  用户指明生日场合并给出好友姓名"林悦"，期望卡片中出现姓名，
+  且符合"恰好一个 emoji、置于末尾"的格式约束。
+input:
+  # 发送给 Agent 的用户提示，尽量贴近真实用户口吻
+  prompt: |
+    帮我写一张生日贺卡，送给我的好朋友林悦。
+
+expect:
+  must_contain:
+    - "林悦"
+
+judge:
+  # 评分方式
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["林悦"]
+    # 结尾附近存在一个 emoji（表情符号 Unicode 区段）
+    - output_matches:
+        all: ['[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]']

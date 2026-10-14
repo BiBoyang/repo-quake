@@ -1,0 +1,46 @@
+# Stable case ID used in reports. Keep it the same as the filename without .yaml.
+id: basic
+# Human-readable summary shown in case lists and reports.
+title: Brief description of what this case validates
+# Optional background explaining the behavior or regression this case covers.
+description: |
+  More detailed background.
+
+input:
+  # User prompt sent to the Agent for a single-turn case.
+  prompt: |
+    Write the actual prompt to send to the Agent here.
+    Use a tone close to real users; avoid being too mechanical.
+
+# For multi-turn conversations, use turns instead of prompt:
+# input:
+#   # Ordered conversation turns; use this instead of prompt for multi-turn cases.
+#   turns:
+#     - role: user
+#       content: "First request"
+#       post_condition:
+#         must_contain_any: ["keywordA", "keywordB"]
+#         on_fail: skip_remaining
+#       capture:
+#         - variable: var_name
+#           pattern: "(?P<value>pattern)"
+#     - role: user
+#       content: "Follow-up using {{var_name}}"
+
+# Optional workspace setup copied or created before the Agent runs.
+# context:
+#   repo_fixture: fixtures/repos/sample-project
+#   git:
+#     init: true
+#     checkout: main
+#     apply_diff: fixtures/diffs/my.patch
+#   files:
+#     "src/main.py": |
+#       def hello(): ...
+
+# Per-case limits that override values from eval.yaml cases.defaults.
+# constraints:
+#   timeout_seconds: 180
+#   max_turns: 8
+
+# Cheap pre-judge checks; when these fail, the judge block is skipped.

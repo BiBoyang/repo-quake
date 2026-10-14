@@ -1,0 +1,31 @@
+# 用例 ID，必须与文件名保持一致。
+id: clarify-unclear-occasion
+# 用例列表与报告中展示的标题。
+title: 场合不明确时应先追问
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  SKILL.md 要求先识别场合，识别不出来就先问。本用例验证 Skill 在第一轮
+  追问场合，并在用户补充"生日祝福"之后写出包含收件人的卡片。
+
+input:
+  # 多轮用例：用 turns 代替 prompt。
+  turns:
+    - role: user
+      content: "帮我给小王写张卡片。"
+      post_condition:
+        # 第一轮应当追问场合，而不是直接成文。
+        must_contain_any: ["？", "?", "生日", "感谢", "鼓励", "道歉", "场合", "主题"]
+        on_fail: fail
+    - role: user
+      content: "是生日祝福，他最近刚升职。"
+
+judge:
+  type: rule_based
+  success:
+    # 仅 status=completed 的轮次可以被断言。
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["场合", "主题", "生日", "感谢", "鼓励", "道歉", "哪种", "哪一"]
+    - turn_response_contains:
+        turn: 2
+        contains_all: ["小王"]

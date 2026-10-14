@@ -1,0 +1,36 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日贺卡包含收件人名字与生日元素
+# 覆盖的规则：用户提供收件人名字时必须写进贺卡；不以 Dear 开头
+description: |
+  验证 Skill 生成生日贺卡时包含用户提供的收件人名字、点明生日场合，
+  且遵守「输出仅卡片正文、不以 Dear 开头、结尾带 emoji」的格式要求。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    帮我给同事小雨写一张生日贺卡。她上周刚带我们团队搞定了一个特别难的项目，想写得真诚、具体一点。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分方式；优先用确定性规则
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须包含收件人名字，并点明生日场合
+    - output_contains:
+        all: ["小雨"]
+        any: ["生日", "生日快乐"]
+    # 必须含至少一个 emoji，且不得以 Dear 开头
+    - output_matches:
+        all: ['[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]']
+        not: ['(?i)^\s*dear']
+    - exit_code: 0

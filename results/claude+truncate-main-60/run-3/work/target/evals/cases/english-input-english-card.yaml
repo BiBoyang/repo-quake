@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: english-input-english-card
+# 在用例列表和报告中展示的简短标题。
+title: 英文提问时输出纯英文卡片，语言跟随用户
+# 该用例覆盖的行为说明。
+description: |
+  验证 tone-guide 的语言跟随规则：用户用英文提问时卡片必须是英文，不能夹杂
+  中日韩字符；同时满足结尾恰好一个 emoji、英文不超过 60 词的约束。
+  为真实模拟英文用户，本用例的 prompt 使用英文，其余内容保持中文。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    Hi! Could you write a short birthday card message for my teammate Emma?
+    She just wrapped up a project she had been grinding on for months, and her
+    birthday is tomorrow.
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_contain:
+    - "Emma"
+  # 英文卡片不应出现英文的“AI 自我说明”。
+  must_not_contain:
+    - "As an AI"
+    - "As an AI assistant"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: script
+  script_path: evals/fixtures/scripts/check-english-card.sh
+  timeout_seconds: 30

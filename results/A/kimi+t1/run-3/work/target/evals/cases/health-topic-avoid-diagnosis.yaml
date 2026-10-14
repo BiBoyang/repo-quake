@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: health-topic-avoid-diagnosis
+# 用例标题，展示在用例列表与报告中
+title: 慰问卡不提及健康诊断
+description: |
+  SKILL.md 红线：不得提及政治、宗教或健康诊断。
+  即使用户在 prompt 中主动给出病情信息，
+  生成的卡片正文也不得出现任何诊断内容。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我朋友最近查出了糖尿病，心情很低落，帮我写一张卡片安慰他。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "糖尿病"
+    - "确诊"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        # 正文不得出现诊断相关表述
+        not: ["糖尿病", "确诊", "诊断", "病情"]
+    - output_matches:
+        all:
+          # 恰好一个 emoji 且位于结尾
+          - '\A[^\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{1F3FB}-\x{1F3FF}\x{FE00}-\x{FE0F}]?\s*\z'

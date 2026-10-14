@@ -1,0 +1,35 @@
+# 用例 ID，必须与文件名去掉 .yaml 后一致。
+id: english-input-english-output
+# 用例标题，出现在用例列表与报告中。
+title: 英文输入产出英文卡片
+# 背景说明：这条用例回归的是什么行为，为什么值得长期保留。
+description: |
+  tone-guide 要求「Match the user's language（Chinese input -> Chinese card）」。
+  这条用例用英文请求回归语言跟随：输出必须是英文、带上收件人姓名，
+  并且不出现任何中文/CJK 字符。本用例的关键词按输出语言写成英文。
+
+input:
+  # 单轮用例发给 Agent 的用户 prompt，语气尽量贴近真实用户。
+  prompt: |
+    My teammate Maya just shipped her first big feature and she is nervous about
+    the launch. Can you write her a short encouragement note? English, please.
+
+# 低成本门槛检查；不通过时 judge 会被跳过，用来省 token。
+expect:
+  must_contain:
+    - "Maya"
+
+judge:
+  # 评分方式；语言与姓名都能用确定性规则判定，所以用 rule_based。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # 全部 success 均满足才算 PASS；任一条 failure 命中则直接 FAIL。
+  success:
+    - output_contains:
+        all: ["Maya"]
+    # 输出不得出现 CJK 字符，确保卡片语言跟随用户。
+    - output_matches:
+        not: ['[\x{4e00}-\x{9fff}\x{3400}-\x{4dbf}\x{3000}-\x{303f}]']
+    # 至少出现一个英文单词，排除只有姓名 + emoji 的空壳输出。
+    - output_matches:
+        any: ['[A-Za-z]{4,}']

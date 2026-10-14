@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-english
+# 用例一句话说明，展示在用例列表和报告中
+title: 英文输入应生成英文感谢卡
+description: |
+  验证 tone-guide 中「Match the user's language」规则：英文提示词应生成
+  英文卡片（输出不含汉字），包含收件人 Sarah，且未要求正式风格时不以
+  Dear 开头。提示词必须为英文，才能测出语言匹配行为。
+
+input:
+  # 发送给 Agent 的单轮用户提示词（功能上必须是英文输入）
+  prompt: |
+    My colleague Sarah covered my shift yesterday. Please write her a thank-you card.
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        all: ["Sarah"]
+    - output_matches:
+        not: ["\\p{Han}", "(?i)^\\s*dear\\b"]

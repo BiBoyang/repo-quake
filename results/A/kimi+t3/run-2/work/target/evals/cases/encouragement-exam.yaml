@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-exam
+# 用例列表与报告中展示的简要说明
+title: 鼓励贺卡应稳重切实、避免空洞口号
+# 该用例覆盖的行为背景
+description: |
+  tone-guide 要求鼓励场景避免 "you are the best" 式空洞口号。
+  验证输出给出切实鼓励（结合复试场景），且不出现典型套话。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我妹妹下周要参加研究生复试，她很紧张，帮我写张卡片给她打打气。
+
+# 低成本前置检查；不通过时跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        any: ["加油", "顺利", "相信", "复试", "稳定发挥"]
+        not: ["你是最棒的"]
+    - output_matches:
+        all: ['[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]']
+    - exit_code: 0

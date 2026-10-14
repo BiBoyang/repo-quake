@@ -1,0 +1,39 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-english
+# 用例列表和报告中展示的简短说明
+title: 英文输入生成英文感谢卡且内容具体
+# 该用例覆盖的行为背景
+description: |
+  验证语言匹配规则（英文输入 -> 英文卡片）与 thanks 语气规则：
+  感谢要落到具体的事情上，不出现中文，不以 Dear 开头，结尾一个 emoji。
+  本用例预期输出为英文，因此 expect / judge 关键词使用英文。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt（英文，用于测试语言匹配）
+  prompt: |
+    Write a thank-you card for my colleague Sarah. She covered my
+    shift last Friday so I could attend my daughter's recital.
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  # 评分策略；本用例使用确定性规则
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部 success 断言满足才判 PASS
+  success:
+    - output_contains:
+        all: ["Sarah"]
+        any: ["thank", "Thank", "grateful", "appreciate"]
+    # 英文卡片不应出现中文字符
+    - output_matches:
+        not: ['[\x{4e00}-\x{9fff}]']
+    # 不以 Dear 开头（tone-guide 禁止）
+    - output_matches:
+        not: ['(?i)^\s*dear\b']
+    # 结尾必须是 emoji（兼容 ❤️ 这类带 VS16 的写法）
+    - output_matches:
+        all: ['\p{So}\x{FE0F}?\s*$']

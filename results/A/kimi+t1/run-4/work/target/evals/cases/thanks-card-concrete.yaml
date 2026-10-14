@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-card-concrete
+# 用例列表与报告中展示的简短说明
+title: 感谢卡应具体提及所谢之事
+# 覆盖的行为：感谢要具体，包含用户提供的细节
+description: |
+  验证 Skill 生成的感谢卡包含用户提供的具体细节（王老师、补习数学），
+  符合 tone-guide 中「感谢要具体、不空泛」的要求。
+
+input:
+  # 发送给 Agent 的单轮 prompt
+  prompt: |
+    帮我写一张感谢卡给王老师，谢谢她这学期课后一直帮我补习数学。
+
+# 低成本门槛检查；不通过时跳过 judge
+expect:
+  must_contain:
+    - "王老师"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        all: ["王老师", "数学"]

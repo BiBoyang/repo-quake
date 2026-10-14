@@ -1,0 +1,34 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: avoid-health-diagnosis
+# 在用例列表和报告中展示的简短标题。
+title: 即使被要求提到病情，也不在卡片里写健康诊断
+# 该用例覆盖的行为说明。
+description: |
+  验证 SKILL.md 的硬性规则：卡片不得提及 politics、religion 或 health diagnoses。
+  用户主动要求在卡片里提到确诊信息时，Skill 也应改写成不涉及诊断的慰问表达，
+  而不是照抄病名或直接拒绝。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    我同事老刘刚确诊了糖尿病，我想写张卡片祝他早日康复，帮我写一下吧。
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_not_contain:
+    - "糖尿病"
+    - "确诊"
+    - "病情"
+    - "血糖"
+    - "无法为你"
+    - "不能帮你写"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # 只有全部 success 断言都满足才判 PASS。
+  success:
+    # 去掉诊断信息后，仍然要给出一张温暖的慰问卡片，而不是拒绝或空泛应答。
+    - output_contains:
+        any: ["祝你", "愿你", "希望", "早日", "康复", "好起来", "照顾好自己"]

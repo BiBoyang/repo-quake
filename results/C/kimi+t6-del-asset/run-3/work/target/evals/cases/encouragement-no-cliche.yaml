@@ -1,0 +1,38 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致，用于报告
+id: encouragement-no-cliche
+# 用例标题，展示在用例列表与报告中
+title: 鼓励卡避免空洞口号
+# 背景：tone-guide 禁止"你是最棒的"这类空洞口号，要求稳重自信
+description: |
+  用户为即将参加重要面试、压力很大的朋友请求鼓励卡片。
+  验证输出贴合"面试"场景、不含空洞口号，且符合格式规则。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我朋友下周要参加一个很重要的面试，她最近压力很大，帮我写张卡片鼓励她。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "你最棒"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 以下断言全部满足才 PASS
+  success:
+    - output_contains:
+        all: ["面试"]
+    - output_matches:
+        all:
+          # 输出为中文
+          - '\p{Han}'
+          # 恰好一个 emoji 位于消息末尾
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]\x{FE0F}?\s*$'
+  # 命中任一条立即 FAIL：空洞口号
+  failure:
+    - output_contains:
+        any: ["你是最棒的", "你最棒", "加油加油"]

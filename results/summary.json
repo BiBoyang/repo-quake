@@ -1,0 +1,26 @@
+{
+  "claude+truncate-attachment-references-judge-types.md-50": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 3,
+    "levels": "L2,L2,L2"
+  },
+  "claude+truncate-main-60": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 3,
+    "levels": "L2,L2,L2"
+  },
+  "codex+truncate-attachment-references-judge-types.md-50": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 2,
+    "levels": "L0,L2,L2"
+  },
+  "codex+truncate-main-60": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 3,
+    "levels": "L2,L2,L2"
+  }
+}

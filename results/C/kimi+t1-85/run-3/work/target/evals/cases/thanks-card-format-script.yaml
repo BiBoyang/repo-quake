@@ -1,0 +1,26 @@
+# 稳定用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-card-format-script
+# 用例标题，展示在用例列表和报告中。
+title: 感谢贺卡的格式与长度合规
+# 背景：tone-guide 的硬性格式规则适合用脚本做确定性校验。
+description: |
+  用 script judge 校验：恰好一个 emoji 且位于末尾、
+  汉字数不超过 80、不含 markdown 标记、包含收信人名字、
+  不以 Dear/亲爱的 开头。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    帮我给同事张伟写一张感谢贺卡，谢谢他上周三帮我顶班，让我能去参加孩子的家长会。
+
+# 零成本预检；不通过则跳过 judge。
+expect:
+  must_contain:
+    - "张伟"
+
+judge:
+  # 评分策略。可选: rule_based | agent_judge | script。
+  type: script
+  # 判分脚本路径，相对 Skill 根目录；退出码 0 = PASS，非 0 = FAIL。
+  script_path: evals/fixtures/scripts/check-card-format.py
+  timeout_seconds: 30

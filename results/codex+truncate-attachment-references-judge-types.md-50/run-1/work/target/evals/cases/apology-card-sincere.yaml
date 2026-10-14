@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: apology-card-sincere
+# 用例一句话摘要，显示在用例列表和报告中。
+title: 道歉贺卡应直接承认过错并包含收件人名字
+# 用例背景：tone-guide 要求道歉真诚、直接承认过错、不过度解释；Skill 规则要求写入收件人名字。
+description: |
+  验证 Skill 写道歉卡时会带上收件人名字（周姐），
+  并使用明确的道歉措辞，而非含糊带过。
+
+input:
+  # 发给 Agent 的单轮用户 prompt，语气贴近真实用户。
+  prompt: |
+    我昨天评审会迟到了二十分钟，帮我写张道歉卡给主持人周姐。
+
+expect:
+  must_contain:
+    - "周姐"
+
+judge:
+  # 判定策略：名字与道歉措辞均可确定性判定，使用 rule_based。
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["周姐"]
+        any: ["对不起", "抱歉", "不好意思"]
+    # 结尾恰好一个 emoji。
+    - output_matches:
+        any:
+          - "(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"
+        not:
+          - "[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}][\\s\\S]*[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]"

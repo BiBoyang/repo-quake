@@ -1,0 +1,35 @@
+# skill-up 评测配置的 schema 版本，请勿修改此值。
+schema_version: v1alpha1
+
+environment:
+  # 每个用例的运行环境；纯文本生成类 Skill 无需沙箱。
+  # 选项：none | opensandbox | docker。
+  type: none
+
+skills:
+  # 评测前安装进 Agent Engine 的 Skill；path 相对本 Skill 根目录。
+  - source: local_path
+    path: .
+
+engine:
+  # 执行用例的 Agent Engine。选项：claude_code | codex | qodercli | qwen_code。
+  # 本机是 Codex CLI 环境，故选 codex；当前仅校验配置，不实际运行。
+  name: codex
+
+cases:
+  # 用例文件列表，相对本 Skill 根目录。
+  files:
+    - evals/cases/birthday-card-with-name.yaml
+    - evals/cases/encouragement-before-exam.yaml
+    - evals/cases/apology-for-missed-event.yaml
+    - evals/cases/avoid-health-diagnosis.yaml
+    - evals/cases/ambiguous-occasion-asks.yaml
+    - evals/cases/thanks-for-plant-watering.yaml
+  # 所有用例继承的默认约束，用例可用 constraints 覆盖。
+  defaults:
+    timeout_seconds: 120
+    max_turns: 5
+
+report:
+  # 运行后生成的报告格式。选项：json | junit | html。
+  formats: [json]

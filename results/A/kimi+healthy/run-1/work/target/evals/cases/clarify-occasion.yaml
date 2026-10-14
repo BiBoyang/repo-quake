@@ -1,0 +1,16 @@
+id: clarify-occasion
+title: 场合不明确时应先向用户确认
+description: |
+  验证澄清行为：用户未指明场合时，Skill 应先反问确认，
+  而不是擅自猜一个场合直接写卡。
+
+input:
+  prompt: |
+    在吗？帮我写张贺卡。
+
+judge:
+  type: rule_based
+  success:
+    # 启发式判定：反问场合的回复几乎总会包含以下词之一
+    - output_contains:
+        any: ["场合", "请问", "什么"]

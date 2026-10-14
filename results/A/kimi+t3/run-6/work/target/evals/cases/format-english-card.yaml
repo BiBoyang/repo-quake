@@ -1,0 +1,26 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: format-english-card
+# 用例一句话说明，展示在用例列表和报告中
+title: 英文卡片应符合格式与长度硬规则
+description: |
+  与 format-chinese-card 共用同一判分脚本，脚本自动识别语言：
+  英文卡片不超过 60 词、不超过 3 句话、恰好一个末尾表情符号、
+  不使用 markdown。提示词必须为英文，才能测出语言匹配行为。
+
+input:
+  # 发送给 Agent 的单轮用户提示词（功能上必须是英文输入）
+  prompt: |
+    Please write a birthday card for Tom. He just ran his first marathon.
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Tom"
+
+judge:
+  # 评分策略；格式规则用自定义脚本精确判定
+  # 可选：rule_based | agent_judge | script
+  type: script
+  # 判分脚本路径，相对 Skill 根目录；exit 0 为 PASS，非 0 为 FAIL
+  script_path: evals/fixtures/scripts/assert-card-format.sh
+  timeout_seconds: 30

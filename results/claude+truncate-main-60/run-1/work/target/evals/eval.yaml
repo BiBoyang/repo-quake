@@ -1,0 +1,39 @@
+# skill-up 评测配置的 schema 版本，固定值，不要修改。
+schema_version: v1alpha1
+
+environment:
+  # 每个用例的运行环境；greeting-card 是纯文本 Skill，不需要沙箱。
+  # 可选值：none | opensandbox | docker。
+  type: none
+
+skills:
+  # 安装到 Agent Engine 的被测 Skill；path 相对本文件所在的 Skill 根目录解析。
+  # 可选字段：include / exclude（doublestar glob，evals/ 始终不会安装）。
+  - source: local_path
+    path: .
+
+engine:
+  # 执行评测 prompt 的 Agent Engine。
+  # 内置可选值：claude_code | codex | qodercli | qwen_code。
+  name: claude_code
+
+cases:
+  # 参与评测的用例文件，路径相对 Skill 根目录。
+  files:
+    - evals/cases/birthday-with-name.yaml
+    - evals/cases/thanks-concrete.yaml
+    - evals/cases/encouragement-avoid-slogans.yaml
+    - evals/cases/apology-sincere.yaml
+    - evals/cases/card-style-rules.yaml
+    - evals/cases/english-input-english-output.yaml
+    - evals/cases/clarify-unclear-occasion.yaml
+    - evals/cases/avoid-religion-and-health.yaml
+  defaults:
+    # 用例超时时间（秒）；纯文本卡片输出很短，120 秒足够。
+    timeout_seconds: 120
+    # 单个用例的最大轮次；卡片请求不需要多轮工具调用。
+    max_turns: 5
+
+report:
+  # 运行后生成的报告格式。可选值：json | junit | html。
+  formats: [json, html]

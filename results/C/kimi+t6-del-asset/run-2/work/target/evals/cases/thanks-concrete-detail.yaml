@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete-detail
+# 用例标题，展示在用例列表与报告中
+title: 感谢贺卡应点名具体事项
+# 本用例覆盖的行为背景
+description: |
+  tone-guide 要求感谢贺卡"具体说明感谢的事情、温暖但不夸张"。
+  本用例验证输出既包含收件人姓名，也提到用户给出的具体事件
+  （项目上线帮忙排查问题），而不是泛泛的感谢。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    上周项目上线，多亏同事老王连续两天帮我排查问题，我想给他写一张感谢贺卡。
+
+# 零成本门槛检查，失败则跳过 judge
+expect:
+  must_contain:
+    - "老王"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 全部断言满足才 PASS
+  success:
+    - output_contains:
+        all: ["老王"]
+        any: ["谢谢", "感谢", "感激"]
+    - output_contains:
+        any: ["上线", "排查", "问题"]

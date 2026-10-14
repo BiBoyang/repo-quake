@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-plain
+# 用例摘要，显示在用例列表和报告中
+title: 道歉卡片诚恳认错、不替用户许诺
+# 该用例覆盖的行为背景
+description: |
+  语气指南规定道歉场合要"坦率认错、不过度解释"，
+  且不得替用户承诺未来行为（如 "我保证""我会永远……"）。
+
+input:
+  prompt: |
+    我忘记了和女朋友的纪念日，她现在有点生气，帮我写一张道歉卡片。
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        # 必须出现认错/致歉类表达
+        any: ["对不起", "抱歉", "原谅"]
+        # 不得替用户许诺未来行为
+        not: ["我保证", "我发誓", "我会永远"]
+    - output_matches:
+        all:
+          - '\p{Han}'
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{FE0F}]\s*$'
+    - exit_code: 0

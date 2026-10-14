@@ -1,0 +1,24 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: thanks-for-plant-watering
+# 一句话说明用例验证点。
+title: 感谢贺卡写入收件人姓名且格式合规
+# 背景：感谢要具体、收件人姓名必须出现；格式由脚本统一校验。
+description: |
+  邻居代浇花是具体场景，tone-guide 要求感谢写具体；
+  本例重点卡收件人姓名（老周）与通用格式两项硬指标。
+
+input:
+  # 发送给 Agent 的单轮用户提示。
+  prompt: |
+    邻居老周在我出差时帮我浇了花，写张感谢贺卡吧。
+
+expect:
+  # 零成本门槛：全部满足才会进入 judge。
+  must_contain:
+    - "老周"
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: script
+  # 校验贺卡格式不变量的本地脚本。
+  script_path: evals/fixtures/scripts/check-card-format.sh

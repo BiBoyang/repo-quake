@@ -1,0 +1,30 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: thanks-concrete-detail
+# 用例简述，出现在用例列表与报告中
+title: 感谢卡应提到用户给出的具体事项
+# 覆盖行为：感谢场合必须落到具体细节，而非泛泛致谢
+description: |
+  tone-guide 要求感谢场合"具体说明感谢的是什么"。
+  用户在 prompt 中提供了"留了咖啡豆"这一细节，卡片应提到它。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    给楼下咖啡店的店长写一张感谢卡，谢谢她昨天特意帮我留了新到的咖啡豆。
+
+# 零成本前置检查；不通过则跳过 judge 直接判 FAIL
+expect:
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        # 应表达谢意
+        any: ["谢谢", "感谢"]
+    - output_contains:
+        # 应提到用户给出的具体事项
+        any: ["咖啡", "豆子"]

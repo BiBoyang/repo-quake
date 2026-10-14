@@ -1,0 +1,20 @@
+id: encouragement-no-empty-slogan
+title: 鼓励卡语气沉稳、不喊空洞口号
+description: |
+  覆盖 tone-guide 对 encouragement 场合的规则：steady and confident，
+  avoid empty slogans like "you are the best"。
+  这是对该条规则的回归用例。
+
+input:
+  prompt: |
+    我朋友明天要面试，他很紧张，帮我写张卡片给他打打气。
+
+judge:
+  type: rule_based
+  success:
+    # 中文 prompt 应产出中文卡片
+    - output_matches:
+        all: ['\p{Han}']
+    # 不得出现 tone-guide 点名的空洞口号
+    - output_contains:
+        not: ["你是最棒的", "你最棒"]

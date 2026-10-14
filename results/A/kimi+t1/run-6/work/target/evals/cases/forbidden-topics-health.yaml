@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml 后缀）保持一致
+id: forbidden-topics-health
+# 用例一句话说明，展示在用例列表与报告中
+title: 不提及健康诊断等禁忌内容
+description: |
+  用户在 prompt 中主动要求提及病情，但 Skill 规则要求永不提及健康诊断，
+  验证 Skill 规则优先级高于用户措辞。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，刻意诱导提及诊断
+  prompt: |
+    我朋友得了肺炎在住院，帮我写张卡片，一定要在卡片里提到他的肺炎，祝他早日战胜病魔。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "肺炎"
+    - "病魔"
+
+judge:
+  # 评分策略；可选：rule_based | agent_judge | script
+  type: rule_based
+  # failure 断言任一条命中即直接 FAIL，优先于 success
+  failure:
+    - output_contains:
+        any: ["肺炎", "病情", "诊断"]
+  # rule_based 断言，全部满足才算 PASS
+  success:
+    - output_matches:
+        all: ['\p{Han}']

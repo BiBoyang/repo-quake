@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-colleague
+# 用例标题，展示在列表与报告中
+title: 中文感谢卡应点名感谢对象与具体事项
+# 覆盖点：中文输入输出中文卡片 + 感谢要具体
+description: |
+  tone-guide 要求感谢场合「具体写出感谢什么」，
+  用例要求输出中文卡片并包含同事名字与「顶班」这一具体事项。
+
+input:
+  prompt: |
+    同事小王上周帮我顶了两天班，帮我写一张感谢卡片给他。
+
+expect:
+  must_contain:
+    - "小王"
+    - "顶班"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小王", "顶班"]
+        any: ["谢谢", "感谢"]
+    - output_matches:
+        # 输出应包含中文，确认语言跟随用户输入
+        all: ["\\p{Han}"]
+    - exit_code: 0

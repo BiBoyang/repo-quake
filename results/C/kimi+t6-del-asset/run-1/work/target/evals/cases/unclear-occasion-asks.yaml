@@ -1,0 +1,23 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: unclear-occasion-asks
+# 用例的一句话说明。
+title: 场合不明时先反问而不是直接生成
+# 背景：SKILL.md 规定第一步识别场合（生日/感谢/鼓励/道歉），不明确时要先询问。
+description: |
+  用户只说一句"帮我写张贺卡"、未给出任何场合信息时，
+  Skill 应先反问澄清，而不是直接产出一张通用贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 判分策略：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言：输出是一个围绕场合/对象的提问。
+  success:
+    - output_matches:
+        any: ["？", "\\?"]
+    - output_contains:
+        any: ["场合", "生日", "感谢", "鼓励", "道歉", "哪位", "谁"]

@@ -1,0 +1,12 @@
+{
+  "errors": [],
+  "warnings": [
+    "SKILL.md: name 'skill-upper' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)",
+    "references/judge-types.md: ends at a heading ('## agent_judge — LLM 评审') with no content after it"
+  ],
+  "info": [
+    "scripts/todo.py: referenced by evals/fixtures/skills/sample-with-evals/SKILL.md but missing (secondary doc — not gated; may be a hypothetical example)"
+  ],
+  "skill_dir": "results/A/kimi+t3/run-3/skill",
+  "verdict": "PASS"
+}

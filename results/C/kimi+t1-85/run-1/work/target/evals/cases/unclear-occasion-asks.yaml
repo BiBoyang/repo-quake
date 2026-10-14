@@ -1,0 +1,24 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例列表和报告中展示的简短说明
+title: 场合不明时先追问澄清
+# 该用例覆盖的行为背景
+description: |
+  SKILL.md 规定：Identify the occasion (birthday, thanks, encouragement,
+  apology). If unclear, ask. 本用例故意不给场合与收件人信息，
+  验证 Agent 会提出澄清问题，而不是直接编造一张卡片。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt（故意缺少场合信息）
+  prompt: |
+    帮我写张卡片。
+
+judge:
+  # 评分策略；本用例使用确定性规则
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部 success 断言满足才判 PASS
+  success:
+    # 澄清提问的确定性标志：输出中包含中英文问号之一
+    - output_matches:
+        any: ['\?', '？']

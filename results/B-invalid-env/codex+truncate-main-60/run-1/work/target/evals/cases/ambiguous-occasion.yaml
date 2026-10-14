@@ -1,0 +1,25 @@
+# 澄清场合 case 的稳定标识。
+id: ambiguous-occasion
+title: 场合不明确时先提出澄清问题
+description: |
+  检查未提供场合时，Skill 会询问缺失的场合，而不是擅自编造一种问候。
+
+input:
+  # 故意省略卡片场合。
+  prompt: |
+    请给我的朋友 Alex 写一段简短的卡片文字。
+
+expect:
+  # 响应应询问场合，且不能擅自选择生日或祝贺场景。
+  must_contain:
+    - 场合
+  must_not_contain:
+    - 生日快乐
+    - 恭喜
+
+judge:
+  # 使用确定性检查，不需要额外的 judge 模型。
+  type: rule_based
+  success:
+    - output_contains:
+        all: [场合]

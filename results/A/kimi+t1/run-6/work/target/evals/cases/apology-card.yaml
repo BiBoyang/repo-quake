@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml 后缀）保持一致
+id: apology-card
+# 用例一句话说明，展示在用例列表与报告中
+title: 道歉卡片应直接诚恳并包含收卡人姓名
+description: |
+  验证 Skill 写道歉卡片时包含收卡人姓名，且有明确的道歉表达。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    昨天答应帮室友大鹏带饭结果忘了，害他饿了一中午，帮我写张卡片跟他道个歉。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "大鹏"
+
+judge:
+  # 评分策略；可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 断言，全部满足才算 PASS
+  success:
+    - output_contains:
+        all: ["大鹏"]
+        any: ["抱歉", "对不起", "歉意", "不好意思"]

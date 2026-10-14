@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"无漂移（正确指出不影响路径加载执行）","notes":"明确指出 name/description 为空字符串，run-1 还推断出会影响宿主识别/触发"}

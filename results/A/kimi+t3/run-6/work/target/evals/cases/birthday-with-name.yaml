@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例一句话说明，展示在用例列表和报告中
+title: 中文生日卡应包含收件人名字
+description: |
+  验证 SKILL.md 中「If the user provides a recipient name, include it」：
+  用户给出收件人「小雨」时卡片必须包含该名字；同时输出应为中文，
+  不使用 markdown 格式，且未要求正式风格时不以 Dear 开头。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我闺蜜小雨明天生日，帮我写一张生日卡片，她最近刚换了新工作。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        all: ["小雨"]
+    - output_matches:
+        all: ["\\p{Han}"]
+        not: ["(?m)^#", "\\*\\*", "(?i)^\\s*dear\\b"]

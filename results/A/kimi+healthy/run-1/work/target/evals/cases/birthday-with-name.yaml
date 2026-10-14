@@ -1,0 +1,34 @@
+# 稳定的用例 ID，需与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例一句话摘要，展示在用例列表与报告中
+title: 生日贺卡应包含收件人名字并以单个 emoji 结尾
+description: |
+  验证生日场景的核心规则：使用收件人名字、输出中文贺卡、
+  结尾恰有 emoji、不使用 markdown、不以称呼开头。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    这周六是我最好的朋友小雨的生日，帮我写一张生日贺卡，我想当面交给她。
+
+# 零成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "**"
+    - "#"
+
+judge:
+  # 评分策略；可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        all: ["小雨"]
+        not: ["Dear", "亲爱的"]
+    - output_matches:
+        # 结尾必须是 emoji（So 类符号 + 可选变体选择符）
+        all: ['\p{So}\x{FE0F}?\s*$']
+        # 不允许两个 emoji 直接相连（带 ZWJ 的组合 emoji 不受影响）
+        not: ['\p{So}\x{FE0F}?\p{So}']

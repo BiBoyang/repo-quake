@@ -1,0 +1,24 @@
+# 用例 ID，与文件名（去掉 .yaml 后缀）保持一致
+id: format-single-emoji
+# 用例一句话说明，展示在用例列表与报告中
+title: 卡片格式应为恰好一个末尾 emoji、无 markdown、1-3 句
+description: |
+  tone-guide 的格式约束（恰好一个 emoji 且在末尾、不用 markdown、1-3 句）
+  是结构化检查，rule_based 难以精确表达，使用 script judge。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    同事小赵今天转正了，帮我写张卡片恭喜他。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小赵"
+
+judge:
+  # 评分策略；可选：rule_based | agent_judge | script
+  type: script
+  # 自定义评分脚本路径，相对 Skill 根目录；退出码 0 = PASS，非 0 = FAIL
+  script_path: evals/fixtures/scripts/check-format.sh
+  timeout_seconds: 30

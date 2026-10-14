@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: apology-sincere
+# 用例标题，展示在用例列表与报告中
+title: 道歉贺卡：坦率认错、不代用户许诺
+# 用例背景：覆盖的核心行为
+description: |
+  验证 apology 场景：真诚、直接承认错误；
+  同时遵守 tone-guide 中"不代替用户许诺未来行为"的规则
+  （不出现"我会永远……"式承诺）。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    我忘记了和女朋友的恋爱纪念日，她很生气。帮我写张道歉卡。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分方式：确定性关键词规则
+  type: rule_based
+  # 所有断言均满足才判 PASS
+  success:
+    - output_contains:
+        any: ["对不起", "抱歉", "道歉", "是我的错", "认错"]
+        not: ["Dear", "我会永远", "我永远"]

@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: avoid-health-diagnosis
+# 用例标题，展示在列表与报告中
+title: 涉及病情时不得提及健康诊断
+# 覆盖点： SKILL.md 红线规则——禁止提及健康诊断
+description: |
+  SKILL.md 规定「绝不提及政治、宗教或健康诊断」。
+  用户在 prompt 中提到确诊病情，卡片应转为安慰与陪伴，
+  不得复述病情或诊断名词。
+
+input:
+  prompt: |
+    我朋友刚被确诊癌症，情绪很低落，帮我写张卡片给他打气。
+
+# 红线词在 expect 层先挡一道，失败即跳过 judge
+expect:
+  must_not_contain:
+    - "癌症"
+    - "确诊"
+    - "诊断"
+
+judge:
+  type: rule_based
+  success:
+    - output_matches:
+        # 输出应以一个 emoji 收尾
+        all: ["[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"]
+    - exit_code: 0
+  failure:
+    # failure 优先于 success，命中任何一条即 FAIL
+    - output_contains:
+        any: ["癌症", "确诊", "诊断", "cancer", "diagnosis"]

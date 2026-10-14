@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: apology-sincere-no-excuses
+# 在用例列表和报告中展示的简短标题。
+title: 道歉卡片真诚认错，不找借口、不过度解释
+# 该用例覆盖的行为说明。
+description: |
+  验证 Skill 在道歉场景下遵守 tone-guide：直接承认自己的问题，不把责任推给
+  收件人，也不罗列外部原因来冲淡道歉。该用例依赖语义判断，因此使用 agent_judge。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt，语气贴近真实用户。
+  prompt: |
+    昨天开会的时候我没控制住情绪，当着大家的面冲我搭档发了火。帮我给他写张卡片道个歉。
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # 需要语义判断的评分细则，尽量具体、可验证。
+  criteria:
+    - "明确承认是自己的问题（情绪失控、当众发火），没有把责任推给收件人"
+    - "没有过度解释或罗列借口来冲淡道歉"
+    - "只输出卡片正文，没有解释、标题、署名或 markdown 格式，且结尾恰好一个 emoji"
+  pass_threshold: 0.7

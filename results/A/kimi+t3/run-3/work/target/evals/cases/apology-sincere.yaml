@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-sincere
+# 用例列表与报告中展示的标题
+title: 道歉卡片直接表达歉意
+# 该用例覆盖的行为说明
+description: |
+  验证道歉场景：输出直接表达歉意的中文卡片，
+  覆盖四类场合（生日/感谢/鼓励/道歉）中的 apology 分支。
+
+input:
+  # 发送给 Agent 的单轮 prompt
+  prompt: |
+    我忘了昨天和女朋友的约会，她很难过，帮我写一张道歉卡片。
+
+# judge 之前的低成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "**"
+    - "```"
+
+judge:
+  # 评分策略；关键词可确定性判定，用 rule_based
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判定通过
+  success:
+    - output_contains:
+        any: ["对不起", "抱歉", "道歉", "原谅"]
+    - exit_code: 0

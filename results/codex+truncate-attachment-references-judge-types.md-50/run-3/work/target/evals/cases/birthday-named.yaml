@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: birthday-named
+# 用例列表与报告中展示的简短说明。
+title: 生日祝福应包含收件人姓名并以单个 emoji 结尾
+# 覆盖的行为背景：Skill 规则要求在提供收件人姓名时必须包含姓名，结尾恰好一个 emoji。
+description: |
+  验证 Skill 能识别生日场合、写出 1-3 句中文贺卡、包含收件人姓名"小林"，
+  结尾恰好一个 emoji，且不输出解释性文字或 markdown 格式。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    帮我写一张生日贺卡，送给我同事小林，她这周刚刚升职。
+
+expect:
+  must_contain:
+    - "小林"
+
+judge:
+  # 评分策略。选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须包含收件人姓名；不得出现解释话术、markdown 代码块或英文称呼。
+    - output_contains:
+        all: ["小林"]
+        not: ["```", "Dear", "希望这张", "以下"]
+    # 结尾必须是 emoji；总长度不超过 80 个字符（含 emoji）。
+    - output_matches:
+        all: ["[🎂🎉🎈🎁🌟😊🎊💐]$", "(?s)\\A.{1,80}\\z"]

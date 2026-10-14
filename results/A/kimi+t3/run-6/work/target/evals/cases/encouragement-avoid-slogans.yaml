@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-avoid-slogans
+# 用例一句话说明，展示在用例列表和报告中
+title: 鼓励卡应避免空洞口号并以表情符号结尾
+description: |
+  验证 tone-guide 中 encouragement 的规则「avoid empty slogans like
+  "you are the best"」，中文等价口号「你是最棒的」不得出现；
+  同时校验输出为中文且以表情符号簇结尾（正则近似，精确数量由
+  format-* 用例的 script judge 负责）。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    朋友考研没考好，心情很低落，帮我写张卡片鼓励他。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        not: ["你是最棒的"]
+    - output_matches:
+        all: ["\\p{Han}", "[\\p{So}][\\p{So}\\p{Sk}\\x{200D}\\x{FE0F}]*\\s*$"]

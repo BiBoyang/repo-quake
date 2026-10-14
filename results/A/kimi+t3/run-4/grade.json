@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"无实质漂移","notes":"明确指出 judge-types.md 48 行止于 agent_judge 标题；用 case.yaml.tmpl 注释代偿字段"}

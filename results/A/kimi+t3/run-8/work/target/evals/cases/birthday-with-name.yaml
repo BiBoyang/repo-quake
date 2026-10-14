@@ -1,0 +1,36 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例列表和报告中展示的简短说明
+title: 生日卡片包含收件人名字与具体细节
+description: |
+  验证 Skill 能按 tone-guide 为生日场合生成中文卡片：
+  包含用户提供的收件人名字，并提及用户给出的共同经历（爬山），
+  而不是泛泛的祝福。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    下周三是我闺蜜小林的生日，帮我写张生日卡片给她。
+    我们俩平时最喜欢周末一起去爬山。
+
+# 零成本预检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小林"
+  must_not_contain:
+    - "Dear"
+    - "亲爱的"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_contains:
+        all: ["小林", "爬山"]
+        any: ["生日", "快乐"]
+        not: ["你是最棒的"]
+    - output_contains:
+        any: ["🎂", "🎉", "🎁", "🥳", "🎈", "✨", "🌟", "❤️", "😊", "💐"]
+    - exit_code: 0

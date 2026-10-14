@@ -1,0 +1,37 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致，用于报告
+id: thanks-concrete
+# 用例标题，展示在用例列表与报告中
+title: 感谢卡提及具体事件与收件人
+# 背景：tone-guide 要求感谢卡"具体说明为何而感谢"，并提供姓名时必须包含
+description: |
+  用户请求感谢卡，给出收件人"阿杰"与具体事件"帮忙搬家"。
+  验证输出提及收件人与具体事件，而非泛泛的感谢，且符合格式规则。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    上周我搬家的时候同事阿杰来帮了一整天忙，我想给他写张感谢卡片。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "阿杰"
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 以下断言全部满足才 PASS
+  success:
+    - output_contains:
+        all: ["阿杰", "搬家", "谢"]
+    - output_matches:
+        all:
+          # 输出为中文
+          - '\p{Han}'
+          # 恰好一个 emoji 位于消息末尾
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]\x{FE0F}?\s*$'
+        not:
+          - '^\s*亲爱的'
+          # 不堆叠多个 emoji
+          - '(?s)[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}].*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]'

@@ -1,0 +1,43 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: unclear-occasion-asks-first
+# 在用例列表和报告中展示的简短标题。
+title: 场合不明确时先追问，而不是直接编一张卡片
+# 该用例覆盖的行为说明。
+description: |
+  验证 SKILL.md 的第一步：识别不出 occasion 时应当先追问。第一轮用模糊请求触发
+  追问（post_condition 校验出现问句），第二轮补充场合后应输出包含名字的卡片。
+  因此本用例是两轮对话，断言按轮次生效。
+  局限：追问的判定基于问号或常见提问措辞，无法覆盖不使用问号的极少数表达。
+
+input:
+  # 多轮对话按顺序发送；每轮结束后可用 post_condition 检查该轮输出。
+  turns:
+    - role: user
+      content: "帮我给一个朋友写句话吧，随便写点就行。"
+      post_condition:
+        # 场合不明确时必须先追问。
+        must_contain_any: ["？", "?", "请问", "告诉我"]
+        # 没有追问说明 Skill 直接编了卡片，本用例直接判 FAIL。
+        on_fail: fail
+    - role: user
+      content: "是生日祝福，她叫小周，最近刚升职。"
+
+expect:
+  # judge 之前的零成本门槛检查；不通过时跳过 judge 直接判失败。
+  must_contain:
+    - "小周"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # 只有全部 success 断言都满足才判 PASS。
+  success:
+    # 第一轮必须先追问场合。
+    - turn_response_contains:
+        turn: 1
+        contains_any: ["？", "?", "请问", "告诉我"]
+    # 第二轮拿到场合和名字后，卡片要带上收件人名字。
+    - turn_response_contains:
+        turn: 2
+        contains_all: ["小周"]

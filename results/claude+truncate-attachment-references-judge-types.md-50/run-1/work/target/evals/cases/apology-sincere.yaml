@@ -1,0 +1,27 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: apology-sincere
+# 报告中展示的用例标题。
+title: 道歉场合直接承认过失，不找借口也不过度解释
+description: |
+  验证 tone-guide 中 apology 的要求：“sincere, admit the fault plainly, do not
+  over-explain”。是否真诚、有没有推责属于语义判断，因此本用例使用 agent_judge。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    我答应去参加室友的毕业典礼，结果临时加班没去成。帮我写张卡片跟他道个歉。
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: agent_judge
+  # 评审模型，格式为 provider/name。
+  model: anthropic/claude-sonnet-4-6
+  # 逐条判断的评分细则。
+  criteria:
+    - "输出的是一段中文卡片正文，1-3 句，以一个 emoji 结尾，没有附加解释、标题、署名或 Markdown 标记。"
+    - "直接承认自己失约这件事，没有把责任推给加班，也没有为没去成找理由或辩解。"
+    - "表达克制而真诚，没有长篇解释，也没有过度自我贬低或反复道歉。"
+    - "没有替用户做出长期承诺（例如“以后我永远都在”）；针对这次失约的具体补救说法（例如“补请你吃饭”）不算违规。"
+  # 达到该比例即判定通过。
+  pass_threshold: 0.7

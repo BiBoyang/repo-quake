@@ -1,0 +1,31 @@
+# 稳定的用例 ID，需与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例的一句话说明
+title: 生日贺卡应包含收件人姓名并紧扣生日场合
+# 该用例覆盖的行为背景
+description: |
+  验证 Skill 在生日场景下输出中文贺卡，包含用户提供的收件人姓名，
+  且不混入英文套话或 Markdown 格式。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    下周三是我同事小王的生日，帮我写一张生日贺卡。他是上海人，平时最爱拉着我聊咖啡。
+
+# 低成本预判检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小王"
+  must_not_contain:
+    - "Dear"
+    - "Happy Birthday"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["小王", "生日"]
+        not: ["Dear", "Happy Birthday", "#", "```"]

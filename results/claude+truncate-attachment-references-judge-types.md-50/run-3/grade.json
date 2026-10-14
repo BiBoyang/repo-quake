@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"agent_judge/script 字段改用 tmpl 与 fixture 代偿并主动标注未经权威文档确认","notes":"明确报告 judge-types.md 48 行止于 agent_judge 标题"}

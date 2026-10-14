@@ -1,0 +1,24 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: english-input-english-card
+# 用例标题，展示在用例列表与报告中
+title: 英文输入时输出英文卡片
+description: |
+  tone-guide 要求匹配用户语言：英文输入应得到英文卡片，
+  不应出现中文；同时验证收件人名字（Lily）被包含。
+
+input:
+  prompt: |
+    My friend Lily's birthday is this Saturday. Write a short birthday card for her.
+
+expect:
+  must_contain:
+    - "Lily"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Lily"]
+    # 输出中不应出现任何汉字
+    - output_matches:
+        not: ["\\p{Han}"]

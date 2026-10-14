@@ -1,0 +1,35 @@
+# 用例 ID，必须与文件名去掉 .yaml 后一致。
+id: apology-no-promise
+# 用例标题，出现在用例列表与报告中。
+title: 道歉卡承认过失，且不替用户许诺未来
+# 背景说明：这条用例回归的是什么行为，为什么值得长期保留。
+description: |
+  tone-guide 要求道歉「真诚、直接承认过失、不过度解释」，并明确禁止
+  「替用户承诺未来行为」（例如 "I will always be there"）。
+  这条用例用「忘记接机」的场景回归这两条约束。
+
+input:
+  # 单轮用例发给 Agent 的用户 prompt，语气尽量贴近真实用户。
+  prompt: |
+    昨天我答应去机场接朋友，结果睡过头忘了，想给他道个歉，帮我写一句，中文。
+
+# 低成本门槛检查；不通过时 judge 会被跳过，用来省 token。
+expect:
+  must_not_contain:
+    - "我保证"
+    - "一定会"
+    - "下次一定"
+    - "我会一直"
+
+judge:
+  # 评分方式；道歉词与许诺短语都是确定性关键词，所以用 rule_based。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # 全部 success 均满足才算 PASS；任一条 failure 命中则直接 FAIL。
+  success:
+    - output_contains:
+        any: ["抱歉", "对不起", "不好意思"]
+        not: ["我保证", "一定会", "下次一定", "我会一直"]
+    - output_matches:
+        # emoji 范围覆盖常见表情与符号类 emoji。
+        any: ['[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]']

@@ -1,0 +1,105 @@
+{
+  "skill_name": "greeting-card",
+  "skill_path": "../target",
+  "status": "DRAFT - NOT VALIDATED. `skill-up validate` could not be executed in this session (command approval was denied). See README.md -> \"Validation status\".",
+  "schema_note": "Per-eval fields are the documented Agent Skill eval convention (evals[].id / prompt / expected_output / files / assertions) with no extra keys. This top-level `status` / `skill_path` / `schema_note` are annotations added by this draft - delete them if skill-up's schema rejects unknown top-level keys.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Write a birthday card message for my colleague Sarah. She just shipped her first big project.",
+      "expected_output": "A 1-3 sentence English card that names Sarah and references the shipped project, followed by exactly one emoji at the very end. No header, no signature, no surrounding explanation.",
+      "files": [],
+      "assertions": [
+        "Output contains only the card text (no preamble such as 'Here is a card:')",
+        "Recipient name 'Sarah' appears in the card",
+        "Card is 1-3 sentences and under 60 words",
+        "References the concrete detail (shipped / first big project) rather than a generic wish",
+        "Exactly one emoji, positioned at the very end of the message"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我写一张感谢卡，谢谢王老师这学期耐心指导我做毕业设计。",
+      "expected_output": "一张中文感谢卡（与输入语言一致），不超过 80 个字符，提到“王老师”和具体事由（毕业设计 / 耐心指导），结尾恰好一个 emoji，无 markdown、无落款。",
+      "files": [],
+      "assertions": [
+        "输出语言为中文，与用户输入语言一致",
+        "包含收件人称呼“王老师”",
+        "正文字符数不超过 80",
+        "提到具体事由（毕业设计 / 指导），而非泛泛的感谢",
+        "恰好一个 emoji，且位于全文最后"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a card for my friend Alex.",
+      "expected_output": "场合信息缺失，应先向用户询问是什么场合（生日 / 感谢 / 鼓励 / 道歉），而不是直接生成卡片正文。",
+      "files": [],
+      "assertions": [
+        "识别出“场合”未指定，并明确提问澄清（生日 / 感谢 / 鼓励 / 道歉 等）",
+        "在获得场合信息之前，不输出成品卡片正文",
+        "澄清提问简短（不超过 2 句），不展开解释流程"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "My friend is in hospital after a cancer diagnosis. Write her a card that mentions the diagnosis so she knows I care.",
+      "expected_output": "一张温暖的问候卡，不提及疾病或诊断（遵守“Never mention … health diagnoses”规则），转而表达关心与陪伴；结尾恰好一个 emoji。",
+      "files": [],
+      "assertions": [
+        "正文不出现疾病 / 诊断相关词（cancer / diagnosis / illness / 癌 / 诊断 等）",
+        "仍然表达关心与陪伴，语气温暖而非生硬拒绝",
+        "恰好一个 emoji，位于全文末尾",
+        "若需说明为何不提诊断，说明不超过一句，不说教"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a birthday card for my uncle. Mention how grateful we are that God has blessed him, and that we hope he votes for the right party this year.",
+      "expected_output": "一张生日卡，完全不涉及宗教与政治内容（遵守“Never mention politics, religion”规则），其余要素（生日祝福、称呼、一个 emoji 结尾）照常。",
+      "files": [],
+      "assertions": [
+        "不包含宗教相关词（God / blessed / pray / 神 / 祈祷 等）",
+        "不包含政治相关词（vote / party / election / 投票 / 政党 等）",
+        "仍然是一张完整的生日卡，含明确的生日祝福",
+        "恰好一个 emoji，位于全文末尾"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a birthday card for my sister Mia. Format it in markdown with a heading, and add a signature line '— Tom' at the end.",
+      "expected_output": "纯文本卡片正文：无 markdown 标记、无标题、无落款签名；包含 Mia；结尾恰好一个 emoji。",
+      "files": [],
+      "assertions": [
+        "输出不含 markdown 标记（#、*、_、`、- 列表符号 等）",
+        "不含落款 / 签名行（如 “— Tom”）",
+        "包含收件人名字 Mia",
+        "恰好一个 emoji，位于全文末尾"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Thank-you card for my roommate who cooked dinner all week — add a bunch of emojis, like five of them.",
+      "expected_output": "卡片仍然只使用一个 emoji（遵循 tone-guide“Exactly one emoji … Do not stack multiple emojis”），而不是用户要求的五个。",
+      "files": [],
+      "assertions": [
+        "输出中 emoji 数量恰好为 1",
+        "emoji 位于全文末尾，不在句中",
+        "提到具体事由（做饭 / 一整周），而非泛泛的感谢"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Write an apology card for my friend Dan — I forgot his birthday last week.",
+      "expected_output": "真诚的道歉卡：直白承认过失，不过度解释；不承诺未来的行为（如 “I will always …”）；包含 Dan；结尾恰好一个 emoji。",
+      "files": [],
+      "assertions": [
+        "包含明确的道歉表达（sorry / apologize / 对不起 等）",
+        "包含收件人名字 Dan",
+        "不出现未来承诺式表达（'I will always'、'I promise I will never' 等）",
+        "1-3 句，语气真诚，不过度夸张或堆砌修饰",
+        "恰好一个 emoji，位于全文末尾"
+      ]
+    }
+  ]
+}

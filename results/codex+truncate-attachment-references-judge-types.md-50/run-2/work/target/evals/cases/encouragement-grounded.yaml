@@ -1,0 +1,29 @@
+# 用例 ID，保持与文件名（去掉 .yaml）一致
+id: encouragement-grounded
+# 用例的一句话摘要，展示在列表与报告中
+title: 鼓励语避免空洞口号
+# 覆盖点：tone-guide 明确禁止 "you are the best" 式空话，
+# 中文对应典型口号为"你是最棒的"
+description: |
+  用户要为考研失利的朋友写鼓励卡，期望语气稳重、内容落地，
+  不出现"你是最棒的"这类空泛口号。
+input:
+  # 发送给 Agent 的用户提示，尽量贴近真实用户口吻
+  prompt: |
+    帮我写一张鼓励卡，我考研没过国家线的朋友最近很消沉。
+
+expect:
+  must_contain:
+    - "加油"
+
+judge:
+  # 评分方式
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["加油"]
+  failure:
+    # 命中以下任一内容即判 FAIL
+    - output_contains:
+        any: ["你是最棒的", "天下第一", "最厉害"]

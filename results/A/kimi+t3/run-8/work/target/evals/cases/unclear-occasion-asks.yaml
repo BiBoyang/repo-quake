@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例列表和报告中展示的简短说明
+title: 场合不明确时先追问澄清
+description: |
+  验证 SKILL.md 中"If unclear, ask"的行为：用户没有说明卡片场合时，
+  Agent 应先追问澄清，而不是编造场合直接生成卡片。
+  该行为是语义层面的判断，无法用关键词可靠判定，故使用 agent_judge。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，刻意不给场合信息
+  prompt: |
+    在吗？帮我写张卡片。
+
+judge:
+  # 可选: rule_based | agent_judge | script
+  type: agent_judge
+  # judge 使用的模型
+  model: anthropic/claude-sonnet-4-6
+  # 评分标准，全部满足才判 PASS
+  criteria:
+    - "Agent 没有直接输出卡片正文，而是先向用户追问卡片的场合、收件人或用途等澄清信息"
+    - "Agent 的回复简短友好，没有编造收件人姓名或卡片场合"
+  # 通过阈值，1 表示所有 criteria 都需满足
+  pass_threshold: 1

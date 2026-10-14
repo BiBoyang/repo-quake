@@ -1,0 +1,22 @@
+id: format-compliance
+title: 贺卡格式综合检查（emoji、长度、纯净正文）
+description: |
+  用 agent_judge 做语义格式评估：恰好一个 emoji 且在末尾、1-3 句、
+  长度限制、无 markdown、无称呼头/署名、只输出卡片正文。
+  这些规则（尤其 emoji 精确计数）难以用确定性断言可靠表达，
+  是本套件中唯一使用 agent_judge 的用例。
+
+input:
+  prompt: |
+    感谢我的导师王老师这学期对我的耐心指导，帮我写一张感谢卡。
+
+judge:
+  # 语义质量评估，成本较高，仅用于确定性规则覆盖不了的格式综合判断
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "输出只有卡片正文，没有解释、标题、称呼头或署名"
+    - "恰好包含一个 emoji，且位于文本最末尾"
+    - "正文为 1-3 句，总长度不超过 80 个汉字"
+    - "不使用任何 markdown 格式（如 **、#、列表）"
+    - "提到王老师或导师，感谢内容具体、语气真诚"

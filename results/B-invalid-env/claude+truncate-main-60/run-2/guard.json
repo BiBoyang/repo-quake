@@ -1,0 +1,15 @@
+{
+  "errors": [],
+  "warnings": [
+    "SKILL.md: name 'skill-upper' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [
+    "scripts/todo.py: referenced by evals/fixtures/skills/sample-with-evals/SKILL.md but missing (secondary doc — not gated; may be a hypothetical example)",
+    "references/case-yaml.md: never referenced from any .md (orphan attachment?)",
+    "references/cli.md: never referenced from any .md (orphan attachment?)",
+    "references/eval-yaml.md: never referenced from any .md (orphan attachment?)",
+    "references/judge-types.md: never referenced from any .md (orphan attachment?)"
+  ],
+  "skill_dir": "/Users/boyang/skill-quake/results/claude+truncate-main-60/run-2/skill",
+  "verdict": "PASS"
+}

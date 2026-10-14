@@ -1,0 +1,31 @@
+# 报告中使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-english
+# 用例列表与报告中展示的简要说明
+title: 英文感谢卡应提及收件人与具体事由
+# 该用例覆盖的行为或回归背景
+description: |
+  验证 Skill 按用户明确要求输出英文感谢卡，并体现用户给出的具体感谢事由
+  （顶班），而非泛泛致谢；不输出中文；不以 Dear 开头（用户未要求正式风格）。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    帮我用英文写一张感谢卡给同事 Sarah，感谢她上周在我生病时帮我顶班。
+
+# 零成本 pre-judge 检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["Sarah"]
+        any: ["shift", "covered", "covering"]
+        not: ["I will always"]
+    - output_matches:
+        not: ['\p{Han}', '(?i)^dear\b']

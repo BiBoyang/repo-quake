@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "warnings": [
+    "SKILL.md: name 'skill-upper' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [
+    "scripts/todo.py: referenced by evals/fixtures/skills/sample-with-evals/SKILL.md but missing (secondary doc — not gated; may be a hypothetical example)"
+  ],
+  "skill_dir": "results/C/kimi+t5-trunc-asset/run-2/skill",
+  "verdict": "PASS"
+}

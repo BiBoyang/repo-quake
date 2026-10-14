@@ -1,0 +1,23 @@
+# 用例 ID，需与文件名（去掉 .yaml）一致，报告中以此为准。
+id: apology-for-missed-event
+# 一句话说明用例验证点。
+title: 道歉贺卡真诚认错、不找借口
+# 背景：tone-guide 要求道歉直认过错、不过度辩解；用 "但是" 作借口话的代理指标。
+description: |
+  道歉应先给出发自内心的认错（抱歉/对不起/不好意思均可），
+  不允许用 "但是" 引导的辩解话术。
+
+input:
+  # 发送给 Agent 的单轮用户提示。
+  prompt: |
+    我上周忘了好友的画展开幕，帮我写张道歉贺卡。
+
+judge:
+  # 判分方式。选项：rule_based | agent_judge | script。
+  type: rule_based
+  # 通过断言：全部满足才 PASS。
+  success:
+    - output_contains:
+        any: ["抱歉", "对不起", "不好意思"]
+    - output_contains:
+        not: ["但是"]

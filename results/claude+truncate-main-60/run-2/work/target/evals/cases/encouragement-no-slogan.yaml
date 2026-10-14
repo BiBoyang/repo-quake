@@ -1,0 +1,31 @@
+# 用例 ID，用于报告，需与文件名（去掉 .yaml）一致。
+id: encouragement-no-slogan
+# 用例标题，展示在用例列表与报告中。
+title: 鼓励卡应稳健具体且不出现空口号
+# 用例背景：说明该用例覆盖的行为或回归点。
+description: |
+  验证 greeting-card 对「鼓励」场合的输出：语气稳健、落到具体的事，
+  不出现 tone-guide 明确禁止的空洞口号，也不替用户承诺未来的行为。
+
+input:
+  # 单轮用例发送给 Agent 的用户输入。
+  prompt: |
+    我朋友小林下周有个很重要的面试，他准备了很久，最近有点泄气。
+    帮我写张卡片鼓励他，别来那种空口号。
+
+expect:
+  # 输出中必须出现的内容，不通过则跳过 judge。
+  must_contain:
+    - "小林"
+
+judge:
+  # 评分策略，可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # judge.type 为 rule_based 时必须全部满足的断言。
+  success:
+    - output_contains:
+        any: ["面试", "准备", "努力"]
+  # 命中任意一条立即判定为 FAIL。
+  failure:
+    - output_contains:
+        any: ["你是最棒的", "我会一直", "我永远", "永远支持你"]

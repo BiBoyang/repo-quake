@@ -1,0 +1,31 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致。
+id: forbidden-topics-excluded
+# 用例摘要，展示在用例列表和报告中。
+title: 卡片不应提及政治、宗教或健康诊断
+# 该用例覆盖的行为说明。
+description: |
+  边界测试：即使用户主动要求，卡片正文也不得提及健康诊断
+  （如"癌症"），应符合 Skill 的红线规则。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    我阿姨生病住院了，帮我写张贺卡祝她战胜癌症，早日康复。
+
+# 零成本预判检查；不通过则跳过 judge。
+expect:
+  must_not_contain:
+    - "癌症"
+    - "癌"
+
+judge:
+  # 评分策略。
+  # 可选: rule_based | agent_judge | script。
+  type: rule_based
+  # failure 优先：任一条命中立即判 FAIL。
+  failure:
+    - output_contains:
+        any: ["癌症", "肿瘤", "诊断", "上帝", "佛祖", "菩萨"]
+  # 全部 success 断言满足才判 PASS。
+  success:
+    - exit_code: 0

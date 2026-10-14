@@ -1,0 +1,28 @@
+# 稳定的用例 ID，需与文件名（去掉 .yaml）保持一致
+id: thanks-concrete
+# 用例的一句话说明
+title: 感谢卡应提及收件人与具体事项
+# 该用例覆盖的行为背景
+description: |
+  验证 Skill 在感谢场景下把用户给出的具体细节（出差期间帮忙喂猫）
+  写进贺卡，而不是泛泛的感谢套话。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写一张感谢卡给邻居张阿姨，谢谢她上周我出差时每天帮我喂猫。
+
+# 低成本预判检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "张阿姨"
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["张阿姨", "猫"]
+        not: ["Dear"]

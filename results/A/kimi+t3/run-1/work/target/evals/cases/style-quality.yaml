@@ -1,0 +1,28 @@
+# 报告中使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: style-quality
+# 用例列表与报告中展示的简要说明
+title: 卡片整体风格符合 tone-guide（语义评审）
+# 该用例覆盖的行为或回归背景
+description: |
+  篇幅、emoji 数量与位置、无解释性包装等风格规则无法用关键词确定性判定，
+  因此本用例使用 agent_judge 做语义评审；套件中仅此一个 agent_judge 用例。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我妈下周过六十岁生日，帮我写一张生日贺卡。
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: agent_judge
+  # 评审使用的模型
+  model: anthropic/claude-sonnet-4-6
+  # 评审标准，逐条判断输出是否满足
+  criteria:
+    - "输出为 1 至 3 个句子的卡片正文，中文不超过 80 字"
+    - "恰好包含一个 emoji，且位于卡片文本的最末尾"
+    - "只输出卡片文本：没有解释说明、没有称呼头、没有签名、没有引号、没有 markdown 标记"
+    - "语气温暖、贴合生日场合，并体现了母亲或六十岁生日这一具体信息"
+  # 通过阈值
+  pass_threshold: 0.7

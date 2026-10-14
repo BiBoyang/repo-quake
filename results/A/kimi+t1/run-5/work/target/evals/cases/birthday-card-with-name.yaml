@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-card-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日贺卡应包含收卡人名字
+description: |
+  用户给出了场合（生日）和收卡人名字（小雨）。
+  验证生成的贺卡包含收卡人名字、贴合生日场合，
+  且不夹带 markdown 格式。
+
+input:
+  # 单轮用例：发送给 Agent 的用户 prompt
+  prompt: |
+    我好朋友小雨下周过生日，帮我写一张生日贺卡给她。
+
+# 判分前的零成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+  exit_code: 0
+
+judge:
+  # 判分策略: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判 PASS
+  success:
+    - output_contains:
+        all: ["小雨", "生日"]
+        not: ["#", "```"]
+    - exit_code: 0

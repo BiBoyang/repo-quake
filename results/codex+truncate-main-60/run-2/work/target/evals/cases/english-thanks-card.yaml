@@ -1,0 +1,25 @@
+id: english-thanks-card
+title: 英文输入须产出纯英文感谢贺卡
+description: |
+  用户用英文请求感谢贺卡，验证输出全程使用英文（不出现中文字符）、
+  包含收件人姓名，内容具体，且不出现“代用户承诺未来行动”的句式。
+
+input:
+  prompt: |
+    Write a thank-you card for my teammate Alex, who covered my on-call
+    shift last week while I was away.
+
+expect:
+  must_contain:
+    - "Alex"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Alex"]
+    - output_matches:
+        not: ["[\\x{4e00}-\\x{9fff}]"]
+        all: ["(?m)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]$"]
+    - output_contains:
+        not: ["I will always", "always be there"]

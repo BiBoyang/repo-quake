@@ -1,0 +1,20 @@
+id: thanks-concrete
+title: 感谢贺卡应包含收件人且格式合规
+description: |
+  验证感谢场景的格式约束：长度上限、无 markdown、不以称呼开头。
+  关键词由 expect 把关，格式细节交由 script 类型 judge 判定。
+
+input:
+  prompt: |
+    项目这周终于顺利上线了，帮我写张贺卡谢谢同事阿磊，这段时间他帮我顶了不少班。
+
+expect:
+  must_contain:
+    - "阿磊"
+
+judge:
+  # 自定义脚本评分：退出码 0 = PASS，非 0 = FAIL
+  type: script
+  # 脚本路径相对 Skill 根目录
+  script_path: evals/fixtures/scripts/check-format.sh
+  timeout_seconds: 30

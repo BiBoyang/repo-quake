@@ -1,0 +1,22 @@
+# 稳定的用例 ID，需与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例的一句话说明
+title: 场合不明时应先向用户确认
+# 该用例覆盖的行为背景
+description: |
+  验证当用户没有说明贺卡场合时，Skill 按 SKILL.md 的要求先询问
+  （生日 / 感谢 / 鼓励 / 道歉），而不是自行编造一张贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 澄清式回复应出现的措辞，命中其一即可
+  success:
+    - output_contains:
+        any: ["场合", "哪种", "什么样", "生日", "感谢", "鼓励", "道歉"]

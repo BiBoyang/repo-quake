@@ -1,0 +1,36 @@
+# 用例 ID，必须与文件名去掉 .yaml 后一致。
+id: thanks-no-dear-no-markdown
+# 用例标题，出现在用例列表与报告中。
+title: 感谢卡不带称呼抬头、不用 Markdown
+# 背景说明：这条用例回归的是什么行为，为什么值得长期保留。
+description: |
+  tone-guide 规定卡片只输出正文：不加称呼抬头、不加落款、不使用 Markdown，
+  且感谢内容要落到具体的事。这条用例用「同事帮忙排查线上故障」回归该规则，
+  同时验证收件人姓名被写入卡片。
+
+input:
+  # 单轮用例发给 Agent 的用户 prompt，语气尽量贴近真实用户。
+  prompt: |
+    我同事小林昨晚陪我一起排查线上故障到半夜，帮我写段话谢谢他，中文就行。
+
+# 低成本门槛检查；不通过时 judge 会被跳过，用来省 token。
+expect:
+  must_contain:
+    - "小林"
+  must_not_contain:
+    - "Dear"
+    - "**"
+    - "```"
+
+judge:
+  # 评分方式；抬头、落款、Markdown 都是确定性关键词，所以用 rule_based。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # 全部 success 均满足才算 PASS；任一条 failure 命中则直接 FAIL。
+  success:
+    - output_contains:
+        all: ["小林"]
+        not: ["Dear", "此致", "敬礼", "署名"]
+    - output_matches:
+        # emoji 范围覆盖常见表情与符号类 emoji。
+        any: ['[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]']

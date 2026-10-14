@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: ambiguous-occasion-asks-clarification
+# 用例列表与报告中展示的简短说明
+title: 场合不明确时应先追问
+# 覆盖的行为：SKILL.md 规定「If unclear, ask」
+description: |
+  验证当用户没有说明贺卡场合时，Skill 遵循「场合不明确就先问」的规则，
+  先追问场合或收卡对象等关键信息，而不是直接臆造一张贺卡。
+  追问的措辞不可枚举，故使用 agent_judge 做语义判断。
+
+input:
+  # 发送给 Agent 的单轮 prompt
+  prompt: |
+    帮我写张卡片。
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # 语义评分标准，尽量具体、可验证
+  criteria:
+    - "回复在追问卡片的场合、对象或用途等关键信息，而不是直接输出一张完整贺卡"
+    - "回复没有臆造用户未提供的场合或收卡人"
+  pass_threshold: 0.7

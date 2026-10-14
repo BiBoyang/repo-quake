@@ -1,0 +1,1 @@
+{"level":"L2","detected":true,"drift":"改用 eval-yaml.md 骨架+自带 fixture 重建","notes":"明确指出 Step 2 要求复制的 eval.yaml.tmpl 不存在"}

@@ -1,0 +1,31 @@
+# 用例 ID，报告中使用；与文件名（去掉 .yaml）保持一致。
+id: birthday-card-with-name
+# 用例标题，展示在用例列表与报告中。
+title: 中文生日贺卡须包含收件人姓名
+# 覆盖的行为背景：Skill 规定用户提供收件人姓名时必须写入卡片正文。
+description: |
+  用户用中文请求为指定姓名的人生日写贺卡，验证输出为中文、
+  包含收件人姓名，并以恰好一个表情符号结尾，无多余格式。
+
+input:
+  # 发送给 Agent 的单轮用户提示词。
+  prompt: |
+    帮我给小雨写一张生日贺卡，她刚升职，想写得热闹一点。
+
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分策略：有确定性关键词与格式可判定时使用 rule_based。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # judge.type 为 rule_based 时必须通过的断言。
+  success:
+    - output_contains:
+        all: ["小雨"]
+    - output_matches:
+        all: ["(?m)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]$"]
+        not: ["Dear", "^#", "```"]

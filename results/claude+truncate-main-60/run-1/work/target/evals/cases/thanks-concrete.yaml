@@ -1,0 +1,29 @@
+# 用例 ID，必须与文件名保持一致。
+id: thanks-concrete
+# 用例列表与报告中展示的标题。
+title: 感谢卡片应具体、温暖而不过度
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  验证感谢类卡片会点出具体的帮助内容（每周 review 代码、定位内存泄漏），
+  而不是泛泛的客套话，同时保持克制的语气。
+
+input:
+  prompt: |
+    我想给带我的导师写一张感谢卡。这半年他每周都帮我 review 代码，
+    上周还熬夜帮我定位了那个内存泄漏问题。
+
+expect:
+  must_not_contain:
+    - "**"
+    - "##"
+
+judge:
+  # "是否具体""语气是否克制"需要语义判断，使用 LLM 评审。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "卡片点出了具体的帮助（每周 review 代码、帮忙定位内存泄漏），不是泛泛的感谢"
+    - "语气温暖但克制，没有堆砌夸张的赞美"
+    - "长度为 1-3 句，只输出卡片正文，没有标题、署名或额外解释"
+    - "结尾恰好有一个 emoji"
+  pass_threshold: 0.75

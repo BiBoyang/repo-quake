@@ -1,0 +1,36 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: english-input-english-card
+# 用例标题，展示在用例列表与报告中
+title: 英文输入生成英文贺卡
+description: |
+  tone-guide 要求匹配用户语言：英文 prompt 必须输出英文卡片，
+  且未要求正式风格时不得以 "Dear" 开头。
+  注意：本用例的 prompt 必须是英文，这是语言匹配规则的测试输入本身。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt（语言匹配规则的测试输入）
+  prompt: |
+    Write a birthday card for my colleague Sarah — she just ran her first marathon.
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_contain:
+    - "Sarah"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Sarah"]
+    - output_matches:
+        all:
+          # 恰好一个 emoji 且位于结尾
+          - '\A[^\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{1F3FB}-\x{1F3FF}\x{FE00}-\x{FE0F}]?\s*\z'
+          # 60 词上限 + 余量（按空白分词计数）
+          - '\A\s*\S+(\s+\S+){0,69}\s*\z'
+        not:
+          # 不出现中文字符
+          - '[\x{4e00}-\x{9fff}]'
+          # 不以 Dear 开头
+          - '(?i)\A\s*dear\b'

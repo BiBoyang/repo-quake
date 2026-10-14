@@ -1,0 +1,26 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks
+# 用例一句话说明，展示在用例列表和报告中
+title: 场合不明时应先追问而不是直接生成
+description: |
+  验证 SKILL.md 中「Identify the occasion. If unclear, ask.」：
+  用户没有说明场合和收件人时，Skill 应反问澄清（输出中包含问号），
+  而不是直接生成一张场合不明的卡片。
+
+input:
+  # 发送给 Agent 的单轮用户提示词（故意不提供场合）
+  prompt: |
+    帮我写张卡片。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+
+judge:
+  # 评分策略；追问行为用「输出含问号」这一确定性信号判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部满足的断言
+  success:
+    - output_matches:
+        any: ["？", "\\?"]

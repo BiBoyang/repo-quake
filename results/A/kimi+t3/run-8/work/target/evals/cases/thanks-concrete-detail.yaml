@@ -1,0 +1,29 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete-detail
+# 用例列表和报告中展示的简短说明
+title: 感谢卡片点名具体感谢事项
+description: |
+  验证 Skill 生成的感谢卡片温暖但不过度夸张，
+  并且具体提到用户说明的感谢事由（赶工时帮忙顶班），
+  符合 tone-guide 中"concrete about what is being thanked"的要求。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我想谢谢同事王磊，上个月我项目赶工的时候他帮我顶了好几次班，
+    帮我写张感谢的小卡片。
+
+expect:
+  must_contain:
+    - "王磊"
+
+judge:
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["王磊"]
+        any: ["谢谢", "感谢", "谢你"]
+    - output_contains:
+        any: ["顶班", "赶工", "项目"]
+    - exit_code: 0

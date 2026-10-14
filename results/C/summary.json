@@ -1,0 +1,26 @@
+{
+  "kimi+t1-85": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 1,
+    "levels": "L2,L0,L0"
+  },
+  "kimi+t4": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 3,
+    "levels": "L2,L2,L2"
+  },
+  "kimi+t5-trunc-asset": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 2,
+    "levels": "L2,L0,L2"
+  },
+  "kimi+t6-del-asset": {
+    "runs": 3,
+    "graded": 3,
+    "detected": 3,
+    "levels": "L2,L2,L2"
+  }
+}

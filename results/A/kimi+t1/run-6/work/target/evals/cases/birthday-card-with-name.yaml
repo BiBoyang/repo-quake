@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml 后缀）保持一致
+id: birthday-card-with-name
+# 用例一句话说明，展示在用例列表与报告中
+title: 生日卡片应包含收卡人姓名
+# 该用例覆盖的行为或回归背景
+description: |
+  验证用户在 prompt 中给出收卡人姓名时，Skill 会把姓名写进生日卡片正文。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    下周三是小雨的生日，帮我写一张生日卡片发给她。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略；可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 断言，全部满足才算 PASS
+  success:
+    - output_contains:
+        all: ["小雨"]
+        any: ["生日", "快乐"]
+    - output_matches:
+        all: ['\p{Han}']

@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: english-birthday
+# 用例列表与报告中展示的标题
+title: 英文输入输出英文卡片
+# 该用例覆盖的行为说明
+description: |
+  验证「匹配用户语言」规则：英文 prompt 必须产出英文卡片，
+  输出中不得夹带任何中文字符。prompt 有意使用英文，是本用例的测试输入。
+
+input:
+  # 发送给 Agent 的单轮 prompt（有意使用英文以测试语言匹配）
+  prompt: |
+    My friend Tom's birthday is this weekend. Write a short birthday card for him.
+
+# judge 之前的低成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Tom"
+
+judge:
+  # 评分策略；关键词与字符集可确定性判定，用 rule_based
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判定通过
+  success:
+    - output_contains:
+        all: ["Tom"]
+        any: ["birthday", "Birthday"]
+    - output_matches:
+        not: ["\\p{Han}"]
+        all: ["(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\x{FE0F}?\\s*$"]
+    - exit_code: 0

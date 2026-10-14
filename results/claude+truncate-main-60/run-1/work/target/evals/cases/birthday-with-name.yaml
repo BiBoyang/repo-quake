@@ -1,0 +1,33 @@
+# 用例 ID，必须与文件名保持一致。
+id: birthday-with-name
+# 用例列表与报告中展示的标题。
+title: 生日卡片应点名收件人并围绕具体经历
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  用户给出了收件人姓名与一段共同经历，验证 Skill 会点名收件人、
+  围绕该经历表达祝福，并且只输出卡片正文。
+
+input:
+  # 单轮用例发送给 Agent 的用户请求。
+  prompt: |
+    帮我给同事小林写一张生日卡片。她刚带我们熬夜赶完了那个大项目，
+    团队都很感谢她，语气轻松一点就好。
+
+expect:
+  # 卡片正文必须出现收件人姓名。
+  must_contain:
+    - "小林"
+  # 卡片正文不应出现 Markdown 标题或加粗。
+  must_not_contain:
+    - "**"
+    - "##"
+
+judge:
+  # 关键词与正则即可判定，无需 LLM 评审。
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小林"]
+        any: ["生日快乐", "生日"]
+    - output_matches:
+        not: ['(?m)^\s*#', '\*\*', '`']

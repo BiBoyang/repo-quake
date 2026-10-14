@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogan
+# 用例标题
+title: 鼓励贺卡沉稳真诚、不喊空口号
+# 用例背景
+description: |
+  鼓励场景。验证贺卡不使用 tone-guide 明令避免的空洞口号
+  （如「你是最棒的」），保持沉稳、自信的语气。
+
+input:
+  # 单轮用户 prompt
+  prompt: |
+    我朋友考研成绩出来了，没考上，这几天情绪特别低落。帮我写几句话鼓励他，短一点。
+
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "你是最强的"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        not: ["你是最棒的", "你是最强的"]
+    - output_matches:
+        all:
+          # 至少一个 emoji
+          - "\\p{So}"
+          # 正文足够短
+          - "(?s)^.{1,100}$"
+    - exit_code: 0

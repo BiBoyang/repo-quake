@@ -1,0 +1,31 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks-first
+# 用例标题，展示在用例列表与报告中
+title: 场合不明确时先追问而不是直接生成
+description: |
+  SKILL.md 规定：场合不清楚时先询问。
+  用户请求缺少场合与收件人信息时，Agent 应反问澄清，
+  而不是直接产出一张贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，故意不给出场合
+  prompt: |
+    帮我写张卡片。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_not_contain:
+    # 直接给出成品套话说明没有追问
+    - "生日快乐"
+    - "Happy Birthday"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 追问场合或收件对象
+    - output_contains:
+        any: ["场合", "对象", "给谁", "哪位", "occasion"]
+    # 输出中包含疑问句
+    - output_matches:
+        all: ["[？?]"]

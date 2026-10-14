@@ -1,0 +1,29 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogan
+# 用例简述，出现在用例列表与报告中
+title: 鼓励卡应结合具体事件且避免空洞口号
+# 覆盖行为：鼓励场合结合具体事件、不出现被禁口号
+description: |
+  tone-guide 规定鼓励场合要"稳重自信，避免'你是最棒的'这类空洞口号"。
+  卡片应提到马拉松这一具体事件，且不得出现该口号。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我朋友下周第一次参加马拉松，有点紧张，帮我写几句话鼓励他。
+
+# 零成本前置检查；不通过则跳过 judge 直接判 FAIL
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        # 应结合具体事件
+        any: ["马拉松", "比赛", "跑"]
+        # 且不得出现空洞口号
+        not: ["你是最棒的"]

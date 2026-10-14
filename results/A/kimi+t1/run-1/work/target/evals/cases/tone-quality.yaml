@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: tone-quality
+# 用例标题，展示在用例列表与报告中
+title: 卡片整体语气与格式质量（语义评估）
+description: |
+  tone-guide 中有些要求难以用确定性规则覆盖，交给 agent_judge 做语义评估。
+  注意：该用例成本最高，只在语义质量把关时保留。
+
+input:
+  prompt: |
+    好朋友阿琳负责的项目这周成功上线了，帮我写张卡片祝贺她，也给她加加油。
+
+expect:
+  exit_code: 0
+
+judge:
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  criteria:
+    - "输出只有卡片正文，没有解释、称呼、落款，正文外没有引号"
+    - "长度为 1-3 句话，符合 tone-guide 的简洁要求"
+    - "恰好包含一个 emoji，且位于文本最末尾"
+    - "没有使用 markdown 格式（如 **、##、列表符号）"
+    - "语气真诚具体，提到项目上线或祝贺，没有空洞口号和越权承诺"
+  pass_threshold: 0.8

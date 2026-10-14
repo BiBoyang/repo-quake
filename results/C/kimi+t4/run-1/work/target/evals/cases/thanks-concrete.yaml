@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: thanks-concrete
+# 用例标题，展示在用例列表与报告中
+title: 感谢贺卡：点名收件人与所谢之事
+# 用例背景：覆盖的核心行为
+description: |
+  验证 Skill 能识别感谢场景，按 tone-guide 要求写具体（提及所谢之事）、
+  温暖而不夸张的卡片，并包含收件人称呼（老张）。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    同事老张昨天加班帮我修好了电脑，我想写张卡片谢谢他。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "老张"
+  must_not_contain:
+    - "Dear"
+
+judge:
+  # 评分方式：确定性关键词规则
+  type: rule_based
+  # 所有断言均满足才判 PASS
+  success:
+    - output_contains:
+        all: ["老张"]
+        any: ["谢谢", "感谢"]
+        not: ["Dear"]
+    # 语气规则：感谢要落到具体的事情上
+    - output_contains:
+        any: ["电脑", "加班"]

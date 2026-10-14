@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例标题，展示在列表与报告中
+title: 生日贺卡应包含收件人名字
+# 覆盖点： occasions 识别 + 收件人名字必须出现
+description: |
+  用户指明收件人 Lily 时，生成的生日贺卡必须包含名字 Lily，
+  并体现生日场合，且按 tone-guide 以 emoji 收尾。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    下周三是我朋友 Lily 的生日，帮我写一张生日贺卡给她。
+
+# 零成本门槛检查，不通过则跳过 judge
+expect:
+  must_contain:
+    - "Lily"
+
+judge:
+  # 评分策略，可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["Lily"]
+        any: ["生日", "birthday", "Birthday"]
+    - output_matches:
+        # 输出应以一个 emoji 收尾（常见 emoji Unicode 区间）
+        all: ["[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"]
+    - exit_code: 0

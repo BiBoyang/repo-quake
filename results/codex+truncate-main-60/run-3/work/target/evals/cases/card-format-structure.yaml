@@ -1,0 +1,23 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: card-format-structure
+# 一句话说明本用例验证什么。
+title: 输出结构合规：1-3 句、恰好一个末尾 emoji、无 markdown
+description: |
+  验证 Skill 输出的贺卡满足 tone-guide 的硬性格式要求：
+  正文 1-3 句话、恰好一个 emoji 且位于末尾、无 markdown 标记、无包裹性前言。
+
+input:
+  prompt: |
+    帮我写一张感谢贺卡，感谢同事小王在我出差期间帮我照顾家里的花草，用中文。
+
+expect:
+  must_not_contain:
+    - "以下是"
+    - "```"
+
+judge:
+  # 结构化断言较多，用脚本在 $EVAL_FINAL_MESSAGE 上自由判断。
+  # 选项: rule_based | agent_judge | script
+  type: script
+  script_path: evals/fixtures/scripts/check-card-format.sh
+  timeout_seconds: 30

@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: clarify-occasion
+# 用例列表与报告中展示的标题
+title: 场合不明确时先询问
+# 该用例覆盖的行为说明
+description: |
+  验证「场合不清晰时先询问」规则：prompt 未说明场合时，
+  Skill 应先向用户确认，而不是直接生成卡片。
+
+input:
+  # 发送给 Agent 的单轮 prompt（有意不给场合信息）
+  prompt: |
+    帮我写一张卡片。
+
+judge:
+  # 评分策略；用确定性规则近似判定「在提问」
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判定通过
+  success:
+    - output_contains:
+        any: ["场合", "送给", "谁", "生日", "感谢", "鼓励", "道歉"]
+    - output_matches:
+        any: ["[?？]"]
+    - exit_code: 0

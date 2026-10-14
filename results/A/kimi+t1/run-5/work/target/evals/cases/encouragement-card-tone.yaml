@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-card-tone
+# 用例标题，展示在用例列表与报告中
+title: 鼓励卡应语气沉稳、避免空洞口号
+description: |
+  tone-guide 要求鼓励卡「沉稳自信，避免空洞口号（如“你是最棒的”）」。
+  语气是否得体属于语义判断，关键词规则覆盖不了，使用 agent_judge；
+  同时用 expect 先挡掉最典型的空洞口号，节省判分开销。
+
+input:
+  # 单轮用例：发送给 Agent 的用户 prompt
+  prompt: |
+    我朋友明天要参加一场很重要的面试，现在特别紧张。帮我写张贺卡鼓励一下他。
+
+# 判分前的零成本门槛检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "你最棒"
+  exit_code: 0
+
+judge:
+  # 判分策略: rule_based | agent_judge | script
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # LLM 评审标准，需具体、可验证
+  criteria:
+    - "输出是 1-3 句的中文贺卡正文，语气沉稳、让人安心，贴合面试前鼓励的场景"
+    - "没有使用空洞口号或夸张吹捧（如“你是最棒的”“必胜”之类）"
+    - "内容贴合用户给出的具体背景（面试、紧张情绪），不是放之四海皆准的套话"
+    - "输出只有贺卡正文：没有解释、标题、署名，且末尾恰好有一个 emoji"
+  pass_threshold: 1

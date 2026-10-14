@@ -1,0 +1,28 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: occasion-unclear-asks-back
+# 报告中展示的用例标题。
+title: 场合不明确时应先追问，而不是凭空猜一个场合
+description: |
+  验证 SKILL.md 中 “Identify the occasion (birthday, thanks, encouragement, apology).
+  If unclear, ask.” 的行为：用户没有说明场合时，Agent 应先确认场合。
+  本用例不检查卡片格式，因为预期输出是追问而不是卡片正文。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    帮我给李经理写张贺卡。
+
+expect:
+  # 预检查；不能把卡片包在 Markdown 代码块里。
+  must_not_contain:
+    - "```"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        # 出现问号或在询问场合，视为按 SKILL.md 先追问。
+        any: ["？", "?", "场合"]

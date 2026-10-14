@@ -1,0 +1,43 @@
+# 评测入口配置：运行环境、Engine、用例列表、报告格式
+schema_version: v1alpha1
+
+environment:
+  # 运行环境类型：none | opensandbox | docker；纯文本 Skill 用 none
+  type: none
+
+skills:
+  # 被测 Skill 来源：本地路径（Skill 根目录）
+  - source: local_path
+    path: .
+    include: [SKILL.md, "references/**"]
+
+engine:
+  # 执行引擎：claude_code | codex | qodercli
+  name: claude_code
+  # model 省略，由引擎本地默认模型接管
+
+cases:
+  # 用例文件清单，路径相对 Skill 根目录
+  files:
+    - evals/cases/birthday-named-recipient.yaml
+    - evals/cases/thanks-concrete-detail.yaml
+    - evals/cases/encouragement-avoid-empty-slogans.yaml
+    - evals/cases/sensitive-health-topic-avoidance.yaml
+    - evals/cases/clarify-when-occasion-missing.yaml
+    - evals/cases/style-format-agent-judge.yaml
+  # 所有用例共享的默认限制与门槛检查
+  defaults:
+    timeout_seconds: 180
+    max_turns: 4
+    expect:
+      exit_code: 0
+  # 并行度，可被 skill-up run --parallelism 覆盖
+  parallelism: 2
+
+benchmark:
+  # 不做 with/without skill 基线对比
+  enabled: false
+
+report:
+  # 报告输出格式
+  formats: [json, html]

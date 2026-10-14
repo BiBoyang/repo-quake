@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例标题，展示在用例列表与报告中
+title: 生日贺卡包含收件人名字且格式合规
+description: |
+  验证 Skill 按生日场合生成贺卡：包含用户提供的收件人名字、
+  恰好一个 emoji 且位于结尾、长度受限、不使用 markdown 格式。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    我闺蜜小雨下周生日，她刚换了新工作，帮我写一张生日贺卡给她。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "#"
+    - "**"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小雨"]
+    - output_matches:
+        all:
+          # 恰好一个 emoji 且位于结尾（允许肤色/变体修饰符与末尾空白）
+          - '\A[^\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{1F3FB}-\x{1F3FF}\x{FE00}-\x{FE0F}]?\s*\z'
+          # 长度上限：中文 80 字规则 + 名字与标点余量
+          - '(?s)\A.{1,120}\z'

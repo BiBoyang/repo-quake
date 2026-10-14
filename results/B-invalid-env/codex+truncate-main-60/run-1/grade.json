@@ -1,0 +1,1 @@
+{"level":"L0","detected":false,"drift":"套件产出且 validate exit 0，但最终报告未提截断","notes":"轶事不计入：transcript 里出现 wc -l=174 与末行内容仍未察觉；随后额度 403 中断"}

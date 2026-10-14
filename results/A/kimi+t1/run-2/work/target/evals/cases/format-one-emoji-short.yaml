@@ -1,0 +1,26 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: format-one-emoji-short
+# 用例简述
+title: 贺卡格式：恰好一个结尾 emoji 且长度达标
+description: |
+  用自定义脚本校验 tone-guide 的硬性格式规则：中文文案不超过 80 字、
+  恰好一个 emoji 且位于结尾、不使用 markdown、不以 Dear 开头。
+  这类结构化检查用 script judge 比 agent_judge 更便宜、更确定。
+
+input:
+  # 单轮用户 prompt
+  prompt: |
+    谢谢同事阿May这周帮我顶了两次班，帮我写一张感谢卡。
+
+# 零成本前置检查
+expect:
+  exit_code: 0
+
+judge:
+  # 判定策略
+  # 可选: rule_based | agent_judge | script
+  type: script
+  # 自定义校验脚本路径，相对 Skill 根目录
+  script_path: evals/fixtures/scripts/check-card-format.sh
+  # 脚本超时时间（秒）
+  timeout_seconds: 30

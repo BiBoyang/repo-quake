@@ -1,0 +1,45 @@
+# 用例 ID，必须与文件名去掉 .yaml 后一致。
+id: clarify-then-write-multiturn
+# 用例标题，出现在用例列表与报告中。
+title: 场合不明时先追问，补充信息后再写卡片
+# 背景说明：这条用例回归的是什么行为，为什么值得长期保留。
+description: |
+  SKILL.md 第 1 步要求「Identify the occasion. If unclear, ask.」。
+  这条用例用两轮对话回归：第一轮只给「送给朋友」这种模糊信息，
+  Skill 必须先追问场合；第二轮补齐场合与细节后，才写出带姓名的卡片。
+
+input:
+  # 多轮对话用 turns 代替 prompt，按顺序依次发送。
+  turns:
+    # 第一轮信息不足：正确行为是追问，而不是直接猜一个场合写卡片。
+    - role: user
+      content: "帮我写张卡片吧，我想送给一个朋友。"
+      post_condition:
+        # 追问至少应包含一个问号（中英文均可）。
+        must_contain_any: ["?", "？"]
+        on_fail: fail
+    # 第二轮补齐场合与细节，Skill 应据此产出卡片。
+    - role: user
+      content: "是生日，她叫小雨，刚搬到新城市开始第一份工作。"
+
+# 低成本门槛检查；不通过时 judge 会被跳过，用来省 token。
+expect:
+  must_contain:
+    - "小雨"
+  must_not_contain:
+    - "**"
+    - "```"
+
+judge:
+  # 评分方式；按轮次断言 + 最终输出关键词，都可以确定性判定。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # 全部 success 均满足才算 PASS；任一条 failure 命中则直接 FAIL。
+  success:
+    # 第二轮回复（即最终卡片）必须带上收件人姓名。
+    - turn_response_contains:
+        turn: 2
+        contains_all: ["小雨"]
+    - output_contains:
+        all: ["小雨"]
+        not: ["Dear", "此致", "敬礼"]

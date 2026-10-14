@@ -1,0 +1,27 @@
+id: encouragement-tone
+title: 鼓励贺卡须沉稳具体且无空洞口号
+description: |
+  语义质量用例：验证鼓励类贺卡语气沉稳自信、不堆叠表情符号、
+  长度在 1-3 句，并避免“你是最棒的”式空洞口号。此类标准无法用
+  确定性规则覆盖，故使用 agent_judge。
+
+input:
+  prompt: |
+    我朋友下周要参加马拉松比赛，有点紧张，帮我写张鼓励贺卡。
+
+expect:
+  must_contain:
+    - "马拉松"
+
+judge:
+  # 语义判断且无确定性规则可用时使用 agent_judge。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # 评分细则：逐条核对输出是否满足。
+  criteria:
+    - "输出为中文贺卡正文，长度在 1-3 句话之间"
+    - "全文恰好一个表情符号，且位于消息末尾"
+    - "语气沉稳自信，具体提到马拉松或比赛相关细节，而非泛泛加油"
+    - "不包含“你是最棒的”等空洞口号，也不承诺代用户未来的行动"
+    - "无标题、署名、引号包裹或 Markdown 格式"
+  pass_threshold: 0.8

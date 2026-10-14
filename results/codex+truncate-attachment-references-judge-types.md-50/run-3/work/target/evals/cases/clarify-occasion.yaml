@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: clarify-occasion
+# 用例列表与报告中展示的简短说明。
+title: 场合不明确时应先反问而不是直接生成
+# 覆盖的行为背景：SKILL.md 要求场合不明确时先询问，而不是猜测生成。
+description: |
+  验证 Skill 在 prompt 未说明场合（生日/感谢/鼓励/道歉）时，
+  先反问澄清场合，而不是擅自产出一张完整贺卡。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt。
+  prompt: |
+    帮我写张贺卡。
+
+expect:
+  must_contain:
+    - "场合"
+
+judge:
+  # 评分策略。选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 输出应是澄清性提问：包含"场合"等询问词，且不产出带 emoji 的成品贺卡。
+    - output_contains:
+        all: ["场合"]
+        any: ["什么", "哪种", "请问", "呢"]
+    - output_matches:
+        not: ["[🎂🎉🎈🎁🌟😊🎊💐🙏❤️]"]

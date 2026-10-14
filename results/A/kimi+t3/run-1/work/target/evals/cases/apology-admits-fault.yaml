@@ -1,0 +1,30 @@
+# 报告中使用的稳定用例 ID，与文件名（去掉 .yaml）保持一致
+id: apology-admits-fault
+# 用例列表与报告中展示的简要说明
+title: 道歉卡应直接认错且真诚
+# 该用例覆盖的行为或回归背景
+description: |
+  验证 Skill 写道歉卡时包含明确的认错表达，不推卸责任、不过度辩解。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    我忘了和女朋友的纪念日，她很生气，帮我写一张道歉贺卡。
+
+# 零成本 pre-judge 检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "都怪"
+    - "你也不对"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        any: ["对不起", "抱歉", "歉意", "我错了"]
+        not: ["都怪", "你也不对", "这不能全怪我"]
+    - output_matches:
+        all: ['\p{Han}']

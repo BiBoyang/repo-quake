@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-no-slogan
+# 用例摘要，显示在用例列表和报告中
+title: 鼓励卡片避免空洞口号
+# 该用例覆盖的行为背景
+description: |
+  语气指南规定鼓励场合要"平稳自信"，
+  明确禁止 "you are the best" 这类空洞口号；
+  内容还应贴合用户提到的具体事件（面试）。
+
+input:
+  prompt: |
+    我下周要参加一个很重要的面试，最近有点紧张，写句话给我打打气吧。
+
+judge:
+  # 评分策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # failure 优先判定：命中任一立即 FAIL（演示 failure 块用法）
+  failure:
+    - output_contains:
+        any: ["你是最棒的", "你是最棒的！", "you are the best"]
+  success:
+    - output_contains:
+        # 贴合用户提到的具体事件
+        any: ["面试"]
+    - output_matches:
+        all:
+          - '\p{Han}'
+          - '(?s)^.{1,120}$'
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{FE0F}]\s*$'
+    - exit_code: 0

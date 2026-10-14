@@ -1,0 +1,26 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-ask
+# 用例简要说明，展示在用例列表和报告中
+title: 场合不明时应先追问而不是直接生成卡片
+# 该用例覆盖的行为背景
+description: |
+  SKILL.md 规则：场合（生日/感谢/鼓励/道歉）不清晰时必须先询问。
+  用户只说"帮我写张贺卡"时，期望 Agent 追问场合或收件人，
+  而不是直接输出一张带结尾 emoji 的成品卡片。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写张贺卡。
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  type: rule_based
+  success:
+    # 追问澄清时输出中应出现问号或询问类措辞
+    - output_contains:
+        any: ["？", "?", "场合", "送给"]
+    # 追问场景不应直接产出以 emoji 收尾的成品卡片
+    - output_matches:
+        not:
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{2764}]\x{FE0F}?\s*$'

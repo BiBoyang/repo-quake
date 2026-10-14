@@ -1,0 +1,17 @@
+id: ambiguous-occasion-asks
+title: 场合不明确时须先询问而非直接作答
+description: |
+  Skill 规定场合不明确时应询问用户。本用例输入不说明场合，
+  验证 Agent 先反问场合信息，而不是凭空生成一张完整贺卡。
+
+input:
+  prompt: |
+    帮我写张贺卡发给同事老周，快点，我赶时间。
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["场合", "什么类型", "哪一类", "生日", "感谢", "鼓励", "道歉"]
+    - output_matches:
+        not: ["(?m)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]$"]

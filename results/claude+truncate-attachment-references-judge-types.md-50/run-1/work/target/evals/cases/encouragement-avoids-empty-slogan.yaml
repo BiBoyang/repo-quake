@@ -1,0 +1,28 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: encouragement-avoids-empty-slogan
+# 报告中展示的用例标题。
+title: 鼓励场合语气稳健具体，不用空泛口号
+description: |
+  验证 tone-guide 中 encouragement 的要求：“steady and confident, avoid empty
+  slogans like 'you are the best'”。语气是否稳健、是否具体属于语义判断，
+  因此本用例使用 agent_judge。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    我朋友这周六要考注册会计师，复习了三个月，最近有点撑不住了。帮我写段话鼓励他一下。
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: agent_judge
+  # 评审模型，格式为 provider/name。
+  model: anthropic/claude-sonnet-4-6
+  # 逐条判断的评分细则。
+  criteria:
+    - "输出的是一段中文卡片正文，1-3 句，以一个 emoji 结尾，没有附加解释、标题、署名或 Markdown 标记。"
+    - "语气稳健而笃定，不是空泛的打鸡血，也没有替用户做出长期承诺（例如“我会一直陪着你”）。"
+    - "内容扣住了备考这个具体情境（例如提到复习、考试、坚持或这三个月），而不是任何场合都能套用的通用祝福。"
+    - "没有使用“你是最棒的”“你一定行”这类不提供任何具体信息的口号来替代具体的肯定。"
+  # 达到该比例即判定通过。
+  pass_threshold: 0.7

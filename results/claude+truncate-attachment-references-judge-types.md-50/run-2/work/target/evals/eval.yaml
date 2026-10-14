@@ -1,0 +1,42 @@
+# skill-up 评测配置的 schema 版本，固定为 v1alpha1，不要修改。
+schema_version: v1alpha1
+
+environment:
+  # 用例运行环境；greeting-card 是纯文本 Skill，不需要沙箱。
+  # Options: none | opensandbox | docker.
+  type: none
+
+skills:
+  # 评测前安装进 Agent Engine 的 Skill；source 目前支持 local_path。
+  - source: local_path
+    # 被测 Skill 根目录，相对本文件所在目录解析；. 表示当前 Skill 根。
+    path: .
+
+engine:
+  # 执行用例 prompt 的 Agent Engine；内置可选 claude_code | codex | qodercli | qwen_code。
+  name: claude_code
+  # 省略 model 时使用引擎默认模型；本机没有网关凭据，因此保持默认不指定。
+
+cases:
+  # 参与本次评测的用例文件，路径相对 Skill 根目录。
+  files:
+    - evals/cases/birthday-includes-name.yaml
+    - evals/cases/thanks-no-dear-no-markdown.yaml
+    - evals/cases/apology-no-promise.yaml
+    - evals/cases/english-input-english-output.yaml
+    - evals/cases/avoids-health-diagnosis.yaml
+    - evals/cases/card-structure-single-emoji.yaml
+    - evals/cases/clarify-then-write-multiturn.yaml
+    - evals/cases/warmth-and-specificity.yaml
+  # 所有用例共享的默认约束，可被用例内的 constraints 覆盖。
+  defaults:
+    timeout_seconds: 120
+    max_turns: 6
+    # 所有用例共享的门槛检查，与用例内 expect 合并后生效。
+    expect:
+      exit_code: 0
+
+report:
+  # 运行结束后额外写出的报告格式；result.json 始终生成。
+  # Options: json | junit | html.
+  formats: [json, html]

@@ -1,0 +1,30 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: vague-prompt-asks-occasion
+# 用例一句话摘要，显示在用例列表和报告中。
+title: 场合不明确时应先反问场合而不是直接写卡
+# 用例背景：SKILL.md 要求场合不明时先询问；防止 Skill 对模糊请求直接产出卡片。
+description: |
+  用户只说「写张贺卡」而不给场合时，
+  验证 Skill 会先询问场合/类型，而不是擅自写一张通用卡。
+
+input:
+  # 发给 Agent 的单轮用户 prompt，语气贴近真实用户。
+  prompt: |
+    帮我写张贺卡。
+
+expect:
+  # 询问场合时通常会以问句形式出现。
+  must_contain:
+    - "？"
+
+judge:
+  # 判定策略：是否反问场合可用确定性关键词判定，使用 rule_based。
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["场合", "哪种", "什么样", "请问", "什么呢"]
+    # 反问不应以完整贺卡结尾（贺卡通常以 emoji 收尾）。
+    - output_matches:
+        not:
+          - "(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"

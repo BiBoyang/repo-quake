@@ -1,0 +1,35 @@
+# 用例 ID，用于报告，需与文件名（去掉 .yaml）一致。
+id: ask-when-occasion-unclear
+# 用例标题，展示在用例列表与报告中。
+title: 场合不明确时应先追问再写卡片
+# 用例背景：说明该用例覆盖的行为或回归点。
+description: |
+  多轮用例：第一轮只给收件人、不给场合，Skill 应先追问；
+  第二轮补充「生日」后，再输出卡片正文。
+
+input:
+  # 多轮对话按顺序发送；使用 turns 时不再写 prompt。
+  turns:
+    - role: user
+      content: "帮我给小雨写张卡片。"
+      # 每轮结束后的检查；on_fail: fail 表示该轮不通过即整例 FAIL。
+      post_condition:
+        must_contain_any: ["场合", "什么", "哪种", "哪个", "？", "?"]
+        on_fail: fail
+    - role: user
+      content: "是生日，她下周过生日，我们认识十年了。"
+
+expect:
+  # 输出中必须出现的内容，不通过则跳过 judge。
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略，可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # judge.type 为 rule_based 时必须全部满足的断言。
+  success:
+    # 按轮次断言，仅 status=completed 的轮次可被断言。
+    - turn_response_contains:
+        turn: 2
+        contains_any: ["生日"]

@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例摘要，显示在用例列表和报告中
+title: 生日贺卡应包含收件人名字
+# 该用例覆盖的行为背景
+description: |
+  用户索要生日贺卡并提供了收件人名字。Skill 规则要求卡片包含收件人名字，
+  且只输出卡片正文，不允许解释性文字或 Markdown 格式。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写一张生日贺卡，送给我闺蜜小雨，她下周生日。
+    我们俩是大学室友，每年都一起爬山庆祝。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["小雨"]
+    - output_matches:
+        # 卡片正文不允许出现 Markdown 标题或加粗
+        not:
+          - '(?m)^#'
+          - '\*\*'

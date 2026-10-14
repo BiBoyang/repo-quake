@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: english-matches-language
+# 用例摘要，显示在用例列表和报告中
+title: 英文输入应产出英文卡片
+# 该用例覆盖的行为背景
+description: |
+  Skill 要求卡片语言与用户输入一致。该用例用英文索要生日卡，
+  输出应为英文、包含收件人名字、且不含任何中文字符。
+  注：为验证语言匹配这一核心行为，本用例的 prompt 有意使用英文，属于测试数据。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt（有意使用英文，验证语言匹配）
+  prompt: |
+    Write a short birthday card message for my coworker Anna.
+    We survived a brutal product launch together this year.
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "Anna"
+
+judge:
+  # 评分策略
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  # rule_based 下必须全部通过的断言
+  success:
+    - output_contains:
+        all: ["Anna"]
+    - output_matches:
+        # 输出中不应出现任何汉字
+        not:
+          - '\p{Han}'

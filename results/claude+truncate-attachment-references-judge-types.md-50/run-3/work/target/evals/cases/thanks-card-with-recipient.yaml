@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: thanks-card-with-recipient
+# 用例标题，展示在用例列表与报告中。
+title: 感谢场合点出具体事由并写入收件人
+# 用例背景：覆盖 tone-guide「感谢：说清感谢什么，温暖但不夸张」。
+description: |
+  用户给出具体事由（室友连续一周带早饭），验证贺卡写到这件事本身，
+  而不是泛泛的「谢谢你的帮助」，同时带上收件人姓名。
+
+input:
+  # 发送给 Agent 的用户提示。
+  prompt: |
+    我室友阿哲连续一周帮我带早饭，我想写张感谢卡给他。
+
+expect:
+  # 门槛检查：姓名必须出现，且不使用「Dear」式抬头。
+  must_contain:
+    - "阿哲"
+  must_not_contain:
+    - "亲爱的"
+
+judge:
+  # 判分方式：确定性的关键词 + 正则断言。
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["阿哲"]
+    - output_matches:
+        # 提到早饭这件具体事由，而不是空泛致谢。
+        any: ["早饭", "早餐", "带饭"]
+        # 结尾有 emoji。
+        all: ["\\p{So}\\s*$"]

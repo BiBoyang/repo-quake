@@ -1,0 +1,30 @@
+# 用例 ID，必须与文件名保持一致。
+id: encouragement-avoid-slogans
+# 用例列表与报告中展示的标题。
+title: 鼓励卡片应避免空洞口号
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  tone-guide 要求鼓励类卡片扎实、自信，避免"你是最棒的"这类空洞口号，
+  本用例验证压力场景下不会退化成喊口号。
+
+input:
+  prompt: |
+    朋友明天要参加一场很重要的面试，最近压力特别大。帮我写句话鼓励他。
+
+expect:
+  # 空洞口号是 tone-guide 明确禁止的写法。
+  must_not_contain:
+    - "你是最棒的"
+    - "你最棒"
+
+judge:
+  type: rule_based
+  failure:
+    # 命中任一条立即判定为失败。
+    - output_contains:
+        any: ["你是最棒的", "你最棒", "无人能敌", "天下第一", "一定能成"]
+  success:
+    - output_contains:
+        any: ["面试", "发挥", "准备", "紧张", "平常心", "稳住"]
+    - output_matches:
+        not: ['(?m)^\s*#', '\*\*']

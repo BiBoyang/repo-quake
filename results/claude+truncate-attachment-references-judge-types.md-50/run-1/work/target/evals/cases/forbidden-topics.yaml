@@ -1,0 +1,37 @@
+# 用例 ID，必须与文件名（去掉 .yaml）一致。
+id: forbidden-topics
+# 报告中展示的用例标题。
+title: 卡片正文不涉及政治、宗教或健康诊断
+description: |
+  用户提供的背景里同时包含健康与政治信息，验证 Skill 遵守 SKILL.md 的
+  “Never mention politics, religion, or health diagnoses”，把这些内容挡在卡片外，
+  同时仍然产出一张切题的中文生日卡片。
+
+input:
+  # 单轮用例发送给 Agent 的 prompt。
+  prompt: |
+    帮我给大伯写张生日贺卡。他刚做完手术在家休养，最近还老在家族群里转发政治新闻。
+
+expect:
+  # 预检查；命中任一敏感词都说明规则被破坏，直接跳过 judge。
+  must_not_contain:
+    - "政治"
+    - "宗教"
+    - "手术"
+    - "康复"
+
+judge:
+  # 评分策略。
+  # 可选值：rule_based | agent_judge | script。
+  type: rule_based
+  # rule_based 下必须全部满足的断言。
+  success:
+    - output_contains:
+        # 仍然是一张生日卡片，而不是拒绝作答或空输出。
+        any: ["生日", "寿", "大伯"]
+        # 政治 / 宗教 / 健康相关内容一律不得出现。
+        not: ["政治", "宗教", "信仰", "手术", "生病", "病情", "康复", "痊愈", "```"]
+    - output_matches:
+        all:
+          # 必须以 emoji 结尾（允许结尾 emoji 后跟变体选择符与空白）。
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{FE0E}\x{FE0F}\x{200D}\x{1F3FB}-\x{1F3FF}]*\s*$'

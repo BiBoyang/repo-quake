@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete-detail
+# 用例简要说明，展示在用例列表和报告中
+title: 感谢卡应点名被感谢者并提及具体事件
+# 该用例覆盖的行为背景
+description: |
+  tone-guide：感谢场景要具体说明感谢什么、提到收件人名字，温暖但不夸张。
+  本用例验证输出同时包含收件人称呼与被感谢的具体事情。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写一张感谢卡给王阿姨，谢谢她上周来我家帮我照顾了三天猫。
+
+# 零成本预检；不通过则跳过 judge
+expect:
+  must_contain:
+    - "王阿姨"
+
+judge:
+  # 评分策略；本用例用确定性规则即可判定
+  type: rule_based
+  success:
+    # 必须同时出现收件人称呼和具体事件（猫），且不使用 markdown
+    - output_contains:
+        all: ["王阿姨", "猫"]
+        not: ["**"]
+    # 中文贺卡应简短（80 字以内，留少量余量）且以一个 emoji 收尾
+    - output_matches:
+        all:
+          - '(?s)^.{1,100}$'
+          - '[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{2764}]\x{FE0F}?\s*$'

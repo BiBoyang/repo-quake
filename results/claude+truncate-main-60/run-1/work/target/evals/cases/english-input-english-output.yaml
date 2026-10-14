@@ -1,0 +1,28 @@
+# 用例 ID，必须与文件名保持一致。
+id: english-input-english-output
+# 用例列表与报告中展示的标题。
+title: 英文请求应输出英文卡片
+# 可选背景说明，解释该用例覆盖的行为。
+description: |
+  tone-guide 要求卡片语言跟随用户语言。本用例用英文请求验证 Skill
+  不会输出中文卡片，并且仍然遵守格式约束。
+  注意：该用例的输入与断言使用英文，因为被测行为就是"输出英文卡片"。
+
+input:
+  prompt: |
+    Write a short thank-you card for my neighbor, who watered my plants
+    while I was away for two weeks.
+
+expect:
+  must_not_contain:
+    - "**"
+    - "##"
+
+judge:
+  type: rule_based
+  success:
+    # 输出中不应出现任何汉字（Go regexp：\p{Han}）。
+    - output_matches:
+        not: ['\p{Han}']
+    - output_contains:
+        any: ["thank", "Thank", "grateful", "appreciate"]

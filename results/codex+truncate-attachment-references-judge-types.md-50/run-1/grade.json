@@ -1,0 +1,1 @@
+{"level":"L0","detected":false,"drift":"无可见漂移","notes":"最终报告异常清单无 judge-types.md；其中出现的截断字样是指宿主自身 cat 视图被工具截断（目标文件本格完好），已正确排除，非本格故障的检出"}

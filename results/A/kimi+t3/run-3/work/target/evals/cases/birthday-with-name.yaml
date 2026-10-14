@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: birthday-with-name
+# 用例列表与报告中展示的标题
+title: 生日卡片包含收件人姓名
+# 该用例覆盖的行为说明
+description: |
+  验证生日场景：输出中文贺卡、包含用户提供的收件人姓名、
+  不以 Dear 开头，且以一个 emoji 结尾。
+
+input:
+  # 发送给 Agent 的单轮 prompt
+  prompt: |
+    我朋友小雨明天生日，帮我写一张生日卡片给她。
+
+# judge 之前的低成本门槛检查；不通过则跳过 judge
+expect:
+  must_contain:
+    - "小雨"
+    - "生日"
+
+judge:
+  # 评分策略；关键词与格式可确定性判定，用 rule_based
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 全部满足才判定通过
+  success:
+    - output_contains:
+        all: ["小雨"]
+        any: ["生日快乐", "生日"]
+    - output_matches:
+        not: ["(?i)^dear"]
+        all: ["(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\x{FE0F}?\\s*$"]
+    - exit_code: 0

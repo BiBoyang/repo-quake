@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete
+# 用例标题，展示在用例列表与报告中
+title: 感谢卡包含收件人与具体感谢事由
+# 覆盖的规则：感谢要具体（tone-guide：concrete about what is being thanked）
+description: |
+  验证感谢卡包含收件人称呼，并具体提及被感谢的事情（帮忙喂猫），
+  而不是泛泛的感谢套话。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt，语气贴近真实用户
+  prompt: |
+    想给楼下的张阿姨写张感谢卡，我出差这一周她每天帮我喂猫，麻烦写得暖心一点。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+  must_contain:
+    - "张阿姨"
+
+judge:
+  # 评分方式；优先用确定性规则
+  # 可选：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    # 必须同时包含收件人称呼与具体事由（猫）
+    - output_contains:
+        all: ["张阿姨", "猫"]
+    # 必须含至少一个 emoji，且不得以 Dear 开头
+    - output_matches:
+        all: ['[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}]']
+        not: ['(?i)^\s*dear']
+    - exit_code: 0

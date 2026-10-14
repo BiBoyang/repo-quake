@@ -1,0 +1,43 @@
+# skill-up 评测配置 schema 版本，请勿修改
+schema_version: v1alpha1
+
+environment:
+  # greeting-card 是纯文本 I/O，无需沙箱
+  # 选项：none | opensandbox | docker
+  type: none
+
+skills:
+  # 被测 Skill 以本地路径安装
+  - source: local_path
+    # 相对 Skill 根目录（SKILL.md 所在目录）
+    path: .
+
+engine:
+  # 执行用例的 Agent Engine
+  # 选项：claude_code | codex | qodercli | qwen_code
+  name: claude_code
+  # model 缺省时使用引擎默认模型
+
+cases:
+  # 用例文件列表，路径相对 Skill 根目录
+  files:
+    - evals/cases/birthday-named.yaml
+    - evals/cases/thanks-concrete.yaml
+    - evals/cases/encouragement-grounded.yaml
+    - evals/cases/apology-admits-fault.yaml
+    - evals/cases/language-match-en.yaml
+    - evals/cases/clarify-occasion.yaml
+  # 所有用例继承的默认约束
+  defaults:
+    timeout_seconds: 120
+    max_turns: 5
+    # 默认 expect 门槛检查，与用例级 expect 合并
+    expect:
+      exit_code: 0
+      must_not_contain:
+        - "TODO"
+
+report:
+  # 报告格式
+  # 选项：json | junit | html
+  formats: [json]

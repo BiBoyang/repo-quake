@@ -1,0 +1,28 @@
+# 用例 ID，与文件名（去掉 .yaml）一致，用于报告
+id: encouragement-no-slogan
+# 用例标题，展示在用例列表与报告中
+title: 鼓励贺卡：沉稳真诚、避免空洞口号
+# 用例背景：覆盖的核心行为
+description: |
+  验证 encouragement 场景的语气规则：沉稳、有信心，
+  不使用 tone-guide 明令禁止的空洞口号（如"你是最棒的"）。
+
+input:
+  # 发送给 Agent 的单轮用户提示
+  prompt: |
+    好朋友面试又失败了，最近很丧。帮我写几句话鼓励他。
+
+# 低成本前置检查；不通过则跳过 judge
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "你是最好的"
+
+judge:
+  # 评分方式：确定性关键词规则
+  type: rule_based
+  # 所有断言均满足才判 PASS
+  success:
+    - output_contains:
+        any: ["加油", "相信", "机会", "下次", "别灰心", "尽力"]
+        not: ["你是最棒的", "你是最好的", "Dear"]

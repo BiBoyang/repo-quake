@@ -1,0 +1,27 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: encouragement-exam
+# 用例标题，展示在列表与报告中
+title: 考前鼓励应避免空洞口号
+# 覆盖点： encouragement 场合语气规则
+description: |
+  tone-guide 规定鼓励场合「沉稳自信，避免空洞口号（如"你是最棒的"）」，
+  用例验证考试鼓励卡片不落入空话，且内容贴合考试场景。
+
+input:
+  prompt: |
+    我室友明天要考研，最近压力很大，帮我写句话鼓励他。
+
+expect:
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["考研", "考试", "加油"]
+        not: ["你是最棒的", "你最棒"]
+    - output_matches:
+        # 输出应以一个 emoji 收尾
+        all: ["[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"]
+    - exit_code: 0

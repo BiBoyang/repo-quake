@@ -1,0 +1,31 @@
+# 用例 ID，用于报告，需与文件名（去掉 .yaml）一致。
+id: apology-sincere
+# 用例标题，展示在用例列表与报告中。
+title: 道歉卡应真诚承认过失并避免过度解释
+# 用例背景：说明该用例覆盖的行为或回归点。
+description: |
+  「真诚、不找借口、不过度解释」只能做语义判断，无法用关键词穷举，
+  因此本用例使用 agent_judge 逐条打分。
+
+input:
+  # 单轮用例发送给 Agent 的用户输入。
+  prompt: |
+    我答应周末帮阿哲拍活动照片，结果我忘了，他临时找不到人。
+    帮我写张卡片道歉。我不想找借口，但也不想写得太沉重。
+
+expect:
+  # 输出中必须出现的内容，不通过则跳过 judge。
+  must_contain:
+    - "阿哲"
+
+judge:
+  # 评分策略，可选值：rule_based | agent_judge | script。
+  type: agent_judge
+  model: anthropic/claude-sonnet-4-6
+  # 逐条判断的评分细则，达到 pass_threshold 比例即 PASS。
+  criteria:
+    - "卡片直接承认忘记拍照这件事，没有找借口或推卸责任"
+    - "语气真诚但不沉重，没有反复道歉或长篇辩解"
+    - "只输出卡片正文，没有标题、签名或正文之外的解释"
+    - "结尾恰好一个 emoji"
+  pass_threshold: 0.7

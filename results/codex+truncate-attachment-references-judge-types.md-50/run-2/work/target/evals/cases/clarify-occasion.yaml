@@ -1,0 +1,25 @@
+# 用例 ID，保持与文件名（去掉 .yaml）一致
+id: clarify-occasion
+# 用例的一句话摘要，展示在列表与报告中
+title: 场合不明确时先追问而非硬写
+# 覆盖点：SKILL.md 规则 1——场合不明时应先询问
+description: |
+  用户只说"帮我写张贺卡"而未说明场合，期望 Agent 先反问
+  场合（生日/感谢/鼓励/道歉），而不是随意生成一张。
+input:
+  # 发送给 Agent 的用户提示，尽量贴近真实用户口吻
+  prompt: |
+    帮我写张贺卡。
+
+expect:
+  # 追问场合时大概率出现的词
+  must_contain:
+    - "贺卡"
+
+judge:
+  # 评分方式
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        any: ["场合", "occasion", "什么类型", "哪种"]

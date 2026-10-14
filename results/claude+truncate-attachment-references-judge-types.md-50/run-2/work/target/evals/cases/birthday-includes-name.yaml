@@ -1,0 +1,37 @@
+# 用例 ID，必须与文件名去掉 .yaml 后一致。
+id: birthday-includes-name
+# 用例标题，出现在用例列表与报告中。
+title: 生日祝福带上收件人姓名与具体细节
+# 背景说明：这条用例回归的是什么行为，为什么值得长期保留。
+description: |
+  SKILL.md 要求「用户提供收件人姓名时必须带上姓名」，tone-guide 要求
+  「优先写具体细节，而不是通用祝福」。这条用例给出姓名 + 具体事件，
+  用于回归 Skill 没有退化成可以套给任何人的祝福模板。
+
+input:
+  # 单轮用例发给 Agent 的用户 prompt，语气尽量贴近真实用户。
+  prompt: |
+    帮我给我妈写一句生日祝福，她今年刚学会开车，特别得意。用中文。
+
+# 低成本门槛检查；不通过时 judge 会被跳过，用来省 token。
+expect:
+  must_contain:
+    - "妈"
+  must_not_contain:
+    - "**"
+    - "```"
+    - "作为 AI"
+
+judge:
+  # 评分方式；本用例的判定点都能写成确定性关键词，所以用 rule_based。
+  # Options: rule_based | agent_judge | script.
+  type: rule_based
+  # 全部 success 均满足才算 PASS；任一条 failure 命中则直接 FAIL。
+  success:
+    - output_contains:
+        # 称呼可以是「妈妈」「母亲」或单字「妈」，只要写到收件人即可。
+        any: ["妈妈", "母亲", "妈"]
+        not: ["Dear", "此致", "敬礼"]
+    - output_matches:
+        # emoji 范围覆盖常见表情与符号类 emoji。
+        any: ['[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}]']

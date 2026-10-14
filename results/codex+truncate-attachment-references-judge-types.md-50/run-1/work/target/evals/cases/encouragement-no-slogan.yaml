@@ -1,0 +1,33 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致。
+id: encouragement-no-slogan
+# 用例一句话摘要，显示在用例列表和报告中。
+title: 鼓励贺卡应稳重自信且不使用空洞口号
+# 用例背景：tone-guide 禁止空口号（如「你是最棒的」），并要求语气稳重。
+description: |
+  验证 Skill 写鼓励卡时不堆砌「你是最棒的」式空口号，
+  结尾遵守单 emoji 规则。
+
+input:
+  # 发给 Agent 的单轮用户 prompt，语气贴近真实用户。
+  prompt: |
+    朋友下周二要参加一个重要面试，帮我写张鼓励卡。
+
+expect:
+  must_not_contain:
+    - "你是最棒的"
+    - "你最棒"
+    - "天下无敌"
+
+judge:
+  # 判定策略：禁用词与格式均可确定性判定，使用 rule_based。
+  # 选项：rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        not: ["你是最棒的", "你最棒", "加油加油"]
+    # 结尾恰好一个 emoji。
+    - output_matches:
+        any:
+          - "(?s)[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]\\s*$"
+        not:
+          - "[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}][\\s\\S]*[\\x{1F300}-\\x{1FAFF}\\x{2600}-\\x{27BF}]"

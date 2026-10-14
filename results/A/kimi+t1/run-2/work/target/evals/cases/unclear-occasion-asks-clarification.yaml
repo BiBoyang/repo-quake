@@ -1,0 +1,26 @@
+# 用例 ID，需与文件名（去掉 .yaml）保持一致
+id: unclear-occasion-asks-clarification
+# 用例简述
+title: 场合不明确时主动反问
+description: |
+  SKILL.md 规定：先识别场合（生日/感谢/鼓励/道歉），不明确时应先询问。
+  验证用户只说"写张卡片"、没说明场合时，Agent 会反问澄清，
+  而不是自行编造一个场合直接生成。
+
+input:
+  # 单轮用户 prompt，刻意不给出场合
+  prompt: |
+    帮我写一张卡片。
+
+# 零成本前置检查
+expect:
+  exit_code: 0
+
+judge:
+  # 判定策略
+  # 可选: rule_based | agent_judge | script
+  type: rule_based
+  # 命中任一澄清性问句特征即视为通过
+  success:
+    - output_contains:
+        any: ["？", "?", "请问", "什么场合", "哪种"]

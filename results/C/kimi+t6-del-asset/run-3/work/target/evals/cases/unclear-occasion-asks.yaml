@@ -1,0 +1,25 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致，用于报告
+id: unclear-occasion-asks
+# 用例标题，展示在用例列表与报告中
+title: 场合不明确时主动询问而非编造
+# 背景：SKILL.md 规定"Identify the occasion; If unclear, ask."
+description: |
+  用户只说"写一张卡片"，未说明场合与收件人。
+  验证 Agent 会反问场合/对象，而不是随意编造一张卡片。
+
+input:
+  # 发送给 Agent 的单轮用户提示词
+  prompt: |
+    帮我写一张卡片。
+
+# 零成本门槛检查；不通过则跳过 judge
+expect:
+  exit_code: 0
+
+judge:
+  # 评分策略：rule_based | agent_judge | script
+  type: rule_based
+  # 命中任一类澄清性表述即视为通过
+  success:
+    - output_contains:
+        any: ["场合", "送给谁", "什么人", "生日", "感谢", "鼓励", "道歉", "慰问", "请问", "哪种", "什么"]

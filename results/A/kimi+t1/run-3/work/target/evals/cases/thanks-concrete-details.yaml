@@ -1,0 +1,32 @@
+# 用例 ID，与文件名（去掉 .yaml）保持一致
+id: thanks-concrete-details
+# 用例标题，展示在用例列表与报告中
+title: 感谢卡体现具体感谢事由
+description: |
+  验证 Skill 按 tone-guide 要求写出具体的感谢内容：
+  提到收件人与用户给出的感谢事由，而不是泛泛的客套话。
+
+input:
+  # 发送给 Agent 的单轮用户 prompt
+  prompt: |
+    帮我写一张感谢卡给同事老张，谢谢他上周替我顶了两天班。
+
+# 零成本前置检查，不通过则跳过 judge
+expect:
+  must_contain:
+    - "老张"
+
+judge:
+  # 判定策略: rule_based | agent_judge | script
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["老张"]
+        # 至少体现一个具体事由细节
+        any: ["顶班", "上周", "替我"]
+    - output_matches:
+        all:
+          # 恰好一个 emoji 且位于结尾
+          - '\A[^\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}]*[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}][\x{1F3FB}-\x{1F3FF}\x{FE00}-\x{FE0F}]?\s*\z'
+          # 长度上限：中文 80 字规则 + 余量
+          - '(?s)\A.{1,120}\z'

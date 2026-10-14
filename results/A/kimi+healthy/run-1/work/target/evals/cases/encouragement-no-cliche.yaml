@@ -1,0 +1,25 @@
+id: encouragement-no-cliche
+title: 鼓励贺卡应沉稳具体，不喊空洞口号
+description: |
+  验证鼓励场景的语气规则：references/tone-guide.md 明确要求
+  避免「你是最棒的」这类空洞口号。
+
+input:
+  prompt: |
+    我朋友小舟明天要跑人生第一个马拉松，现在特别紧张，帮我写张贺卡给她打打气。
+
+expect:
+  must_contain:
+    - "小舟"
+  must_not_contain:
+    - "你是最棒的"
+
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["小舟"]
+        not: ["你是最棒的", "你最棒", "加油加油"]
+    - output_matches:
+        # 结尾必须是 emoji
+        all: ['\p{So}\x{FE0F}?\s*$']
