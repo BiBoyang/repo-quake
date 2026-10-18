@@ -43,6 +43,34 @@ rerun wrote iteration-2").
 - Validator blind spots confirmed at code level, upstreamed
   (anthropics/skills#1949, microsoft/eval-guide#16)
 
+## Disclosure file
+
+Every experiment phase ships a disclosure next to its report — fill
+`disclosure-template.md`. Minimum contents: what was accessed (and what was
+never touched), which numbers are estimates vs official measurements, the hash
+manifest (target version, fixtures, prompts, calibration), the deviation log,
+the contamination register. The disclosure is what lets a reader trust the
+report without rerunning it.
+
+## Posting gate
+
+No public artifact (issue, PR, blog post, repo push, disclosure-file example)
+goes out until every box is checked:
+
+- [ ] the upstream loop is opened FIRST for any third-party finding — the issue
+      is filed before the public writeup exists, and the writeup links the
+      issue, never the reverse
+- [ ] every number re-checked against its primary source (logs, transcripts,
+      mock bytes) — nothing added beyond those sources
+- [ ] the most striking conclusion re-verified end to end
+- [ ] sample sizes and caveats stated wherever a number appears
+- [ ] contamination register reviewed; affected cells annotated, not hidden
+
+Learned the hard way, both directions: a benchmark submission that refused to
+open its issue before the repo was public (JevBench practice), and an unfiled
+third-party spike report that briefly escaped into a public repo here and had
+to be force-pushed out (2026-10-15). The gate is cheap; the retraction is not.
+
 ## What not to do
 
 - Do not file from a single run.

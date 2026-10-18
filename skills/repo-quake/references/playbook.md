@@ -67,6 +67,12 @@ the witness itself needs tests (a witness with false positives drowns real
 wounds: skill-guard once flagged 9 errors on a pristine target because it could
 not tell real references from illustrative examples in prose).
 
+**Hash manifest.** Version pinning says which release you ran; content hashing
+says which bytes. Record sha256 for the target binary/image, every fixture,
+every prompt, and every calibration file — per cell where cheap (prompt sha256
+per item is one line of code and kills a whole class of "which text did we
+actually send" disputes).
+
 ## Step 5 — Baseline, negative control, positive control
 
 In order, all before the first fault cell:
@@ -89,6 +95,9 @@ In order, all before the first fault cell:
   regression.
 - Keep witness artifacts, dispatch artifacts, and the host-visible staging tree
   in separate roots; hash-name everything the host can see.
+- Per-cell meta carries: target version, host version, model, effort level,
+  prompt sha256, fixture sha256, witness verdict, timestamp. A cell you cannot
+  re-key from its meta is a cell you cannot defend.
 
 ## Step 7 — Grade and appeal
 

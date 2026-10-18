@@ -136,7 +136,11 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 - `references/fault-catalog.md` — five attack surfaces: standard faults, witness
   design, cut-point rules, observed lessons
 - `references/target-catalog.md` — ten high-value trust seams with priors
-- `references/measurement.md` — statistics, controls, judge calibration
-- `references/reporting.md` — upstream issues, PRs, public retraction
+- `references/measurement.md` — statistics, controls, judge calibration,
+  pre-registration and deviation logs
+- `references/reporting.md` — upstream issues, PRs, public retraction,
+  disclosure files, the posting gate
+- `references/disclosure-template.md` — per-phase disclosure file to fill;
+  `examples/disclosure-phase3-metacodes.md` is a filled instance
 - Sibling: `skills/skill-quake/` — the file/skill-layer specialization with
   ready-made mutation scripts and host adapters

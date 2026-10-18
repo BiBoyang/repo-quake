@@ -42,6 +42,24 @@ eval configs are public and aligned.
   dimension. Unknown is a legal answer; a high unknown rate indicts the
   rubric, not the judge.
 
+
+## Pre-registration and deviation log
+
+Before the first fault cell runs, freeze a `prereg.json` into the results dir:
+
+- cell definitions (hosts x faults x N), the grading rules, and the selection
+  rule for every fitted parameter (thresholds, cut points, prompt text)
+- the total run budget
+
+After the series, append a deviation log: every place the executed experiment
+departed from the prereg, one line each, with the reason. Discovered mid-series
+that a rule was wrong? Fix it forward and log the change — never retro-edit the
+prereg. Pattern credit: benchmark-submission practice (JevBench) — an earlier
+draft that had adopted a value because the check half preferred it was reverted
+to the pre-registered dev-half pick, and the deviation was disclosed item by
+item. Selection rules age better than results; a logged deviation is data, a
+silent one is contamination.
+
 ## Grading pitfalls
 
 - Grade from primary artifacts, not self-report.

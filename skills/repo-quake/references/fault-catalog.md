@@ -23,6 +23,12 @@ Both are silent; both are reportable.
 For SKILL.md targets use `skills/skill-quake` (ready-made mutate.sh, host
 adapters, grading rubric).
 
+Refusal pattern worth copying into targets you design: refuse loudly, with the
+measured cost attached (a benchmark adapter refuses nf4 quantization and states
+the measured ~12-point capability loss as the reason; over-length inputs get a
+typed 422, "scored wrong, not an infrastructure error"). A refusal that carries
+its evidence is a feature; a silent fallback is a wound.
+
 ## §stream — protocol / streaming layer
 
 Standard faults (truncation-detection-benchmark lineage):
@@ -53,7 +59,10 @@ Lessons burned in:
 Typical findings to hunt: detection exists but is never translated to a
 user-visible sentence; deterministic faults share one retry policy with
 transient faults; transcripts keep no tombstone (failed attempt and retry
-attempt serialize identically).
+attempt serialize identically); a missing-terminator stream normalized to a
+fabricated `end_turn`, which also bypasses any truncation-triggered recovery
+net (observed 2026-10: all three wire protocols of one CLI, upstream issue
+filed).
 
 ## §behavior — behavior / contrast layer
 
