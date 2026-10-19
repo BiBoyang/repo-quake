@@ -51,9 +51,9 @@ this skill orchestrates the parts that need judgment.
 
 ### Step 0: Baseline the source skill
 
-- Run `skill-guard <source-skill>` (the companion CLI: `bin/skill-guard` in the
-  skill-quake repo, or anywhere on your PATH); it must PASS (warnings are
-  acceptable, record them).
+- Run `skill-guard <source-skill>` (the companion CLI: `bin/skill-guard` at the repo
+  root — this umbrella or the standalone skill-quake bundle — or anywhere on your
+  PATH); it must PASS (warnings are acceptable, record them).
 - Read the source SKILL.md fully and map its structure: frontmatter fields, sections,
   referenced attachments. Mark likely truncation-sensitive points.
 - Define the task the host will perform with the skill (e.g. "evaluate target X").

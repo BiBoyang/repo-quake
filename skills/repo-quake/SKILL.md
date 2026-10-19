@@ -1,6 +1,6 @@
 ---
 name: repo-quake
-description: "Fault-injection + measurement-discipline methodology for attacking open-source projects / 对开源项目做故障注入与评测以产出真实 bug. Use when the user asks to: 爆破/评测/体检 an open-source project; find real bugs in a CLI/agent/framework via controlled fault injection; design a wound matrix, mock provider, or witness layer for some target; turn eval results into upstream issues/PRs. For SKILL.md-layer integrity experiments specifically, use the sibling skill-quake skill."
+description: "Fault-injection + measurement-discipline methodology for attacking open-source projects / 对开源项目做故障注入与评测以产出真实 bug. Use when the user asks to: 爆破/评测/体检 an open-source project; find real bugs in a CLI/agent/framework via controlled fault injection; design a wound matrix, mock provider, or witness layer for some target; turn eval results into upstream issues/PRs. For SKILL.md-layer integrity experiments specifically, use the bundled skill-quake skill (`skills/skill-quake/`)."
 ---
 
 # repo-quake
@@ -8,7 +8,7 @@ description: "Fault-injection + measurement-discipline methodology for attacking
 Generalized fault-injection methodology for one question: **pick an open-source
 project, find where it silently breaks, and prove it with evidence an upstream
 maintainer cannot dismiss.** Born from a 7-part eval series and three phases of
-live experiments (see `docs/phase*-report.md`). The sibling `skill-quake` skill
+live experiments (see `docs/phase*-report.md`). The bundled `skill-quake` skill
 is the file/skill-layer specialization; this skill is the umbrella method.
 
 ## The one-screen model
@@ -31,7 +31,7 @@ striking conclusion is a suspect, not a finding, until it survives review.
 
 ## Methodology invariants (never violate)
 
-Inherit all eight from skill-quake, generalized:
+Inherit all eight from the skill-quake specialization, generalized:
 
 1. **The experimenter never hosts a run.** Fresh zero-context hosts only.
 2. **Neutral prompts only.** No hint that anything might be wrong. The final
@@ -142,5 +142,5 @@ form. Grading is judgment; that is why it lives here and not in the witness.
   disclosure files, the posting gate
 - `references/disclosure-template.md` — per-phase disclosure file to fill;
   `examples/disclosure-phase3-metacodes.md` is a filled instance
-- Sibling: `skills/skill-quake/` — the file/skill-layer specialization with
+- Bundled specialization: `skills/skill-quake/` — the file/skill-layer specialization with
   ready-made mutation scripts and host adapters

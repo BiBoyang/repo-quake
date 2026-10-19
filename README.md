@@ -4,9 +4,11 @@ Fault-injection methodology and experiment workspace for one question: **pick an
 open-source project, find where it silently breaks, and prove it with evidence an
 upstream maintainer cannot dismiss.**
 
-This repo is the umbrella. It absorbs and supersedes
-[skill-quake](https://github.com/BiBoyang/skill-quake) (which remains available as
-the file/skill-layer specialization, now vendored here under `skills/skill-quake/`).
+This repo is the umbrella and the source of truth. It absorbs and supersedes
+[skill-quake](https://github.com/BiBoyang/skill-quake), which stays online as the
+small self-contained bundle for the file/skill-layer experiment (same guard, same
+skill, same tests — ~316 KB clone vs ~23 MB here). Method and code changes land in
+this repo first; the bundle is refreshed from here when it needs to be.
 
 ## Two layers, deliberately separated
 
@@ -54,8 +56,9 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 - `witness/` — mechanical witnesses and matrix runners used in the phases
 - `targets/` — self-made minimal targets (greeting-agent, pydantic-greeter)
 - `vendor/` — pinned upstreams under test (eval-guide, skill-creator)
-- `docs/` — phase reports, PR drafts; `docs/skill-quake/` — absorbed docs incl.
-  `REPLICATION.md`
+- `docs/` — phase reports, PR drafts; `docs/skill-quake/` — labelled snapshots of
+  the bundle's docs (`REPLICATION.md`, article, upstream issue drafts); the living
+  copies stay in the skill-quake repo
 - `results/` — skill-quake era result summaries; `runs/` — raw per-run artifacts
   (gitignored except summaries)
 - `tests/` — skill-guard fixture suite (`bash tests/run_tests.sh`)
