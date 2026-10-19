@@ -56,7 +56,7 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 - `witness/` — mechanical witnesses and matrix runners used in the phases
 - `targets/` — self-made minimal targets (greeting-agent, pydantic-greeter)
 - `vendor/` — pinned upstreams under test (eval-guide, skill-creator)
-- `docs/` — phase reports, PR drafts; `docs/skill-quake/` — labelled snapshots of
+- `docs/` — phase reports, PR drafts; `docs/skill-quake/` — labeled snapshots of
   the bundle's docs (`REPLICATION.md`, article, upstream issue drafts); the living
   copies stay in the skill-quake repo
 - `results/` — skill-quake era result summaries; `runs/` — raw per-run artifacts

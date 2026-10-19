@@ -18,6 +18,38 @@
 - EXCLUDED counting: any run leaving the denominator is a printed line, never
   silence.
 
+## Fail vs error
+
+Declare the expected failure shape before the run (exit code, terminal event,
+error class). A run that dies in the declared way is a data point — a detector
+firing, or a client correctly rejecting the wound. Any other death is an error:
+quota, TLS, missing binary, installer failure. Errors never enter the
+denominator, never get averaged, and are never rewritten as "0/N detected".
+Print them as their own line and count them.
+
+The test is attribution, not outcome: did the run die before the target had a
+chance to act on the wound (setup, install, transport, quota), or while acting
+on it? Before → error. While → the target's behavior, which is your data —
+including flakiness, which is variance to report, not an error to exclude.
+An install step is part of the experiment, not plumbing around it: "the plugin
+would not install" is a finding with the installer's output tail attached, not
+an accident to apologize for.
+
+## Retries vs trials
+
+Two operations that both look like "run it again":
+
+- **retries** — engineering convenience: rerun a failed attempt, keep the best.
+  Legitimate for a gate whose job is "is this still green", never for a
+  measurement.
+- **trials** — measurement: n independent attempts, every one counted.
+
+A measured rate must have zero retry intervention, and the two are mutually
+exclusive in the same run (trials > 1 ignores retries). If you retried, your
+x/N is not a probability: print the retry count next to the rate, or stop
+calling it a rate. The same rule kills "we ran it five times and it passed
+three" when two of the five were reruns of the same attempt.
+
 ## Independence assumptions
 
 i.i.d. is a modeling assumption, not a fact: rate limits, time-of-day, and
@@ -59,6 +91,15 @@ draft that had adopted a value because the check half preferred it was reverted
 to the pre-registered dev-half pick, and the deviation was disclosed item by
 item. Selection rules age better than results; a logged deviation is data, a
 silent one is contamination.
+
+### A budget that can refuse
+
+A pre-registered budget that cannot stop the run is decoration. Estimate the
+plan before spending (requests × tokens × N, wall-clock × cells), print the
+estimate, and refuse to start when it exceeds the budget. Mid-series overrun
+stops issuing new work and marks the series truncated — it never "adjusts" the
+budget after the fact. A dry run that prints the plan and spends nothing is the
+cheapest way to keep the estimate honest.
 
 ## Grading pitfalls
 

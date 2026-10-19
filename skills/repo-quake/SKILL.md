@@ -104,6 +104,7 @@ Full per-step checklists: `references/playbook.md`.
 | behavior / contrast | with/without control, in-domain smuggling, adversarial pressure | `references/fault-catalog.md` §behavior |
 | concurrency / timing | real re-runs (replay physically erases races), retry history, stderr tails | `references/fault-catalog.md` §concurrency |
 | env / config | "which code did CI actually test", worst-induced-behavior isolation | `references/fault-catalog.md` §env |
+| extension / plugin lifecycle | installer + version pin + mount witness; install failure is data | `references/fault-catalog.md` §extension |
 
 ## Grading
 
@@ -133,7 +134,7 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 ## References
 
 - `references/playbook.md` — the eight steps, expanded with checklists
-- `references/fault-catalog.md` — five attack surfaces: standard faults, witness
+- `references/fault-catalog.md` — six attack surfaces: standard faults, witness
   design, cut-point rules, observed lessons
 - `references/target-catalog.md` — ten high-value trust seams with priors
 - `references/measurement.md` — statistics, controls, judge calibration,

@@ -56,6 +56,15 @@ Lessons burned in:
 - client tolerance hides your dialect errors — the stricter the client, the
   more honest your mock must be
 
+Mock fidelity: calibrate the mock against a captured real stream, and treat the
+capture as the only step allowed to touch the network. Keep provenance next to
+the fixture — endpoint, protocol dialect, capture date, request parameters —
+because a mock that drifts from the real dialect hides exactly the errors the
+experiment is meant to find. Delivery proof belongs in the report per request
+(port, fault id, event count, bytes, whether the terminal witness arrived, how
+the stream was closed); an empty delivery array is itself a signal — the client
+never reached the mock.
+
 Typical findings to hunt: detection exists but is never translated to a
 user-visible sentence; deterministic faults share one retry policy with
 transient faults; transcripts keep no tombstone (failed attempt and retry
@@ -117,3 +126,26 @@ starts, 23 crashes pre-fix, 0 post-fix, then 24-way × 4 rounds as insurance).
   a real crontab on your machine.
 - Pin versions in writing; isolate HOME with pre-seeded one-time dialogs;
   beware update prompts that replace the pinned binary mid-matrix.
+
+## §extension — plugin / extension lifecycle
+
+For targets that install third-party code rather than only running their own:
+the package manager, the mount step, and the version resolver are all seams.
+
+| seam | wound | witness |
+|---|---|---|
+| installer | package not installable, build hook blocked, lifecycle script fails | installer exit code + output tail, recorded as a case-level error (not a crashed run) |
+| version resolution | unpinned spec resolves to latest; an upstream publish changes the target mid-series | resolved version/hash in every cell's meta; pinned spec in every case |
+| post-install build | `prepare` / `postinstall` suppressed by the package manager's policy → installed but broken | installed tree diffed against the package manifest |
+| mount / enable | plugin present but never loaded, or loaded after the step that needed it | load log or config dump — never an exit code |
+
+Rules that keep this surface honest:
+
+- An install failure is a finding, not an accident: keep the spec, the command,
+  and the installer's output tail attached to that cell.
+- Declaring a plugin for mounting authorizes arbitrary code execution on the
+  machine running the experiment. Say so in the report, and only do it for
+  source you would run by hand. The isolation level is sized by that sentence,
+  not by the task's intent.
+- A version bump is not a re-run, it is a new experiment: re-baseline by hand
+  and keep the old numbers labeled with their version.

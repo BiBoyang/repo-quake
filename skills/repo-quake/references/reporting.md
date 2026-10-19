@@ -52,6 +52,55 @@ manifest (target version, fixtures, prompts, calibration), the deviation log,
 the contamination register. The disclosure is what lets a reader trust the
 report without rerunning it.
 
+## Freezing the behavior after you file
+
+The issue is not the end of the loop; the case is. Once the report is out, turn
+the minimal repro into a pinned regression case that runs on every new target
+version, and freeze the CURRENT behavior in it — including the defect level you
+just described. Header the case with the level it pins: `F4 length truncation:
+detected but no user-facing sentence — L1 status quo, not an endorsement`.
+
+Pinning the defect rather than the fix makes the case red in both directions —
+but only if you pin both halves. The detection assertion catches regression
+(L1 → L0: the exit code and terminal event stop matching). For improvement
+(L1 → L2: a user-visible notice appears) you need a negative assertion on what
+the fix would add, e.g. `output_not_contains: <the notice an L2 fix prints>`.
+Without that half the case catches regression only, and on the day upstream
+fixes it the gate stays green while the pinned defect quietly becomes stale
+documentation. A green run then means "same as the version we investigated",
+never "upstream approves". Behavior fixation is not behavior endorsement — write
+that inside the case, because the next reader reads green as praise.
+
+Pin every spec in the case (`@x.y.z` or `#sha`). An unpinned case measures
+"latest", and the red it produces when upstream publishes is your own fault.
+After a version bump, re-run the whole pack once and re-baseline by hand; a gate
+that re-baselines itself measures nothing.
+
+## When a finding becomes a gate
+
+A finding has two lives: one report, then maybe a gate that runs forever. The
+second life has its own failure mode — alarms stop being read long before they
+stop being printed.
+
+- Warn only on change versus a known baseline, and only when it increases. A
+  signal that fires every run is not a signal; it is wallpaper, and it will
+  still be wallpaper on the day it matters.
+- Never put a known-flaky case into the baseline. It hides the next flaky one;
+  keep it visible as its own informational line instead.
+- Treat a target version change as information, not a warning: the first full
+  run after an upgrade is exactly when you want the eye, and a standing yellow
+  for "version differs" spends it before you get there.
+- Aggregate identical error signatures (error code + top application frame).
+  The same signature twice across cells is not two case failures; it is one
+  shared-state accident — concurrency, disk, a healing routine. Route it to the
+  target, not to the case.
+- A case that only passes on retry is evidence about the target's reliability
+  even when its assertions are green. Report it; do not let the retry wash it.
+
+Pattern credit: this section, the fail-vs-error split, the retries/trials
+distinction and the refusable budget were generalized from `dsh-eval-harness`, a
+DSH plugin regression gate that had to encode the same calls in code.
+
 ## Posting gate
 
 No public artifact (issue, PR, blog post, repo push, disclosure-file example)
