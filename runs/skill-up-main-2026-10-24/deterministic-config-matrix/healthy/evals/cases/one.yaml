@@ -1,0 +1,12 @@
+id: one
+title: one healthy case
+input:
+  prompt: Return one.
+expect:
+  must_contain:
+    - "1"
+judge:
+  type: rule_based
+  success:
+    - output_contains:
+        all: ["1"]

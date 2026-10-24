@@ -1,0 +1,353 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a16e71-66d8-7000-b63a-f87945e42583",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "error",
+    "exitCode": 2,
+    "startedAt": "2026-10-24T15:04:48.436Z",
+    "finishedAt": "2026-10-24T15:05:03.612Z",
+    "project": {
+      "id": "e2e-replay-pilot",
+      "configDigest": "6ffaad4acf27963f531e04b9c3a9c53676e7eb6bc77814e23ae5dcafca0e1cc9"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "05bfcdbcac0fcd81cbc5c190d90ea69c48417e36",
+      "branch": "master",
+      "dirty": true
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "e3c536536f98aef14b95a0057ef6a13551afc77111b36da7d445ae997a3926e9",
+        "testId": "tests/failure-cache.e2e.ts::failed%20later%20assertion%20does%20not%20poison%20the%20replay%20cache",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "failed later assertion does not poison the replay cache"
+        ],
+        "file": "tests/failure-cache.e2e.ts",
+        "source": {
+          "file": "tests/failure-cache.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      },
+      {
+        "id": "7760434dd681a3e89042366aa245422a43e1abb7180237a480563e0d1b9f93a8",
+        "testId": "tests/replay.e2e.ts::live%20recording%2C%20unchanged%20replay%2C%20and%20changed-control%20handoff",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "live recording, unchanged replay, and changed-control handoff"
+        ],
+        "file": "tests/replay.e2e.ts",
+        "source": {
+          "file": "tests/replay.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "failed",
+        "attempts": [
+          {
+            "id": "01a16e71-6a13-7948-90df-c5ed4ef73b8d",
+            "index": 0,
+            "status": "failed",
+            "startedAt": "2026-10-24T15:04:48.915Z",
+            "durationMs": 14679,
+            "artifacts": [
+              {
+                "id": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:artifact:0",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "replay-live-recording-unchanged-replay-7760434dd681a3e8/attempt-1/screen-at-failure.txt",
+                "size": 115,
+                "sha256": "13c586889d0ef8647083ce8299b93061c82dc1c34fd8a4b43fca61b97f01e17d"
+              },
+              {
+                "id": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:artifact:1",
+                "kind": "screenshot",
+                "mediaType": "image/png",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "replay-live-recording-unchanged-replay-7760434dd681a3e8/attempt-1/screenshots/001-failure.png",
+                "size": 9319,
+                "sha256": "36bd764741b3980ad4536068d6478504879305554df710ffdb60a762470e7a56"
+              }
+            ],
+            "error": {
+              "category": "configuration",
+              "code": "REPLAY_STALE",
+              "message": "the recording of this step no longer replays (target-not-found), and cache.strict hands no step to the agent; re-record it with a read-write run without --strict-cache; the run writes the new entry under /Users/boyang/repo-quake/runs/e2e-adversarial-2026-10-24/cache-B",
+              "retryable": false,
+              "phase": "body",
+              "source": {
+                "file": "tests/replay.e2e.ts",
+                "line": 6,
+                "column": 3
+              }
+            },
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "failure": {
+              "url": "http://127.0.0.1:4173/",
+              "viewport": {
+                "width": 1280,
+                "height": 720
+              },
+              "nodes": 5,
+              "screen": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:artifact:0",
+              "screenshot": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:artifact:1"
+            },
+            "steps": [
+              {
+                "id": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-24T15:04:48.974Z",
+                "durationMs": 237,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 5,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/replay.e2e.ts",
+                  "line": 5,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a16e71-6a13-7948-90df-c5ed4ef73b8d:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "upgrade the workspace to Pro",
+                "status": "failed",
+                "startedAt": "2026-10-24T15:04:49.212Z",
+                "durationMs": 14292,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:49.216Z",
+                    "durationMs": 119,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:49.437Z",
+                    "durationMs": 13,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:49.751Z",
+                    "durationMs": 17,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:50.369Z",
+                    "durationMs": 25,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:51.394Z",
+                    "durationMs": 13,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:54.409Z",
+                    "durationMs": 21,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:04:57.432Z",
+                    "durationMs": 18,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:05:00.453Z",
+                    "durationMs": 26,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:05:03.480Z",
+                    "durationMs": 23,
+                    "status": "passed",
+                    "bytes": 114,
+                    "count": 5
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 0,
+                  "observationBytes": 114,
+                  "contextBytes": 0,
+                  "ledgerBytes": 0
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "target-not-found",
+                  "replayedActions": 0,
+                  "totalActions": 1,
+                  "entry": "3c9cc78e1c7eb08360b971adf4ffce7ddc52e5ec96bd5bf6825e6d68392b8d50",
+                  "detail": "at action 1 of 1, tap button \"Upgrade Plan\""
+                },
+                "observationRevision": "b10",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 5,
+                  "since": 0,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/replay.e2e.ts",
+                  "line": 6,
+                  "column": 15
+                },
+                "error": {
+                  "category": "configuration",
+                  "code": "REPLAY_STALE",
+                  "message": "the recording of this step no longer replays (target-not-found), and cache.strict hands no step to the agent; re-record it with a read-write run without --strict-cache; the run writes the new entry under /Users/boyang/repo-quake/runs/e2e-adversarial-2026-10-24/cache-B",
+                  "retryable": false,
+                  "source": {
+                    "file": "tests/replay.e2e.ts",
+                    "line": 6,
+                    "column": 3
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 2,
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 2,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 0,
+      "maxObservationBytes": 114,
+      "artifactBytes": 9434,
+      "downloads": 0,
+      "events": 9,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 0
+    }
+  }
+}

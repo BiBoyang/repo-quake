@@ -1,0 +1,11 @@
+{
+  "level": "L2",
+  "valid": true,
+  "detected": true,
+  "reported": true,
+  "contained": true,
+  "recovered": true,
+  "reverified": true,
+  "drift": "Used references/eval-yaml.md as an alternative source and produced a valid config. Differences from C0 config details are not attributable to the fault because model variance remains.",
+  "notes": "Explicitly identified the missing template before guessing that this might be a fault-injection experiment. Detection is supported by direct file evidence; recovery behavior may be influenced by evaluation awareness. contained/recovered reflect the completed fallback; reverified is limited to the pinned CLI schema/config validation, not semantic quality."
+}

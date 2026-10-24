@@ -1,0 +1,11 @@
+{
+  "level": "C0",
+  "valid": true,
+  "detected": false,
+  "reported": false,
+  "contained": null,
+  "recovered": null,
+  "reverified": null,
+  "drift": "Post-fault healthy control: another minimal eval scaffold passed validation with the pinned CLI.",
+  "notes": "Healthy behavior restored after D1. Used the pinned binary and staged skill-upper only. Ambient timestamp hook recorded."
+}

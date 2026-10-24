@@ -1,0 +1,2 @@
+level=WARNING msg="SKILL.md not found within 10 levels above /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/deterministic-config-matrix/missing-case/evals; falling back to /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/deterministic-config-matrix/missing-case"
+Error: failed to load config: failed to read case file evals/cases/one.yaml: open /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/deterministic-config-matrix/missing-case/evals/cases/one.yaml: no such file or directory

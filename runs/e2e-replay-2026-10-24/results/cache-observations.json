@@ -1,0 +1,44 @@
+{
+  "note": "Run 1 and run 2 fields were transcribed from immediate report inspection. Run 3 additionally has the full report preserved as run-3.report.json.",
+  "runs": [
+    {
+      "run": 1,
+      "status": "passed",
+      "cache": {
+        "mode": "missed",
+        "reason": "no-entry",
+        "replayedActions": 0,
+        "totalActions": 0,
+        "entry": "3c9cc78e1c7eb08360b971adf4ffce7ddc52e5ec96bd5bf6825e6d68392b8d50",
+        "write": "saved"
+      },
+      "metrics": {"modelCalls": 0}
+    },
+    {
+      "run": 2,
+      "status": "passed",
+      "cache": {
+        "mode": "self-finalized",
+        "replayedActions": 1,
+        "totalActions": 1,
+        "entry": "3c9cc78e1c7eb08360b971adf4ffce7ddc52e5ec96bd5bf6825e6d68392b8d50",
+        "write": "kept"
+      },
+      "metrics": {"modelCalls": 0, "actionSteps": 1, "observationBytes": 120, "contextBytes": 0, "ledgerBytes": 0}
+    },
+    {
+      "run": 3,
+      "status": "passed",
+      "cache": {
+        "mode": "missed",
+        "reason": "target-not-found",
+        "replayedActions": 0,
+        "totalActions": 1,
+        "entry": "3c9cc78e1c7eb08360b971adf4ffce7ddc52e5ec96bd5bf6825e6d68392b8d50",
+        "detail": "at action 1 of 1, tap button \"Upgrade Plan\"",
+        "write": "saved"
+      },
+      "metrics": {"modelCalls": 0, "actionSteps": 1, "observationBytes": 123, "contextBytes": 0, "ledgerBytes": 23}
+    }
+  ]
+}

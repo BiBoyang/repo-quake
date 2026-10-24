@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "host": "kimi",
+  "fault": "delete-ref:references/tone-guide.md",
+  "cell": "kimi+delete-ref-references-tone-guide.md",
+  "run": 1,
+  "stage": "d7a3b3cb3418",
+  "time": "2026-10-24T12:41:53.203885Z",
+  "target_version": "repo-quake@05bfcdbcac0fcd81cbc5c190d90ea69c48417e36",
+  "host_version": "2.1.1",
+  "model": "kimi-for-coding",
+  "effort": "low",
+  "prompt_sha256": "936bebac66f214395c4e9b77a77619e41e47ee4327392bbf8a22247c1ffc2fdb",
+  "fixture_sha256": "a592f3254f3ad3af3fd1b0005dcf9e9337a17572f22971785ab9b4d13dddfd05",
+  "witness": {
+    "verdict": "FAIL",
+    "output_sha256": "0950f4af6fb0631aa8488fd398b68d2eeb428d852ebbdea62157bbef96964ab7",
+    "checker_sha256": "0bc4628a096f38559eb189fd1fe16421f5479e940220c2b13116880a9cefbe08"
+  },
+  "missing": []
+}

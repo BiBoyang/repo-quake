@@ -1,0 +1,10 @@
+id: whitespace-turn
+title: whitespace turn
+input:
+  turns:
+    - role: user
+      content: "   "
+judge:
+  type: rule_based
+  success:
+    - exit_code: 0

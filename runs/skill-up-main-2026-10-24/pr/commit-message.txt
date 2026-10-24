@@ -1,0 +1,1 @@
+fix(config): reject whitespace-only prompt and turn content

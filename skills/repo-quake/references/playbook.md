@@ -1,5 +1,13 @@
 # The eight-step playbook (expanded)
 
+## Step 0 — Freeze the experiment card
+
+Use `examples/experiment-card.json` and `scripts/validate_card.py` to freeze the
+claim, task, host/model/effort, arms, controls, witness, rubric, invalid rules,
+budget, isolation and ethics before the first paid run. The card's planned run count
+must fit its budget. Store the validated card beside the results and treat later
+changes as disclosed deviations or a new experiment.
+
 ## Step 1 — Select the target
 
 Read source before writing any fault. You are looking for **trust seams** —
@@ -96,12 +104,16 @@ In order, all before the first fault cell:
 - Keep witness artifacts, dispatch artifacts, and the host-visible staging tree
   in separate roots; hash-name everything the host can see.
 - Per-cell meta carries: target version, host version, model, effort level,
-  prompt sha256, fixture sha256, witness verdict, timestamp. A cell you cannot
-  re-key from its meta is a cell you cannot defend.
+  prompt sha256, fixture sha256, witness verdict, timestamp. Hashes are captured
+  before dispatch so they describe the bytes actually delivered, not any host-side
+  edits. A cell you cannot re-key from its meta is a cell you cannot defend.
 
 ## Step 7 — Grade and appeal
 
 - L0–L3 per run; drift vs baseline; perceived-but-unreported in notes.
+- Invalid and ungraded runs have separate counts and no metric denominator. New
+  runs may record reported/contained/recovered/reverified as independent optional
+  booleans; each gets its own denominator and unknown count, never backfilled.
 - Grade from primary artifacts (transcript, deliverable), not from the host's
   self-report alone.
 - **Appeal step, mandatory**: pick the single most striking conclusion and

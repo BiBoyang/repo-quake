@@ -1,0 +1,11 @@
+{
+  "level": "C0",
+  "valid": true,
+  "detected": false,
+  "reported": false,
+  "contained": null,
+  "recovered": null,
+  "reverified": null,
+  "drift": "Healthy baseline; no integrity alarm and no unexpected format drift.",
+  "notes": "Read SKILL.md and tone-guide.md; card.md created. No pristine-source reference. Ambient UserPromptSubmit timestamp hook recorded."
+}

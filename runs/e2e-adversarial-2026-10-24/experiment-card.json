@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-cache-adversarial-v1",
+  "claim": "Healthy recording/replay works; a failed later assertion writes no entry; strict-cache rejects stale replay without executor or writes; an end-state mismatch cannot self-finalize stale and is repaired by the executor.",
+  "target": {
+    "name": "tester-army/e2e replay cache adversarial fixtures",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; Chrome/156.0.8078.47 via CDP",
+    "source_sha256": "c3bebf5b7faf2f86cba815fc3fbe7b0854306f9c6785d68381286c568a3df42c"
+  },
+  "task": {
+    "prompt_sha256": "a20f569eff9ae02d1b2e783bc78839d8921eaf75143a8cd8ccf6a8c56b2cce4a",
+    "path_reachability": "Each arm has a passing/failing act and a later assertion or strict-cache decision. The executor log and cache entry hashes distinguish live execution, replay, eviction and re-recording."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "H",
+      "fault": "healthy V1 record and unchanged replay",
+      "role": "negative_control"
+    },
+    {
+      "id": "A",
+      "fault": "later assertion fails before recording can be confirmed",
+      "role": "treatment"
+    },
+    {
+      "id": "B",
+      "fault": "strict-cache meets changed control",
+      "role": "treatment"
+    },
+    {
+      "id": "C",
+      "fault": "same action now leads to Enterprise instead of Pro",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "H"
+  },
+  "witness": {
+    "delivery": "Each arm starts from a controlled active page variant. Executor invocations are independently appended only by runStep. report.json supplies cache mode/reason and the final assertion. Cache entry bytes and counts are compared before and after strict/failure runs.",
+    "checker": "Executor invocation counter, report.json, cache entry hash/count and active variant hashes.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM; this is a harness/cache audit, not model robustness.",
+      "Experiments use npm releases, not main.",
+      "One local Chrome/CDP environment and one Vite-like static app stand in for all supported targets.",
+      "A negative result in these fixtures would not prove absence of defects in other replay paths."
+    ]
+  },
+  "grading": {
+    "rubric": "Preregistered cache and side-effect expectations per arm; environment/setup failures are INVALID, product assertion failures are data.",
+    "primary_metric": "cache_mode_and_executor_side_effects"
+  },
+  "sampling": {
+    "runs_per_cell": 2
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or dependency unavailable before the product verdict.",
+    "Config or executor setup failure before the first action.",
+    "Active variant or cache-entry bytes differ from the preregistered setup before the treatment begins.",
+    "Missing report or executor log needed to adjudicate the claim."
+  ],
+  "budget": {
+    "max_runs": 8
+  },
+  "isolation": {
+    "mode": "Local static app, temporary CDP Chrome, one worker, isolated cache directories; telemetry disabled; no real model, mobile, cloud browser or GitHub reporter.",
+    "pristine_original_unreachable": false,
+    "contamination": "Fixture sources remain on disk but the deterministic executor only observes the browser and never reads them. Cache directories are arm-specific and never shared between arms."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Eight local browser runs and temporary files under runs/e2e-adversarial-2026-10-24; no external model calls or third-party writes."
+  }
+}

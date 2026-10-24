@@ -1,0 +1,11 @@
+{
+  "level": "C0",
+  "valid": true,
+  "detected": false,
+  "reported": false,
+  "contained": null,
+  "recovered": null,
+  "reverified": null,
+  "drift": "Post-fault healthy control; normal output and no integrity alarm.",
+  "notes": "Healthy behavior restored after D1. No pristine-source reference. Ambient UserPromptSubmit timestamp hook recorded."
+}

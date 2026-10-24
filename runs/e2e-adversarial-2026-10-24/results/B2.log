@@ -1,0 +1,48 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-adversarial-2026-10-24/app
+      run 01a16e71-66d8-7000-b63a-f87945e42583 · targets: web
+
+   × live recording, unchanged replay, and changed-control handoff > agent.act "upgrade the workspace to Pro" 14.29s failed
+ ❯ |web| tests/replay.e2e.ts (1 test | 1 failed) 14.68s
+   × live recording, unchanged replay, and changed-control handoff 14.68s
+     → the recording of this step no longer replays (target-not-found), and cac…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |web| tests/replay.e2e.ts > live recording, unchanged replay, and changed-control handoff
+REPLAY_STALE: the recording of this step no longer replays (target-not-found), and cache.strict hands no step to the agent; re-record it with a read-write run without --strict-cache; the run writes the new entry under /Users/boyang/repo-quake/runs/e2e-adversarial-2026-10-24/cache-B
+ ❯ tests/replay.e2e.ts:6:3
+      4| test('live recording, unchanged replay, and changed-control handoff',…
+      5|   await app.open('/');
+      6|   await agent.act('upgrade the workspace to Pro');
+       |   ^
+      7|   await expect(screen.getByRole('status')).toContainText('Pro');
+      8| });
+ ❯ at http://127.0.0.1:4173/
+ ❯ trace .e2e/results/replay-live-recording-unchanged-replay-7760434dd681a3e8/trace.md
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 0 passed (1)
+      Tests  1 failed | 0 passed (1)
+      Cache  1 missed
+   Start at  23:04:48
+   Duration  15.18s
+     Traces  .e2e/results/ (1 page, trace.md in each test's directory)
+
+[e2e debug] phase timings (wall 15.5s)
+  phase           count  total    avg    max
+  scheduler           1  15.2s  15.2s  15.2s
+  test.body           1  14.5s  14.5s  14.5s
+  config.load         1  304ms  304ms  304ms
+  agent.observe       9  276ms   31ms  119ms
+  engine.init         1   49ms   49ms   49ms
+  session.launch      1    8ms    8ms    8ms
+  collect             1    7ms    7ms    7ms
+  session.close       1    7ms    7ms    7ms
+  engine.prepare      1    1ms    1ms    1ms
+[e2e debug] agent steps (execution order)
+  step                                      total  model  observe  action  calls  tokens in/out  cached  cost
+  agent.act "upgrade the workspace to Pro"  14.3s    0ms    275ms     0ms      0            0/0       -     -
+[e2e debug] report .e2e/report.json

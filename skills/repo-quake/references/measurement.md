@@ -101,6 +101,14 @@ stops issuing new work and marks the series truncated — it never "adjusts" the
 budget after the fact. A dry run that prints the plan and spends nothing is the
 cheapest way to keep the estimate honest.
 
+## Independent outcome fields
+
+Detection, user-facing reporting, containment, recovery and reverification answer
+different questions. New runs may record them as optional booleans in `grade.json`.
+Each metric has its own denominator and unknown count; missing fields are not false,
+and old L-levels are not mined for retroactive meanings. Invalid and ungraded runs
+never enter any of these denominators.
+
 ## Grading pitfalls
 
 - Grade from primary artifacts, not self-report.

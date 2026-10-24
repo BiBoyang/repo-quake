@@ -1,0 +1,8 @@
+id: whitespace
+title: whitespace
+input:
+  prompt: "   "
+judge:
+  type: rule_based
+  success:
+    - exit_code: 0

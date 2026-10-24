@@ -1,0 +1,44 @@
+# Working directory
+cd /tmp/skill-up-main-review.8dPupF/repo
+
+# Context and scope checks
+pwd && git rev-parse --show-toplevel && git remote -v && git branch --show-current
+git status --short
+git diff --check
+
+# Create the upstream issue first and capture its number
+ISSUE_URL=$(gh issue create --repo alibaba/skill-up \
+  --title "validate: whitespace-only prompt and turn content are accepted" \
+  --body-file /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/pr/issue-body.md)
+ISSUE_NUMBER=${ISSUE_URL##*/}
+
+# Add only the reviewed files
+git add CHANGELOG.md internal/config/validator.go internal/config/validator_test.go
+git diff --staged --name-only
+git diff --staged --check
+
+# Sensitive-file and staged-scope gates
+if git diff --staged --name-only | rg '(^|/)(\.env|.*\.pem|.*\.key|id_rsa|node_modules/)' >/dev/null; then
+  echo 'Sensitive or generated file staged; stop for review' >&2
+  exit 1
+fi
+if git diff --staged | rg -n 'api key|token|private key|password|secret' >/dev/null; then
+  echo 'Potential credential material in staged diff; stop for review' >&2
+  exit 1
+fi
+
+# Commit on the existing topic branch
+git commit -m "fix(config): reject whitespace-only prompt and turn content"
+
+# Push to the user's existing fork, not to Alibaba upstream
+git remote add fork https://github.com/BiBoyang/skill-up.git 2>/dev/null || git remote set-url fork https://github.com/BiBoyang/skill-up.git
+GIT_TERMINAL_PROMPT=0 git push -u fork codex/fix-whitespace-input-validation
+
+export ISSUE_NUMBER
+perl -pi -e 's/#<issue-number>/$ENV{ISSUE_NUMBER}/g' /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/pr/pr-body.md
+
+gh pr create --repo alibaba/skill-up \
+  --base main \
+  --head BiBoyang:codex/fix-whitespace-input-validation \
+  --title "fix(config): reject whitespace-only prompt and turn content" \
+  --body-file /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/pr/pr-body.md

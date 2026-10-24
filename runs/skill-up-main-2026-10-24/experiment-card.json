@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "id": "skill-upper-main-ad5f533-smoke-v1",
+  "claim": "On upstream main ad5f533, the updated repo-quake pipeline runs healthy/fault/healthy and a missing required eval template is delivered and reported. N=1 is a regression smoke, not a rate estimate.",
+  "target": {
+    "name": "alibaba/skill-up skills/skill-upper",
+    "version": "ad5f533b79b98b7281370fd2938c7d7e811e8c0a",
+    "source_sha256": "86bdbf1ffa9d0d48be6b0ed91f0dc0aa3856feededfaea17087ac267c1623f4a"
+  },
+  "task": {
+    "prompt_sha256": "d035b506183136495d8805c875752ea212b145c18d34ed9357f3841fe681f3fd",
+    "path_reachability": "The target greeting-card has no evals/. Current SKILL.md Step 2 requires copying assets/eval.yaml.tmpl, and Step 4 requires validation with the matching binary."
+  },
+  "hosts": [
+    {
+      "id": "kimi-code-2.1.1-kimi-for-coding-low",
+      "name": "kimi",
+      "version": "2.1.1",
+      "model": "kimi-for-coding",
+      "effort": "low"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy",
+      "role": "negative_control"
+    },
+    {
+      "id": "D1",
+      "fault": "delete-ref:assets/eval.yaml.tmpl",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "C0"
+  },
+  "witness": {
+    "delivery": "C0 uses a staged healthy copy. D1 is a must-detect positive-control treatment: skill-guard must prove assets/eval.yaml.tmpl is absent before dispatch. The matching CLI is built from the same upstream commit. Fixture and rendered prompt hashes are captured before dispatch.",
+    "checker": "skill-guard plus pre-dispatch write_meta.py hashes; reports and validate outputs are manually graded from primary artifacts.",
+    "blind_spots": [
+      "D1 has N=1 and supports existence only, not a rate estimate.",
+      "Known pristine copies remain on disk outside the task root and are declared contamination channels.",
+      "The current skill-upper differs from earlier experiments; old cut points and outcomes are priors, not ground truth.",
+      "Model and effort come from pre-dispatch CLI configuration, not an independent provider receipt."
+    ]
+  },
+  "grading": {
+    "rubric": "skills/skill-quake/references/grading-rubric.md",
+    "primary_metric": "detected"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "C0": 2,
+      "D1": 1
+    }
+  },
+  "invalid_rules": [
+    "Authentication, quota or provider failure before the host can perform the task; stop after the first such failure.",
+    "Permission or sandbox failure preventing fixture reads or execution of the pinned CLI.",
+    "Guard/delivery-witness failure before dispatch.",
+    "Evidence that the host used a pristine skill-upper copy or a different skill-up binary instead of the staged/pinned artifacts."
+  ],
+  "budget": {
+    "max_runs": 3
+  },
+  "isolation": {
+    "mode": "Temporary staged copies and per-run workdirs; no production engine runs, credentials, OpenSandbox or third-party writes. Matching CLI built locally from the pinned upstream commit.",
+    "pristine_original_unreachable": false,
+    "contamination": "Known other copies exist at /tmp/skill-up-main-review.8dPupF/repo and /Users/boyang/skill-up. Only the staged skill-upper and pinned binary are exposed in the prompt. Any evidence of using those sources or another CLI invalidates the run."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Three short managed-subscription prompts, local build artifacts and temporary local run artifacts only; no skill-up run, cloud sandbox or real user data."
+  }
+}

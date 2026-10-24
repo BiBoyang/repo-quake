@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-replay-v1-v2-smoke-v1",
+  "claim": "V1 first run calls the deterministic executor once and records; unchanged V1 second run self-finalizes from replay with no new executor call; V2 changed button name forces a handoff and a second executor call, then passes.",
+  "target": {
+    "name": "tester-army/e2e replay cache with local web fixture",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; Chrome/156.0.8078.47 via CDP",
+    "source_sha256": "522044680e3006263367a4f6b4a4b76489631319a678449868ab68be2ab3e422"
+  },
+  "task": {
+    "prompt_sha256": "f1b7b66512b532fbc5fa6b5f45acd0a2f32c9950535d54244eb75481cb4eb1e3",
+    "path_reachability": "The test clicks Upgrade Plan then asserts role=status contains Pro, which is required for a passing act to be recorded. V2 changes only the button name to force replay divergence."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "V1",
+      "fault": "unchanged healthy app",
+      "role": "negative_control"
+    },
+    {
+      "id": "V2",
+      "fault": "button name changed from Upgrade Plan to Upgrade Plan v2",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "V1"
+  },
+  "witness": {
+    "delivery": "The app serves page.html with cache-control:no-store. Before each run the active variant hash is recorded. An independent executor-calls.jsonl is appended only when runStep is invoked; report.json supplies ActResult.modelCalls and cache mode/reason.",
+    "checker": "Executor invocation counter plus e2e report.json plus pre-run variant hashes and the pinned package versions.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM; this pilot tests the replay/cache harness, not model intelligence.",
+      "One changed button name covers one divergence class, not all stale-cache forms.",
+      "The pilot uses npm releases, not the previously inspected main branch.",
+      "A local Chrome/CDP session and local static server are environmental dependencies, not product behavior."
+    ]
+  },
+  "grading": {
+    "rubric": "Executor-call count and cache.mode/reason must agree with the preregistered claim; environment failures are INVALID.",
+    "primary_metric": "executor_invocations_and_cache_mode"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "V1": 2,
+      "V2": 1
+    }
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or required dependency unavailable before a product verdict can be reached.",
+    "Config or executor setup failure before the first action.",
+    "Active variant hash differs from the preregistered variant for that run.",
+    "Missing or unreadable report.json or executor-calls.jsonl after a completed run."
+  ],
+  "budget": {
+    "max_runs": 3
+  },
+  "isolation": {
+    "mode": "Local static app, temporary CDP Chrome profile, one browser and one worker; telemetry disabled; no production, mobile, cloud browser, GitHub reporter or real model.",
+    "pristine_original_unreachable": false,
+    "contamination": "Original fixture files remain on disk, but the executor is deterministic code that only observes the browser and never reads them. Only the operator changes the active variant between runs."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Three local browser runs and temporary files under runs/e2e-replay-2026-10-24; no external model calls or third-party writes."
+  }
+}

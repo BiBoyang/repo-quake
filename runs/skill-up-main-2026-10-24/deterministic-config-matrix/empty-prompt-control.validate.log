@@ -1,0 +1,3 @@
+level=WARNING msg="SKILL.md not found within 10 levels above /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/deterministic-config-matrix/empty-prompt-control/evals; falling back to /Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/deterministic-config-matrix/empty-prompt-control"
+Error: validation failed: case empty: validation errors:
+  - input.prompt or input.turns is required

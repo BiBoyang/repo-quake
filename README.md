@@ -61,8 +61,10 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
   copies stay in the skill-quake repo
 - `results/` — skill-quake era result summaries; `runs/` — raw per-run artifacts
   (gitignored except summaries)
-- `tests/` — skill-guard fixture suite (`bash tests/run_tests.sh`)
-- `examples/` — sample targets and prompts
+- `tests/` — guard fixtures plus collector, metadata, card and fake-host matrix tests (`bash tests/run_tests.sh`)
+- `examples/` — sample targets, prompts and `experiment-card.json`
+- `skills/repo-quake/scripts/validate_card.py` — stdlib experiment-card validator
+- `skills/skill-quake/scripts/write_meta.py` — per-run provenance and content-hash writer
 
 ## License
 

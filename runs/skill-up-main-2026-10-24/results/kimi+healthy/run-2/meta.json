@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "host": "kimi",
+  "fault": "healthy",
+  "cell": "kimi+healthy",
+  "run": 2,
+  "stage": "7dbea9daf675",
+  "time": "2026-10-24T14:07:44.677897Z",
+  "target_version": "ad5f533b79b98b7281370fd2938c7d7e811e8c0a",
+  "host_version": "2.1.1",
+  "model": "kimi-for-coding",
+  "effort": "low",
+  "prompt_sha256": "01bd691cd890d42214c7b32840bd5450c24ae9e71ec4ac2463e4d18b7d70d00e",
+  "fixture_sha256": "86bdbf1ffa9d0d48be6b0ed91f0dc0aa3856feededfaea17087ac267c1623f4a",
+  "witness": {
+    "verdict": "PASS",
+    "output_sha256": "e2ef690d85446e2c4b5a9cfc2c3a19c6dcccf80b00839b46317e616a03047503",
+    "checker_sha256": "0bc4628a096f38559eb189fd1fe16421f5479e940220c2b13116880a9cefbe08"
+  },
+  "missing": []
+}

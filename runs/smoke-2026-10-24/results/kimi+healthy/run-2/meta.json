@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "host": "kimi",
+  "fault": "healthy",
+  "cell": "kimi+healthy",
+  "run": 2,
+  "stage": "0713129208fd",
+  "time": "2026-10-24T12:42:52.151761Z",
+  "target_version": "repo-quake@05bfcdbcac0fcd81cbc5c190d90ea69c48417e36",
+  "host_version": "2.1.1",
+  "model": "kimi-for-coding",
+  "effort": "low",
+  "prompt_sha256": "ea81b21052e8d326ec51197c6336fd4391e4754e70343e502b5da9c8b636069b",
+  "fixture_sha256": "f1815f3c9317387c7fbd1eefcdc7feca56be4d8febb5e54c91beb65ca513730a",
+  "witness": {
+    "verdict": "PASS",
+    "output_sha256": "f1a1a449dd0184543757448d040bd0b118a7525bdf955a6edf8bee47f353f49a",
+    "checker_sha256": "0bc4628a096f38559eb189fd1fe16421f5479e940220c2b13116880a9cefbe08"
+  },
+  "missing": []
+}

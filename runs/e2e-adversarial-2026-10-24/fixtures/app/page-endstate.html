@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Replay Pilot</title></head>
+<body>
+  <main>
+    <h1>Billing</h1>
+    <div id="status" role="status">Idle</div>
+    <button id="upgrade" type="button">Upgrade Plan</button>
+    <button id="repair" type="button">Fix to Pro</button>
+  </main>
+  <script>
+    document.querySelector('#upgrade').addEventListener('click', () => {
+      document.querySelector('#status').textContent = 'Enterprise';
+    });
+    document.querySelector('#repair').addEventListener('click', () => {
+      document.querySelector('#status').textContent = 'Pro';
+    });
+  </script>
+</body>
+</html>

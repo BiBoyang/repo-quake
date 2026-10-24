@@ -1,0 +1,8 @@
+{
+  "path": "/Users/boyang/repo-quake/runs/skill-up-main-2026-10-24/bin/skill-up",
+  "sha256": "507efbd23682164ae2902804120bb150f02349c98e0116460e3714194ae1ea4a",
+  "upstream_commit": "ad5f533b79b98b7281370fd2938c7d7e811e8c0a",
+  "build": "GOTOOLCHAIN=go1.26.6 GOPROXY=https://goproxy.cn,direct go build -o <pilot>/bin/skill-up ./cmd/skill-up",
+  "reported_version": "dev",
+  "note": "The commit and binary hash identify the build; --version is dev because this was a fast local build without version injection."
+}

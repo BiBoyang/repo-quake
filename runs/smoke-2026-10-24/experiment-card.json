@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "id": "greeting-card-smoke-2026-10-24-v1",
+  "claim": "Three real-host smoke runs validate the healthy/fault/healthy pipeline and a must-detect missing-reference report; no detection-rate claim is made.",
+  "target": {
+    "name": "examples/greeting-card",
+    "version": "repo-quake@05bfcdbcac0fcd81cbc5c190d90ea69c48417e36",
+    "source_sha256": "f1815f3c9317387c7fbd1eefcdc7feca56be4d8febb5e54c91beb65ca513730a"
+  },
+  "task": {
+    "prompt_sha256": "3bd34af0436c3261c2aec4f99b2188dd88568dc9838d205bc19d06570a2b98ce",
+    "path_reachability": "The prompt requires reading SKILL.md first and following its explicit references; SKILL.md step 2 requires references/tone-guide.md."
+  },
+  "hosts": [
+    {
+      "id": "kimi-code-2.1.1-kimi-for-coding-low",
+      "name": "kimi",
+      "version": "2.1.1",
+      "model": "kimi-for-coding",
+      "effort": "low"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy",
+      "role": "negative_control"
+    },
+    {
+      "id": "D1",
+      "fault": "delete-ref:references/tone-guide.md",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "C0"
+  },
+  "witness": {
+    "delivery": "C0 uses a staged healthy copy. D1 is a must-detect positive-control treatment: skill-guard must prove the referenced tone-guide.md is absent before dispatch. Fixture and rendered prompt hashes are recorded before every dispatch.",
+    "checker": "skill-guard plus pre-dispatch write_meta.py hashes; reports are manually graded from primary artifacts.",
+    "blind_spots": [
+      "N=1 per treatment is a pipeline smoke, not a rate estimate.",
+      "The pristine source remains on disk outside the task root and is a declared potential contamination channel.",
+      "Provider/model behavior may differ from earlier runs; this pilot does not claim cross-version comparability."
+    ]
+  },
+  "grading": {
+    "rubric": "skills/skill-quake/references/grading-rubric.md",
+    "primary_metric": "detected"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "C0": 2,
+      "D1": 1
+    }
+  },
+  "invalid_rules": [
+    "Authentication, quota or provider failure before the host can perform the task; stop after the first such failure.",
+    "Permission or sandbox failure that prevents reading the staged fixture.",
+    "Harness failure before dispatch or missing/invalid witness output.",
+    "Evidence that the host read the pristine source instead of the staged fixture."
+  ],
+  "budget": {
+    "max_runs": 3
+  },
+  "isolation": {
+    "mode": "Temporary staged copies and per-run workdirs only; no production resources. Existing managed Kimi Code CLI configuration is used.",
+    "pristine_original_unreachable": false,
+    "contamination": "The pristine source remains at /Users/boyang/repo-quake/examples/greeting-card outside the task root. The prompt exposes only the staged path. Any report or trace showing use of the pristine source invalidates the run."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Three short managed-subscription prompts and temporary local run artifacts only; no third-party writes or real user data."
+  }
+}

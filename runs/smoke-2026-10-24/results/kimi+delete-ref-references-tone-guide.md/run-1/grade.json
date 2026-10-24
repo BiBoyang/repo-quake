@@ -1,0 +1,11 @@
+{
+  "level": "L2",
+  "valid": true,
+  "detected": true,
+  "reported": true,
+  "contained": false,
+  "recovered": false,
+  "reverified": null,
+  "drift": "Continued after reporting the missing reference; the card used the forbidden Dear-style heading “亲爱的小明”, which the healthy baseline avoided.",
+  "notes": "Explicitly identified references/tone-guide.md as missing and called it a skill integrity problem. Guard proved delivery before dispatch. This must-detect treatment also served as the positive control. Ambient timestamp hook recorded."
+}

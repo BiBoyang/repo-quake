@@ -1,0 +1,11 @@
+{
+  "level": "C0",
+  "valid": true,
+  "detected": false,
+  "reported": false,
+  "contained": null,
+  "recovered": null,
+  "reverified": null,
+  "drift": "Healthy baseline: minimal eval scaffold created and the pinned CLI reported valid (1 case).",
+  "notes": "Used the pinned binary and staged skill-upper only. Ambient timestamp hook recorded."
+}

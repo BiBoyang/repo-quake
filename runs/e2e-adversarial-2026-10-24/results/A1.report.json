@@ -1,0 +1,360 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a16e70-1000-70ec-a2e1-e496d1784fb7",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "failed",
+    "exitCode": 1,
+    "startedAt": "2026-10-24T15:03:20.617Z",
+    "finishedAt": "2026-10-24T15:03:26.858Z",
+    "project": {
+      "id": "e2e-replay-pilot",
+      "configDigest": "6ffaad4acf27963f531e04b9c3a9c53676e7eb6bc77814e23ae5dcafca0e1cc9"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "05bfcdbcac0fcd81cbc5c190d90ea69c48417e36",
+      "branch": "master",
+      "dirty": true
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "e3c536536f98aef14b95a0057ef6a13551afc77111b36da7d445ae997a3926e9",
+        "testId": "tests/failure-cache.e2e.ts::failed%20later%20assertion%20does%20not%20poison%20the%20replay%20cache",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "failed later assertion does not poison the replay cache"
+        ],
+        "file": "tests/failure-cache.e2e.ts",
+        "source": {
+          "file": "tests/failure-cache.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "failed",
+        "attempts": [
+          {
+            "id": "01a16e70-12ff-703e-88ea-c5925bff016d",
+            "index": 0,
+            "status": "failed",
+            "startedAt": "2026-10-24T15:03:21.087Z",
+            "durationMs": 5754,
+            "artifacts": [
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:0",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "step",
+                  "stepId": "01a16e70-12ff-703e-88ea-c5925bff016d:1"
+                },
+                "path": "failure-cache-failed-later-assertion-does-not-e3c536536f98aef1/attempt-1/transcript-01a16e70-12ff-703e-88ea-c5925bff016d-1.txt",
+                "size": 44,
+                "sha256": "f6a86200d1aaaaff66152ab6de36f4e5f88395284d0733d02d81e64c6c51ca19"
+              },
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:1",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "failure-cache-failed-later-assertion-does-not-e3c536536f98aef1/attempt-1/screen-at-failure.txt",
+                "size": 121,
+                "sha256": "45655b0c0c64899894c0e399e2ce2a7ce0b6c4f20ab129668f1b288db8636c1e"
+              },
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:2",
+                "kind": "screenshot",
+                "mediaType": "image/png",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "failure-cache-failed-later-assertion-does-not-e3c536536f98aef1/attempt-1/screenshots/001-failure.png",
+                "size": 8974,
+                "sha256": "f358d8f0b78f79f145609491a9cb0791d15c4ba3b12d3b2cff8383749deb5369"
+              }
+            ],
+            "error": {
+              "category": "test",
+              "code": "ASSERTION_FAILED",
+              "message": "expect.toContainText failed\nlocator: getByRole(\"status\")\nexpected: text containing \"Impossible\"\nobserved: text \"Pro\" (match count 1)",
+              "retryable": false,
+              "phase": "body",
+              "details": {
+                "locator": "getByRole(\"status\")",
+                "expected": "text containing \"Impossible\"",
+                "observed": "text \"Pro\"",
+                "matches": 1
+              }
+            },
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "failure": {
+              "url": "http://127.0.0.1:4173/",
+              "viewport": {
+                "width": 1280,
+                "height": 720
+              },
+              "nodes": 5,
+              "screen": "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:1",
+              "screenshot": "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:2"
+            },
+            "steps": [
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-24T15:03:21.148Z",
+                "durationMs": 216,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 5,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/failure-cache.e2e.ts",
+                  "line": 5,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "upgrade the workspace to Pro",
+                "status": "passed",
+                "startedAt": "2026-10-24T15:03:21.365Z",
+                "durationMs": 383,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:03:21.367Z",
+                    "durationMs": 121,
+                    "status": "passed",
+                    "bytes": 111,
+                    "count": 5
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-24T15:03:21.490Z",
+                    "durationMs": 52,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Upgrade Plan\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:03:21.543Z",
+                    "durationMs": 100,
+                    "status": "passed",
+                    "bytes": 120,
+                    "count": 5
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T15:03:21.643Z",
+                    "durationMs": 101,
+                    "status": "passed",
+                    "bytes": 120,
+                    "count": 5
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [
+                  "01a16e70-12ff-703e-88ea-c5925bff016d:artifact:0"
+                ],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 1,
+                  "observationBytes": 120,
+                  "contextBytes": 0,
+                  "ledgerBytes": 23
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "no-entry",
+                  "replayedActions": 0,
+                  "totalActions": 0,
+                  "entry": "9684da4fb248f79d7699d162898c35d46a9a4eba1b5ea4b5821dc62e95d5f058",
+                  "write": "unconfirmed"
+                },
+                "observationRevision": "b6",
+                "explanation": "Tapped Upgrade Plan",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 5,
+                  "since": 0,
+                  "changes": [
+                    "changed status \"Pro\" (was: status \"Idle\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/failure-cache.e2e.ts",
+                  "line": 6,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a16e70-12ff-703e-88ea-c5925bff016d:2",
+                "index": 2,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "failed",
+                "startedAt": "2026-10-24T15:03:21.749Z",
+                "durationMs": 5009,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-24T15:03:21.749Z",
+                    "durationMs": 5009,
+                    "status": "failed",
+                    "count": 46,
+                    "detail": "text \"Pro\" (1 match) x46"
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/failure-cache.e2e.ts",
+                  "line": 7,
+                  "column": 44
+                },
+                "error": {
+                  "category": "test",
+                  "code": "ASSERTION_FAILED",
+                  "message": "expect.toContainText failed\nlocator: getByRole(\"status\")\nexpected: text containing \"Impossible\"\nobserved: text \"Pro\" (match count 1)",
+                  "retryable": false,
+                  "details": {
+                    "locator": "getByRole(\"status\")",
+                    "expected": "text containing \"Impossible\"",
+                    "observed": "text \"Pro\"",
+                    "matches": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "7760434dd681a3e89042366aa245422a43e1abb7180237a480563e0d1b9f93a8",
+        "testId": "tests/replay.e2e.ts::live%20recording%2C%20unchanged%20replay%2C%20and%20changed-control%20handoff",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "live recording, unchanged replay, and changed-control handoff"
+        ],
+        "file": "tests/replay.e2e.ts",
+        "source": {
+          "file": "tests/replay.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 2,
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 2,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 23,
+      "maxObservationBytes": 120,
+      "artifactBytes": 9139,
+      "downloads": 0,
+      "events": 5,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 1
+    }
+  }
+}

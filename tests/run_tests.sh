@@ -1,7 +1,7 @@
 #!/bin/bash
 # skill-guard fixture tests: each fixture maps to one known fault class.
 set -u
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 1
 GUARD=bin/skill-guard
 fails=0
 
@@ -65,5 +65,14 @@ printf '%s' '{"level":"L0","detected":false}' > "$tmp/results/ghost+healthy/run-
 out=$(python3 $SUS --results "$tmp/results")
 if grep -q 'TP=1 FP=0 TN=1 FN=0' <<<"$out"; then echo "ok   [suspicion-results-confusion]"; else echo "FAIL [suspicion-results-confusion]"; echo "$out"; fails=$((fails+1)); fi
 
+if ! python3 -m unittest discover -s tests -p 'test_*.py'; then
+  fails=$((fails+1))
+fi
+
 echo "---"
-[ "$fails" -eq 0 ] && echo "ALL TESTS PASSED" || { echo "$fails TEST(S) FAILED"; exit 1; }
+if [ "$fails" -eq 0 ]; then
+  echo "ALL TESTS PASSED"
+else
+  echo "$fails TEST(S) FAILED"
+  exit 1
+fi

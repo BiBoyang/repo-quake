@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "warnings": [
+    "SKILL.md: name 'greeting-card' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [],
+  "skill_dir": "/Users/boyang/repo-quake/runs/smoke-2026-10-24/.stage/0713129208fd/skill",
+  "verdict": "PASS"
+}

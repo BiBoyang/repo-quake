@@ -1,2 +1,17 @@
 runs/phase1/stage/
 runs/phase1/.salt
+__pycache__/
+*.py[cod]
+
+# Experiment runtime artifacts (keep source, contracts and evidence only)
+node_modules/
+chrome-profile/
+.e2e/
+runs/**/bin/
+runs/**/.stage/
+runs/**/results/.stage/
+runs/**/cache-*/
+runs/**/home/
+runs/**/.salt
+runs/**/*.pid
+runs/**/chrome.log

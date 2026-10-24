@@ -1,0 +1,11 @@
+{
+  "errors": [
+    "references/tone-guide.md: referenced by SKILL.md but missing on disk"
+  ],
+  "warnings": [
+    "SKILL.md: name 'greeting-card' != directory name 'skill' (agentskills convention; expected in copied/renamed dirs)"
+  ],
+  "info": [],
+  "skill_dir": "/Users/boyang/repo-quake/runs/smoke-2026-10-24/results/.stage/d7a3b3cb3418/skill",
+  "verdict": "FAIL"
+}

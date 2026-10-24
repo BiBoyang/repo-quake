@@ -1,0 +1,2 @@
+{"time":"2026-10-24T15:05:30.849Z","attemptId":"01a16e72-0c4d-7f4a-a0b9-d1e4e0b86926","instruction":"upgrade the workspace to Pro","replayedPrefix":null,"observedStatus":"Idle","target":{"id":"n5","name":"Upgrade Plan"}}
+{"time":"2026-10-24T15:06:13.095Z","attemptId":"01a16e72-7964-70b6-84fb-01853081153f","instruction":"upgrade the workspace to Pro","replayedPrefix":{"replayedActions":["tap button \"Upgrade Plan\""],"totalActions":1,"stopReason":"end-mismatch"},"observedStatus":"Enterprise","target":{"id":"n6","name":"Fix to Pro"}}

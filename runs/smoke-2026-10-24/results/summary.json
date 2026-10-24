@@ -1,0 +1,52 @@
+{
+  "kimi+delete-ref-references-tone-guide.md": {
+    "runs": 1,
+    "graded": 1,
+    "excluded": 0,
+    "ungraded": 0,
+    "detected": 1,
+    "levels": "L2",
+    "metrics": {
+      "detected": {
+        "x": 1,
+        "n": 1,
+        "unknown": 0
+      },
+      "reported": {
+        "x": 1,
+        "n": 1,
+        "unknown": 0
+      },
+      "contained": {
+        "x": 0,
+        "n": 1,
+        "unknown": 0
+      },
+      "recovered": {
+        "x": 0,
+        "n": 1,
+        "unknown": 0
+      }
+    }
+  },
+  "kimi+healthy": {
+    "runs": 2,
+    "graded": 2,
+    "excluded": 0,
+    "ungraded": 0,
+    "detected": 0,
+    "levels": "C0,C0",
+    "metrics": {
+      "detected": {
+        "x": 0,
+        "n": 2,
+        "unknown": 0
+      },
+      "reported": {
+        "x": 0,
+        "n": 2,
+        "unknown": 0
+      }
+    }
+  }
+}
