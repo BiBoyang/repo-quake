@@ -15,8 +15,8 @@
 ## Ordered publication gate
 
 - [x] Human reviewed the title and draft on 2026-10-25; final edit was tone-only, with the reproduction and technical claims unchanged.
-- [ ] Publish the upstream issue. **Blocked on 2026-10-25:** three bounded create attempts failed at TLS handshake; final title search found no match. See `publication-recovery.md`; no evidence push or PR followed.
-- [ ] Record the issue URL in all disclosure files and this checklist.
+- [x] Upstream issue published and content verified: https://github.com/tester-army/e2e/issues/1371. The `bug` label could not be added because the upstream denied `AddLabelsToLabelable`; title/body are correct and the label is left for a maintainer.
+- [x] Recorded https://github.com/tester-army/e2e/issues/1371 in all three disclosure files and this checklist.
 - [ ] Commit any disclosure URL updates, then push the repo-quake evidence branch.
 - [ ] Optional: authorize the PR implementation in `pr-plan.md`; a `fix` PR must link the issue.
 - [ ] Before the PR, replace every placeholder in `pr-body-template.md` with final-diff facts and actual verification.

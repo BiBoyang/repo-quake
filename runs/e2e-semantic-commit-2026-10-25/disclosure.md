@@ -35,7 +35,7 @@ Measured nine full-runner cells against npm e2e 0.21.3 and @e2e-dev/web 0.15.3 u
 
 ## 5. Posting gate
 
-- [ ] Upstream issue URL recorded (pending human authorization)
+- [x] Upstream issue opened first: https://github.com/tester-army/e2e/issues/1371
 - [x] Every reported number checked against primary artifacts
 - [x] F1 conclusion independently re-verified by direct contract probe and standalone repro
 - [x] Sample sizes and caveats stated

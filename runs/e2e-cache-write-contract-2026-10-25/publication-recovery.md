@@ -21,3 +21,9 @@ No fourth create was attempted. Three public-write attempts are the hard stop fo
 - No issue URL was obtained. The evidence branch was not pushed, and no PR was started.
 
 Recorded at 2026-10-25 11:04:28. The next publication attempt should start from the frozen title/body and the duplicate-title check, not from an assumption that the timeout meant either success or failure.
+
+## Resumed publication and permission note
+
+- On the user-requested resume, the first REST title query timed out and no create ran. A fallback read of the current account's recent issues succeeded and showed no matching title. The next `gh issue create` succeeded as [tester-army/e2e#1371](https://github.com/tester-army/e2e/issues/1371).
+- Remote title, body, and OPEN state were compared with the frozen local files and matched.
+- The create request's `bug` label did not take effect. A follow-up `gh issue edit --add-label bug` was rejected: `GraphQL: BiBoyang does not have the correct permissions to execute AddLabelsToLabelable`. No alternative write or permission bypass was attempted; the issue remains unlabeled for a maintainer to classify.

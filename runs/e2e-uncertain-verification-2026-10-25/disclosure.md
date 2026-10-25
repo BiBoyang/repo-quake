@@ -36,6 +36,7 @@ Measured two cells against npm e2e 0.21.3 and @e2e-dev/web 0.15.3 using the arch
 ## 5. Posting gate
 
 - [x] No upstream defect finding from U1/N1; no new issue required for these valid outcomes
+- [x] Related upstream issue for the accompanying F1 evidence: https://github.com/tester-army/e2e/issues/1371
 - [x] Counts checked against primary artifacts
 - [x] Most important conclusion re-read from report, fault log, executor prefix, DOM, and server ledger
 - [x] Sample sizes and caveats stated

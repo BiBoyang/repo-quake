@@ -35,7 +35,7 @@ Measured three direct settlement calls against npm e2e 0.21.3, with healthy and 
 
 ## 5. Posting gate
 
-- [ ] Upstream issue URL recorded (pending human review/authorization)
+- [x] Upstream issue opened first: https://github.com/tester-army/e2e/issues/1371
 - [x] Every number re-checked against primary outputs
 - [x] Most striking conclusion re-verified by standalone `upstream-repro/repro.mjs`
 - [x] One-per-cell sample and main-runtime caveat stated
