@@ -1,0 +1,4 @@
+{"time":"2026-10-24T21:19:30.608Z","attemptId":"01a16fc8-7379-7839-a1a0-11fad070718e","instruction":"prepare upgrade","observedStatus":"Idle","replayedPrefix":null,"target":{"id":"n5","name":"Prepare Upgrade"}}
+{"time":"2026-10-24T21:19:30.884Z","attemptId":"01a16fc8-7379-7839-a1a0-11fad070718e","instruction":"finish upgrade","observedStatus":"Ready","replayedPrefix":null,"target":{"id":"n6","name":"Finish Upgrade"}}
+{"time":"2026-10-24T21:20:21.237Z","attemptId":"01a16fc9-394b-7e18-8287-fe258b8fbf9f","instruction":"prepare upgrade","observedStatus":"Idle","replayedPrefix":null,"target":{"id":"n5","name":"Prepare Upgrade"}}
+{"time":"2026-10-24T21:20:21.413Z","attemptId":"01a16fc9-394b-7e18-8287-fe258b8fbf9f","instruction":"finish upgrade","observedStatus":"Ready","replayedPrefix":null,"target":{"id":"n6","name":"Finish Upgrade"}}

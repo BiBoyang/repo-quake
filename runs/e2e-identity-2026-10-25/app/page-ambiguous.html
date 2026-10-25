@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Ambiguous Replay Pilot</title></head>
+<body><main>
+  <h1>Upgrade workflow</h1>
+  <div id="status" role="status">Idle</div>
+  <button id="good" type="button">Finish Upgrade</button>
+  <button id="bad" type="button">Finish Upgrade</button>
+</main><script>
+  document.querySelector('#good').addEventListener('click', async () => {
+    await fetch('/event', { method: 'POST', body: 'finish' });
+    document.querySelector('#status').textContent = 'Pro';
+  });
+  document.querySelector('#bad').addEventListener('click', async () => {
+    await fetch('/event', { method: 'POST', body: 'enterprise' });
+    document.querySelector('#status').textContent = 'Enterprise';
+  });
+</script></body></html>

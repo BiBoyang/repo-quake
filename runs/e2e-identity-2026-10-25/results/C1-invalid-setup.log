@@ -1,0 +1,48 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-identity-2026-10-25/app
+      run 01a1707f-85de-72b0-a3d5-bbecbe8a2fd8 · targets: web
+
+   × agent context changes must not reuse the old flow > agent.act "finish upgrade" 127ms failed
+ ❯ |web| tests/context.e2e.ts (1 test | 1 failed) 571ms
+   × agent context changes must not reuse the old flow 571ms
+     → agent.act failed: Ambiguous upgrade controls
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |web| tests/context.e2e.ts > agent context changes must not reuse the old flow
+LOCATOR_AMBIGUOUS: agent.act failed: Ambiguous upgrade controls
+ ❯ tests/context.e2e.ts:6:3
+      4| test('agent context changes must not reuse the old flow', async ({ ap…
+      5|   await app.open('/');
+      6|   await agent.act('finish upgrade');
+       |   ^
+      7|   await expect(screen.getByRole('status')).toContainText('Pro');
+      8| });
+ ❯ at http://127.0.0.1:4173/
+ ❯ trace .e2e/results/context-agent-context-changes-must-not-bb9edf5ebc53fe80/trace.md
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 0 passed (1)
+      Tests  1 failed | 0 passed (1)
+      Cache  1 missed
+   Start at  08:39:28
+   Duration  1.16s
+     Traces  .e2e/results/ (1 page, trace.md in each test's directory)
+
+[e2e debug] phase timings (wall 1605ms)
+  phase           count   total     avg     max
+  scheduler           1  1144ms  1144ms  1144ms
+  config.load         1   395ms   395ms   395ms
+  test.body           1   390ms   390ms   390ms
+  agent.observe       1   122ms   122ms   122ms
+  engine.init         1    66ms    66ms    66ms
+  collect             1    14ms    14ms    14ms
+  session.launch      1     9ms     9ms     9ms
+  session.close       1     9ms     9ms     9ms
+  engine.prepare      1     0ms     0ms     0ms
+[e2e debug] agent steps (execution order)
+  step                        total  model  observe  action  calls  tokens in/out  cached  cost
+  agent.act "finish upgrade"  127ms    0ms    122ms     0ms      0            0/0       -     -
+[e2e debug] report .e2e/report.json

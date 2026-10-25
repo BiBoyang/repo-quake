@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Noop Replay Pilot</title></head>
+<body><main>
+  <h1>Noop workflow</h1>
+  <div id="status" role="status">Idle</div>
+  <button id="noop" type="button">Noop</button>
+</main><script>
+  document.querySelector('#noop').addEventListener('click', () => {
+    // Deliberately no state change and no side effect.
+  });
+</script></body></html>

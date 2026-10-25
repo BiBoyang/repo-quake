@@ -1,0 +1,30 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-deferred-2026-10-25/app
+      run 01a16ff0-a54d-778f-9d9e-3eb4430638e5 · targets: web
+
+   ✓ no-change step is not recorded > agent.act "noop" 2.33s
+ ✓ |web| tests/noop.e2e.ts (1 test) 2.62s
+   ✓ no-change step is not recorded 2.62s
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+      Cache  1 missed
+   Start at  06:03:24
+   Duration  3.10s
+
+[e2e debug] phase timings (wall 3446ms)
+  phase           count   total     avg     max
+  scheduler           1  3096ms  3096ms  3096ms
+  test.body           1  2547ms  2547ms  2547ms
+  agent.observe       2  2262ms  1131ms  2141ms
+  config.load         1   300ms   300ms   300ms
+  agent.action        1    58ms    58ms    58ms
+  engine.init         1    50ms    50ms    50ms
+  session.close       1     9ms     9ms     9ms
+  collect             1     7ms     7ms     7ms
+  session.launch      1     7ms     7ms     7ms
+  engine.prepare      1     0ms     0ms     0ms
+[e2e debug] agent steps (execution order)
+  step               total  model  observe  action  calls  tokens in/out  cached  cost
+  agent.act "noop"  2327ms    0ms   2262ms    58ms      0            0/0       -     -
+[e2e debug] report .e2e/report.json

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "trace-1",
+  "createdAt": "2026-10-25T00:50:19.644Z",
+  "payload": {
+    "actions": [
+      {
+        "name": "tap",
+        "summary": "tap button \"Finish Upgrade\"",
+        "target": {
+          "role": "button",
+          "name": "Finish Upgrade"
+        }
+      }
+    ],
+    "executor": {
+      "name": "deterministic-upgrade-executor",
+      "version": "1.0.0"
+    },
+    "recordedFor": {
+      "testId": "tests/ambiguous.e2e.ts::ambiguous%20controls%20must%20not%20be%20clicked%20blindly",
+      "targetId": "web",
+      "instructionDigest": "e516d9e426b61330e21ff1b4ed243cda38c9c095a0a0663217a1222d55798544",
+      "paramsDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "callIndex": 0,
+      "agent": "default"
+    },
+    "summary": "Tapped Finish Upgrade",
+    "startPath": "/",
+    "endPath": "/",
+    "endAnchors": [
+      {
+        "role": "status",
+        "name": "Pro"
+      }
+    ],
+    "goneAnchors": [
+      {
+        "role": "status",
+        "name": "Idle"
+      }
+    ],
+    "endWaitMs": 10100,
+    "keyedBy": {
+      "cacheSchema": "trace-1",
+      "policyVersion": "conservative/6",
+      "project": "b4745b767e0d1186009bb97d878ba6113be087970689928ba9c0bd65889f94b9",
+      "platform": "web",
+      "engineName": "web",
+      "engineSpiVersion": 1,
+      "appIdentity": "cd557c932b7030321cba8e8748ed3ccac87511c545e02c2f1c4878399e194597",
+      "agentContextDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

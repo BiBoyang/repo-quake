@@ -1,0 +1,2 @@
+{"time":"2026-10-24T22:02:59.167Z","attemptId":"01a16ff0-4109-7412-84f6-95ae9ddcd4f2","instruction":"prepare upgrade","observedStatus":"Idle","replayedPrefix":null,"target":{"id":"n5","name":"Prepare Upgrade"}}
+{"time":"2026-10-24T22:02:59.459Z","attemptId":"01a16ff0-4109-7412-84f6-95ae9ddcd4f2","instruction":"finish upgrade","observedStatus":"Ready","replayedPrefix":null,"target":{"id":"n6","name":"Finish Upgrade"}}

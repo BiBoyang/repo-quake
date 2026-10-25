@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-cache-identity-ambiguity-and-uncertain-v1",
+  "claim": "Changed agent context cannot reuse the old flow; a unique param collision is not recorded; duplicate Upgrade Plan buttons produce target-ambiguous rather than a blind click; full StepTraceSession hands ACTION_MAY_HAVE_COMMITTED to the executor with the correct uncertain action and exactly one commit.",
+  "target": {
+    "name": "tester-army/e2e cache identity and ambiguity fixtures",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; local CDP Chrome",
+    "source_sha256": "9556f6735c6e2ffd3bc633c4e537fab58284531e4b236ec531bac6d08c310360"
+  },
+  "task": {
+    "prompt_sha256": "e0cc2138f173b28bc67015e9221e9ddb06ced7092b893c637c6f3d6292be11d6",
+    "path_reachability": "Each treatment has a baseline before changing one axis. Context changes alter only agent.context; collision changes only unique params; ambiguous changes only the number of matching buttons; U1 directly invokes StepTraceSession with a committed-but-unknown action."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "H",
+      "fault": "healthy two-goal baseline",
+      "role": "negative_control"
+    },
+    {
+      "id": "C",
+      "fault": "agent.context changes from A to B",
+      "role": "treatment"
+    },
+    {
+      "id": "P",
+      "fault": "unique param value collides with another param",
+      "role": "treatment"
+    },
+    {
+      "id": "A",
+      "fault": "two visible buttons share the name Upgrade Plan",
+      "role": "treatment"
+    },
+    {
+      "id": "U1",
+      "fault": "direct StepTraceSession action commits then throws ACTION_MAY_HAVE_COMMITTED",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "H"
+  },
+  "witness": {
+    "delivery": "Each arm has a fresh baseline before the treatment. report.json supplies cache mode/reason and entry identity. Executor logs expose instruction, params, status, replayedPrefix and matching buttons. Event logs detect wrong-button side effects. U1 separately records verdict, prefix and commit count.",
+    "checker": "Executor invocation count, cache entry identity, notRecorded reason, ambiguous side-effect ledger, and full StepTraceSession prefix.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM.",
+      "Context, collision and ambiguity fixtures cover only one variation each and do not prove all cache identities.",
+      "U1 directly exercises StepTraceSession, not the complete production runner or a real model.",
+      "Experiments use npm releases, not main."
+    ]
+  },
+  "grading": {
+    "rubric": "Preregistered cache identity, no-wrong-side-effect and uncertain-handoff expectations must agree; environment/setup failures are INVALID, expected ambiguity failures are data.",
+    "primary_metric": "cache_identity_and_safe_handoff"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "C": 2,
+      "P": 2,
+      "A": 2
+    }
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or dependency unavailable before a product verdict.",
+    "Config or executor setup failure before the first action.",
+    "Active variant or baseline cache differs from the preregistered setup before the treatment.",
+    "Missing report, event log or StepTraceSession prefix needed for adjudication."
+  ],
+  "budget": {
+    "max_runs": 8
+  },
+  "isolation": {
+    "mode": "Local static app and event log, temporary CDP Chrome, arm-specific baseline caches, telemetry disabled; no real model, mobile, cloud browser or GitHub reporter.",
+    "pristine_original_unreachable": false,
+    "contamination": "Fixture sources remain on disk but the deterministic executor only observes the browser and never reads them. Each arm has a separate baseline and treatment cache."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Eight local test executions and temporary files under runs/e2e-identity-2026-10-25; no external model calls or third-party writes."
+  }
+}

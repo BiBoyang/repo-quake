@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Advanced Replay Pilot</title></head>
+<body><main>
+  <h1>Upgrade workflow</h1>
+  <div id="status" role="status">Idle</div>
+  <button id="prepare" type="button">Prepare Upgrade</button>
+  <button id="finish" type="button">Finish Upgrade v2</button>
+</main><script>
+  document.querySelector('#prepare').addEventListener('click', async () => {
+    await fetch('/event', { method: 'POST', body: 'prepare' });
+    document.querySelector('#status').textContent = 'Ready';
+  });
+  document.querySelector('#finish').addEventListener('click', async () => {
+    await fetch('/event', { method: 'POST', body: 'finish' });
+    document.querySelector('#status').textContent = 'Pro';
+  });
+</script></body></html>

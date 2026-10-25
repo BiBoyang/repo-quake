@@ -1,0 +1,11 @@
+{
+  "info": {
+    "mode": "missed",
+    "reason": "action-uncertain",
+    "replayedActions": 0,
+    "totalActions": 1,
+    "entry": "3c9cc78e1c7eb08360b971adf4ffce7ddc52e5ec96bd5bf6825e6d68392b8d50",
+    "detail": "at action 1 of 1, tap button \"Upgrade Plan\""
+  },
+  "calls": 1
+}

@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Identity Replay Pilot</title></head>
+<body><main>
+  <h1>Upgrade workflow</h1>
+  <div id="status" role="status">Idle</div>
+  <button id="finish" type="button">Upgrade Plan</button>
+</main><script>
+  document.querySelector('#finish').addEventListener('click', async () => {
+    await fetch('/event', { method: 'POST', body: 'finish' });
+    document.querySelector('#status').textContent = 'Pro';
+  });
+</script></body></html>

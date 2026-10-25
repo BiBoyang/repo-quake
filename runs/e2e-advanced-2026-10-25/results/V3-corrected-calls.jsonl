@@ -1,0 +1,1 @@
+{"time":"2026-10-24T21:24:11.406Z","attemptId":"01a16fcc-83a5-702d-926c-c471449f17c6","instruction":"finish upgrade","observedStatus":"Enterprise","replayedPrefix":{"replayedActions":["tap button \"Finish Upgrade\""],"totalActions":1,"stopReason":"end-mismatch"},"target":{"id":"n7","name":"Fix to Pro"}}

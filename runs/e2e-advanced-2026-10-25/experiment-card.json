@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-advanced-cache-and-side-effects-v1",
+  "claim": "Two-goal live/replay/--no-cache runs produce the same prepare/finish events exactly once; changed finish control causes a new live step without duplicating prepare; end-state mismatch is repaired; uncertain commit stops once without duplication; no-change creates no entry and reruns live.",
+  "target": {
+    "name": "tester-army/e2e replay cache advanced side-effect fixtures",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; local CDP Chrome",
+    "source_sha256": "964f5e954b368922accd65e781f57313a0b92623d89d7644c7fa771caeffe7d6"
+  },
+  "task": {
+    "prompt_sha256": "445c41d9b6fcb8c5b4df868d67560e671d21fd707867ff56d964988844edc20b",
+    "path_reachability": "prepare and finish are separately recorded goals. The event server distinguishes replay from fresh live execution. V2 changes finish label, V3 changes finish outcome, and U1 invokes replayTrace directly with a committed-but-unknown action."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "H",
+      "fault": "healthy two-goal record, unchanged replay, and --no-cache differential",
+      "role": "negative_control"
+    },
+    {
+      "id": "V2",
+      "fault": "finish control renamed while prepare remains recorded",
+      "role": "treatment"
+    },
+    {
+      "id": "V3",
+      "fault": "finish now produces Enterprise instead of Pro",
+      "role": "treatment"
+    },
+    {
+      "id": "U1",
+      "fault": "direct replay action commits then throws ACTION_MAY_HAVE_COMMITTED",
+      "role": "treatment"
+    },
+    {
+      "id": "N",
+      "fault": "no-op action changes no state and has no side effect",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "H"
+  },
+  "witness": {
+    "delivery": "Active page variants are hashed before each run. Executor invocations are appended only by runStep. The server event list is reset before each run and compared against the expected sequence and count. report.json supplies cache mode/reason; U1 separately asserts stopReason and call count.",
+    "checker": "Server event differential, executor invocation count, cache mode/reason, variant hashes, and direct replayTrace outcome.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM; this is a harness/cache audit, not model robustness.",
+      "The two-button static workflow does not cover all asynchronous or real-world UI shapes.",
+      "U1 tests replayTrace directly, not the full StepTraceSession or a real provider.",
+      "Experiments use npm releases, not main."
+    ]
+  },
+  "grading": {
+    "rubric": "Preregistered event sequence, executor count and cache behavior must all agree; environment failures are INVALID, expected product failures are data.",
+    "primary_metric": "side_effect_equivalence_and_cache_handoff"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "H": 3,
+      "N": 2
+    }
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or dependency unavailable before a product verdict.",
+    "Config or executor setup failure before the first action.",
+    "Active variant bytes differ from the preregistered setup before the treatment begins.",
+    "Missing report, event log or replayTrace outcome needed for adjudication."
+  ],
+  "budget": {
+    "max_runs": 8
+  },
+  "isolation": {
+    "mode": "Local static app and in-memory event log, temporary CDP Chrome, arm-specific caches, telemetry disabled; no real model, mobile, cloud browser or GitHub reporter.",
+    "pristine_original_unreachable": false,
+    "contamination": "Fixture sources remain on disk but the deterministic executor only observes the browser and never reads them. Event state is reset by the operator before every run, never by the cached agent."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Eight local test executions and temporary files under runs/e2e-advanced-2026-10-25; no external model calls or third-party writes."
+  }
+}

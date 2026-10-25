@@ -1,0 +1,32 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-advanced-2026-10-25/app
+      run 01a16fcc-1235-7234-89d9-25a109bb040c · targets: web
+
+   ✓ two-goal replay and side-effect differential > agent.act "prepare upgrade" 308ms
+   ✓ two-goal replay and side-effect differential > agent.act "finish upgrade" 237ms
+ ✓ |web| tests/multi.e2e.ts (1 test) 807ms
+   ✓ two-goal replay and side-effect differential 807ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+      Cache  2 missed
+   Start at  05:23:27
+   Duration  1.28s
+
+[e2e debug] phase timings (wall 1599ms)
+  phase           count   total     avg     max
+  scheduler           1  1276ms  1276ms  1276ms
+  test.body           1   738ms   738ms   738ms
+  agent.observe       4   432ms   108ms   130ms
+  config.load         1   274ms   274ms   274ms
+  agent.action        2   102ms    51ms    71ms
+  engine.init         1    50ms    50ms    50ms
+  collect             1     9ms     9ms     9ms
+  session.launch      1     8ms     8ms     8ms
+  session.close       1     8ms     8ms     8ms
+  engine.prepare      1     0ms     0ms     0ms
+[e2e debug] agent steps (execution order)
+  step                         total  model  observe  action  calls  tokens in/out  cached  cost
+  agent.act "prepare upgrade"  308ms    0ms    228ms    71ms      0            0/0       -     -
+  agent.act "finish upgrade"   237ms    0ms    204ms    31ms      0            0/0       -     -
+[e2e debug] report .e2e/report.json

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-identity-reset-ambiguous-and-uncertain-v1",
+  "claim": "A single Finish Upgrade baseline records normally; two Finish Upgrade buttons produce target-ambiguous and no wrong-button side effect; full StepTraceSession hands ACTION_MAY_HAVE_COMMITTED to the executor with the correct uncertain action and exactly one commit.",
+  "target": {
+    "name": "tester-army/e2e identity reset ambiguity and uncertain fixtures",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; local CDP Chrome",
+    "source_sha256": "821a7293c5b1c0a06eb5d9419067ace737cb231624b7f76438d0916c3d85c69a"
+  },
+  "task": {
+    "prompt_sha256": "78098d50fcb7cd41b74afa30b1675e87f032976ae7723f179dd3648a9be58c6c",
+    "path_reachability": "A1 records a single Finish Upgrade button. A2 changes only the active page to two Finish Upgrade buttons while retaining the baseline entry. U1 directly invokes StepTraceSession with a committed-but-unknown action."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "A1",
+      "fault": "healthy single Finish Upgrade baseline",
+      "role": "negative_control"
+    },
+    {
+      "id": "A2",
+      "fault": "two visible Finish Upgrade buttons",
+      "role": "treatment"
+    },
+    {
+      "id": "U1",
+      "fault": "direct StepTraceSession action commits then throws ACTION_MAY_HAVE_COMMITTED",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "A1"
+  },
+  "witness": {
+    "delivery": "A1 cache entry is copied and hashed before A2. The active page is read from disk immediately before A2. Executor logs expose matching buttons and replayedPrefix. Event logs detect wrong-button side effects. U1 separately records verdict, prefix and commit count.",
+    "checker": "Baseline entry hash, cache mode/reason, ambiguous side-effect ledger, and full StepTraceSession prefix.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM.",
+      "A2 covers one duplicated-control shape and does not prove all ambiguity forms.",
+      "U1 directly exercises StepTraceSession, not the complete production runner or a real model.",
+      "Experiments use npm releases, not main."
+    ]
+  },
+  "grading": {
+    "rubric": "Baseline evidence, target-ambiguous handoff with no wrong-button side effect, and uncertain commit prefix must agree; environment/setup failures are INVALID, expected ambiguity failure is data.",
+    "primary_metric": "cache_identity_and_safe_handoff"
+  },
+  "sampling": {
+    "runs_per_cell": 1
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or dependency unavailable before a product verdict.",
+    "Config or executor setup failure before the first action.",
+    "Active variant or baseline entry differs from the preregistered setup before the treatment.",
+    "Missing report, event log or StepTraceSession prefix needed for adjudication."
+  ],
+  "budget": {
+    "max_runs": 3
+  },
+  "isolation": {
+    "mode": "Local static app and event log, temporary CDP Chrome, arm-specific baseline cache, telemetry disabled; no real model, mobile, cloud browser or GitHub reporter.",
+    "pristine_original_unreachable": false,
+    "contamination": "Fixture sources remain on disk but the deterministic executor only observes the browser and never reads them. A1 and A2 use the same baseline entry only as intended by the treatment."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Three local test executions and temporary files under runs/e2e-identity-reset-2026-10-25; no external model calls or third-party writes."
+  }
+}

@@ -1,0 +1,8 @@
+file:///Users/boyang/repo-quake/runs/e2e-identity-reset-2026-10-25/app/full-step-uncertain.mjs:67
+if (!prefix || prefix.stopReason !== 'action-uncertain') throw new Error(`Expected action-uncertain, got ${JSON.stringify(prefix)}`);
+                                                               ^
+
+Error: Expected action-uncertain, got undefined
+    at file:///Users/boyang/repo-quake/runs/e2e-identity-reset-2026-10-25/app/full-step-uncertain.mjs:67:64
+
+Node.js v25.4.0

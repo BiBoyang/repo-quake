@@ -1,0 +1,45 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-identity-2026-10-25/app
+      run 01a1707e-9923-77aa-9157-222fcc92f87d · targets: web
+
+   ✓ two-goal replay and side-effect differential > agent.act "prepare upgrade" 297ms
+ ❯ |web| tests/multi.e2e.ts (1 test | 1 failed) 5.70s
+   × two-goal replay and side-effect differential 5.70s
+     → expect.toContainText failed
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |web| tests/multi.e2e.ts > two-goal replay and side-effect differential
+ASSERTION_FAILED: expect.toContainText failed
+locator: getByRole("status")
+expected: text containing "Ready"
+observed: text "Pro" (match count 1)
+ ❯ at http://127.0.0.1:4173/
+ ❯ trace .e2e/results/multi-two-goal-replay-and-side-effect-282ea583a93e7756/trace.md
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 0 passed (1)
+      Tests  1 failed | 0 passed (1)
+      Cache  1 missed
+   Start at  08:38:27
+   Duration  6.25s
+     Traces  .e2e/results/ (1 page, trace.md in each test's directory)
+
+[e2e debug] phase timings (wall 6711ms)
+  phase           count   total     avg     max
+  scheduler           1  6241ms  6241ms  6241ms
+  test.body           1  5563ms  5563ms  5563ms
+  config.load         1   347ms   347ms   347ms
+  agent.observe       2   222ms   111ms   123ms
+  agent.action        1    68ms    68ms    68ms
+  engine.init         1    61ms    61ms    61ms
+  collect             1    14ms    14ms    14ms
+  session.launch      1    11ms    11ms    11ms
+  session.close       1     9ms     9ms     9ms
+  engine.prepare      1     0ms     0ms     0ms
+[e2e debug] agent steps (execution order)
+  step                         total  model  observe  action  calls  tokens in/out  cached  cost
+  agent.act "prepare upgrade"  297ms    0ms    222ms    68ms      0            0/0       -     -
+[e2e debug] report .e2e/report.json

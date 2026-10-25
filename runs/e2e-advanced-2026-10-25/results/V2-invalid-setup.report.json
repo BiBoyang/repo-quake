@@ -1,0 +1,455 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a16fc9-a96c-73d6-800e-05c3170e9fc4",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "passed",
+    "exitCode": 0,
+    "startedAt": "2026-10-24T21:20:49.808Z",
+    "finishedAt": "2026-10-24T21:20:51.047Z",
+    "project": {
+      "id": "e2e-replay-pilot",
+      "configDigest": "6ffaad4acf27963f531e04b9c3a9c53676e7eb6bc77814e23ae5dcafca0e1cc9"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "e926ee79c1e24528a618fcebe5563e6b9d5c13c7",
+      "branch": "codex/measurement-hardening",
+      "dirty": false
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "e3c536536f98aef14b95a0057ef6a13551afc77111b36da7d445ae997a3926e9",
+        "testId": "tests/failure-cache.e2e.ts::failed%20later%20assertion%20does%20not%20poison%20the%20replay%20cache",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "failed later assertion does not poison the replay cache"
+        ],
+        "file": "tests/failure-cache.e2e.ts",
+        "source": {
+          "file": "tests/failure-cache.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      },
+      {
+        "id": "282ea583a93e7756dab8cb0105f3db95670b8a74238331d6cd9c4f3bff34711d",
+        "testId": "tests/multi.e2e.ts::two-goal%20replay%20and%20side-effect%20differential",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "two-goal replay and side-effect differential"
+        ],
+        "file": "tests/multi.e2e.ts",
+        "source": {
+          "file": "tests/multi.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "passed",
+        "attempts": [
+          {
+            "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9",
+            "index": 0,
+            "status": "passed",
+            "startedAt": "2026-10-24T21:20:50.252Z",
+            "durationMs": 780,
+            "artifacts": [
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:artifact:0",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "step",
+                  "stepId": "01a16fc9-ac4b-7f96-b343-b81251c532c9:1"
+                },
+                "path": "multi-two-goal-replay-and-side-effect-282ea583a93e7756/attempt-1/transcript-01a16fc9-ac4b-7f96-b343-b81251c532c9-1.txt",
+                "size": 47,
+                "sha256": "e69970b17aaf1a548a5eed2f71e829598850270d4276c4ae7d1cd3704f45b937"
+              },
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:artifact:1",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "step",
+                  "stepId": "01a16fc9-ac4b-7f96-b343-b81251c532c9:3"
+                },
+                "path": "multi-two-goal-replay-and-side-effect-282ea583a93e7756/attempt-1/transcript-01a16fc9-ac4b-7f96-b343-b81251c532c9-3.txt",
+                "size": 49,
+                "sha256": "a03e3e43b3e374ae6e68cf897c2d34644efd5064110cbf69912e62323a6fec3b"
+              }
+            ],
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "steps": [
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:20:50.308Z",
+                "durationMs": 173,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 6,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 5,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "prepare upgrade",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:20:50.483Z",
+                "durationMs": 295,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:20:50.485Z",
+                    "durationMs": 127,
+                    "status": "passed",
+                    "bytes": 165,
+                    "count": 6
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-24T21:20:50.615Z",
+                    "durationMs": 59,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Prepare Upgrade\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:20:50.674Z",
+                    "durationMs": 100,
+                    "status": "passed",
+                    "bytes": 176,
+                    "count": 6
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [
+                  "01a16fc9-ac4b-7f96-b343-b81251c532c9:artifact:0"
+                ],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 1,
+                  "observationBytes": 176,
+                  "contextBytes": 0,
+                  "ledgerBytes": 23
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "no-entry",
+                  "replayedActions": 0,
+                  "totalActions": 0,
+                  "entry": "ae7a68aa12e041aa64e923cf8dbe81c59a5ae4906beccda561b4efa9beb45552",
+                  "write": "saved"
+                },
+                "observationRevision": "b4",
+                "explanation": "Tapped Prepare Upgrade",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 6,
+                  "since": 0,
+                  "changes": [
+                    "changed status \"Ready\" (was: status \"Idle\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 6,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:2",
+                "index": 2,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:20:50.779Z",
+                "durationMs": 8,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-24T21:20:50.779Z",
+                    "durationMs": 8,
+                    "status": "passed",
+                    "count": 1
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 7,
+                  "column": 44
+                }
+              },
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:3",
+                "index": 3,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "finish upgrade",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:20:50.787Z",
+                "durationMs": 233,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:20:50.787Z",
+                    "durationMs": 100,
+                    "status": "passed",
+                    "bytes": 176,
+                    "count": 6
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-24T21:20:50.889Z",
+                    "durationMs": 29,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Finish Upgrade v2\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:20:50.918Z",
+                    "durationMs": 101,
+                    "status": "passed",
+                    "bytes": 174,
+                    "count": 6
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [
+                  "01a16fc9-ac4b-7f96-b343-b81251c532c9:artifact:1"
+                ],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 1,
+                  "observationBytes": 176,
+                  "contextBytes": 0,
+                  "ledgerBytes": 152
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "no-entry",
+                  "replayedActions": 0,
+                  "totalActions": 0,
+                  "entry": "0a082a36a2219be3bb1f96b8c5f739783898ada9ae5a6e668058443eb3062c86",
+                  "write": "saved"
+                },
+                "observationRevision": "b8",
+                "explanation": "Tapped Finish Upgrade v2",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 6,
+                  "since": 1,
+                  "changes": [
+                    "changed status \"Pro\" (was: status \"Ready\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 8,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a16fc9-ac4b-7f96-b343-b81251c532c9:4",
+                "index": 4,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:20:51.020Z",
+                "durationMs": 4,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-24T21:20:51.020Z",
+                    "durationMs": 4,
+                    "status": "passed",
+                    "count": 1
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 9,
+                  "column": 44
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "e191c9d62cf78e0d3b4bd5234c92d4134bfeb649f7c523c598429d026d1ecb06",
+        "testId": "tests/noop.e2e.ts::no-change%20step%20is%20not%20recorded",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "no-change step is not recorded"
+        ],
+        "file": "tests/noop.e2e.ts",
+        "source": {
+          "file": "tests/noop.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      },
+      {
+        "id": "7760434dd681a3e89042366aa245422a43e1abb7180237a480563e0d1b9f93a8",
+        "testId": "tests/replay.e2e.ts::live%20recording%2C%20unchanged%20replay%2C%20and%20changed-control%20handoff",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "live recording, unchanged replay, and changed-control handoff"
+        ],
+        "file": "tests/replay.e2e.ts",
+        "source": {
+          "file": "tests/replay.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 4,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 4,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 152,
+      "maxObservationBytes": 176,
+      "artifactBytes": 96,
+      "downloads": 0,
+      "events": 8,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 1
+    }
+  }
+}

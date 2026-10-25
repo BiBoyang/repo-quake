@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-deferred-uncertain-and-nochange-v1",
+  "claim": "A healthy two-goal run records normally; a no-change act produces no cache entry and invokes the executor on both runs; direct ACTION_MAY_HAVE_COMMITTED returns action-uncertain with the action detail and exactly one committed action.",
+  "target": {
+    "name": "tester-army/e2e deferred replay checks",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; local CDP Chrome",
+    "source_sha256": "964f5e954b368922accd65e781f57313a0b92623d89d7644c7fa771caeffe7d6"
+  },
+  "task": {
+    "prompt_sha256": "445c41d9b6fcb8c5b4df868d67560e671d21fd707867ff56d964988844edc20b",
+    "path_reachability": "The healthy run establishes the fixture. Noop has a passing act with no screen change, so no entry should exist on either run. U1 calls replayTrace directly with a committed-but-unknown action."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "H",
+      "fault": "healthy two-goal baseline",
+      "role": "negative_control"
+    },
+    {
+      "id": "N",
+      "fault": "no-op act with no state change",
+      "role": "treatment"
+    },
+    {
+      "id": "U1",
+      "fault": "direct replay action commits then throws ACTION_MAY_HAVE_COMMITTED",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "H"
+  },
+  "witness": {
+    "delivery": "Active variants are checked before dispatch. Executor invocations are appended only by runStep. report.json supplies cache mode/reason and write outcome. U1 separately checks stopReason, uncertainAction and the committed call count.",
+    "checker": "Executor invocation counter, cache entry count, cache mode/write, and direct replayTrace outcome.",
+    "blind_spots": [
+      "The custom executor is deterministic code, not an LLM.",
+      "U1 tests replayTrace directly, not the complete StepTraceSession or a real provider.",
+      "No-change checks one no-op action only and does not prove all no-change forms.",
+      "Experiments use npm releases, not main."
+    ]
+  },
+  "grading": {
+    "rubric": "Preregistered cache/write behavior, executor count and direct uncertain outcome must agree; environment failures are INVALID.",
+    "primary_metric": "cache_write_and_uncertain_commit_behavior"
+  },
+  "sampling": {
+    "runs_per_cell": 1,
+    "runs_overrides": {
+      "N": 2
+    }
+  },
+  "invalid_rules": [
+    "Browser, CDP endpoint, local app or dependency unavailable before a product verdict.",
+    "Config or executor setup failure before the first action.",
+    "Active variant differs from the preregistered setup.",
+    "Missing report, executor log or direct uncertain outcome required for adjudication."
+  ],
+  "budget": {
+    "max_runs": 4
+  },
+  "isolation": {
+    "mode": "Local static app, temporary CDP Chrome, arm-specific caches, telemetry disabled; no real model, mobile, cloud browser or GitHub reporter.",
+    "pristine_original_unreachable": false,
+    "contamination": "Fixture sources remain on disk but the deterministic executor only observes the browser and never reads them. Each arm has an isolated cache directory."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Four local test executions and temporary files under runs/e2e-deferred-2026-10-25; no external model calls or third-party writes."
+  }
+}

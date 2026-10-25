@@ -1,0 +1,564 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a16fcb-180d-743f-b2f7-0a4ede9005f6",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "failed",
+    "exitCode": 1,
+    "startedAt": "2026-10-24T21:22:23.698Z",
+    "finishedAt": "2026-10-24T21:22:44.197Z",
+    "project": {
+      "id": "e2e-replay-pilot",
+      "configDigest": "6ffaad4acf27963f531e04b9c3a9c53676e7eb6bc77814e23ae5dcafca0e1cc9"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "e926ee79c1e24528a618fcebe5563e6b9d5c13c7",
+      "branch": "codex/measurement-hardening",
+      "dirty": false
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "e3c536536f98aef14b95a0057ef6a13551afc77111b36da7d445ae997a3926e9",
+        "testId": "tests/failure-cache.e2e.ts::failed%20later%20assertion%20does%20not%20poison%20the%20replay%20cache",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "failed later assertion does not poison the replay cache"
+        ],
+        "file": "tests/failure-cache.e2e.ts",
+        "source": {
+          "file": "tests/failure-cache.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      },
+      {
+        "id": "282ea583a93e7756dab8cb0105f3db95670b8a74238331d6cd9c4f3bff34711d",
+        "testId": "tests/multi.e2e.ts::two-goal%20replay%20and%20side-effect%20differential",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "two-goal replay and side-effect differential"
+        ],
+        "file": "tests/multi.e2e.ts",
+        "source": {
+          "file": "tests/multi.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "failed",
+        "attempts": [
+          {
+            "id": "01a16fcb-1b16-7006-aaed-054081d098e8",
+            "index": 0,
+            "status": "failed",
+            "startedAt": "2026-10-24T21:22:24.150Z",
+            "durationMs": 20024,
+            "artifacts": [
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:0",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "step",
+                  "stepId": "01a16fcb-1b16-7006-aaed-054081d098e8:3"
+                },
+                "path": "multi-two-goal-replay-and-side-effect-282ea583a93e7756/attempt-1/transcript-01a16fcb-1b16-7006-aaed-054081d098e8-3.txt",
+                "size": 46,
+                "sha256": "33764e81f129a69ac4b42a53eff4196b31abdb9f4c1de94b55d2f990df173ec0"
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:1",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "multi-two-goal-replay-and-side-effect-282ea583a93e7756/attempt-1/screen-at-failure.txt",
+                "size": 205,
+                "sha256": "23fd39e933ed6c1ff1c28f2b546e734191d70ee497f59c31312d4fc990640e2e"
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:2",
+                "kind": "screenshot",
+                "mediaType": "image/png",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "multi-two-goal-replay-and-side-effect-282ea583a93e7756/attempt-1/screenshots/001-failure.png",
+                "size": 15328,
+                "sha256": "f5544f8dc6d012f705b1103b686a0a666f1ffff115fcdf5545987ee6e97b57b6"
+              }
+            ],
+            "error": {
+              "category": "test",
+              "code": "ASSERTION_FAILED",
+              "message": "expect.toContainText failed\nlocator: getByRole(\"status\")\nexpected: text containing \"Pro\"\nobserved: text \"Enterprise\" (match count 1)",
+              "retryable": false,
+              "phase": "body",
+              "details": {
+                "locator": "getByRole(\"status\")",
+                "expected": "text containing \"Pro\"",
+                "observed": "text \"Enterprise\"",
+                "matches": 1
+              }
+            },
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "failure": {
+              "url": "http://127.0.0.1:4173/",
+              "viewport": {
+                "width": 1280,
+                "height": 720
+              },
+              "nodes": 7,
+              "screen": "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:1",
+              "screenshot": "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:2"
+            },
+            "steps": [
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:22:24.212Z",
+                "durationMs": 189,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 5,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "prepare upgrade",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:22:24.402Z",
+                "durationMs": 209,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:24.406Z",
+                    "durationMs": 121,
+                    "status": "passed",
+                    "bytes": 188,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-24T21:22:24.529Z",
+                    "durationMs": 68,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Prepare Upgrade\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:24.597Z",
+                    "durationMs": 12,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 1,
+                  "observationBytes": 199,
+                  "contextBytes": 0,
+                  "ledgerBytes": 0
+                },
+                "cache": {
+                  "mode": "self-finalized",
+                  "replayedActions": 1,
+                  "totalActions": 1,
+                  "entry": "ae7a68aa12e041aa64e923cf8dbe81c59a5ae4906beccda561b4efa9beb45552",
+                  "write": "kept"
+                },
+                "observationRevision": "b3",
+                "explanation": "replayed 1 recorded action(s) zero-turn from the trace cache; recorded verdict: Tapped Prepare Upgrade",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "since": 0,
+                  "changes": [
+                    "changed status \"Ready\" (was: status \"Idle\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 6,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:2",
+                "index": 2,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:22:24.611Z",
+                "durationMs": 8,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-24T21:22:24.611Z",
+                    "durationMs": 7,
+                    "status": "passed",
+                    "count": 1
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 7,
+                  "column": 44
+                }
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:3",
+                "index": 3,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "finish upgrade",
+                "status": "passed",
+                "startedAt": "2026-10-24T21:22:24.619Z",
+                "durationMs": 14470,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:24.620Z",
+                    "durationMs": 101,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:24.823Z",
+                    "durationMs": 14,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:25.140Z",
+                    "durationMs": 20,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:25.763Z",
+                    "durationMs": 35,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:26.801Z",
+                    "durationMs": 24,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:29.827Z",
+                    "durationMs": 26,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:32.857Z",
+                    "durationMs": 30,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:35.887Z",
+                    "durationMs": 26,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:38.914Z",
+                    "durationMs": 27,
+                    "status": "passed",
+                    "bytes": 199,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-24T21:22:38.947Z",
+                    "durationMs": 35,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Finish Upgrade\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-24T21:22:38.983Z",
+                    "durationMs": 103,
+                    "status": "passed",
+                    "bytes": 204,
+                    "count": 7
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [
+                  "01a16fcb-1b16-7006-aaed-054081d098e8:artifact:0"
+                ],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 1,
+                  "observationBytes": 204,
+                  "contextBytes": 0,
+                  "ledgerBytes": 152
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "target-not-found",
+                  "replayedActions": 0,
+                  "totalActions": 1,
+                  "entry": "0a082a36a2219be3bb1f96b8c5f739783898ada9ae5a6e668058443eb3062c86",
+                  "detail": "at action 1 of 1, tap button \"Finish Upgrade v2\"",
+                  "write": "unconfirmed"
+                },
+                "observationRevision": "b15",
+                "explanation": "Tapped Finish Upgrade",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "since": 1,
+                  "changes": [
+                    "changed status \"Enterprise\" (was: status \"Ready\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 8,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a16fcb-1b16-7006-aaed-054081d098e8:4",
+                "index": 4,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "failed",
+                "startedAt": "2026-10-24T21:22:39.089Z",
+                "durationMs": 5005,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-24T21:22:39.089Z",
+                    "durationMs": 5005,
+                    "status": "failed",
+                    "count": 46,
+                    "detail": "text \"Enterprise\" (1 match) x46"
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/multi.e2e.ts",
+                  "line": 9,
+                  "column": 44
+                },
+                "error": {
+                  "category": "test",
+                  "code": "ASSERTION_FAILED",
+                  "message": "expect.toContainText failed\nlocator: getByRole(\"status\")\nexpected: text containing \"Pro\"\nobserved: text \"Enterprise\" (match count 1)",
+                  "retryable": false,
+                  "details": {
+                    "locator": "getByRole(\"status\")",
+                    "expected": "text containing \"Pro\"",
+                    "observed": "text \"Enterprise\"",
+                    "matches": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "e191c9d62cf78e0d3b4bd5234c92d4134bfeb649f7c523c598429d026d1ecb06",
+        "testId": "tests/noop.e2e.ts::no-change%20step%20is%20not%20recorded",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "no-change step is not recorded"
+        ],
+        "file": "tests/noop.e2e.ts",
+        "source": {
+          "file": "tests/noop.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      },
+      {
+        "id": "7760434dd681a3e89042366aa245422a43e1abb7180237a480563e0d1b9f93a8",
+        "testId": "tests/replay.e2e.ts::live%20recording%2C%20unchanged%20replay%2C%20and%20changed-control%20handoff",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "live recording, unchanged replay, and changed-control handoff"
+        ],
+        "file": "tests/replay.e2e.ts",
+        "source": {
+          "file": "tests/replay.e2e.ts",
+          "line": 4,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": false,
+        "status": "skipped",
+        "skip": {
+          "cause": "filtered",
+          "reason": "file not selected by a positional argument"
+        },
+        "attempts": []
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 4,
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 4,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 152,
+      "maxObservationBytes": 204,
+      "artifactBytes": 15579,
+      "downloads": 0,
+      "events": 16,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 1
+    }
+  }
+}

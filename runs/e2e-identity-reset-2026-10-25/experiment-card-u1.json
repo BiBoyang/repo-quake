@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-identity-reset-uncertain-only-v1",
+  "claim": "A direct StepTraceSession with a committed-but-unknown action hands ACTION_MAY_HAVE_COMMITTED to the executor with the correct uncertain action and exactly one commit.",
+  "target": {
+    "name": "tester-army/e2e StepTraceSession uncertain commit",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3; local CDP Chrome",
+    "source_sha256": "821a7293c5b1c0a06eb5d9419067ace737cb231624b7f76438d0916c3d85c69a"
+  },
+  "task": {
+    "prompt_sha256": "82bda736d34b6a1eda1a2a90aae1bc5e3c9024d9193251c0902dc7b3386b46c1",
+    "path_reachability": "U1 directly invokes StepTraceSession with a valid trace-1 entry and a host action that has committed once but whose outcome is unknown."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-upgrade-executor-1.0.0",
+      "name": "hand-rolled-executor",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "A1",
+      "fault": "healthy single Finish Upgrade baseline (already completed)",
+      "role": "negative_control"
+    },
+    {
+      "id": "U1",
+      "fault": "direct StepTraceSession action commits then throws ACTION_MAY_HAVE_COMMITTED",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "A1"
+  },
+  "witness": {
+    "delivery": "The baseline trace is valid trace-1 content and the action host throws after exactly one commit. The test asserts stopReason, uncertainAction and calls=1.",
+    "checker": "Direct replayTrace outcome, prefix and committed call count.",
+    "blind_spots": [
+      "Direct StepTraceSession only; no production runner or real model.",
+      "One uncertain action shape only."
+    ]
+  },
+  "grading": {
+    "rubric": "Expected handoff, action-uncertain and exactly one committed action must agree; syntax or setup failure is INVALID.",
+    "primary_metric": "uncertain_commit_handoff"
+  },
+  "sampling": {
+    "runs_per_cell": 1
+  },
+  "invalid_rules": [
+    "Missing or invalid baseline trace, class API mismatch, or any setup failure before the direct replay begins."
+  ],
+  "budget": {
+    "max_runs": 2
+  },
+  "isolation": {
+    "mode": "Direct Node.js replay host only; no production, real model or third-party writes.",
+    "pristine_original_unreachable": false,
+    "contamination": "Baseline trace is a saved valid entry, not a live target."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "One direct Node.js execution and a small JSON outcome file."
+  }
+}
