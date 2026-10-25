@@ -14,7 +14,7 @@
 
 ## Ordered publication gate
 
-- [ ] Human reviews `issue-title.txt` and `issue-body.md`.
+- [x] Human reviewed the title and draft on 2026-10-25; final edit was tone-only, with the reproduction and technical claims unchanged.
 - [ ] Publish the upstream issue (this is the first public third-party finding).
 - [ ] Record the issue URL in all disclosure files and this checklist.
 - [ ] Commit any disclosure URL updates, then push the repo-quake evidence branch.

@@ -2,7 +2,7 @@
 
 When a confirmed trace's `cache.store.write()` rejects, `settleStagedTraces` contains the exception but returns no outcome for that step. `step.cache.write` is therefore omitted instead of `not-written`.
 
-The undefined-return path already reports `not-written`, so a store that rejects is less observable than one that declines to write. I expected a rejected write to keep the same explicit outcome while the test itself remains best-effort/green.
+The undefined-return path already reports `not-written`. I expected a rejected write to produce the same explicit outcome while keeping cache persistence best-effort and the test green.
 
 ## Minimal reproduction
 
@@ -73,18 +73,20 @@ Expected the last line to be `throw -> not-written`.
 
 ## Anything else
 
-A full-runner/browser control showed the user-visible result. The application made one save, the test passed, and the custom store logged that settlement reached `write` and threw. The report omitted `step.cache.write`; the console showed only `Tests 1 passed` and `Cache 1 missed`.
+In a full-runner/browser control, the application made one save, the test passed, and the custom store logged the write rejection. The report omitted `step.cache.write`; the console showed only `Tests 1 passed` and `Cache 1 missed`.
 
-The write branch sets `not-written` only for a returned `undefined`; the surrounding catch drops a rejection without setting an outcome:
+From the code, the write branch maps a returned `undefined` to `not-written`, but the catch handles a rejection without recording an outcome:
 
 https://github.com/tester-army/e2e/blob/69e123b17e04ed624df16d32f3b1ef95ce22c083/packages/e2e/src/cache/context.ts#L188-L223
 
-The same structure was present when main was read on 2026-10-25. The runtime reproduction above used the pinned npm release; main was source-inspected, not rebuilt.
+I saw the same structure on main on 2026-10-25. The reproduction used the pinned npm release; main was source-inspected, not rebuilt.
 
 `not-written` is already the documented outcome for a store that did not write a confirmed recording:
 
 https://github.com/tester-army/e2e/blob/69e123b17e04ed624df16d32f3b1ef95ce22c083/docs/cache.mdx#L48-L57
 
-Related: #939 introduced the cache-outcome report so automation could tell what settlement did. A missing outcome removes that signal. #1363 proposes counting explicit not-saved outcomes in the console, but it does not cover this case either: a thrown write currently has no outcome for the summary to count.
+Related: #939 introduced cache-outcome reporting so automation could consume settlement results; an absent outcome removes that signal. #1363 proposes counting explicit not-saved outcomes, but cannot cover a rejection that never gets one.
+
+If you’d like, I can open a small PR with a regression test and docs update.
 
 Investigated and drafted with AI assistance. All runtime results came from deterministic local fixtures; no real model was called.
