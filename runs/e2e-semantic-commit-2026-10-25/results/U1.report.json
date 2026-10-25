@@ -1,0 +1,306 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a170a8-752c-7ffc-ad41-6d8ee8f18764",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "blocked",
+    "exitCode": 3,
+    "startedAt": "2026-10-25T01:24:11.066Z",
+    "finishedAt": "2026-10-25T01:24:12.351Z",
+    "project": {
+      "id": "e2e-semantic-commit-audit",
+      "configDigest": "ee6aaba39ea2f5e6909113d96f9ddb0e6549221f719a2ad7d49fae70143d5ae7"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "f7f7f8b3d009ed5e8f8fb1b7fecc6257b29bdfe2",
+      "branch": "codex/measurement-hardening",
+      "dirty": false
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "394652203e8e74e00b7675ef634a4044d429ffe2b3d9d8786f49c972d1b1759d",
+        "testId": "tests/workflow.e2e.ts::asynchronous%20parameterized%20save",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "asynchronous parameterized save"
+        ],
+        "file": "tests/workflow.e2e.ts",
+        "source": {
+          "file": "tests/workflow.e2e.ts",
+          "line": 9,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "failed",
+        "attempts": [
+          {
+            "id": "01a170a8-789a-7383-a287-3f9c956c2ebf",
+            "index": 0,
+            "status": "failed",
+            "startedAt": "2026-10-25T01:24:11.546Z",
+            "durationMs": 784,
+            "artifacts": [
+              {
+                "id": "01a170a8-789a-7383-a287-3f9c956c2ebf:artifact:0",
+                "kind": "log",
+                "mediaType": "text/plain",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "workflow-asynchronous-parameterized-save-394652203e8e74e0/attempt-1/screen-at-failure.txt",
+                "size": 232,
+                "sha256": "9bd76f922fd69c75b0db4a78e81a330d11cb19ef98ad918e78bee27fb97bded6"
+              },
+              {
+                "id": "01a170a8-789a-7383-a287-3f9c956c2ebf:artifact:1",
+                "kind": "screenshot",
+                "mediaType": "image/png",
+                "redaction": "complete",
+                "producer": {
+                  "kind": "attempt"
+                },
+                "path": "workflow-asynchronous-parameterized-save-394652203e8e74e0/attempt-1/screenshots/001-failure.png",
+                "size": 17108,
+                "sha256": "79b17b305dd703023d916aaa5e0a47fa91f7276ad96a2eb6212f74b798561044"
+              }
+            ],
+            "error": {
+              "category": "infrastructure",
+              "code": "APP_UNREACHABLE",
+              "message": "actions failed: Cannot read properties of undefined (reading 'cause')",
+              "retryable": false,
+              "phase": "body"
+            },
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "failure": {
+              "url": "http://127.0.0.1:4173/",
+              "viewport": {
+                "width": 1280,
+                "height": 720
+              },
+              "nodes": 7,
+              "screen": "01a170a8-789a-7383-a287-3f9c956c2ebf:artifact:0",
+              "screenshot": "01a170a8-789a-7383-a287-3f9c956c2ebf:artifact:1"
+            },
+            "steps": [
+              {
+                "id": "01a170a8-789a-7383-a287-3f9c956c2ebf:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:11.602Z",
+                "durationMs": 221,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 10,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a170a8-789a-7383-a287-3f9c956c2ebf:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "save item {item}",
+                "status": "failed",
+                "startedAt": "2026-10-25T01:24:11.825Z",
+                "durationMs": 431,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:11.828Z",
+                    "durationMs": 119,
+                    "status": "passed",
+                    "bytes": 183,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:11.948Z",
+                    "durationMs": 48,
+                    "status": "passed",
+                    "name": "type",
+                    "detail": "type \"Uncertain 007\" into textbox \"Item name\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:11.997Z",
+                    "durationMs": 13,
+                    "status": "passed",
+                    "bytes": 215,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:12.010Z",
+                    "durationMs": 90,
+                    "status": "failed",
+                    "name": "tap",
+                    "code": "ENGINE_FAILURE",
+                    "detail": "tap: actions failed: Cannot read properties of undefined (reading 'cause')"
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:12.101Z",
+                    "durationMs": 101,
+                    "status": "passed",
+                    "bytes": 231,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:12.202Z",
+                    "durationMs": 22,
+                    "status": "passed",
+                    "name": "type",
+                    "detail": "type \"Uncertain 007\" into textbox \"Item name\""
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:12.224Z",
+                    "durationMs": 32,
+                    "status": "failed",
+                    "name": "tap",
+                    "code": "ENGINE_FAILURE",
+                    "detail": "tap: actions failed: Cannot read properties of undefined (reading 'cause')"
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 4,
+                  "observationBytes": 231,
+                  "contextBytes": 0,
+                  "ledgerBytes": 23
+                },
+                "cache": {
+                  "mode": "agent-concluded",
+                  "reason": "action-failed",
+                  "replayedActions": 1,
+                  "totalActions": 2,
+                  "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+                  "detail": "at action 2 of 2, tap button \"Save Item\": actions failed: Cannot read properties of undefined (reading 'cause')",
+                  "write": "evicted"
+                },
+                "observationRevision": "b5",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "since": 0,
+                  "changes": [
+                    "changed textbox \"Item name\" value=\"Uncertain 007\" (was: textbox \"Item name\")",
+                    "changed status \"Saving Uncertain 007\" (was: status \"Idle\")"
+                  ]
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 11,
+                  "column": 15
+                },
+                "error": {
+                  "category": "infrastructure",
+                  "code": "APP_UNREACHABLE",
+                  "message": "actions failed: Cannot read properties of undefined (reading 'cause')",
+                  "retryable": false
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 1,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 23,
+      "maxObservationBytes": 231,
+      "artifactBytes": 17340,
+      "downloads": 0,
+      "events": 7,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 4
+    }
+  }
+}

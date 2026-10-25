@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a170a8-7d04-73d2-921f-a750e475f7fa",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "passed",
+    "exitCode": 0,
+    "startedAt": "2026-10-25T01:24:12.976Z",
+    "finishedAt": "2026-10-25T01:24:15.275Z",
+    "project": {
+      "id": "e2e-semantic-commit-audit",
+      "configDigest": "74c6c7799f5869cbaef2de8af78d7956427801c87e1cb38ab0bb13f1ca0e9101"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "f7f7f8b3d009ed5e8f8fb1b7fecc6257b29bdfe2",
+      "branch": "codex/measurement-hardening",
+      "dirty": false
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "394652203e8e74e00b7675ef634a4044d429ffe2b3d9d8786f49c972d1b1759d",
+        "testId": "tests/workflow.e2e.ts::asynchronous%20parameterized%20save",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "asynchronous parameterized save"
+        ],
+        "file": "tests/workflow.e2e.ts",
+        "source": {
+          "file": "tests/workflow.e2e.ts",
+          "line": 9,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "passed",
+        "attempts": [
+          {
+            "id": "01a170a8-80bf-7889-b8eb-7c8f9f13f4c9",
+            "index": 0,
+            "status": "passed",
+            "startedAt": "2026-10-25T01:24:13.631Z",
+            "durationMs": 1617,
+            "artifacts": [],
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "steps": [
+              {
+                "id": "01a170a8-80bf-7889-b8eb-7c8f9f13f4c9:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:13.693Z",
+                "durationMs": 220,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 10,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a170a8-80bf-7889-b8eb-7c8f9f13f4c9:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "save item {item}",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:13.914Z",
+                "durationMs": 1291,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:13.918Z",
+                    "durationMs": 120,
+                    "status": "passed",
+                    "bytes": 183,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:14.039Z",
+                    "durationMs": 50,
+                    "status": "passed",
+                    "name": "type",
+                    "detail": "type \"Negative 008\" into textbox \"Item name\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:14.090Z",
+                    "durationMs": 11,
+                    "status": "passed",
+                    "bytes": 214,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:14.101Z",
+                    "durationMs": 44,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Save Item\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:14.145Z",
+                    "durationMs": 13,
+                    "status": "passed",
+                    "bytes": 229,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:14.260Z",
+                    "durationMs": 11,
+                    "status": "passed",
+                    "bytes": 229,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:14.572Z",
+                    "durationMs": 11,
+                    "status": "passed",
+                    "bytes": 229,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:15.183Z",
+                    "durationMs": 21,
+                    "status": "passed",
+                    "bytes": 278,
+                    "count": 9
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 2,
+                  "observationBytes": 278,
+                  "contextBytes": 0,
+                  "ledgerBytes": 0
+                },
+                "cache": {
+                  "mode": "self-finalized",
+                  "replayedActions": 2,
+                  "totalActions": 2,
+                  "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+                  "write": "kept"
+                },
+                "observationRevision": "b7",
+                "explanation": "replayed 2 recorded action(s) zero-turn from the trace cache; recorded verdict: Saved Alpha 001",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 9,
+                  "since": 0,
+                  "changes": [
+                    "changed textbox \"Item name\" value=\"Negative 008\" (was: textbox \"Item name\")",
+                    "changed status \"Saved Negative 008\" (was: status \"Idle\")",
+                    "added list",
+                    "added listitem \"Negative 008\""
+                  ]
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 11,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a170a8-80bf-7889-b8eb-7c8f9f13f4c9:2",
+                "index": 2,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:15.206Z",
+                "durationMs": 13,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-25T01:24:15.207Z",
+                    "durationMs": 13,
+                    "status": "passed",
+                    "count": 1
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 12,
+                  "column": 44
+                }
+              },
+              {
+                "id": "01a170a8-80bf-7889-b8eb-7c8f9f13f4c9:3",
+                "index": 3,
+                "kind": "resource",
+                "api": "browser.evaluate",
+                "label": "",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:15.220Z",
+                "durationMs": 3,
+                "events": [],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 13,
+                  "column": 29
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 1,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 0,
+      "maxObservationBytes": 278,
+      "artifactBytes": 0,
+      "downloads": 0,
+      "events": 9,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 2
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "C0",
+  "behavior": "saved",
+  "expected": "saved",
+  "actual": "saved",
+  "contained": true,
+  "matchesPreregisteredExpectation": true,
+  "calls": [
+    {
+      "op": "read",
+      "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "op": "write",
+      "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "behavior": "saved",
+      "payload": {
+        "actions": [],
+        "executor": {
+          "name": "contract-probe",
+          "version": "1.0.0"
+        },
+        "summary": "verified",
+        "startPath": "/"
+      }
+    }
+  ],
+  "stagedAfter": 0
+}

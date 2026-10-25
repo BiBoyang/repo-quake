@@ -1,0 +1,6 @@
+{
+  "name": "e2e-cache-write-throw-repro",
+  "private": true,
+  "type": "module",
+  "dependencies": { "e2e": "0.21.3" }
+}

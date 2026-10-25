@@ -1,0 +1,14 @@
+
+ RUN  e2e v0.21.3 /Users/boyang/repo-quake/runs/e2e-uncertain-verification-2026-10-25/fixtures/app
+      run 01a170ad-529c-7592-8de5-033408ba6146 · targets: web
+
+   ✓ asynchronous parameterized save > agent.act "save item {item}" 1.22s
+ ✓ |web| tests/workflow.e2e.ts (1 test) 1.55s
+   ✓ asynchronous parameterized save 1.55s
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+      Cache  1 handed off
+   Start at  09:29:30
+   Duration  2.16s
+

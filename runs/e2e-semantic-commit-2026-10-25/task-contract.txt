@@ -1,0 +1,23 @@
+Task and frozen grading contract — e2e semantic/cache and asynchronous commit audit
+
+The only agent instruction is: save item {item}. Params are item=unique(current value), alias=<literal>.
+The deterministic executor fills the textbox named "Item name", taps "Save Item", and waits for the asynchronous status "Saved <item>".
+On an action-uncertain replay prefix it must verify the independent server commit ledger and final UI, and must not repeat the tap.
+
+Nine executions, one per cell, no retries:
+C0 healthy live recording; C1 cached replay with a new unique value; C2 --no-cache semantic reference; W1 /other wrong-context recovery; P1 unique/literal param collision; R1 defaulted cache config under CI=1; F1 custom store read miss then EACCES write throw; U1 cached tap commits and then throws ACTION_MAY_HAVE_COMMITTED through the real browser engine wrapper; N1 healthy cached negative control after all faults.
+
+Mechanical expectations fixed before execution:
+- Every valid cell has at most one save-request and one save-committed for its current item, never another cell's item.
+- C0: one executor call, missed/no-entry, write=saved, one cache entry.
+- C1: zero executor calls, full replay, current Beta value in the DOM and server ledger, write=kept.
+- C2: one executor call, no agent cache detail, and the same normalized event sequence/final DOM shape as C0 and C1.
+- W1: missed/wrong-context, one executor call, correct live recovery on /other.
+- P1: one executor call, notRecorded=param-collision, no cache entry.
+- R1: report environment CI=true, full replay, zero executor calls, byte-identical cache before/after.
+- F1: independent store log proves read then write; write throws after the application workflow. Record test status, cache.write presence, executor calls and side effects without assuming whether a missing cache.write is a defect.
+- U1: cache reason action-uncertain, handoff names the tap, exactly one engine fault injection after the real tap, one executor handoff, one commit, no repeated save.
+- N1: full replay with zero executor calls and one correct commit.
+
+Normalized semantic comparison replaces only the current item string with {item}; event types/order, route, input value shape, saved item count and final status shape must otherwise agree across C0/C1/C2.
+A product failure is data. Missing browser/CDP/server, stale or absent baseline before a treatment, fixture syntax/config errors, missing primary artifacts needed for adjudication, or a U1 run that never reads the seed entry are invalid setup. Any invalid attempt consumes budget and is not retried under this card.

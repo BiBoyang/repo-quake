@@ -1,0 +1,8 @@
+{
+  "files": {
+    "fixtures/app/package-lock.json": "6e27c96b1463ea73e4f1cad902f88695c7e71d3af34064b5f61be42bc58960cf",
+    "fixtures/app/package.json": "89f7ebdc2ca6cf87d48fec89b79a0e9a397f280be2d418ae438497d8c230b785",
+    "fixtures/app/probe.mjs": "3977f68117e69c54dc1ce11ee548074284f89e5e5c2136f3d188f047c35b5780",
+    "task-contract.txt": "9c7e98137a18a8310ad567799f64efb26b6e83397179d93be0a0e04d5998dc90"
+  }
+}

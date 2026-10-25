@@ -1,0 +1,20 @@
+[
+  {
+    "sequence": 1,
+    "at": "2026-10-25T01:23:59.203Z",
+    "type": "input",
+    "item": "Gamma 003"
+  },
+  {
+    "sequence": 2,
+    "at": "2026-10-25T01:23:59.251Z",
+    "type": "save-request",
+    "item": "Gamma 003"
+  },
+  {
+    "sequence": 3,
+    "at": "2026-10-25T01:23:59.913Z",
+    "type": "save-committed",
+    "item": "Gamma 003"
+  }
+]

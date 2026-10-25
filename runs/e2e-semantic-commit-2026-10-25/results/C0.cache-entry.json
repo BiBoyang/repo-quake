@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "trace-1",
+  "createdAt": "2026-10-25T01:23:54.942Z",
+  "payload": {
+    "actions": [
+      {
+        "name": "type",
+        "summary": "type \"{{param:/item}}\" into textbox \"Item name\"",
+        "target": {
+          "role": "textbox",
+          "name": "Item name"
+        },
+        "value": "{{param:/item}}"
+      },
+      {
+        "name": "tap",
+        "summary": "tap button \"Save Item\"",
+        "target": {
+          "role": "button",
+          "name": "Save Item"
+        }
+      }
+    ],
+    "executor": {
+      "name": "deterministic-semantic-executor",
+      "version": "1.0.0"
+    },
+    "recordedFor": {
+      "testId": "tests/workflow.e2e.ts::asynchronous%20parameterized%20save",
+      "targetId": "web",
+      "instructionDigest": "ac474f310fcc70e0e514e809abae18bca88c6893ae2fa6605e112dd91d0a2754",
+      "paramsDigest": "e8cea214c03404dcb2d881148011e30ffa77f3ecf280904219fce5a184eb4ca0",
+      "callIndex": 0,
+      "agent": "default"
+    },
+    "summary": "Saved Alpha 001",
+    "startPath": "/",
+    "endPath": "/",
+    "endAnchors": [
+      {
+        "role": "status",
+        "name": "Saved {{param:/item}}"
+      },
+      {
+        "role": "textbox",
+        "name": "Item name",
+        "value": "{{param:/item}}"
+      },
+      {
+        "role": "listitem",
+        "name": "{{param:/item}}"
+      }
+    ],
+    "goneAnchors": [
+      {
+        "role": "status",
+        "name": "Idle"
+      },
+      {
+        "role": "textbox",
+        "name": "Item name"
+      }
+    ],
+    "endWaitMs": 10898,
+    "keyedBy": {
+      "cacheSchema": "trace-1",
+      "policyVersion": "conservative/6",
+      "project": "6e700244203c97932549f52c08acbd0814ba6112580fd4481d7abfe188e53d11",
+      "platform": "web",
+      "engineName": "web",
+      "engineSpiVersion": 1,
+      "appIdentity": "cd557c932b7030321cba8e8748ed3ccac87511c545e02c2f1c4878399e194597",
+      "agentContextDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

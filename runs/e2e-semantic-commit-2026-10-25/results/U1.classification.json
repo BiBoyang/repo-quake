@@ -1,0 +1,8 @@
+{
+  "id": "U1",
+  "classification": "invalid setup",
+  "productFinding": false,
+  "rootCause": "The fixture constructed EngineError without its required options argument. The intended ACTION_MAY_HAVE_COMMITTED became TypeError: Cannot read properties of undefined (reading 'cause'), so replay reported action-failed instead.",
+  "observedSideEffects": "The executor treated the malformed action-failed handoff as an ordinary miss and repeated the save. The two save-request events are not evidence of an e2e uncertain-commit defect.",
+  "disposition": "No retry under this card. A separately preregistered two-cell corrected experiment is in runs/e2e-uncertain-verification-2026-10-25."
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "sequence": 1,
+    "at": "2026-10-25T01:24:01.576Z",
+    "type": "input",
+    "item": "Delta 004"
+  },
+  {
+    "sequence": 2,
+    "at": "2026-10-25T01:24:01.630Z",
+    "type": "save-request",
+    "item": "Delta 004"
+  },
+  {
+    "sequence": 3,
+    "at": "2026-10-25T01:24:02.292Z",
+    "type": "save-committed",
+    "item": "Delta 004"
+  }
+]

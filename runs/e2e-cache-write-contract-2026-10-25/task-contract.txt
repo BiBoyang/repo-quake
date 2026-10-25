@@ -1,0 +1,10 @@
+Frozen cache-write settlement contract
+
+Target: settleStagedTraces in e2e@0.21.3. One direct invocation per cell, no browser, no model, no retries.
+Every cell stages one kind=write trace at stepIndex=0 in read-write mode. The settlement has lastVerifiedStepIndex=1, so the trace is confirmed. The store read returns a miss, forcing the write path.
+
+C0: write returns {bytes:128}; expected outcomes.get(0) === saved.
+C1: write returns undefined; expected outcomes.get(0) === not-written. This is the positive reporting control.
+T1: write throws Error(EACCES); expected outcomes.get(0) === not-written under the public CacheWrite contract: confirmed, but the store did not write it. The throw must be contained and must not erase the outcome.
+
+The store call ledger is the delivery witness. Import/setup failure, a failed control, or a missing outcome artifact is invalid setup. An unexpected T1 outcome is a contract candidate to review against the full-browser F1 evidence, not an automatic upstream issue.

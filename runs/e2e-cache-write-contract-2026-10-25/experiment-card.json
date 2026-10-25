@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-cache-write-throw-settlement-v1",
+  "claim": "A confirmed staged trace whose store write throws is contained and receives the explicit not-written outcome, just like a store write that returns undefined.",
+  "target": {
+    "name": "tester-army/e2e settleStagedTraces cache write reporting contract",
+    "version": "e2e@0.21.3 npm lockfile pinned",
+    "source_sha256": "6e27c96b1463ea73e4f1cad902f88695c7e71d3af34064b5f61be42bc58960cf"
+  },
+  "task": {
+    "prompt_sha256": "9c7e98137a18a8310ad567799f64efb26b6e83397179d93be0a0e04d5998dc90",
+    "path_reachability": "All cells stage a confirmed write at stepIndex 0. Store read misses, so settlement necessarily reaches write. C0 and C1 gate the healthy and undefined reporting channels before T1 throws EACCES."
+  },
+  "hosts": [
+    {
+      "id": "direct-node-contract-probe-1.0.0",
+      "name": "direct-deterministic-function-probe",
+      "version": "1.0.0",
+      "model": "none",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy write returns bytes",
+      "role": "negative_control"
+    },
+    {
+      "id": "C1",
+      "fault": "write returns undefined",
+      "role": "positive_control"
+    },
+    {
+      "id": "T1",
+      "fault": "write throws EACCES",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "C0",
+    "positive": "C1"
+  },
+  "witness": {
+    "delivery": "Per-cell store call logs prove read then write and record the selected behavior. The execution ledger forbids replacement runs.",
+    "checker": "Compare settled outcomes.get(0), thrown containment and store calls with task-contract.txt. C0 must be saved; C1 and T1 must be not-written.",
+    "blind_spots": [
+      "This is a direct internal-function contract probe, not a public package API or a full runner by itself; it must be read with the independent full-browser F1 evidence.",
+      "One custom store behavior cannot cover all filesystem and remote-store errors."
+    ]
+  },
+  "grading": {
+    "rubric": "Frozen task-contract.txt; an unexpected T1 result is reviewed against CacheWrite documentation and full-browser F1, while control or setup failures are invalid.",
+    "primary_metric": "explicit_cache_write_outcome"
+  },
+  "sampling": {
+    "runs_per_cell": 1
+  },
+  "invalid_rules": [
+    "Target import or fixture setup fails before settlement.",
+    "C0 or C1 does not produce its frozen control outcome; T1 then does not run.",
+    "Store delivery log or outcome artifact is missing.",
+    "Every attempted cell consumes budget and is not replaced."
+  ],
+  "budget": {
+    "max_runs": 3
+  },
+  "isolation": {
+    "mode": "Direct local Node function invocation with in-memory stores; no browser, network, model or filesystem cache writes.",
+    "pristine_original_unreachable": false,
+    "contamination": "Pinned target sources remain readable for import, but each cell receives a fresh context and store; no cell shares mutable staged state with another."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Three in-memory function calls and JSON evidence under this run directory; no external writes or paid calls."
+  }
+}

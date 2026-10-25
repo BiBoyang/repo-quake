@@ -1,0 +1,20 @@
+[
+  {
+    "sequence": 1,
+    "at": "2026-10-25T01:23:56.452Z",
+    "type": "input",
+    "item": "Beta 002"
+  },
+  {
+    "sequence": 2,
+    "at": "2026-10-25T01:23:56.503Z",
+    "type": "save-request",
+    "item": "Beta 002"
+  },
+  {
+    "sequence": 3,
+    "at": "2026-10-25T01:23:57.169Z",
+    "type": "save-committed",
+    "item": "Beta 002"
+  }
+]

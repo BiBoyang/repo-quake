@@ -1,0 +1,8 @@
+Focused real-browser uncertain-commit verification, frozen before execution
+
+This is a separate two-execution experiment, not a retry under e2e-semantic-cache-and-async-commit-v1. The earlier U1 is invalid setup because its fixture omitted EngineError options and produced TypeError/action-failed. This card corrects only that fixture call and uses the archived healthy C0 seed entry and hash.
+
+U1: materialize the archived seed, replay with item=Uncertain 007, let the real web tap return, then throw EngineError(ACTION_MAY_HAVE_COMMITTED, {retryable:false}). The cache must hand off with reason action-uncertain and name the tap. The deterministic executor must verify the independent save-committed ledger and final UI without another tap. Exactly one input, save-request and save-committed sequence is expected; no duplicate save.
+N1: a fresh copy of the same archived seed replays with item=Negative 008 and no engine fault. It must self-finalize two actions with zero executor calls and exactly one correct commit.
+
+Every attempted cell consumes budget; no replacement execution. Missing browser/server/seed/report/ledger/fault evidence, or U1 not reading the seed, is invalid setup. An incorrect product handoff after valid delivery is product data.

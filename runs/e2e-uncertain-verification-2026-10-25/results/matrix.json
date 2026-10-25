@@ -1,0 +1,346 @@
+[
+  {
+    "id": "U1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "agent-concluded",
+      "reason": "action-uncertain",
+      "replayedActions": 1,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "detail": "at action 2 of 2, tap button \"Save Item\"",
+      "write": "saved"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:29:31.277Z",
+        "kind": "call",
+        "runId": "U1",
+        "attemptId": "01a170ad-5751-7a00-b2bc-bc3319ed5935",
+        "item": "Uncertain 007",
+        "replayedPrefix": {
+          "replayedActions": [
+            "type \"Uncertain 007\" into textbox \"Item name\""
+          ],
+          "totalActions": 2,
+          "stopReason": "action-uncertain",
+          "uncertainAction": "tap button \"Save Item\""
+        }
+      },
+      {
+        "at": "2026-10-25T01:29:32.118Z",
+        "kind": "verification",
+        "runId": "U1",
+        "item": "Uncertain 007",
+        "result": "committed-once-not-repeated"
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 1,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": false,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:29:31.920Z",
+            "type": "save-committed",
+            "item": "Uncertain 007"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:29:31.263Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:29:31.263Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:29:31.920Z",
+            "type": "save-committed",
+            "item": "Uncertain 007"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Uncertain 007",
+          "input": "Uncertain 007",
+          "items": [
+            "Uncertain 007"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "U1-action-uncertain",
+        "pass": false,
+        "actual": {
+          "mode": "agent-concluded",
+          "reason": "action-uncertain",
+          "replayedActions": 1,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "detail": "at action 2 of 2, tap button \"Save Item\"",
+          "write": "saved"
+        }
+      },
+      {
+        "name": "U1-handoff-names-tap",
+        "pass": true,
+        "actual": [
+          {
+            "replayedActions": [
+              "type \"Uncertain 007\" into textbox \"Item name\""
+            ],
+            "totalActions": 2,
+            "stopReason": "action-uncertain",
+            "uncertainAction": "tap button \"Save Item\""
+          }
+        ]
+      },
+      {
+        "name": "U1-fault-after-real-tap-once",
+        "pass": true,
+        "actual": [
+          {
+            "at": "2026-10-25T01:29:31.275Z",
+            "fault": "commit-then-ACTION_MAY_HAVE_COMMITTED",
+            "action": "tap"
+          }
+        ]
+      },
+      {
+        "name": "U1-verified-not-repeated",
+        "pass": true,
+        "actual": [
+          {
+            "at": "2026-10-25T01:29:31.277Z",
+            "kind": "call",
+            "runId": "U1",
+            "attemptId": "01a170ad-5751-7a00-b2bc-bc3319ed5935",
+            "item": "Uncertain 007",
+            "replayedPrefix": {
+              "replayedActions": [
+                "type \"Uncertain 007\" into textbox \"Item name\""
+              ],
+              "totalActions": 2,
+              "stopReason": "action-uncertain",
+              "uncertainAction": "tap button \"Save Item\""
+            }
+          },
+          {
+            "at": "2026-10-25T01:29:32.118Z",
+            "kind": "verification",
+            "runId": "U1",
+            "item": "Uncertain 007",
+            "result": "committed-once-not-repeated"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "N1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "self-finalized",
+      "replayedActions": 2,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "write": "kept"
+    },
+    "ci": false,
+    "executorCalls": 0,
+    "executor": [],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:29:34.638Z",
+            "type": "save-committed",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:29:33.976Z",
+            "type": "save-request",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:29:33.976Z",
+            "type": "save-request",
+            "item": "Negative 008"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:29:34.638Z",
+            "type": "save-committed",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Negative 008",
+          "input": "Negative 008",
+          "items": [
+            "Negative 008"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "N1-zero-live-calls",
+        "pass": true,
+        "actual": 0
+      },
+      {
+        "name": "N1-full-replay",
+        "pass": true,
+        "actual": {
+          "mode": "self-finalized",
+          "replayedActions": 2,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "write": "kept"
+        }
+      },
+      {
+        "name": "N1-kept",
+        "pass": true,
+        "actual": "kept"
+      }
+    ]
+  }
+]

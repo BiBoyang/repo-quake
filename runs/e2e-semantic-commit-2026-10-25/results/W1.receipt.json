@@ -1,0 +1,13 @@
+{
+  "id": "W1",
+  "startedAt": "2026-10-25T01:24:00.137Z",
+  "finishedAt": "2026-10-25T01:24:02.655Z",
+  "code": 0,
+  "signal": null,
+  "item": "Delta 004",
+  "route": "/other",
+  "noCache": false,
+  "ci": false,
+  "storeFault": false,
+  "uncertainTap": false
+}

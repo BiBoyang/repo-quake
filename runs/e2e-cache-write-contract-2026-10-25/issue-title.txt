@@ -1,0 +1,1 @@
+cache: a thrown store write loses the step's `not-written` outcome

@@ -1,0 +1,10 @@
+$ node --version
+v25.4.0
+$ uname -srm
+Darwin 27.2.0 arm64
+$ node node_modules/e2e/dist/cli/bin.js --version
+0.21.3
+$ node repro.mjs
+saved -> saved
+undefined -> not-written
+throw -> undefined

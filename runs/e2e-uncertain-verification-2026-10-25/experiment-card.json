@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-real-browser-uncertain-verification-v1",
+  "claim": "After a real cached browser tap commits and then throws ACTION_MAY_HAVE_COMMITTED, replay names the uncertain action and a verify-before-react executor produces exactly one commit; healthy replay returns afterward.",
+  "target": {
+    "name": "tester-army/e2e full runner and real web engine uncertain commit verification",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3 + Chrome 156.0.8078.47; archived C0 seed pinned",
+    "source_sha256": "6e27c96b1463ea73e4f1cad902f88695c7e71d3af34064b5f61be42bc58960cf"
+  },
+  "task": {
+    "prompt_sha256": "1c237cba629e5ec1c103e19be7def29a13423d60f26eab38fa9d322cb0a3b7ed",
+    "path_reachability": "U1 materializes the exact archived healthy C0 cache entry, replays its type action, performs the real tap, writes fault proof only after the tap returns, and throws the correctly constructed EngineError. N1 uses another copy without the fault."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-semantic-executor-1.0.0",
+      "name": "hand-rolled-executor-plus-local-Chrome",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "U1",
+      "fault": "correct EngineError ACTION_MAY_HAVE_COMMITTED after real cached tap",
+      "role": "treatment"
+    },
+    {
+      "id": "N1",
+      "fault": "healthy cached replay after the fault",
+      "role": "negative_control"
+    }
+  ],
+  "controls": {
+    "negative": "N1"
+  },
+  "witness": {
+    "delivery": "seed-entry.json and seed-manifest.json bind both cells to the archived healthy C0 entry. The fault log is written after the real tap returns. The server independently records input/save-request/save-committed; executor logs carry replayedPrefix and uncertainAction.",
+    "checker": "grade.mjs applies frozen task-contract checks to report cache details, DOM, event order, engine fault count and executor verification. U1 must have action-uncertain, one fault, one handoff and one commit; N1 must have two replayed actions and zero executor calls.",
+    "blind_spots": [
+      "Deterministic executor, not an LLM.",
+      "One local async commit window and one Chromium version; no provider, mobile or distributed backend.",
+      "The seed comes from the earlier healthy C0, so this focused experiment does not independently re-establish recording.",
+      "Pinned npm releases, not upstream main."
+    ]
+  },
+  "grading": {
+    "rubric": "Frozen task-contract.txt. The original malformed U1 remains invalid setup and is not replaced in its own matrix; this separate card evaluates only the corrected EngineError delivery. A valid fault followed by wrong handoff or duplicate commit is product data. U1 is also the required fine-grained delivery control: without action-uncertain delivery, its result is not a negative product conclusion.",
+    "primary_metric": "uncertain_commit_single_side_effect"
+  },
+  "sampling": {
+    "runs_per_cell": 1
+  },
+  "invalid_rules": [
+    "Browser, server, dependency or corrected EngineError preflight fails before replay.",
+    "Archived seed is absent, hash-mismatched or unread by U1.",
+    "Primary report, server ledger, executor prefix or fault delivery evidence is missing.",
+    "Any attempt consumes this two-run budget and cannot be replaced."
+  ],
+  "budget": {
+    "max_runs": 2
+  },
+  "isolation": {
+    "mode": "Loopback app and independent event server, temporary headless Chrome, fake HOME, per-cell copies of archived seed, no model or external telemetry.",
+    "pristine_original_unreachable": false,
+    "contamination": "Archived seed and fixture sources remain on disk, but each cell can access only its configured copy; deterministic executor reads only browser state, params and loopback witness."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Two local product executions and JSON evidence; no paid calls, external network actions or third-party writes."
+  }
+}

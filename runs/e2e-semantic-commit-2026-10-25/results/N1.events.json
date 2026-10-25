@@ -1,0 +1,20 @@
+[
+  {
+    "sequence": 1,
+    "at": "2026-10-25T01:24:14.078Z",
+    "type": "input",
+    "item": "Negative 008"
+  },
+  {
+    "sequence": 2,
+    "at": "2026-10-25T01:24:14.132Z",
+    "type": "save-request",
+    "item": "Negative 008"
+  },
+  {
+    "sequence": 3,
+    "at": "2026-10-25T01:24:14.794Z",
+    "type": "save-committed",
+    "item": "Negative 008"
+  }
+]

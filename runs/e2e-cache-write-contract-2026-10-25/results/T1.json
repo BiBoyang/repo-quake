@@ -1,0 +1,29 @@
+{
+  "id": "T1",
+  "behavior": "throw",
+  "expected": "not-written",
+  "actual": null,
+  "contained": true,
+  "matchesPreregisteredExpectation": false,
+  "calls": [
+    {
+      "op": "read",
+      "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "op": "write",
+      "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "behavior": "throw",
+      "payload": {
+        "actions": [],
+        "executor": {
+          "name": "contract-probe",
+          "version": "1.0.0"
+        },
+        "summary": "verified",
+        "startPath": "/"
+      }
+    }
+  ],
+  "stagedAfter": 0
+}

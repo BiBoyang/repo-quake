@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "report-1",
+  "run": {
+    "id": "01a170a8-6b73-723c-98db-a3e4b2c1d2d0",
+    "specVersion": "0.1",
+    "runner": {
+      "name": "e2e",
+      "version": "0.21.3"
+    },
+    "status": "passed",
+    "exitCode": 0,
+    "startedAt": "2026-10-25T01:24:08.473Z",
+    "finishedAt": "2026-10-25T01:24:10.358Z",
+    "project": {
+      "id": "e2e-semantic-commit-audit",
+      "configDigest": "867d49d1a7e3f496e0ab1fe56e19e461b7a8522b8b5ed05b43d2d751c384ca21"
+    },
+    "environment": {
+      "ci": false,
+      "trustNoticeShown": false,
+      "os": "darwin 27.2.0",
+      "arch": "arm64",
+      "runtime": "node v25.4.0"
+    },
+    "vcs": {
+      "commit": "f7f7f8b3d009ed5e8f8fb1b7fecc6257b29bdfe2",
+      "branch": "codex/measurement-hardening",
+      "dirty": false
+    },
+    "targets": [
+      {
+        "id": "web",
+        "index": 0,
+        "platform": "web",
+        "baseOrigin": "http://127.0.0.1:4173",
+        "environment": "test",
+        "engine": {
+          "name": "web",
+          "version": "0.15.3",
+          "spiVersion": 1
+        },
+        "capabilities": [
+          "actions",
+          "artifacts",
+          "browser",
+          "keyboard",
+          "location",
+          "observation",
+          "pointer",
+          "state"
+        ],
+        "artifactCapabilities": [
+          "screenshot",
+          "video"
+        ],
+        "stateCapability": true
+      }
+    ],
+    "serialGroups": [],
+    "results": [
+      {
+        "id": "394652203e8e74e00b7675ef634a4044d429ffe2b3d9d8786f49c972d1b1759d",
+        "testId": "tests/workflow.e2e.ts::asynchronous%20parameterized%20save",
+        "kind": "test",
+        "declarationIndex": 0,
+        "titlePath": [
+          "asynchronous parameterized save"
+        ],
+        "file": "tests/workflow.e2e.ts",
+        "source": {
+          "file": "tests/workflow.e2e.ts",
+          "line": 9,
+          "column": 1
+        },
+        "targetId": "web",
+        "platform": "web",
+        "agent": "default",
+        "repeat": 0,
+        "tags": [],
+        "selected": true,
+        "status": "passed",
+        "attempts": [
+          {
+            "id": "01a170a8-6e56-74e0-a31d-f4a4452da3de",
+            "index": 0,
+            "status": "passed",
+            "startedAt": "2026-10-25T01:24:08.918Z",
+            "durationMs": 1407,
+            "artifacts": [],
+            "secondaryErrors": [],
+            "cleanup": "complete",
+            "environment": {
+              "browser": "chromium 156.0.8078.47",
+              "user agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+            },
+            "steps": [
+              {
+                "id": "01a170a8-6e56-74e0-a31d-f4a4452da3de:0",
+                "index": 0,
+                "kind": "app",
+                "api": "app.open",
+                "label": "/",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:08.970Z",
+                "durationMs": 190,
+                "events": [],
+                "artifacts": [],
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 7,
+                  "changes": []
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 10,
+                  "column": 13
+                }
+              },
+              {
+                "id": "01a170a8-6e56-74e0-a31d-f4a4452da3de:1",
+                "index": 1,
+                "kind": "agent",
+                "api": "agent.act",
+                "label": "save item {item}",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:09.161Z",
+                "durationMs": 1119,
+                "events": [
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:09.164Z",
+                    "durationMs": 119,
+                    "status": "passed",
+                    "bytes": 183,
+                    "count": 7
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:09.285Z",
+                    "durationMs": 47,
+                    "status": "passed",
+                    "name": "type",
+                    "detail": "type \"Flush 006\" into textbox \"Item name\""
+                  },
+                  {
+                    "kind": "engine",
+                    "startedAt": "2026-10-25T01:24:09.333Z",
+                    "durationMs": 49,
+                    "status": "passed",
+                    "name": "tap",
+                    "detail": "tap button \"Save Item\""
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:09.382Z",
+                    "durationMs": 100,
+                    "status": "passed",
+                    "bytes": 223,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:09.583Z",
+                    "durationMs": 104,
+                    "status": "passed",
+                    "bytes": 223,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:09.789Z",
+                    "durationMs": 99,
+                    "status": "passed",
+                    "bytes": 223,
+                    "count": 7
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:09.988Z",
+                    "durationMs": 185,
+                    "status": "passed",
+                    "bytes": 269,
+                    "count": 9
+                  },
+                  {
+                    "kind": "observation",
+                    "startedAt": "2026-10-25T01:24:10.174Z",
+                    "durationMs": 102,
+                    "status": "passed",
+                    "bytes": 269,
+                    "count": 9
+                  }
+                ],
+                "agent": "default",
+                "artifacts": [],
+                "metrics": {
+                  "modelCalls": 0,
+                  "actionSteps": 2,
+                  "observationBytes": 269,
+                  "contextBytes": 0,
+                  "ledgerBytes": 23
+                },
+                "cache": {
+                  "mode": "missed",
+                  "reason": "no-entry",
+                  "replayedActions": 0,
+                  "totalActions": 0,
+                  "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd"
+                },
+                "observationRevision": "b13",
+                "explanation": "Saved Flush 006",
+                "screen": {
+                  "location": "http://127.0.0.1:4173/",
+                  "nodes": 9,
+                  "since": 0,
+                  "changes": [
+                    "changed textbox \"Item name\" value=\"Flush 006\" (was: textbox \"Item name\")",
+                    "changed status \"Saved Flush 006\" (was: status \"Idle\")",
+                    "added list",
+                    "added listitem \"Flush 006\""
+                  ]
+                },
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 11,
+                  "column": 15
+                }
+              },
+              {
+                "id": "01a170a8-6e56-74e0-a31d-f4a4452da3de:2",
+                "index": 2,
+                "kind": "assertion",
+                "api": "expect.toContainText",
+                "label": "getByRole(\"status\")",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:10.281Z",
+                "durationMs": 10,
+                "events": [
+                  {
+                    "kind": "poll",
+                    "name": "expect",
+                    "startedAt": "2026-10-25T01:24:10.281Z",
+                    "durationMs": 10,
+                    "status": "passed",
+                    "count": 1
+                  }
+                ],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 12,
+                  "column": 44
+                }
+              },
+              {
+                "id": "01a170a8-6e56-74e0-a31d-f4a4452da3de:3",
+                "index": 3,
+                "kind": "resource",
+                "api": "browser.evaluate",
+                "label": "",
+                "status": "passed",
+                "startedAt": "2026-10-25T01:24:10.292Z",
+                "durationMs": 6,
+                "events": [],
+                "artifacts": [],
+                "source": {
+                  "file": "tests/workflow.e2e.ts",
+                  "line": 13,
+                  "column": 29
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "errors": [],
+    "summary": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "limits": {
+      "maxAgentContextBytes": 16384,
+      "maxLedgerBytes": 8192,
+      "maxObservationBytes": 262144,
+      "maxEventsPerStep": 1000,
+      "maxModelTokensPerCall": 64000
+    },
+    "usage": {
+      "discoveredResults": 1,
+      "maxAgentContextBytes": 0,
+      "maxLedgerBytes": 23,
+      "maxObservationBytes": 269,
+      "artifactBytes": 0,
+      "downloads": 0,
+      "events": 9,
+      "modelTokens": 0,
+      "maxModelCallsInStep": 0,
+      "maxActionStepsInStep": 2
+    }
+  }
+}

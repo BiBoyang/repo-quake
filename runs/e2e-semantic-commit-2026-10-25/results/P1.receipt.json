@@ -1,0 +1,13 @@
+{
+  "id": "P1",
+  "startedAt": "2026-10-25T01:24:02.656Z",
+  "finishedAt": "2026-10-25T01:24:05.208Z",
+  "code": 0,
+  "signal": null,
+  "item": "Collision",
+  "route": "/",
+  "noCache": false,
+  "ci": false,
+  "storeFault": false,
+  "uncertainTap": false
+}

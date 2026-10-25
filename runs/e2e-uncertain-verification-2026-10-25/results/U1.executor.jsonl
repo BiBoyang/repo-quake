@@ -1,0 +1,2 @@
+{"at":"2026-10-25T01:29:31.277Z","kind":"call","runId":"U1","attemptId":"01a170ad-5751-7a00-b2bc-bc3319ed5935","item":"Uncertain 007","replayedPrefix":{"replayedActions":["type \"Uncertain 007\" into textbox \"Item name\""],"totalActions":2,"stopReason":"action-uncertain","uncertainAction":"tap button \"Save Item\""}}
+{"at":"2026-10-25T01:29:32.118Z","kind":"verification","runId":"U1","item":"Uncertain 007","result":"committed-once-not-repeated"}

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "C0",
+    "equalToC0": true,
+    "events": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "dom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    }
+  },
+  {
+    "id": "C1",
+    "equalToC0": true,
+    "events": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "dom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    }
+  },
+  {
+    "id": "C2",
+    "equalToC0": true,
+    "events": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "dom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    }
+  }
+]

@@ -1,0 +1,89 @@
+[
+  {
+    "id": "C0",
+    "behavior": "saved",
+    "expected": "saved",
+    "actual": "saved",
+    "contained": true,
+    "matchesPreregisteredExpectation": true,
+    "calls": [
+      {
+        "op": "read",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "op": "write",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "behavior": "saved",
+        "payload": {
+          "actions": [],
+          "executor": {
+            "name": "contract-probe",
+            "version": "1.0.0"
+          },
+          "summary": "verified",
+          "startPath": "/"
+        }
+      }
+    ],
+    "stagedAfter": 0
+  },
+  {
+    "id": "C1",
+    "behavior": "undefined",
+    "expected": "not-written",
+    "actual": "not-written",
+    "contained": true,
+    "matchesPreregisteredExpectation": true,
+    "calls": [
+      {
+        "op": "read",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "op": "write",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "behavior": "undefined",
+        "payload": {
+          "actions": [],
+          "executor": {
+            "name": "contract-probe",
+            "version": "1.0.0"
+          },
+          "summary": "verified",
+          "startPath": "/"
+        }
+      }
+    ],
+    "stagedAfter": 0
+  },
+  {
+    "id": "T1",
+    "behavior": "throw",
+    "expected": "not-written",
+    "actual": null,
+    "contained": true,
+    "matchesPreregisteredExpectation": false,
+    "calls": [
+      {
+        "op": "read",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "op": "write",
+        "keyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "behavior": "throw",
+        "payload": {
+          "actions": [],
+          "executor": {
+            "name": "contract-probe",
+            "version": "1.0.0"
+          },
+          "summary": "verified",
+          "startPath": "/"
+        }
+      }
+    ],
+    "stagedAfter": 0
+  }
+]

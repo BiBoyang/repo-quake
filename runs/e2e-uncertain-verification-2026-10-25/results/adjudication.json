@@ -1,0 +1,22 @@
+{
+  "id": "U1",
+  "classification": "valid product outcome",
+  "initialGraderMatches": false,
+  "adjudicatedMatches": true,
+  "detected": true,
+  "reported": true,
+  "contained": true,
+  "recovered": true,
+  "reverified": true,
+  "evidence": {
+    "cacheMode": "agent-concluded",
+    "cacheReason": "action-uncertain",
+    "replayedActions": 1,
+    "uncertainAction": "tap button \"Save Item\"",
+    "faultDeliveries": 1,
+    "saveRequests": 1,
+    "saveCommits": 1,
+    "finalStatus": "Saved Uncertain 007"
+  },
+  "graderCorrection": "The initial grader additionally required mode=missed. That was a grader implementation error, not part of the frozen task contract: a replay that completed one action before handing off is agent-concluded by the public StepCacheInfo contract. Raw matrix.json is retained unchanged; this separate adjudication uses the primary artifacts."
+}

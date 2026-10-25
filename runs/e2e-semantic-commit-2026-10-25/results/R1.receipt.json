@@ -1,0 +1,13 @@
+{
+  "id": "R1",
+  "startedAt": "2026-10-25T01:24:05.210Z",
+  "finishedAt": "2026-10-25T01:24:07.892Z",
+  "code": 0,
+  "signal": null,
+  "item": "Echo 005",
+  "route": "/",
+  "noCache": false,
+  "ci": true,
+  "storeFault": false,
+  "uncertainTap": false
+}

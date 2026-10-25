@@ -1,0 +1,15 @@
+{
+  "files": {
+    "driver.mjs": "0c9104f483afbabc634d3bcec5d9e3f6a2722ce769a63cc04200791d35847fcc",
+    "fixtures/app/e2e.config.ts": "11907933d95f61efb7f0daeafdd8202668b669f916ac26e4a5b8fc2227914b25",
+    "fixtures/app/executor.mjs": "88444754abc2263868dd6b9a2f5c477d842c08dd8717b41662e990c77827b86d",
+    "fixtures/app/package-lock.json": "6e27c96b1463ea73e4f1cad902f88695c7e71d3af34064b5f61be42bc58960cf",
+    "fixtures/app/package.json": "89f7ebdc2ca6cf87d48fec89b79a0e9a397f280be2d418ae438497d8c230b785",
+    "fixtures/app/page.html": "e9a1cd51579e5d3dcfaefde0290434b9afd41be5593a5c91c6992ed5c813403f",
+    "fixtures/app/server.mjs": "ad85490604bf1c067ad0b598c2c87d7d779e1085e4386b2fb714ca35bf65a265",
+    "fixtures/app/tests/workflow.e2e.ts": "1c0e7bfdcd8860b54cb9f6ab511246899290e3b3434b96f5a55426bd501fe990",
+    "fixtures/app/uncertain-engine.mjs": "14d6184cf53cea6dac18fdbe160c04c512911c6e962a2cf00f642162a086f4bf",
+    "grade.mjs": "18af5151d7403c1095682a988b966f156cc9c67f7a72374fda7e46499cc15365",
+    "task-contract.txt": "d5043eed003dea7b40e6b2d6c51614f21cddaea287a68eb776ef8721fa2a55f3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "U1",
+  "startedAt": "2026-10-25T01:24:10.376Z",
+  "finishedAt": "2026-10-25T01:24:12.374Z",
+  "code": 3,
+  "signal": null,
+  "item": "Uncertain 007",
+  "route": "/",
+  "noCache": false,
+  "ci": false,
+  "storeFault": false,
+  "uncertainTap": true
+}

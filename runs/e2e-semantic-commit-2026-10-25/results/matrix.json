@@ -1,0 +1,1357 @@
+[
+  {
+    "id": "C0",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "missed",
+      "reason": "no-entry",
+      "replayedActions": 0,
+      "totalActions": 0,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "write": "saved"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:23:53.903Z",
+        "kind": "call",
+        "runId": "C0",
+        "attemptId": "01a170a8-3221-76e2-8c8d-c0628de7e054",
+        "item": "Alpha 001",
+        "replayedPrefix": null
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:54.660Z",
+            "type": "save-committed",
+            "item": "Alpha 001"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:54.004Z",
+            "type": "save-request",
+            "item": "Alpha 001"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:54.004Z",
+            "type": "save-request",
+            "item": "Alpha 001"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:54.660Z",
+            "type": "save-committed",
+            "item": "Alpha 001"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Alpha 001",
+          "input": "Alpha 001",
+          "items": [
+            "Alpha 001"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "C0-one-live-call",
+        "pass": true,
+        "actual": 1
+      },
+      {
+        "name": "C0-no-entry",
+        "pass": true,
+        "actual": {
+          "mode": "missed",
+          "reason": "no-entry",
+          "replayedActions": 0,
+          "totalActions": 0,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "write": "saved"
+        }
+      },
+      {
+        "name": "C0-saved",
+        "pass": true,
+        "actual": {
+          "cache": {
+            "mode": "missed",
+            "reason": "no-entry",
+            "replayedActions": 0,
+            "totalActions": 0,
+            "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+            "write": "saved"
+          },
+          "entries": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "C1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "self-finalized",
+      "replayedActions": 2,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "write": "kept"
+    },
+    "ci": false,
+    "executorCalls": 0,
+    "executor": [],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:57.169Z",
+            "type": "save-committed",
+            "item": "Beta 002"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:56.503Z",
+            "type": "save-request",
+            "item": "Beta 002"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:56.503Z",
+            "type": "save-request",
+            "item": "Beta 002"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:57.169Z",
+            "type": "save-committed",
+            "item": "Beta 002"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Beta 002",
+          "input": "Beta 002",
+          "items": [
+            "Beta 002"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "C1-zero-live-calls",
+        "pass": true,
+        "actual": 0
+      },
+      {
+        "name": "C1-full-replay",
+        "pass": true,
+        "actual": {
+          "mode": "self-finalized",
+          "replayedActions": 2,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "write": "kept"
+        }
+      },
+      {
+        "name": "C1-kept",
+        "pass": true,
+        "actual": "kept"
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:23:59.039Z",
+        "kind": "call",
+        "runId": "C2",
+        "attemptId": "01a170a8-46a0-7798-90dc-3011fe6eb43b",
+        "item": "Gamma 003",
+        "replayedPrefix": null
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": false,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:59.913Z",
+            "type": "save-committed",
+            "item": "Gamma 003"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:59.251Z",
+            "type": "save-request",
+            "item": "Gamma 003"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:23:59.251Z",
+            "type": "save-request",
+            "item": "Gamma 003"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:23:59.913Z",
+            "type": "save-committed",
+            "item": "Gamma 003"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Gamma 003",
+          "input": "Gamma 003",
+          "items": [
+            "Gamma 003"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "C2-one-live-call",
+        "pass": true,
+        "actual": 1
+      },
+      {
+        "name": "C2-cache-off",
+        "pass": true
+      }
+    ]
+  },
+  {
+    "id": "W1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "missed",
+      "reason": "wrong-context",
+      "replayedActions": 0,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "detail": "recorded starting on /, the step began on /other",
+      "write": "saved"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:24:01.537Z",
+        "kind": "call",
+        "runId": "W1",
+        "attemptId": "01a170a8-5015-7b69-ad44-e419a8cdd147",
+        "item": "Delta 004",
+        "replayedPrefix": null
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/other",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:02.292Z",
+            "type": "save-committed",
+            "item": "Delta 004"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:01.630Z",
+            "type": "save-request",
+            "item": "Delta 004"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:01.630Z",
+            "type": "save-request",
+            "item": "Delta 004"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:02.292Z",
+            "type": "save-committed",
+            "item": "Delta 004"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/other",
+          "status": "Saved Delta 004",
+          "input": "Delta 004",
+          "items": [
+            "Delta 004"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/other"
+      },
+      {
+        "name": "W1-wrong-context",
+        "pass": true,
+        "actual": {
+          "mode": "missed",
+          "reason": "wrong-context",
+          "replayedActions": 0,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "detail": "recorded starting on /, the step began on /other",
+          "write": "saved"
+        }
+      },
+      {
+        "name": "W1-live-recovery",
+        "pass": true,
+        "actual": {
+          "calls": 1,
+          "summary": {
+            "discovered": 1,
+            "selected": 1,
+            "executed": 1,
+            "passed": 1,
+            "failed": 0,
+            "interrupted": 0,
+            "flaky": 0,
+            "skipped": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "P1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "missed",
+      "reason": "no-entry",
+      "replayedActions": 0,
+      "totalActions": 0,
+      "entry": "742598cb29cfe0104c994689e1c467d4882afed1692b8c6f1e3c78b09cc467c6",
+      "notRecorded": "param-collision"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:24:04.125Z",
+        "kind": "call",
+        "runId": "P1",
+        "attemptId": "01a170a8-5a07-7b54-b70d-8e4c219933ee",
+        "item": "Collision",
+        "replayedPrefix": null
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": false,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:04.866Z",
+            "type": "save-committed",
+            "item": "Collision"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:04.204Z",
+            "type": "save-request",
+            "item": "Collision"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:04.204Z",
+            "type": "save-request",
+            "item": "Collision"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:04.866Z",
+            "type": "save-committed",
+            "item": "Collision"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Collision",
+          "input": "Collision",
+          "items": [
+            "Collision"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "P1-one-live-call",
+        "pass": true,
+        "actual": 1
+      },
+      {
+        "name": "P1-collision-reported",
+        "pass": true,
+        "actual": {
+          "mode": "missed",
+          "reason": "no-entry",
+          "replayedActions": 0,
+          "totalActions": 0,
+          "entry": "742598cb29cfe0104c994689e1c467d4882afed1692b8c6f1e3c78b09cc467c6",
+          "notRecorded": "param-collision"
+        }
+      },
+      {
+        "name": "P1-no-entry-written",
+        "pass": true,
+        "actual": {}
+      }
+    ]
+  },
+  {
+    "id": "R1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "self-finalized",
+      "replayedActions": 2,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd"
+    },
+    "ci": true,
+    "executorCalls": 0,
+    "executor": [],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": false,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:07.412Z",
+            "type": "save-committed",
+            "item": "Echo 005"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:06.735Z",
+            "type": "save-request",
+            "item": "Echo 005"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:06.735Z",
+            "type": "save-request",
+            "item": "Echo 005"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:07.412Z",
+            "type": "save-committed",
+            "item": "Echo 005"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Echo 005",
+          "input": "Echo 005",
+          "items": [
+            "Echo 005"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "R1-ci",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "R1-zero-live-calls",
+        "pass": true,
+        "actual": 0
+      },
+      {
+        "name": "R1-full-replay",
+        "pass": true,
+        "actual": {
+          "mode": "self-finalized",
+          "replayedActions": 2,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd"
+        }
+      },
+      {
+        "name": "R1-byte-identical-cache",
+        "pass": true,
+        "actual": {
+          "before": {
+            "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd.json": "0778e1a1b9c3f0fe96efba46c9b56740f106df308634801b284febbf32fd92f0"
+          },
+          "after": {
+            "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd.json": "0778e1a1b9c3f0fe96efba46c9b56740f106df308634801b284febbf32fd92f0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "F1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "missed",
+      "reason": "no-entry",
+      "replayedActions": 0,
+      "totalActions": 0,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:24:09.283Z",
+        "kind": "call",
+        "runId": "F1",
+        "attemptId": "01a170a8-6e56-74e0-a31d-f4a4452da3de",
+        "item": "Flush 006",
+        "replayedPrefix": null
+      }
+    ],
+    "storeOps": [
+      {
+        "op": "read",
+        "result": "miss"
+      },
+      {
+        "op": "read",
+        "result": "miss"
+      },
+      {
+        "op": "write",
+        "result": "throw-EACCES"
+      }
+    ],
+    "faultDeliveries": 0,
+    "cacheWritePresent": false,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:10.034Z",
+            "type": "save-committed",
+            "item": "Flush 006"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:09.371Z",
+            "type": "save-request",
+            "item": "Flush 006"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:09.371Z",
+            "type": "save-request",
+            "item": "Flush 006"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:10.034Z",
+            "type": "save-committed",
+            "item": "Flush 006"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Flush 006",
+          "input": "Flush 006",
+          "items": [
+            "Flush 006"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "F1-write-fault-delivered",
+        "pass": true,
+        "actual": [
+          {
+            "op": "read",
+            "result": "miss"
+          },
+          {
+            "op": "read",
+            "result": "miss"
+          },
+          {
+            "op": "write",
+            "result": "throw-EACCES"
+          }
+        ]
+      },
+      {
+        "name": "F1-one-live-call",
+        "pass": true,
+        "actual": 1
+      }
+    ]
+  },
+  {
+    "id": "U1",
+    "exitCode": 3,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "agent-concluded",
+      "reason": "action-failed",
+      "replayedActions": 1,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "detail": "at action 2 of 2, tap button \"Save Item\": actions failed: Cannot read properties of undefined (reading 'cause')",
+      "write": "evicted"
+    },
+    "ci": false,
+    "executorCalls": 1,
+    "executor": [
+      {
+        "at": "2026-10-25T01:24:12.101Z",
+        "kind": "call",
+        "runId": "U1",
+        "attemptId": "01a170a8-789a-7383-a287-3f9c956c2ebf",
+        "item": "Uncertain 007",
+        "replayedPrefix": {
+          "replayedActions": [
+            "type \"Uncertain 007\" into textbox \"Item name\""
+          ],
+          "totalActions": 2,
+          "stopReason": "action-failed"
+        }
+      }
+    ],
+    "storeOps": [],
+    "faultDeliveries": 2,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": null,
+    "matchesPreregisteredExpectation": false,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": false,
+        "actual": []
+      },
+      {
+        "name": "one-current-request",
+        "pass": false,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:12.084Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          },
+          {
+            "sequence": 4,
+            "at": "2026-10-25T01:24:12.243Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:12.084Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          },
+          {
+            "sequence": 4,
+            "at": "2026-10-25T01:24:12.243Z",
+            "type": "save-request",
+            "item": "Uncertain 007"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": false,
+        "actual": null
+      },
+      {
+        "name": "expected-route",
+        "pass": false
+      },
+      {
+        "name": "U1-action-uncertain",
+        "pass": false,
+        "actual": {
+          "mode": "agent-concluded",
+          "reason": "action-failed",
+          "replayedActions": 1,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "detail": "at action 2 of 2, tap button \"Save Item\": actions failed: Cannot read properties of undefined (reading 'cause')",
+          "write": "evicted"
+        }
+      },
+      {
+        "name": "U1-handoff-names-tap",
+        "pass": false,
+        "actual": [
+          {
+            "replayedActions": [
+              "type \"Uncertain 007\" into textbox \"Item name\""
+            ],
+            "totalActions": 2,
+            "stopReason": "action-failed"
+          }
+        ]
+      },
+      {
+        "name": "U1-fault-after-real-tap-once",
+        "pass": false,
+        "actual": [
+          {
+            "at": "2026-10-25T01:24:12.098Z",
+            "fault": "commit-then-ACTION_MAY_HAVE_COMMITTED",
+            "action": "tap"
+          },
+          {
+            "at": "2026-10-25T01:24:12.254Z",
+            "fault": "commit-then-ACTION_MAY_HAVE_COMMITTED",
+            "action": "tap"
+          }
+        ]
+      },
+      {
+        "name": "U1-verified-not-repeated",
+        "pass": false,
+        "actual": [
+          {
+            "at": "2026-10-25T01:24:12.101Z",
+            "kind": "call",
+            "runId": "U1",
+            "attemptId": "01a170a8-789a-7383-a287-3f9c956c2ebf",
+            "item": "Uncertain 007",
+            "replayedPrefix": {
+              "replayedActions": [
+                "type \"Uncertain 007\" into textbox \"Item name\""
+              ],
+              "totalActions": 2,
+              "stopReason": "action-failed"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "N1",
+    "exitCode": 0,
+    "reportStatus": {
+      "discovered": 1,
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "interrupted": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    "cache": {
+      "mode": "self-finalized",
+      "replayedActions": 2,
+      "totalActions": 2,
+      "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+      "write": "kept"
+    },
+    "ci": false,
+    "executorCalls": 0,
+    "executor": [],
+    "storeOps": [],
+    "faultDeliveries": 0,
+    "cacheWritePresent": true,
+    "normalizedEvents": [
+      {
+        "type": "input",
+        "item": "{item}"
+      },
+      {
+        "type": "save-request",
+        "item": "{item}"
+      },
+      {
+        "type": "save-committed",
+        "item": "{item}"
+      }
+    ],
+    "normalizedDom": {
+      "path": "/",
+      "status": "Saved {item}",
+      "input": "{item}",
+      "items": [
+        "{item}"
+      ]
+    },
+    "matchesPreregisteredExpectation": true,
+    "checks": [
+      {
+        "name": "primary-report-present",
+        "pass": true,
+        "actual": true
+      },
+      {
+        "name": "one-current-commit",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:14.794Z",
+            "type": "save-committed",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "one-current-request",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:14.132Z",
+            "type": "save-request",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "no-cross-cell-side-effect",
+        "pass": true,
+        "actual": [
+          {
+            "sequence": 2,
+            "at": "2026-10-25T01:24:14.132Z",
+            "type": "save-request",
+            "item": "Negative 008"
+          },
+          {
+            "sequence": 3,
+            "at": "2026-10-25T01:24:14.794Z",
+            "type": "save-committed",
+            "item": "Negative 008"
+          }
+        ]
+      },
+      {
+        "name": "final-dom-current-item",
+        "pass": true,
+        "actual": {
+          "path": "/",
+          "status": "Saved Negative 008",
+          "input": "Negative 008",
+          "items": [
+            "Negative 008"
+          ]
+        }
+      },
+      {
+        "name": "expected-route",
+        "pass": true,
+        "actual": "/"
+      },
+      {
+        "name": "N1-zero-live-calls",
+        "pass": true,
+        "actual": 0
+      },
+      {
+        "name": "N1-full-replay",
+        "pass": true,
+        "actual": {
+          "mode": "self-finalized",
+          "replayedActions": 2,
+          "totalActions": 2,
+          "entry": "5f032ec669b4536d52c1fe0bdf32579d5b258b9c444a3e849fa63543df2a51fd",
+          "write": "kept"
+        }
+      },
+      {
+        "name": "N1-kept",
+        "pass": true,
+        "actual": "kept"
+      }
+    ]
+  }
+]

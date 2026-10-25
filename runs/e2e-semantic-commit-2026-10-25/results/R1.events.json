@@ -1,0 +1,20 @@
+[
+  {
+    "sequence": 1,
+    "at": "2026-10-25T01:24:06.688Z",
+    "type": "input",
+    "item": "Echo 005"
+  },
+  {
+    "sequence": 2,
+    "at": "2026-10-25T01:24:06.735Z",
+    "type": "save-request",
+    "item": "Echo 005"
+  },
+  {
+    "sequence": 3,
+    "at": "2026-10-25T01:24:07.412Z",
+    "type": "save-committed",
+    "item": "Echo 005"
+  }
+]

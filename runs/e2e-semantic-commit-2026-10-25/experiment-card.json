@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "id": "e2e-semantic-cache-and-async-commit-v1",
+  "claim": "Cached, uncached and faulted executions preserve the same parameterized save semantics; wrong context, collisions, read-only operation, write failure and uncertain commit do not cause duplicate or cross-context side effects.",
+  "target": {
+    "name": "tester-army/e2e semantic cache and real-browser asynchronous commit fixtures",
+    "version": "e2e@0.21.3 + @e2e-dev/web@0.15.3 + Chrome 156.0.8078.47; npm lockfile pinned",
+    "source_sha256": "6e27c96b1463ea73e4f1cad902f88695c7e71d3af34064b5f61be42bc58960cf"
+  },
+  "task": {
+    "prompt_sha256": "d5043eed003dea7b40e6b2d6c51614f21cddaea287a68eb776ef8721fa2a55f3",
+    "path_reachability": "C0 records a two-action async save and is gated before all treatments. Every treatment uses a copy of that seed. C1/C2 compare cached and uncached semantics. W1 opens /other under the same app identity. P1 makes unique(item) collide with literal alias. R1 uses defaulted cache mode with CI=1. F1 reaches a custom store write after the app workflow. U1 replays the seed through the real web engine, commits its tap, then throws ACTION_MAY_HAVE_COMMITTED."
+  },
+  "hosts": [
+    {
+      "id": "deterministic-semantic-executor-1.0.0",
+      "name": "hand-rolled-executor-plus-local-Chrome",
+      "version": "1.0.0",
+      "model": "none-deterministic-local-code",
+      "effort": "not-applicable"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy live async recording",
+      "role": "negative_control"
+    },
+    {
+      "id": "C1",
+      "fault": "cached replay with a new unique item value",
+      "role": "treatment"
+    },
+    {
+      "id": "C2",
+      "fault": "--no-cache semantic reference with another unique value",
+      "role": "negative_control"
+    },
+    {
+      "id": "W1",
+      "fault": "same cache key but start route changes from / to /other",
+      "role": "treatment"
+    },
+    {
+      "id": "P1",
+      "fault": "unique item value equals literal alias parameter",
+      "role": "treatment"
+    },
+    {
+      "id": "R1",
+      "fault": "CI=1 with defaulted cache mode and a readable seed",
+      "role": "treatment"
+    },
+    {
+      "id": "F1",
+      "fault": "custom cache store read miss then EACCES write throw",
+      "role": "treatment"
+    },
+    {
+      "id": "U1",
+      "fault": "real browser tap returns then engine throws ACTION_MAY_HAVE_COMMITTED during replay",
+      "role": "positive_control"
+    },
+    {
+      "id": "N1",
+      "fault": "healthy cached negative control after the fault series",
+      "role": "negative_control"
+    }
+  ],
+  "controls": {
+    "negative": "C0",
+    "positive": "U1"
+  },
+  "witness": {
+    "delivery": "Seed cache hashes and per-cell before/after manifests prove cache provenance. The store log proves F1 read/write calls and the thrown write. The engine fault log is written only after the real web tap returns. The local server ledger records input, save-request and save-committed independently of e2e reports.",
+    "checker": "grade.mjs applies the frozen task-contract checks to primary JSON, DOM snapshots, executor handoff logs, cache manifests and server event order. C0/C1/C2 normalized final DOM and event sequences are compared directly. Detection, reporting, containment, recovery and reverification will be narrated separately, not collapsed into pass/fail.",
+    "blind_spots": [
+      "The executor is deterministic code, not an LLM; this audits the runner, cache and engine contract rather than model robustness.",
+      "One local asynchronous form and one Chromium version cannot cover all UI, network, mobile or distributed cache behavior.",
+      "The custom store proves one write-failure seam, not every filesystem permission failure.",
+      "The engine wrapper injects after the real tap returns while the app commit is asynchronous; other crash windows remain untested.",
+      "Experiments target pinned npm releases, not the upstream main branch."
+    ]
+  },
+  "grading": {
+    "rubric": "task-contract.txt is frozen before execution. Every valid cell must have one current-item request/commit and no cross-cell side effect. Cell-specific cache mode, handoff, executor-call, DOM, event-order and cache-byte checks are mechanical. Unexpected results are candidates for review, not automatically upstream bugs; invalid setup never becomes product evidence. C2 is the no-cache semantic reference; N1 is the post-series healthy control. U1 silence invalidates related negative conclusions.",
+    "primary_metric": "semantic_equivalence_and_single_commit"
+  },
+  "sampling": {
+    "runs_per_cell": 1
+  },
+  "invalid_rules": [
+    "Chrome, CDP, local app, pinned dependency or fixture configuration fails before the target can execute the intended path.",
+    "C0 fails its healthy baseline gate; no treatment may then run.",
+    "A treatment seed is absent or differs from the frozen C0 seed before dispatch.",
+    "Report, server ledger, DOM, executor handoff or fault-delivery evidence required for that cell is missing.",
+    "U1 never reads the seed entry or injects during a live miss instead of cached replay.",
+    "Any attempt consumes budget; no retry or replacement execution is allowed under this card."
+  ],
+  "budget": {
+    "max_runs": 9
+  },
+  "isolation": {
+    "mode": "Local static app and independent event server, temporary headless Chrome profile, fake HOME, per-cell copied caches, telemetry/update checks disabled, no real model or provider.",
+    "pristine_original_unreachable": false,
+    "contamination": "The C0 seed and fixture sources remain on disk, but each treatment can access only its own configured cache copy; the deterministic executor observes the browser and local witness endpoint and never reads pristine fixtures or seed files."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Nine local product executions and temporary files under this run directory; loopback HTTP only, no paid model calls, external telemetry, GitHub writes or third-party state changes."
+  }
+}
