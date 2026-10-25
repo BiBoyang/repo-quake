@@ -40,4 +40,4 @@ Measured nine full-runner cells against npm e2e 0.21.3 and @e2e-dev/web 0.15.3 u
 - [x] F1 conclusion independently re-verified by direct contract probe and standalone repro
 - [x] Sample sizes and caveats stated
 - [x] Contamination register reviewed; original U1 annotated
-- [ ] Repository evidence made public (intentionally pending until the upstream issue opens)
+- [x] Repository evidence public on [codex/measurement-hardening](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening), after issue #1371 was created

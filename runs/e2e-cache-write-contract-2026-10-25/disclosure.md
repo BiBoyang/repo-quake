@@ -40,4 +40,4 @@ Measured three direct settlement calls against npm e2e 0.21.3, with healthy and 
 - [x] Most striking conclusion re-verified by standalone `upstream-repro/repro.mjs`
 - [x] One-per-cell sample and main-runtime caveat stated
 - [x] Contamination register reviewed; no affected valid cell hidden
-- [ ] Repository/artifacts public (issue body is self-contained; evidence push waits until after issue creation)
+- [x] Repository/artifacts public on [codex/measurement-hardening](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening), after issue #1371 was created

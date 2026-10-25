@@ -41,4 +41,4 @@ Measured two cells against npm e2e 0.21.3 and @e2e-dev/web 0.15.3 using the arch
 - [x] Most important conclusion re-read from report, fault log, executor prefix, DOM, and server ledger
 - [x] Sample sizes and caveats stated
 - [x] Grader contamination/correction disclosed
-- [ ] Repository evidence made public (will accompany the related evidence push)
+- [x] Repository evidence public on [codex/measurement-hardening](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening), with the related evidence push

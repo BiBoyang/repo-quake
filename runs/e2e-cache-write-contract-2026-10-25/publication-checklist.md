@@ -17,7 +17,7 @@
 - [x] Human reviewed the title and draft on 2026-10-25; final edit was tone-only, with the reproduction and technical claims unchanged.
 - [x] Upstream issue published and content verified: https://github.com/tester-army/e2e/issues/1371. The `bug` label could not be added because the upstream denied `AddLabelsToLabelable`; title/body are correct and the label is left for a maintainer.
 - [x] Recorded https://github.com/tester-army/e2e/issues/1371 in all three disclosure files and this checklist.
-- [ ] Commit any disclosure URL updates, then push the repo-quake evidence branch.
+- [x] Committed disclosure URL updates and pushed the [repo-quake evidence branch](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening) through `85babcf`, after issue #1371 was created.
 - [ ] Optional: authorize the PR implementation in `pr-plan.md`; a `fix` PR must link the issue.
 - [ ] Before the PR, replace every placeholder in `pr-body-template.md` with final-diff facts and actual verification.
 
