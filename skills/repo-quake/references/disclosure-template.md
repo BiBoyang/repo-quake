@@ -42,6 +42,9 @@ estimate moves. State that rule here.*
   rules, budget), frozen before the first fault cell.
 - Deviation log: one line per departure from the prereg, with the reason.
   *A logged deviation is data; a silent one is contamination.*
+- Correction lineage, when present: invalid setup -> new frozen card with its own
+  budget; grader error -> preserved initial output plus separate adjudication.
+  Never erase either history.
 
 ## 4. Integrity statements
 
@@ -78,3 +81,5 @@ calibration values), said out loud.*
 - [ ] Sample sizes and caveats next to every number
 - [ ] Contamination register reviewed; affected cells annotated, not hidden
 - [ ] Repository/artifacts public before the issue or writeup that cites them
+- [ ] Exact public repro extracted and run in a clean environment
+- [ ] Public writes deduped and read back; permission limits and remote SHA recorded

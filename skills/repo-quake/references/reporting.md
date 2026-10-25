@@ -13,6 +13,41 @@ upstream maintainer can verify in five minutes.
 - Evidence quality does not guarantee conclusion correctness — it guarantees
   correction speed. That is still worth it.
 
+## The public repro is a deliverable
+
+A maintainer receives the issue body, not your harness. Extract the exact code
+block you will publish and run it in a clean, minimal environment. Paste its
+actual output beside expected and actual behavior. Keep the issue self-contained:
+do not cite an evidence repository that is not public yet, and distinguish npm
+runtime evidence from main-source inspection. When linking source, record main
+HEAD and the file's last-change commit separately rather than calling one the
+other.
+
+## Publication writes are uncertain commits
+
+A timeout may mean the write never arrived, or that it committed and the response
+was lost. Do not guess and do not blind-retry:
+
+1. Query a unique dedupe key (for an issue, its exact title) before creating.
+2. Retry only within a bounded budget, and only after the duplicate check says
+   the operation is still needed. An alternate API is justified after the same
+   dedupe check, not as a way to create a second copy.
+3. Read back title, body, labels, state and head. A create response is not proof
+   that optional fields such as labels took effect.
+4. Permission denial is a boundary, not a transient error. Record the maintainer
+   action needed; never switch APIs to bypass it.
+5. After pushing, independently compare local and remote SHA. If the read-back
+   fails, the push is unverified until a separate read succeeds.
+
+## Upstream contribution preflight
+
+Read `CONTRIBUTING`, issue/PR templates and repository agent instructions before
+implementing the fix. Check whether a fix PR needs an existing issue, changeset,
+docs, a particular runtime, benchmark A/B, fresh-context review, or a maintainer
+label. Branch and benchmark from the authoritative `upstream/main`, not a possibly
+stale fork `origin/main`. A reviewer that did not run tests is not a replacement
+for the author's executed verification; keep the two evidence sets separate.
+
 ## Fix suggestions are hypotheses
 
 An issue's proposed fix is a sketch written before reading the fix site. When
@@ -114,6 +149,9 @@ goes out until every box is checked:
 - [ ] the most striking conclusion re-verified end to end
 - [ ] sample sizes and caveats stated wherever a number appears
 - [ ] contamination register reviewed; affected cells annotated, not hidden
+- [ ] exact public repro code extracted and run in a clean environment
+- [ ] public writes deduped and read back; permission boundaries recorded
+- [ ] local and remote revision verified, and upstream base provenance checked
 
 Learned the hard way, both directions: a benchmark submission that refused to
 open its issue before the repo was public (JevBench practice), and an unfiled
@@ -128,3 +166,6 @@ to be force-pushed out (2026-10-15). The gate is cheap; the retraction is not.
   re-verify.
 - Do not silently update a wrong claim in-place; annotate the correction so
   the trail stays readable.
+- Do not retry a public write before dedupe, and do not treat a timeout as proof
+  of either success or failure.
+- Do not call fork `origin/main` the upstream baseline without checking its SHA.

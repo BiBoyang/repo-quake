@@ -30,6 +30,21 @@ neutral prompts, mutated copies only, hash-named staging, x/N per cell, negative
 controls — the full invariant list and the eight-step playbook live in
 [`skills/repo-quake/SKILL.md`](skills/repo-quake/SKILL.md).
 
+## Evidence guide and archive audit
+
+For a Chinese, example-driven guide to failure attribution, independent
+outcomes and publication read-back, read
+[`docs/eval-evidence-guide.md`](docs/eval-evidence-guide.md).
+
+Before archiving an experiment directory, run:
+
+```bash
+python3 skills/repo-quake/scripts/audit_artifacts.py <experiment-directory>
+```
+
+It reports symlinks, runtime-only trees and high-confidence credential shapes
+without deleting or rewriting evidence.
+
 ## Experiment log (live runs)
 
 | phase | target | headline | report |
@@ -64,6 +79,8 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 - `tests/` — guard fixtures plus collector, metadata, card and fake-host matrix tests (`bash tests/run_tests.sh`)
 - `examples/` — sample targets, prompts and `experiment-card.json`
 - `skills/repo-quake/scripts/validate_card.py` — stdlib experiment-card validator
+- `skills/repo-quake/scripts/audit_artifacts.py` — stdlib pre-archive symlink,
+  runtime-tree and credential-shape audit
 - `skills/skill-quake/scripts/write_meta.py` — per-run provenance and content-hash writer
 
 ## License

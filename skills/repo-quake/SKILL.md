@@ -139,6 +139,13 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 - Your grading keywords can false-positive on the host's own vocabulary
   (a CLI whose reasoning stream says "truncated" a lot). Calibrate the judge
   against fixtures like anything else.
+- A grader may not strengthen the frozen rubric. Product, fixture and grader
+  failures have different correction paths; preserve raw output and adjudicate
+  separately (`references/failure-attribution.md`).
+- Public writes are uncertain commits: dedupe before retry, read back after
+  create, respect permission denial, and independently compare remote SHA.
+- Archive checks reject symlinks by file type, not just forbidden path names;
+  never normalize raw evidence to satisfy a whitespace check.
 
 ## References
 
@@ -149,9 +156,13 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 - `references/target-catalog.md` — ten high-value trust seams with priors
 - `references/measurement.md` — statistics, controls, judge calibration,
   pre-registration and deviation logs
+- `references/failure-attribution.md` — product / fixture / grader ledgers,
+  semantic delivery, missing-field decisions and correction protocols
 - `references/reporting.md` — upstream issues, PRs, public retraction,
   disclosure files, the posting gate
 - `references/disclosure-template.md` — per-phase disclosure file to fill;
   `examples/disclosure-phase3-metacodes.md` is a filled instance
+- `scripts/audit_artifacts.py` — pre-archive audit for symlinks, runtime trees,
+  browser/PID files and high-confidence credential shapes
 - Bundled specialization: `skills/skill-quake/` — the file/skill-layer specialization with
   ready-made mutation scripts and host adapters

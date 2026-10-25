@@ -56,6 +56,9 @@ Rules:
   different error path.
 - The mock's dialect must match the real API to the event name. Verify against
   captured real traffic or source, never intuition.
+- Preflight the fault's semantic identity as well as its transport: error type
+  and code, required constructor options, injection point, timing and occurrence
+  count. A side effect without the intended error semantics is a different cell.
 
 ## Step 4 — Witness layer
 
@@ -68,7 +71,8 @@ Two components, both deterministic and zero-token:
 2. **Delivery proof**: per-request log of bytes actually written, full event
    sequence, whether the terminator was sent, how the stream closed. Symmetric
    request-side capture. This is what separates "no reaction" from "fault never
-   arrived".
+   arrived". Include the fault type/code and required parameters, not only the
+   resulting click or write; an effect alone does not prove which fault arrived.
 
 Calibrate the witness against fixtures including a deliberately bad sample —
 the witness itself needs tests (a witness with false positives drowns real
@@ -116,6 +120,10 @@ In order, all before the first fault cell:
   booleans; each gets its own denominator and unknown count, never backfilled.
 - Grade from primary artifacts (transcript, deliverable), not from the host's
   self-report alone.
+- Do not let the grader strengthen the frozen rubric. If an extra assertion is
+  wrong, preserve the initial output and adjudicate separately. Fixture repair
+  uses a new frozen card; grader repair does not automatically mean a new run.
+  See `failure-attribution.md`.
 - **Appeal step, mandatory**: pick the single most striking conclusion and
   re-verify its entire evidence chain — mock bytes, witness logs, grading
   notes. Both published near-misses in the series (a false-negative codex cell,
@@ -128,3 +136,18 @@ In order, all before the first fault cell:
 See `reporting.md`. The short version: minimal repro, environment block,
 expected-vs-actual, inline evidence that does not require repo access; and the
 courage to post "this was a false report, please close" when wrong.
+
+### Archive without mutating the evidence
+
+Before committing a run directory, audit it:
+
+```bash
+python3 skills/repo-quake/scripts/audit_artifacts.py <experiment-directory>
+```
+
+The audit rejects symlinks by file type (an ignore rule for `node_modules/` does
+not cover a same-named symlink), runtime-only directories, browser/PID files,
+and high-confidence credential shapes (first 4 MiB per file). It never deletes anything. Keep raw logs
+byte-for-byte; if their natural EOF blank lines or progress-output trailing
+spaces trip `git diff --check`, use a scoped `.gitattributes` whitespace rule
+instead of normalizing the evidence.

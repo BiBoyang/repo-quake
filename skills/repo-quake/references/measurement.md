@@ -75,6 +75,21 @@ eval configs are public and aligned.
   rubric, not the judge.
 
 
+## Attribution and grader corrections
+
+Unexpected outcomes need a product / fixture / grader decision before they become
+findings. See `failure-attribution.md` for the full protocol.
+
+- Prove the fault's semantic identity (type, code, parameters, position and
+  timing), not only the side effect that followed it.
+- A checker may not strengthen the frozen rubric. Every mechanical assertion
+  must map to it; an extra condition is a grader bug, not a product regression.
+- Fixture failure means `invalid setup` and, when justified, a new frozen card
+  with its own budget and lineage. Grader failure means preserve initial output
+  and write a separate adjudication, not another product run by default.
+- Full-product and minimal-function reproductions are two evidence layers for
+  one finding, not two findings.
+
 ## Pre-registration and deviation log
 
 Before the first fault cell runs, freeze a `prereg.json` into the results dir:
@@ -108,6 +123,12 @@ different questions. New runs may record them as optional booleans in `grade.jso
 Each metric has its own denominator and unknown count; missing fields are not false,
 and old L-levels are not mined for retroactive meanings. Invalid and ungraded runs
 never enter any of these denominators.
+
+Test normal returns, sentinel declines and thrown faults as distinct paths when
+the contract makes them reachable. A passing business result does not imply a
+complete report or recovery. Before interpreting an absent field, distinguish a
+contract-allowed absence, a harness-lost artifact, and a required outcome the
+product failed to generate.
 
 ## Grading pitfalls
 
