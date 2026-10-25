@@ -1,0 +1,38 @@
+
+ RUN  v5.0.1 /Users/boyang/e2e/packages/e2e
+
+ ❯ |unit| tests/unit/trace-cache-config.test.ts (27 tests | 1 failed) 51ms
+   ❯ settleStagedTraces (13)
+     × reports a confirmed recording as not written when a custom store rejects its write 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| tests/unit/trace-cache-config.test.ts > settleStagedTraces > reports a confirmed recording as not written when a custom store rejects its write
+AssertionError: expected undefined to be 'not-written' // Object.is equality
+
+- Expected:
+"not-written"
+
++ Received:
+undefined
+
+ ❯ tests/unit/trace-cache-config.test.ts:310:27
+    308|     const writes = await settleStagedTraces(context, { lastVerifiedSte…
+    309|
+    310|     expect(writes.get(1)).toBe('not-written');
+       |                           ^
+    311|     expect(writes.get(2)).toBe('saved');
+    312|     expect(store.entries.has(KEY_A)).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  11:18:14
+   Duration  523ms (transform 67%, import 19%, tests 13%, worker 1%)
+
+Error: ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL
+
+  × "pnpm recursive exec" failed in /Users/boyang/e2e/packages/e2e
+

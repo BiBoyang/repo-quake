@@ -1,0 +1,104 @@
+$ pnpm run build && pnpm --filter @e2e-dev/web-benchmark test
+$ pnpm --filter e2e run build && pnpm --filter @e2e-dev/web run build && pnpm --filter @e2e-dev/mobile run build && pnpm --filter @e2e-dev/github run build && pnpm --filter @e2e-dev/kernel run build && pnpm --filter @e2e-dev/lightpanda run build && pnpm --filter @e2e-dev/eas run build && pnpm --filter @e2e-dev/smol run build && pnpm --filter @e2e-dev/limrun run build && pnpm --filter @e2e-dev/decision run build && pnpm --filter @e2e-dev/testmu run build
+$ node scripts/prepare-build.ts && tsc --project tsconfig.build.json && node scripts/write-sibling-versions.ts && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ node -e "require('node:fs').rmSync('dist',{recursive:true,force:true})" && tsc --project tsconfig.build.json && node ../../scripts/stamp-dist.ts
+$ pnpm run build && node node_modules/e2e/dist/cli/bin.js run
+$ next build app
+▲ Next.js 16.4.1 (Turbopack)
+✓ Running next.config.ts took 1107ms
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1221ms
+  Running TypeScript ...
+  Finished TypeScript in 306ms ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/45) ...
+  Generating static pages using 5 workers (11/45) 
+  Generating static pages using 5 workers (22/45) 
+  Generating static pages using 5 workers (33/45) 
+✓ Generating static pages using 5 workers (45/45) in 454ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+└   /e/[slug]
+  ├ ● /e/login-form
+  ├ ● /e/shadow-dom-form
+  ├ ● /e/canvas-only
+  └ ● [+39 more paths]
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+
+ RUN  e2e v0.21.3 /Users/boyang/e2e/apps/web-benchmark
+      run 01a17122-f306-7fa0-a028-e94e115343de · targets: web · CI
+
+ℹ target "web" command: reuseExisting is ignored in CI, starting the command
+ ✓ target "web" command ready 424ms
+ ✓ |web| tests/aria-hidden-flow.e2e.ts (2 tests) 822ms
+ ✓ |web| tests/async-states.e2e.ts (2 tests) 7.19s
+ ✓ |web| tests/canvas-only.e2e.ts (2 tests) 340ms
+ ✓ |web| tests/canvas-whiteboard.e2e.ts (2 tests) 440ms
+ ✓ |web| tests/cart-totals.e2e.ts (2 tests) 459ms
+ ✓ |web| tests/checkout-review.e2e.ts (1 test) 234ms
+ ✓ |web| tests/context-menu-trap.e2e.ts (2 tests) 779ms
+ ✓ |web| tests/control-inventory.e2e.ts (8 tests) 4.30s
+ ✓ |web| tests/css-content-ui.e2e.ts (2 tests) 436ms
+ ✓ |web| tests/date-picker.e2e.ts (2 tests) 784ms
+ ✓ |web| tests/debounced-search.e2e.ts (2 tests) 3.11s
+ ✓ |web| tests/deferred-dialog.e2e.ts (1 test) 1.16s
+ ✓ |web| tests/div-soup.e2e.ts (2 tests) 905ms
+ ✓ |web| tests/drag-and-drop.e2e.ts (2 tests) 750ms
+ ✓ |web| tests/filter-deep-link.e2e.ts (2 tests) 290ms
+ ✓ |web| tests/gift-card-purchase.e2e.ts (3 tests) 739ms
+ ✓ |web| tests/hover-menu.e2e.ts (2 tests) 576ms
+ ✓ |web| tests/iframe-form.e2e.ts (2 tests) 722ms
+ ✓ |web| tests/image-only-ui.e2e.ts (3 tests) 654ms
+ ✓ |web| tests/infinite-scroll.e2e.ts (1 test) 4.13s
+ ✓ |web| tests/kanban-board.e2e.ts (3 tests) 949ms
+ ✓ |web| tests/login-form.e2e.ts (4 tests) 1.08s
+ ✓ |web| tests/lying-labels.e2e.ts (4 tests) 891ms
+ ✓ |web| tests/native-dialogs.e2e.ts (3 tests) 612ms
+ ✓ |web| tests/newsletter-signup.e2e.ts (1 test) 2.31s
+ ✓ |web| tests/onboarding-wizard.e2e.ts (5 tests) 8.15s
+ ✓ |web| tests/order-history.e2e.ts (2 tests) 1.54s
+ ✓ |web| tests/otp-auto-advance.e2e.ts (3 tests) 1.75s
+ ✓ |web| tests/overlay-trap.e2e.ts (1 test) 739ms
+ ✓ |web| tests/playbook-cleanup.e2e.ts (2 tests) 745ms
+ ✓ |web| tests/price-sorting.e2e.ts (3 tests) 579ms
+ ✓ |web| tests/product-reviews.e2e.ts (1 test) 1.18s
+ ✓ |web| tests/promo-storefront.e2e.ts (1 test) 1.43s
+ ✓ |web| tests/rich-text-editor.e2e.ts (2 tests) 682ms
+ ✓ |web| tests/saved-addresses.e2e.ts (3 tests) 841ms
+ ✓ |web| tests/shadow-dom-form.e2e.ts (2 tests) 456ms
+ ✓ |web| tests/smoke.e2e.ts (1 test) 606ms
+ ✓ |web| tests/stale-dom.e2e.ts (1 test) 2.28s
+ ✓ |web| tests/sticky-chrome.e2e.ts (1 test) 324ms
+ ✓ |web| tests/virtualized-table.e2e.ts (1 test) 30.60s
+ ✓ |web| tests/wishlist.e2e.ts (2 tests) 1.84s
+
+ Test Files  41 passed (41)
+      Tests  91 passed (91)
+   Start at  11:37:58
+   Duration  89.67s (1m 30s, startup 424ms)
+
+     GitHub  not posted: not running on GitHub Actions
+

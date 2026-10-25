@@ -41,3 +41,4 @@ Measured three direct settlement calls against npm e2e 0.21.3, with healthy and 
 - [x] One-per-cell sample and main-runtime caveat stated
 - [x] Contamination register reviewed; no affected valid cell hidden
 - [x] Repository/artifacts public on [codex/measurement-hardening](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening), after issue #1371 was created
+- [x] Upstream PR opened as https://github.com/tester-army/e2e/pull/1372; head `5beeb50937f904edddca422cdde15b959b438327`, checks passed, maintainer-only label/preview steps documented in `pr-evidence/pr-status.md`

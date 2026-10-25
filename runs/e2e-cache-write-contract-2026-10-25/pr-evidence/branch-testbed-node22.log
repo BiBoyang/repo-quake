@@ -1,0 +1,27 @@
+$ tsc --noEmit && node node_modules/e2e/dist/cli/bin.js run
+
+ RUN  e2e v0.21.3 /Users/boyang/e2e/apps/testbed
+      run 01a17122-2d4f-79a6-9b57-b061c503bc70 · targets: web
+
+ ✓ target "web" command ready 93ms
+ ✓ |web| tests/auth.setup.e2e.ts (2 tests) 1.46s
+ ✓ |web| tests/board.e2e.ts (3 tests) 827ms
+ ✓ |web| tests/dashboard.e2e.ts (5 tests) 1.41s
+ ✓ |web| tests/browser.e2e.ts (7 tests) 2.30s
+ ✓ |web| tests/dialogs-frames.e2e.ts (7 tests) 2.00s
+ ✓ |web| tests/network.e2e.ts (5 tests) 1.24s
+ ✓ |web| tests/forms.e2e.ts (5 tests) 2.89s
+ ✓ |web| tests/smoke.e2e.ts (4 tests | 1 skipped) 685ms
+ ✓ |web| tests/pointer.e2e.ts (6 tests) 2.10s
+ ✓ |web| tests/visual.e2e.ts (4 tests) 2.50s
+ ✓ |web| tests/speed.e2e.ts (2 tests) 3.36s
+ ✓ |web| tests/wizard.e2e.ts (3 tests) 581ms
+ ✓ |web| tests/todos.e2e.ts (7 tests) 4.18s
+ ✓ |web| tests/scroll.e2e.ts (4 tests) 8.91s
+ ✓ |web| tests/controls.e2e.ts (16 tests) 18.06s
+
+ Test Files  15 passed (15)
+      Tests  79 passed | 1 skipped (80)
+   Start at  11:37:08
+   Duration  20.18s (startup 93ms)
+

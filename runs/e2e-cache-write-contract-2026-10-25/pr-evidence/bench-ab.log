@@ -1,0 +1,70 @@
+$ node scripts/bench-ab.ts --base upstream/main --suite testbed --threshold 3 --out /Users/boyang/repo-quake/runs/e2e-cache-write-contract-2026-10-25/pr-evidence/bench-ab -- tests/forms.e2e.ts
+bench-ab: adding worktree /var/folders/c4/ftzpswv106v83_32z6k_4m0h0000gn/T/e2e-bench-ab/69e123b17e04ed624df16d32f3b1ef95ce22c083
+Preparing worktree (detached HEAD 69e123b1)
+bench-ab: installing and building base 69e123b1
+bench-ab: building head
+bench-ab: load average 11.1 on 10 cores; timings will be noisy
+bench-ab: warmup pair 1
+bench-ab: pair 1: base 3.61 s, head 2.46 s (head first)
+bench-ab: pair 2: base 2.68 s, head 2.69 s (base first)
+bench-ab: pair 3: base 2.62 s, head 2.59 s (base first)
+bench-ab: pair 4: base 2.75 s, head 2.63 s (base first)
+bench-ab: pair 5: base 2.75 s, head 2.57 s (head first)
+bench-ab: pair 6: base 2.73 s, head 2.61 s (base first)
+bench-ab: pair 7: base 2.69 s, head 2.65 s (base first)
+bench-ab: pair 8: base 2.57 s, head 2.75 s (head first)
+bench-ab: pair 9: base 2.69 s, head 2.65 s (base first)
+bench-ab: pair 10: base 2.64 s, head 2.58 s (head first)
+bench-ab: pair 11: base 2.73 s, head 2.55 s (head first)
+bench-ab: pair 12: base 2.60 s, head 2.61 s (head first)
+bench-ab: pair 13: base 2.65 s, head 2.60 s (head first)
+bench-ab: pair 14: base 2.68 s, head 2.58 s (head first)
+bench-ab: pair 15: base 2.62 s, head 2.63 s (head first)
+bench-ab: pair 16: base 2.54 s, head 2.61 s (head first)
+bench-ab: pair 17: base 2.61 s, head 2.62 s (head first)
+bench-ab: pair 18: base 2.61 s, head 2.58 s (head first)
+bench-ab: pair 19: base 2.83 s, head 2.50 s (base first)
+bench-ab: pair 20: base 2.46 s, head 2.55 s (head first)
+### bench-ab: `69e123b1` (merge base with upstream/main) vs `69e123b1` + uncommitted changes
+
+apps/testbed: `e2e run --workers 1 tests/forms.e2e.ts`. 20 pairs in random order, stopped at the 20-pair budget, unresolved. Threshold ±3% and 10 ms. darwin arm64, Apple M1 Pro x10, Node 22.22.3, load 11.7.
+
+#### Behavior
+
+Every test ran the same steps with the same outcome on every run of both builds.
+
+#### Timings
+
+| Metric | base median (IQR) | head median (IQR) | change (95% CI) | verdict |
+| --- | ---: | ---: | ---: | --- |
+| wall (process) | 3.99 s (3.88 s-4.01 s) | 3.83 s (3.81 s-3.88 s) | -2.2% (-3.8% to -0.2%) | unresolved |
+| suite (sum of attempts) | 2.66 s (2.61 s-2.73 s) | 2.60 s (2.58 s-2.63 s) | -1.5% (-3.9% to +0.3%) | unresolved |
+| action (events) | 676 ms (665 ms-701 ms) | 650 ms (636 ms-659 ms) | -4.3% (-7.3% to -1.6%) | unresolved |
+| step expect.not.toBeChecked | 1.09 s (1.08 s-1.09 s) | 1.08 s (1.08 s-1.09 s) | +0.1% (-0.5% to +0.4%) | same, under the floor |
+| step app.open | 430 ms (417 ms-448 ms) | 423 ms (412 ms-438 ms) | +1.0% (-3.7% to +2.0%) | same, under the floor |
+| step locator.fill | 296 ms (289 ms-302 ms) | 283 ms (271 ms-287 ms) | -3.5% (-8.7% to -1.9%) | unresolved |
+| step locator.pressSequentially | 95 ms (93 ms-99 ms) | 86 ms (85 ms-92 ms) | -9.0% (-13.0% to -4.4%) | same, under the floor |
+| step locator.tap | 82 ms (75 ms-91 ms) | 86 ms (82 ms-92 ms) | +2.4% (-2.9% to +12.9%) | same, under the floor |
+| step expect.toHaveText | 66 ms (62 ms-71 ms) | 66 ms (64 ms-66 ms) | -1.5% (-6.0% to +4.0%) | same, under the floor |
+| step locator.focus | 63 ms (62 ms-65 ms) | 63 ms (62 ms-64 ms) | -0.8% (-2.3% to 0.0%) | same, under the floor |
+| step locator.selectOption | 56 ms (54 ms-58 ms) | 47 ms (45 ms-48 ms) | -16.7% (-19.1% to -12.9%) | same, under the floor |
+| step locator.clear | 53 ms (51 ms-55 ms) | 50 ms (48 ms-52 ms) | -7.4% (-10.0% to -2.9%) | same, under the floor |
+| step locator.check | 51 ms (45 ms-62 ms) | 49 ms (45 ms-53 ms) | -5.4% (-19.7% to +15.2%) | same, under the floor |
+| step locator.uncheck | 47 ms (45 ms-47 ms) | 48 ms (46 ms-48 ms) | +2.1% (-1.1% to +6.6%) | same, under the floor |
+| step expect.toHaveValue | 35 ms (32 ms-36 ms) | 35 ms (34 ms-36 ms) | +1.4% (-7.0% to +7.3%) | same, under the floor |
+| step expect.toBeVisible | 25 ms (25 ms-26 ms) | 24 ms (24 ms-25 ms) | -3.9% (-4.0% to 0.0%) | same, under the floor |
+| step browser.keyboard.type | 11 ms (10 ms-11 ms) | 10 ms (10 ms-11 ms) | -4.7% (-9.5% to 0.0%) | same, under the floor |
+| step expect.toHaveCount | 10 ms (9 ms-10 ms) | 10 ms (9 ms-11 ms) | 0.0% (-4.7% to +10.0%) | same |
+| step expect.toBeChecked | 8 ms (7 ms-8 ms) | 8 ms (7 ms-8 ms) | 0.0% (-11.8% to +15.5%) | same |
+| step browser.keyboard.press | 1 ms (1 ms-2 ms) | 1 ms (1 ms-1 ms) | 0.0% (0.0% to 0.0%) | same |
+
+#### Counters
+
+Every counter matched on every run of both builds.
+
+<details><summary>Tests outside the threshold: 0 of 78</summary>
+
+With 78 tests compared at 95%, about 3.9 could land outside by chance.
+
+</details>
+bench-ab: wrote /Users/boyang/repo-quake/runs/e2e-cache-write-contract-2026-10-25/pr-evidence/bench-ab/summary.md and result.json

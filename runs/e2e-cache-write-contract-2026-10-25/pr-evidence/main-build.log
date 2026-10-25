@@ -1,0 +1,1 @@
+$ node scripts/prepare-build.ts && tsc --project tsconfig.build.json && node scripts/write-sibling-versions.ts && node ../../scripts/stamp-dist.ts

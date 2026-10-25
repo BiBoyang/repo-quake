@@ -1,0 +1,14 @@
+{
+  "exitCode": 0,
+  "cache": {
+    "mode": "missed",
+    "reason": "no-entry",
+    "replayedActions": 0,
+    "totalActions": 0,
+    "entry": "d09779345b57fe0102660afbbabea958a472f631593749a5c03438ec48be28db",
+    "write": "not-written"
+  },
+  "executorCalls": 1,
+  "tapCalls": 2,
+  "finalCount": 2
+}

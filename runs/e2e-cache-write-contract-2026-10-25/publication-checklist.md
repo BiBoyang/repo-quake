@@ -18,8 +18,8 @@
 - [x] Upstream issue published and content verified: https://github.com/tester-army/e2e/issues/1371. The `bug` label could not be added because the upstream denied `AddLabelsToLabelable`; title/body are correct and the label is left for a maintainer.
 - [x] Recorded https://github.com/tester-army/e2e/issues/1371 in all three disclosure files and this checklist.
 - [x] Committed disclosure URL updates and pushed the [repo-quake evidence branch](https://github.com/BiBoyang/repo-quake/tree/codex/measurement-hardening) through `85babcf`, after issue #1371 was created.
-- [ ] Optional: authorize the PR implementation in `pr-plan.md`; a `fix` PR must link the issue.
-- [ ] Before the PR, replace every placeholder in `pr-body-template.md` with final-diff facts and actual verification.
+- [x] PR implemented and opened as https://github.com/tester-army/e2e/pull/1372 with `Fixes #1371`; checks and Cubic passed. Ready label and Mintlify approval require upstream write access; no merge or self-approval.
+- [x] PR body populated with final-diff facts and actual verification; no placeholders remain in the public body.
 
 ## Manual issue command (do not run during preparation)
 

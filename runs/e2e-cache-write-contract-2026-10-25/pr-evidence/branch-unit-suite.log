@@ -1,0 +1,10 @@
+$ vitest run tests/unit
+
+ RUN  v5.0.1 /Users/boyang/e2e/packages/e2e
+
+
+ Test Files  197 passed (197)
+      Tests  3021 passed | 1 skipped (3022)
+   Start at  11:28:00
+   Duration  12.75s (tests 61%, import 20%, transform 18%, worker 1%)
+

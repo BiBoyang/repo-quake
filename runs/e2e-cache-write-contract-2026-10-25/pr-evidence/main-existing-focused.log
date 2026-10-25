@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 /Users/boyang/e2e/packages/e2e
+
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  11:17:36
+   Duration  492ms (transform 67%, import 20%, tests 13%, worker 1%)
+
