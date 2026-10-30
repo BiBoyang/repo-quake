@@ -1,6 +1,6 @@
 ---
 task: /Users/boyang/repo-quake/plans/TASK-factorial-probes.md
-status: pending
+status: done
 from: Planner
 to: Executor
 created: 2026-10-30

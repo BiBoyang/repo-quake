@@ -1,4 +1,4 @@
-# repo-quake 缺陷台账（fault ledger）schema v1
+# repo-quake 缺陷台账（fault ledger）schema v1.1
 
 台账文件：`ledger/ledger.json`。校验器：`bin/ledger-check`。
 
@@ -13,10 +13,10 @@
 ## 文件骨架
 
 ```json
-{"version": 1, "updated": "YYYY-MM-DD", "entries": [ ... ]}
+{"version": 2, "updated": "YYYY-MM-DD", "entries": [ ... ]}
 ```
 
-- `version`：整数，当前为 `1`。
+- `version`：整数，当前为 `2`。骨架的 `version` 随 schema 演进升级（schema v1 → `1`，v1.1 → `2`，见文末「版本沿革」）；校验器只接受当前值。
 - `updated`：台账最近一次写入的日期。`upstream[].status` 等外部状态以该日期为准。
 - `entries`：条目数组，按 `id` 追加，不重排。
 
@@ -109,9 +109,27 @@
 |---|---|---|---|
 | `kind` | string | 是 | `issue` / `pr` |
 | `url` | string | 是 | `http(s)://` 完整链接 |
-| `status` | string | 是 | `open` / `merged` / `closed-unmerged` / `none`，以 `updated` 日期的只读查询为准 |
+| `status` | string | 是 | 按 `kind` 分表的枚举（见下），以 `updated` 日期的只读查询为准 |
 
-对 `kind: issue`：`open` = 未关闭；`merged` = 关联修复已合入并关闭；`closed-unmerged` = 未经修复关闭。没有上游动作时省略整个 `upstream`，不写 `none` 占位。
+`kind: issue` 的 `status`：
+
+| 值 | 含义 |
+|---|---|
+| `open` | 未关闭 |
+| `closed-fixed` | 关联修复已合入后关闭 |
+| `closed-stale` | 未经修复关闭（过期、重复、不复现、不修等） |
+| `none` | 保留值：链接存在，但只读查询得不到可判定状态（仓库归档、条目删除、无权限） |
+
+`kind: pr` 的 `status`：
+
+| 值 | 含义 |
+|---|---|
+| `open` | 未合入且未关闭 |
+| `merged` | 已合入 |
+| `closed-unmerged` | 未合入即关闭 |
+| `none` | 保留值，含义同 issue 表 |
+
+跨表取值是错误（issue 用 `merged`、PR 用 `closed-fixed` 都会被校验器拒绝）。没有上游动作时省略整个 `upstream`，不写 `none` 占位。
 
 ## 枚举释义
 
@@ -127,7 +145,7 @@
 | `superseded` | 原判定被后续 adjudication 或后续条目取代，原始输出保留 |
 | `n-a` | 不适用，仅 `experiment-invalid` 使用 |
 
-`fault.path_relation`（对应 phase2 报告的"为什么不挡路"）
+`fault.path_relation`（对应 phase2 报告的"为什么不挡路"；v1.1 依 phase1p R2 补 `on-path-no-gap`）
 
 | 值 | 含义 |
 |---|---|
@@ -135,6 +153,7 @@
 | `redundant-backstop` | 伤口在路径上，但同一信息有冗余来源兜底（目录/脚本/正文自描述、幸存的引用） |
 | `future-use` | 伤口所在内容在本次任务路径之外：下次会话才需要，或只在未触发的条件分支里需要 |
 | `weak-reference` | 伤口位于"详见 X"式弱引用的目标文件，宿主无需打开即可完成任务 |
+| `on-path-no-gap` | 文件在任务路径上被完整消费，但切口在完整句处、语义上无可见缺口；丢失内容在别处没有冗余来源（有冗余来源时记 `redundant-backstop`） |
 | `unknown` | 未判定，或不属于以上任一类（原因写进 `attribution.explanation`） |
 
 `attribution.primary_factor`
@@ -156,6 +175,13 @@
 - 宁缺勿编：信息不足就省略可选字段，不猜。
 - 跨期汇总示例：`python3 -c 'import json;d=json.load(open("ledger/ledger.json"));print(sum(c["detected"] for e in d["entries"] for c in e.get("cells",[])),"/",sum(c["runs"] for e in d["entries"] for c in e.get("cells",[])))'`
 
+### evidence 锚定声明
+
+`evidence` 路径以**实验机**为锚：存在性检查针对写入台账的那台机器上的仓库检出。`runs/` 下的原始产物
+大多被 `.gitignore` 排除（产物树与证人分离），不随仓库分发，所以换机克隆后 `ledger-check` 可能对这些路径
+报 `does not exist`——这是锚定方式的已知后果，不代表条目失真。跨机校验时用 `--root` 指向持有原始产物的
+检出；取不到原始产物时，只把 `runs/` 路径的存在性错误按此解读，`docs/`、`bin/`、`ledger/` 等入库路径仍须通过。
+
 ## 校验器
 
 ```bash
@@ -163,10 +189,10 @@ python3 bin/ledger-check ledger/ledger.json          # 证据路径相对 ledger
 python3 bin/ledger-check path/to/copy.json --root .  # 显式指定仓库根
 ```
 
-检查项：JSON 合法；骨架字段；每条必填字段与类型；未知字段；`id` 格式、字母与 `class` 一致、全局唯一；
+检查项：JSON 合法；骨架字段（`version` = 2）；每条必填字段与类型；未知字段；`id` 格式、字母与 `class` 一致、全局唯一；
 各枚举合法；`experiment-invalid` ⇔ `status: n-a`；F/I 类带 `target`，F 类带 `fault` 与 `attribution`；
 `cells` 的 `runs > 0`、`0 ≤ detected ≤ runs`、`levels` 段数 = `runs` 且 L2/L3 段数 = `detected`；
-`evidence` 非空且每条路径存在；`upstream` 的 `kind`/`status` 枚举与 `http(s)://` 链接。
+`evidence` 非空且每条路径存在（锚定方式见上）；`upstream` 的 `kind` 枚举、按 `kind` 分表的 `status` 枚举与 `http(s)://` 链接。
 退出码：`0` 通过，`1` 校验失败（逐条可读错误），`2` 用法或文件读取错误。
 
 ## 示例一：`target-finding`（e2e 缓存写入合同，tester-army/e2e#1371 / #1372）
@@ -211,7 +237,7 @@ python3 bin/ledger-check path/to/copy.json --root .  # 显式指定仓库根
     "docs/eval-evidence-guide.md"
   ],
   "upstream": [
-    {"kind": "issue", "url": "https://github.com/tester-army/e2e/issues/1371", "status": "merged"},
+    {"kind": "issue", "url": "https://github.com/tester-army/e2e/issues/1371", "status": "closed-fixed"},
     {"kind": "pr", "url": "https://github.com/tester-army/e2e/pull/1372", "status": "merged"}
   ],
   "lesson": "业务成功、异常被吞、报告缺字段是三件事：正常返回、哨兵值、抛出各走一条路径分别验证，缺字段先查合同再定性"
@@ -237,3 +263,10 @@ python3 bin/ledger-check path/to/copy.json --root .  # 显式指定仓库根
   "lesson": "证人也需要校准：有假阳性的证人只能做基线 diff，而且真伤会被淹没；示例识别要覆盖行内与表格，不只围栏"
 }
 ```
+
+## 版本沿革
+
+| schema | 骨架 `version` | 变化 |
+|---|---|---|
+| v1 | `1` | 初版（2026-10-30）：三类条目、字段表、枚举、校验器 |
+| v1.1 | `2` | 2026-10-30：`upstream.status` 按 `kind` 分表（issue：`open` / `closed-fixed` / `closed-stale` / `none`；pr：`open` / `merged` / `closed-unmerged` / `none`）；`path_relation` 增加 `on-path-no-gap`；补 evidence 锚定声明。数据迁移两处：RQ-F-001 的 issue #1371 `merged` → `closed-fixed`，RQ-F-006 的 `path_relation` `unknown` → `on-path-no-gap`（其 `attribution.explanation` 中的旧归类说明同步改写） |

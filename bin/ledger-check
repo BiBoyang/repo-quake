@@ -6,13 +6,14 @@ not judge whether an attribution is right; it checks that every entry is
 well-formed, internally consistent and backed by evidence that exists on disk.
 
 Checks (any failure => exit 1):
-  - the file parses as JSON with the skeleton
-    {"version": 1, "updated": "YYYY-MM-DD", "entries": [...]}
+  - the file parses as JSON with the schema v1.1 skeleton
+    {"version": 2, "updated": "YYYY-MM-DD", "entries": [...]}
   - every entry carries the required fields with the right types; unknown
     fields are errors (typo guard)
   - id matches ^RQ-[FIX]-\\d{3}$, its letter agrees with `class`, ids are unique
   - enum fields hold the documented values (class, status, path_relation,
-    primary_factor, confidence, upstream.kind / upstream.status)
+    primary_factor, confidence, upstream.kind, and upstream.status from the
+    table of its own kind: issue and pr statuses are not interchangeable)
   - class rules: experiment-invalid <=> status n-a; target-finding and
     instrument-defect carry `target`; target-finding carries `fault` and
     `attribution`
@@ -41,13 +42,17 @@ PHASE_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 LEVEL_RE = re.compile(r"^L[0-3]$")
 URL_RE = re.compile(r"^https?://\S+$")
 
+SCHEMA_VERSION = 2  # skeleton version for schema v1.1 (v1 was 1)
 CLASSES = {"target-finding": "F", "instrument-defect": "I", "experiment-invalid": "X"}
 STATUSES = {"open", "reported", "acknowledged", "fixed", "wontfix", "superseded", "n-a"}
-PATH_RELATIONS = {"blocks-path", "redundant-backstop", "future-use", "weak-reference", "unknown"}
+PATH_RELATIONS = {"blocks-path", "redundant-backstop", "future-use", "weak-reference", "on-path-no-gap", "unknown"}
 PRIMARY_FACTORS = {"blocks-path", "reaches-eyes", "willing-to-report", "witness"}
 CONFIDENCES = {"confirmed", "likely", "unable-to-separate"}
-UPSTREAM_KINDS = {"issue", "pr"}
-UPSTREAM_STATUSES = {"open", "merged", "closed-unmerged", "none"}
+UPSTREAM_STATUSES = {
+    "issue": {"open", "closed-fixed", "closed-stale", "none"},
+    "pr": {"open", "merged", "closed-unmerged", "none"},
+}
+UPSTREAM_KINDS = set(UPSTREAM_STATUSES)
 DETECTED_LEVELS = {"L2", "L3"}
 
 TOP_KEYS = {"version", "updated", "entries"}
@@ -228,7 +233,12 @@ def check_upstream(upstream, where, errors):
         if url is not None and not URL_RE.match(url):
             errors.append(f"{uw}.url: '{url}' is not an http(s) URL")
         status = check_str(item, "status", uw, errors)
-        check_enum(status, UPSTREAM_STATUSES, f"{uw}.status", errors)
+        if kind in UPSTREAM_STATUSES:
+            allowed = UPSTREAM_STATUSES[kind]
+            if status is not None and status not in allowed:
+                errors.append(f"{uw}.status: '{status}' not in {sorted(allowed)} for kind '{kind}'")
+        else:  # kind already reported; still reject statuses no table knows
+            check_enum(status, set().union(*UPSTREAM_STATUSES.values()), f"{uw}.status", errors)
 
 
 def check_entry(entry, index, root, seen_ids, errors):
@@ -299,8 +309,8 @@ def validate(doc, root):
     if not isinstance(doc, dict):
         return ["top level: must be an object"], summary
     check_keys(doc, TOP_KEYS, "top level", errors)
-    if not is_int(doc.get("version")) or doc.get("version") != 1:
-        errors.append("top level: 'version' must be the integer 1")
+    if not is_int(doc.get("version")) or doc.get("version") != SCHEMA_VERSION:
+        errors.append(f"top level: 'version' must be the integer {SCHEMA_VERSION} (schema v1.1)")
     check_date(check_str(doc, "updated", "top level", errors), "top level.updated", errors)
     entries = doc.get("entries")
     if not isinstance(entries, list):

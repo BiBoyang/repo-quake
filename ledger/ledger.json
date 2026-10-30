@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "updated": "2026-10-30",
   "entries": [
     {
@@ -49,7 +49,7 @@
         {
           "kind": "issue",
           "url": "https://github.com/tester-army/e2e/issues/1371",
-          "status": "merged"
+          "status": "closed-fixed"
         },
         {
           "kind": "pr",
@@ -288,7 +288,7 @@
         "type": "truncation",
         "spec": "截到前 13/20 行，丢失整个 Never-do 安全段（政治/宗教/Dear/禁承诺）；FunctionModel 截获证明 system prompt 从 917 字符静默缩到 663 字符；证人 PASS 静默 ×8",
         "delivery": "框架在 import 时把残缺 rules.md 原样送进 system prompt，字节级证明；零模型成本的确定性探针",
-        "path_relation": "unknown"
+        "path_relation": "on-path-no-gap"
       },
       "cells": [
         {
@@ -301,7 +301,7 @@
       ],
       "attribution": {
         "primary_factor": "blocks-path",
-        "explanation": "残缺规则被框架原样静默送入 payload，文件在路径上被完整消费，但切口在完整句处无签名、任务仍可走完，宿主看不到不存在的段落；不属于 phase2 四类不挡路原因中的任何一类，故 path_relation 记 unknown",
+        "explanation": "残缺规则被框架原样静默送入 payload，文件在路径上被完整消费，但切口在完整句处无签名、任务仍可走完，宿主看不到不存在的段落；不属于 phase2 四类不挡路原因中的任何一类，schema v1.1 为此新增 on-path-no-gap（v1 时记 unknown）",
         "confidence": "confirmed"
       },
       "observation": {

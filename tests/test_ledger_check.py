@@ -4,6 +4,7 @@ import importlib.machinery
 import importlib.util
 import io
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,6 +16,7 @@ SPEC = importlib.util.spec_from_loader("quake_ledger_check", LOADER)
 checker = importlib.util.module_from_spec(SPEC)
 LOADER.exec_module(checker)
 LEDGER = ROOT / "ledger/ledger.json"
+SCHEMA = ROOT / "ledger/SCHEMA.md"
 
 
 def run_main(argv):
@@ -105,7 +107,23 @@ class LedgerCheckTests(unittest.TestCase):
             "bad upstream kind": (lambda d: d["entries"][0]["upstream"][0].update(kind="ticket"), "'ticket' not in"),
             "bad upstream url": (lambda d: d["entries"][0]["upstream"][0].update(url="github.com/x"), "not an http(s) URL"),
             "bad upstream status": (lambda d: d["entries"][0]["upstream"][0].update(status="done"), "'done' not in"),
-            "wrong version": (lambda d: d.update(version=2), "'version' must be the integer 1"),
+            "issue status from the pr table": (
+                lambda d: d["entries"][0]["upstream"][0].update(status="merged"),
+                "'merged' not in ['closed-fixed', 'closed-stale', 'none', 'open'] for kind 'issue'",
+            ),
+            "retired v1 issue status": (
+                lambda d: d["entries"][0]["upstream"][0].update(status="closed-unmerged"),
+                "for kind 'issue'",
+            ),
+            "pr status from the issue table": (
+                lambda d: d["entries"][0]["upstream"][1].update(status="closed-fixed"),
+                "'closed-fixed' not in ['closed-unmerged', 'merged', 'none', 'open'] for kind 'pr'",
+            ),
+            "status unknown to every table": (
+                lambda d: d["entries"][0]["upstream"][0].update(kind="ticket", status="done"),
+                "'done' not in",
+            ),
+            "wrong version": (lambda d: d.update(version=1), "'version' must be the integer 2"),
             "entries not a list": (lambda d: d.update(entries={}), "'entries' must be an array"),
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -118,6 +136,47 @@ class LedgerCheckTests(unittest.TestCase):
                     self.assertEqual(rc, 1, out)
                     self.assertIn(expected, out)
                     self.assertIn("FAIL", out)
+
+    def test_v11_enums_accept_every_documented_value(self):
+        issue_statuses = {"open", "closed-fixed", "closed-stale", "none"}
+        pr_statuses = {"open", "merged", "closed-unmerged", "none"}
+        self.assertEqual(checker.UPSTREAM_STATUSES, {"issue": issue_statuses, "pr": pr_statuses})
+        self.assertIn("on-path-no-gap", checker.PATH_RELATIONS)
+        for relation in sorted(checker.PATH_RELATIONS):
+            for issue_status, pr_status in zip(sorted(issue_statuses), sorted(pr_statuses)):
+                with self.subTest(relation=relation, issue=issue_status, pr=pr_status):
+                    doc = copy.deepcopy(self.doc)
+                    first = doc["entries"][0]
+                    first["fault"]["path_relation"] = relation
+                    first["upstream"][0]["status"] = issue_status
+                    first["upstream"][1]["status"] = pr_status
+                    errors, _ = checker.validate(doc, ROOT)
+                    self.assertEqual(errors, [])
+
+    def test_v11_migrations_are_in_the_live_ledger(self):
+        self.assertEqual(self.doc["version"], 2)
+        entries = {e["id"]: e for e in self.doc["entries"]}
+        upstream = {u["url"].rsplit("/", 1)[-1]: u for u in entries["RQ-F-001"]["upstream"]}
+        self.assertEqual((upstream["1371"]["kind"], upstream["1371"]["status"]), ("issue", "closed-fixed"))
+        self.assertEqual((upstream["1372"]["kind"], upstream["1372"]["status"]), ("pr", "merged"))
+        self.assertEqual(entries["RQ-F-006"]["fault"]["path_relation"], "on-path-no-gap")
+
+    def test_schema_doc_stays_in_sync_with_the_checker(self):
+        text = SCHEMA.read_text(encoding="utf-8")
+        self.assertIn(f'"version": {checker.SCHEMA_VERSION}', text)
+        for value in sorted(checker.PATH_RELATIONS):
+            self.assertIn(f"| `{value}` |", text)
+        for kind, statuses in checker.UPSTREAM_STATUSES.items():
+            self.assertIn(f"`kind: {kind}` 的 `status`", text)
+            for status in sorted(statuses):
+                self.assertIn(f"| `{status}` |", text)
+        # Every complete entry example in SCHEMA.md must itself pass the checker.
+        blocks = re.findall(r"```json\n(\{.*?\})\n```", text, re.S)
+        examples = [json.loads(b) for b in blocks if '"id"' in b]
+        self.assertGreaterEqual(len(examples), 2)
+        doc = {"version": checker.SCHEMA_VERSION, "updated": "2026-10-30", "entries": examples}
+        errors, _ = checker.validate(doc, ROOT)
+        self.assertEqual(errors, [])
 
     def test_root_override_controls_evidence_lookup(self):
         with tempfile.TemporaryDirectory() as tmp:
