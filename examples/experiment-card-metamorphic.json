@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "example-metamorphic-delta-v1",
+  "claim": "Transport delta segmentation does not change final parsed output.",
+  "target": {
+    "name": "example-skill",
+    "version": "example-pin-not-for-production",
+    "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "task": {
+    "prompt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path_reachability": "The task must read SKILL.md and execute the step removed by T1."
+  },
+  "hosts": [
+    {
+      "id": "example-host-model-effort",
+      "name": "example-cli",
+      "version": "0.0.0-example",
+      "model": "example-model",
+      "effort": "low"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy",
+      "role": "negative_control"
+    },
+    {
+      "id": "T1",
+      "fault": "truncate-main:60",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "C0"
+  },
+  "witness": {
+    "delivery": "Guard the mutated copy before dispatch and retain the delivery log outside the host tree.",
+    "checker": "skill-guard fixture suite plus task-specific delivery witness",
+    "blind_spots": [
+      "A clean-tail semantic truncation may pass skill-guard."
+    ]
+  },
+  "grading": {
+    "rubric": "skills/skill-quake/references/grading-rubric.md",
+    "primary_metric": "detected"
+  },
+  "sampling": {
+    "runs_per_cell": 2
+  },
+  "invalid_rules": [
+    "provider failure before dispatch",
+    "host permission failure before reading the fixture"
+  ],
+  "budget": {
+    "max_runs": 4,
+    "max_usd": 5.0
+  },
+  "isolation": {
+    "mode": "temporary copies, fake HOME, sandboxed host",
+    "pristine_original_unreachable": true
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Temporary local fixtures only; no production or third-party writes."
+  },
+  "design": {
+    "kind": "metamorphic",
+    "metamorphic": {
+      "source_case": "pinned SSE cassette source-v1",
+      "follow_ups": [
+        {
+          "id": "token",
+          "transform": "one logical token per event",
+          "relation": "same final text, tool calls and stop reason"
+        },
+        {
+          "id": "bytes",
+          "transform": "random legal UTF-8 byte boundaries",
+          "relation": "same final text, tool calls and stop reason"
+        }
+      ],
+      "outcome_relation": "final Conversation and integrity verdict are equivalent",
+      "na_policy": "Illegal wire splits and unsupported thought encodings are N/A, outside all rates"
+    }
+  }
+}

@@ -66,7 +66,9 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 
 - `bin/skill-guard` — deterministic integrity gate for Agent Skills (stdlib-only
   Python, single file)
-- `skills/repo-quake/` — the general methodology skill (this umbrella's core)
+- `skills/repo-quake/` — the general methodology skill (this umbrella's core),
+  including fault injection plus paired, memory, metamorphic and quality–cost
+  experiment contracts
 - `skills/skill-quake/` — file/skill-layer fault-injection specialization
 - `witness/` — mechanical witnesses and matrix runners used in the phases
 - `targets/` — self-made minimal targets (greeting-agent, pydantic-greeter)

@@ -1,5 +1,10 @@
 # Measurement discipline
 
+Specialized contracts: `paired-experiments.md` (AB/BA and McNemar),
+`memory-eval.md` (write × retrieval × acceptance), `metamorphic.md`
+(relation-based oracles), and `quality-cost.md` (billing alignment and
+quality–cost rejection rules). This file supplies their shared controls.
+
 ## Counting
 
 - Single runs are anecdotes. Report x/N per cell, always with N visible.

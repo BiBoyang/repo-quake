@@ -152,6 +152,8 @@ def validate(card):
         ):
             errors.append("budget.max_usd must be a positive number when present")
 
+    validate_design_and_cost(card, planned, errors)
+
     if require_fields(card.get("isolation"), {"mode", "pristine_original_unreachable"}, "isolation", errors):
         if not text(card["isolation"].get("mode")):
             errors.append("isolation.mode must be non-empty text")
@@ -171,6 +173,108 @@ def validate(card):
             errors.append("ethics.consent is required when human_subjects is true")
     return errors, planned
 
+
+
+def nonnegative_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0
+
+
+def validate_design_and_cost(card, planned, errors):
+    """Optional v1 extensions; legacy fault-injection cards remain unchanged."""
+    design = card.get("design")
+    if design is not None:
+        if not isinstance(design, dict):
+            errors.append("design must be an object when present")
+            design = {}
+        kind = design.get("kind")
+        if kind not in {"paired", "memory", "metamorphic"}:
+            errors.append("design.kind must be paired, memory or metamorphic")
+        elif kind == "paired":
+            paired = design.get("paired")
+            if require_fields(paired, {"pairs_planned", "order_schedule", "statistic", "holdout", "proxy_chain"}, "design.paired", errors):
+                pairs = paired.get("pairs_planned")
+                if not isinstance(pairs, int) or isinstance(pairs, bool) or pairs < 1:
+                    errors.append("design.paired.pairs_planned must be a positive integer")
+                    pairs = 0
+                schedule = paired.get("order_schedule")
+                if not isinstance(schedule, list) or len(schedule) != pairs or any(x not in {"AB", "BA"} for x in schedule):
+                    errors.append("design.paired.order_schedule must contain one AB/BA entry per pair")
+                elif schedule.count("AB") != schedule.count("BA"):
+                    errors.append("design.paired.order_schedule must balance AB and BA")
+                if paired.get("statistic") != "exact_mcnemar":
+                    errors.append("design.paired.statistic must be exact_mcnemar")
+                if not text(paired.get("holdout")):
+                    errors.append("design.paired.holdout must be non-empty text")
+                chain = paired.get("proxy_chain")
+                if not isinstance(chain, list) or len(chain) < 2 or not all(text(x) for x in chain):
+                    errors.append("design.paired.proxy_chain must name at least two consumption steps")
+                if len(card.get("arms", [])) != 2:
+                    errors.append("paired design requires exactly two arms")
+                if card.get("sampling", {}).get("runs_overrides"):
+                    errors.append("paired design does not allow sampling.runs_overrides")
+                if pairs and planned != 2 * pairs * len(card.get("hosts", [])):
+                    errors.append("design.paired.pairs_planned must equal runs per arm per host")
+        elif kind == "memory":
+            memory = design.get("memory")
+            if require_fields(memory, {"layers", "corpora", "shadow", "write_before_enable", "recall_rerank_split"}, "design.memory", errors):
+                layers = memory.get("layers")
+                if require_fields(layers, {"write", "retrieval", "acceptance"}, "design.memory.layers", errors):
+                    for field in ("write", "retrieval", "acceptance"):
+                        if not text(layers.get(field)):
+                            errors.append(f"design.memory.layers.{field} must name a witness")
+                corpora = memory.get("corpora")
+                if not isinstance(corpora, list) or not corpora:
+                    errors.append("design.memory.corpora must be a non-empty array")
+                    corpora = []
+                ids = []
+                for index, corpus in enumerate(corpora):
+                    if require_fields(corpus, {"id", "gold_shape"}, f"design.memory.corpora[{index}]", errors):
+                        if text(corpus.get("id")):
+                            ids.append(corpus["id"])
+                        if not text(corpus.get("id")) or not text(corpus.get("gold_shape")):
+                            errors.append(f"design.memory.corpora[{index}] id/gold_shape must be non-empty text")
+                if len(set(ids)) != len(ids):
+                    errors.append("design.memory.corpora ids must be unique")
+                if not text(memory.get("shadow")):
+                    errors.append("design.memory.shadow must describe byte-level identity verification")
+                if memory.get("write_before_enable") is not True:
+                    errors.append("design.memory.write_before_enable must be true")
+                if memory.get("recall_rerank_split") is not True:
+                    errors.append("design.memory.recall_rerank_split must be true")
+        elif kind == "metamorphic":
+            metamorphic = design.get("metamorphic")
+            if require_fields(metamorphic, {"source_case", "follow_ups", "outcome_relation", "na_policy"}, "design.metamorphic", errors):
+                if not text(metamorphic.get("source_case")):
+                    errors.append("design.metamorphic.source_case must be non-empty text")
+                follow_ups = metamorphic.get("follow_ups")
+                if not isinstance(follow_ups, list) or not follow_ups:
+                    errors.append("design.metamorphic.follow_ups must be a non-empty array")
+                    follow_ups = []
+                ids = []
+                for index, follow in enumerate(follow_ups):
+                    if require_fields(follow, {"id", "transform", "relation"}, f"design.metamorphic.follow_ups[{index}]", errors):
+                        if text(follow.get("id")):
+                            ids.append(follow["id"])
+                        for field in ("id", "transform", "relation"):
+                            if not text(follow.get(field)):
+                                errors.append(f"design.metamorphic.follow_ups[{index}].{field} must be non-empty text")
+                if len(set(ids)) != len(ids):
+                    errors.append("design.metamorphic.follow_ups ids must be unique")
+                if not text(metamorphic.get("outcome_relation")):
+                    errors.append("design.metamorphic.outcome_relation must be non-empty text")
+                if not text(metamorphic.get("na_policy")):
+                    errors.append("design.metamorphic.na_policy must be non-empty text")
+    cost = card.get("cost_policy")
+    if cost is not None:
+        if require_fields(cost, {"max_per_run", "max_per_success", "retry_policy", "cache_policy", "billing_alignment", "overrun", "decision_rule"}, "cost_policy", errors):
+            for field in ("max_per_run", "max_per_success"):
+                if not nonnegative_number(cost.get(field)):
+                    errors.append(f"cost_policy.{field} must be a finite non-negative number")
+            for field in ("retry_policy", "cache_policy", "billing_alignment", "decision_rule"):
+                if not text(cost.get(field)):
+                    errors.append(f"cost_policy.{field} must be non-empty text")
+            if cost.get("overrun") not in {"invalid", "counted", "stop_and_report"}:
+                errors.append("cost_policy.overrun must be invalid, counted or stop_and_report")
 
 def main(argv=None):
     argv = sys.argv if argv is None else argv

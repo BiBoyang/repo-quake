@@ -151,3 +151,12 @@ and high-confidence credential shapes (first 4 MiB per file). It never deletes a
 byte-for-byte; if their natural EOF blank lines or progress-output trailing
 spaces trip `git diff --check`, use a scoped `.gitattributes` whitespace rule
 instead of normalizing the evidence.
+
+## Choose the experiment family before the matrix
+
+Not every question is a fault matrix. For a causal treatment effect use
+`paired-experiments.md`; for long-term memory use `memory-eval.md`; for an
+invariance without an enumerable oracle use `metamorphic.md`; for adoption under a
+real budget add `quality-cost.md`. Do not force paired or memory experiments into
+generic fault-cell denominators. Their cards reuse the same witness, isolation,
+invalid-ledger and appeal duties.

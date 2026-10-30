@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "id": "example-quality-cost-v1",
+  "claim": "A treatment is accepted only within its quality and cost contract.",
+  "target": {
+    "name": "example-skill",
+    "version": "example-pin-not-for-production",
+    "source_sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "task": {
+    "prompt_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "path_reachability": "The task must read SKILL.md and execute the step removed by T1."
+  },
+  "hosts": [
+    {
+      "id": "example-host-model-effort",
+      "name": "example-cli",
+      "version": "0.0.0-example",
+      "model": "example-model",
+      "effort": "low"
+    }
+  ],
+  "arms": [
+    {
+      "id": "C0",
+      "fault": "healthy",
+      "role": "negative_control"
+    },
+    {
+      "id": "T1",
+      "fault": "truncate-main:60",
+      "role": "treatment"
+    }
+  ],
+  "controls": {
+    "negative": "C0"
+  },
+  "witness": {
+    "delivery": "Guard the mutated copy before dispatch and retain the delivery log outside the host tree.",
+    "checker": "skill-guard fixture suite plus task-specific delivery witness",
+    "blind_spots": [
+      "A clean-tail semantic truncation may pass skill-guard."
+    ]
+  },
+  "grading": {
+    "rubric": "skills/skill-quake/references/grading-rubric.md",
+    "primary_metric": "detected"
+  },
+  "sampling": {
+    "runs_per_cell": 2
+  },
+  "invalid_rules": [
+    "provider failure before dispatch",
+    "host permission failure before reading the fixture"
+  ],
+  "budget": {
+    "max_runs": 4,
+    "max_usd": 5.0
+  },
+  "isolation": {
+    "mode": "temporary copies, fake HOME, sandboxed host",
+    "pristine_original_unreachable": true
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Temporary local fixtures only; no production or third-party writes."
+  },
+  "cost_policy": {
+    "max_per_run": 0.25,
+    "max_per_success": 1.0,
+    "retry_policy": "zero silent retries; every authorized attempt receipted",
+    "cache_policy": "input/output/cache-read/cache-creation charged separately",
+    "billing_alignment": "identical model, prompt prefix, retry and cache conditions apart from treatment",
+    "overrun": "stop_and_report",
+    "decision_rule": "reject when quality is tied and cost per success exceeds control by more than 0.02 USD"
+  }
+}

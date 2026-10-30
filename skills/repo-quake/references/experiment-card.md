@@ -47,6 +47,29 @@ These hashes answer different questions and are not expected to match:
 The run hashes therefore prove what was delivered; the card hashes prove what was
 pre-registered. Do not compare them as if they were the same artifact.
 
+## Optional design families
+
+Legacy cards need no `design` field and retain their original meaning. New cards
+may declare exactly one of these designs; each has a worked example under
+`examples/` and a full playbook under `references/`:
+
+- `design.kind=paired` with `design.paired`: two arms, balanced AB/BA order,
+  exact McNemar, a frozen holdout and an explicit proxy-consumption chain.
+- `design.kind=memory` with `design.memory`: independent write/retrieval/
+  acceptance witnesses, named gold-shape corpora, shadow identity and split
+  recall/reranking.
+- `design.kind=metamorphic` with `design.metamorphic`: source/follow-up
+  transforms, per-transform relations and an explicit N/A policy.
+
+`cost_policy` is orthogonal to all three and to ordinary fault injection. It
+freezes per-run/per-success ceilings, retry/cache accounting, billing alignment,
+overrun handling and the quality–cost decision rule. It is a decision contract,
+not a replacement for `budget.max_usd`.
+
+The validator checks structural invariants only. It cannot prove that pairing
+reset state, memory witnesses actually measure acceptance, a transform preserves
+semantics, or billing was truly aligned. Those remain run-level evidence duties.
+
 ## Comparability
 
 A card is comparable only when its claim, task, host/model/effort, arms, rubric and

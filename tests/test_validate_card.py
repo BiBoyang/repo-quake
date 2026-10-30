@@ -52,6 +52,39 @@ class ValidateCardTests(unittest.TestCase):
         self.assertTrue(any("arms[0].id and fault" in error for error in errors))
         self.assertTrue(any("max_usd" in error for error in errors))
 
+    def test_new_design_examples_are_valid(self):
+        for name in ("paired", "memory", "metamorphic", "quality-cost"):
+            path = EXAMPLE.with_name(f"experiment-card-{name}.json")
+            errors, planned = validator.validate(json.loads(path.read_text(encoding="utf-8")))
+            self.assertEqual(errors, [], name)
+            self.assertEqual(planned, 4, name)
+
+    def test_paired_design_requires_balanced_order(self):
+        card = json.loads(EXAMPLE.with_name("experiment-card-paired.json").read_text(encoding="utf-8"))
+        card["design"]["paired"]["order_schedule"] = ["AB", "AB"]
+        errors, _ = validator.validate(card)
+        self.assertTrue(any("must balance AB and BA" in error for error in errors))
+
+    def test_memory_design_requires_all_three_layers(self):
+        card = json.loads(EXAMPLE.with_name("experiment-card-memory.json").read_text(encoding="utf-8"))
+        del card["design"]["memory"]["layers"]["acceptance"]
+        errors, _ = validator.validate(card)
+        self.assertTrue(any("design.memory.layers.acceptance" in error for error in errors))
+
+    def test_metamorphic_design_requires_relation_per_followup(self):
+        card = json.loads(EXAMPLE.with_name("experiment-card-metamorphic.json").read_text(encoding="utf-8"))
+        card["design"]["metamorphic"]["follow_ups"][0]["relation"] = ""
+        errors, _ = validator.validate(card)
+        self.assertTrue(any("follow_ups[0].relation" in error for error in errors))
+
+    def test_cost_policy_rejects_negative_limit_and_missing_alignment(self):
+        card = json.loads(EXAMPLE.with_name("experiment-card-quality-cost.json").read_text(encoding="utf-8"))
+        card["cost_policy"]["max_per_run"] = -1
+        card["cost_policy"]["billing_alignment"] = ""
+        errors, _ = validator.validate(card)
+        self.assertTrue(any("max_per_run" in error for error in errors))
+        self.assertTrue(any("billing_alignment" in error for error in errors))
+
     def test_control_reference_must_have_matching_role(self):
         card = copy.deepcopy(self.card)
         card["controls"]["positive"] = "T1"

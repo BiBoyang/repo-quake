@@ -114,6 +114,20 @@ Full per-step checklists: `references/playbook.md`.
 | env / config | "which code did CI actually test", worst-induced-behavior isolation | `references/fault-catalog.md` §env |
 | extension / plugin lifecycle | installer + version pin + mount witness; install failure is data | `references/fault-catalog.md` §extension |
 
+## Beyond fault matrices
+
+Not every question is a wound matrix. Use the matching design contract instead of
+forcing a different experiment into host × fault cells:
+
+- causal treatment effect on the same task → `references/paired-experiments.md`;
+- long-term memory → `references/memory-eval.md` (write × retrieval × acceptance);
+- no enumerable oracle / invariance → `references/metamorphic.md`;
+- adoption or comparison with a real budget → `references/quality-cost.md`.
+
+These are composable with the same witness, invalid-ledger, isolation and appeal
+rules. An optional `design` block and `cost_policy` in the experiment card make the
+structural contract machine-checkable; they do not replace run-level evidence.
+
 ## Grading
 
 Detection levels: **L0** no sign / **L1** signal exists but misattributed or
@@ -156,6 +170,10 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 - `references/target-catalog.md` — ten high-value trust seams with priors
 - `references/measurement.md` — statistics, controls, judge calibration,
   pre-registration and deviation logs
+- `references/paired-experiments.md` — paired AB/BA designs, discordant pairs and proxy chains
+- `references/memory-eval.md` — write / retrieval / acceptance ledgers and memory contamination
+- `references/metamorphic.md` — source/follow-up transforms and relation-based oracles
+- `references/quality-cost.md` — per-success cost, billing alignment and Pareto decisions
 - `references/failure-attribution.md` — product / fixture / grader ledgers,
   semantic delivery, missing-field decisions and correction protocols
 - `references/reporting.md` — upstream issues, PRs, public retraction,
