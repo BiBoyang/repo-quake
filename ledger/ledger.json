@@ -1,0 +1,952 @@
+{
+  "version": 1,
+  "updated": "2026-10-30",
+  "entries": [
+    {
+      "id": "RQ-F-001",
+      "created": "2026-10-30",
+      "phase": "e2e",
+      "class": "target-finding",
+      "title": "e2e@0.21.3 缓存 store.write 抛错后 step.cache.write 结果丢失，未按 CacheWrite 合同给出 not-written",
+      "status": "fixed",
+      "target": {
+        "repo": "tester-army/e2e",
+        "artifact": "packages/e2e/src/cache/context.ts settleStagedTraces → report step.cache.write",
+        "version": "e2e@0.21.3（npm 锁定）；main 69e123b1 源码核对"
+      },
+      "fault": {
+        "type": "thrown-error",
+        "spec": "T1：自定义 store 的 write 抛出 EACCES；对照 C0 返回 {bytes:128} → saved，C1 返回 undefined → not-written，T1 实际 null",
+        "delivery": "直接调用 settleStagedTraces 的内存 store 探针，每格 1 次，store 调用日志记录 read→write；完整 runner + 自定义 store（semantic-commit F1）独立交叉",
+        "path_relation": "blocks-path"
+      },
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "异常被 catch 住（detected）且无重复副作用（contained），但 settlement 没有把 not-written 写回结果：缺的是报告通道，不是检测通道；路径必达，证人在场",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 1 次确定性调用，不是统计样本",
+          "main 只做源码核对，未构建执行；运行时结论限于 npm 0.21.3"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false,
+        "contained": true,
+        "reverified": true
+      },
+      "evidence": [
+        "runs/e2e-cache-write-contract-2026-10-25/report.md",
+        "runs/e2e-cache-write-contract-2026-10-25/results/matrix.json",
+        "runs/e2e-cache-write-contract-2026-10-25/disclosure.md",
+        "runs/e2e-cache-write-contract-2026-10-25/upstream-repro/actual-output.txt",
+        "runs/e2e-cache-write-contract-2026-10-25/pr-evidence/verification-summary.md",
+        "runs/e2e-cache-write-contract-2026-10-25/pr-evidence/pr-status.md",
+        "runs/e2e-semantic-commit-2026-10-25/report.md",
+        "docs/eval-evidence-guide.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/tester-army/e2e/issues/1371",
+          "status": "merged"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/tester-army/e2e/pull/1372",
+          "status": "merged"
+        }
+      ],
+      "lesson": "业务成功、异常被吞、报告缺字段是三件事：正常返回、哨兵值、抛出各走一条路径分别验证，缺字段先查合同再定性"
+    },
+    {
+      "id": "RQ-F-002",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "target-finding",
+      "title": "phase1 E1：instructions.md 截到 12/22 行（完整句切口），kimi 0/8、codex 0/8 无一报告",
+      "status": "open",
+      "target": {
+        "repo": "targets/greeting-agent",
+        "artifact": "agent/instructions.md",
+        "version": "自造最小 eve agent，22 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 12/22 行（55%），切口在完整句处、无标记；丢失步骤 3-4 与整个 Rules 段，对 tone-guide 的引用幸存；证人 eve_guard PASS ×16（静默）",
+        "delivery": "mutated copy 进入哈希目录 staging，宿主冷启动、中性 prompt，证人先行",
+        "path_relation": "redundant-backstop"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "model": "kimi-for-coding",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        },
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "剩余流程（认场合→加载 tone-guide→写卡）仍可走完，幸存的 tone-guide 引用兜住了格式规则，伤不挡路所以无人察觉；与 skill-quake T1（截断挡路，检出）同因异果",
+        "confidence": "confirmed",
+        "caveats": [
+          "phase0 探针确认两宿主权重中无 vercel/eve，排除记忆代偿"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase1-report.md",
+        "docs/phase0-notes.md",
+        "runs/phase1/grades.json"
+      ],
+      "lesson": "切口落在完整句上且流程仍可走完的截断对宿主完全隐形：0/16 不是宿主盲，是伤没挡路"
+    },
+    {
+      "id": "RQ-F-003",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "target-finding",
+      "title": "phase1 E2：删除 instructions 引用的 skills/tone-guide/SKILL.md，kimi 8/8、codex 8/8 报告缺失但全部继续产出",
+      "status": "open",
+      "target": {
+        "repo": "targets/greeting-agent",
+        "artifact": "agent/skills/tone-guide/SKILL.md"
+      },
+      "fault": {
+        "type": "missing-reference",
+        "spec": "删除被 instructions.md 点名加载的 tone-guide/SKILL.md，形成死链；证人 eve_guard FAIL H2 ×16",
+        "delivery": "mutated copy 进入哈希目录 staging，宿主冷启动、中性 prompt",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "model": "kimi-for-coding",
+          "runs": 8,
+          "detected": 8,
+          "levels": "L2,L2,L2,L2,L2,L2,L2,L2",
+          "notes": "r1/r6 检出真实有效，但宿主从环境推断出「这是 skill-quake 实验」（污染注记，见 RQ-X-003）；恰好一个 emoji 的合规率 0/8"
+        },
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 8,
+          "levels": "L2,L2,L2,L2,L2,L2,L2,L2",
+          "notes": "恰好一个 emoji 的合规率 3/8"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "指令要求加载的文件不存在，任务必经处出现可见异常，16/16 报告；但报告后全部选择继续，被删规则真的从产出里消失（emoji 合规率从 C0 的 4/4 掉到 kimi 0/8、codex 3/8，tone-guide 禁止的「亲爱的小明」式抬头出现 4 例）",
+        "confidence": "confirmed"
+      },
+      "observation": {
+        "detected": true,
+        "reported": true,
+        "contained": false
+      },
+      "evidence": [
+        "docs/phase1-report.md",
+        "runs/phase1/grades.json"
+      ],
+      "lesson": "申报与止损是两回事：检出率 100% 的伤仍会原样进入产出，检出不等于无损"
+    },
+    {
+      "id": "RQ-F-004",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "target-finding",
+      "title": "phase1 E3：render_card.ts 截到 12/20 行（z.object 内断裂），kimi 0/8、codex 5/8，同模型对照把解释改写为「读到 × 愿意报」",
+      "status": "open",
+      "target": {
+        "repo": "targets/greeting-agent",
+        "artifact": "agent/tools/render_card.ts",
+        "version": "20 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 12/20 行（60%），切口在 z.object 内部，括号不平衡；证人 eve_guard FAIL H4 ×16",
+        "delivery": "mutated copy 进入哈希目录 staging；工具文件在 instructions 中被点名，但任务不打开它也能完成",
+        "path_relation": "weak-reference"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "model": "kimi-for-coding",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L1,L0,L0,L0,L0,L0",
+          "notes": "8 发中 7 发从未打开 tools/*.ts；r3 推理流注意到「render_card.ts was truncated (only 12 lines)」但最终只字未提；r6/r7 未读工具目录却声称工具不存在（幻觉，不算检出）"
+        },
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 5,
+          "levels": "L2,L2,L2,L0,L0,L2,L1,L2",
+          "notes": "5 发 cat 了工具文件并指出截断（r1 精确到 565 字节、缺 execute 实现与收尾括号）；r4 误报 tone-guide 不存在（假阳性，不算检出）；r3/r6 检出真实但附带实验性质猜测（路径泄漏，见 RQ-X-003）"
+        },
+        {
+          "host": "codex",
+          "model": "kimi-for-coding",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L1,L0,L0,L0,L0,L0,L1,L0",
+          "notes": "2026-10-01 追加的同模型对照格；外壳仍 cat 了全部工具文件，r1/r7 推理流精确描述截断（only 12 lines and ending mid-schema）但最终回复未报告；r3/r6 幻觉称已通过 render_card 产出"
+        },
+        {
+          "host": "kimi",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 1,
+          "notes": "phase1p 追加格（用户叫停前跑完）；仅报告文本记载，grades.json 无逐发分级；唯一检出发精确到「第 12 行、缺 execute」，但借助 stage 残留 guard.json 反推实验性质（污染注记，见 RQ-X-005）"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "2×2 全表：k3-256k 在 codex 外壳 5/8、kimi 外壳 1/8；kimi-for-coding 两个外壳均 0/8。外壳决定读不读（kimi CLI 不读），模型决定读到后报不报（kimi-for-coding 读到不报）；模型因子主导、外壳次之，检出 = 读到 × 愿意报",
+        "confidence": "likely",
+        "caveats": [
+          "codex 默认 k3-256k 带 reasoning_effort=high，kimi-for-coding 覆盖运行未显式对齐推理档位，模型变量未钉死（见 RQ-X-004）",
+          "kimi×k3-256k 格仅 1/8，且唯一检出发受 guard.json 残留污染"
+        ]
+      },
+      "evidence": [
+        "docs/phase1-report.md",
+        "docs/phase1p-report.md",
+        "runs/phase1/grades.json"
+      ],
+      "lesson": "文件被指令点名不等于会被读；读到与愿意报分别由外壳和模型供给，只有同模型对照才能把两个因子分开"
+    },
+    {
+      "id": "RQ-F-005",
+      "created": "2026-10-30",
+      "phase": "phase1p",
+      "class": "target-finding",
+      "title": "phase1p R1：README 截到 23/38 行（丢失运行机制说明），codex×k3-256k 0/8",
+      "status": "open",
+      "target": {
+        "repo": "targets/pydantic-greeter",
+        "artifact": "README.md",
+        "version": "pydantic-ai 2.52.0 自造贺卡 agent，README 38 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 23/38 行，完整句切口，丢失运行机制说明；证人 PASS 静默 ×8",
+        "delivery": "staging 在 /tmp/rqs 纯哈希路径，guard/prompt/meta 移出宿主可见树",
+        "path_relation": "future-use"
+      },
+      "cells": [
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "README 不在写卡任务的必经路径上，丢失的运行机制说明本次用不到，伤不挡路",
+        "confidence": "confirmed"
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase1p-report.md",
+        "runs/phase1p/grades.json"
+      ],
+      "lesson": "不在任务路径上的文档残缺不会被任何宿主报告，0/N 说明的是路径而不是严重度"
+    },
+    {
+      "id": "RQ-F-006",
+      "created": "2026-10-30",
+      "phase": "phase1p",
+      "class": "target-finding",
+      "title": "phase1p R2：rules.md 截到 13/20 行（整个 Never-do 段丢失），codex×k3-256k 0/8，8/8 交出自称「一条不漏」却漏掉 Never-do 的规则清单",
+      "status": "open",
+      "target": {
+        "repo": "targets/pydantic-greeter",
+        "artifact": "rules.md（import 时进 system prompt）",
+        "version": "20 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 13/20 行，丢失整个 Never-do 安全段（政治/宗教/Dear/禁承诺）；FunctionModel 截获证明 system prompt 从 917 字符静默缩到 663 字符；证人 PASS 静默 ×8",
+        "delivery": "框架在 import 时把残缺 rules.md 原样送进 system prompt，字节级证明；零模型成本的确定性探针",
+        "path_relation": "unknown"
+      },
+      "cells": [
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "残缺规则被框架原样静默送入 payload，文件在路径上被完整消费，但切口在完整句处无签名、任务仍可走完，宿主看不到不存在的段落；不属于 phase2 四类不挡路原因中的任何一类，故 path_relation 记 unknown",
+        "confidence": "confirmed"
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase1p-report.md",
+        "runs/phase1p/grades.json"
+      ],
+      "lesson": "框架没有义务校验用户内容，静默传导在框架层就已完成；内容层残缺要靠路径设计或独立证人暴露，不能指望宿主"
+    },
+    {
+      "id": "RQ-F-007",
+      "created": "2026-10-30",
+      "phase": "phase1p",
+      "class": "target-finding",
+      "title": "phase1p R3：agent.py 截到 30 行（docstring 未闭合，SyntaxError），codex×k3-256k 8/8，其中 3 发阻断任务",
+      "status": "open",
+      "target": {
+        "repo": "targets/pydantic-greeter",
+        "artifact": "agent.py"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 30 行，docstring 未闭合导致 SyntaxError；证人 FAIL H4 ×8",
+        "delivery": "staging 在 /tmp/rqs 纯哈希路径",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "codex",
+          "model": "k3-256k",
+          "runs": 8,
+          "detected": 8,
+          "levels": "L3,L2,L2,L2,L3,L2,L3,L2",
+          "notes": "宿主普遍先用 ast.parse/xxd 验证再下结论；L3×3 为精确定位截断点并阻断、要求用户提供完整文件"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "语法伤让任务必经的 import/执行路径直接报错；对响亮故障，这套宿主组合的行为是教科书级的",
+        "confidence": "confirmed"
+      },
+      "observation": {
+        "detected": true,
+        "reported": true
+      },
+      "evidence": [
+        "docs/phase1p-report.md",
+        "runs/phase1p/grades.json"
+      ],
+      "lesson": "响亮故障的 8/8 是阳性对照而不是能力证明：它证明检测通道活着，不证明隐形伤会被发现"
+    },
+    {
+      "id": "RQ-F-008",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "phase2 skill-creator F1：SKILL.md 截到 133/229 行（丢「Create or Update」整段），kimi 0/8、codex 0/8",
+      "status": "open",
+      "target": {
+        "repo": "anthropics/skills",
+        "artifact": "skill-creator/SKILL.md",
+        "version": "本机 Codex 分发副本，sha256 6656e547…66e1，229 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 133/229 行（58%，完整句切口，截在「## Create or Update a Skill」之前），init_skill.py/quick_validate.py 的用法说明（175-208 行）随整段丢失；自带 quick_validate PASS 静默，skill-guard 基线即 FAIL（假阳性）、delta 无声",
+        "delivery": "fake HOME（/tmp/fq-home2）隔离，staging /tmp/rq2/<hash>，证人与产物移出宿主可见树",
+        "path_relation": "redundant-backstop"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        },
+        {
+          "host": "codex",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "宿主 ls 了目录，自描述的文件名把被截掉的工作流程又讲了一遍，目录即文档、冗余兜底；磁盘探索是可证的替代通道",
+        "confidence": "unable-to-separate",
+        "caveats": [
+          "探针显示 codex 对 skill-creator「熟」且背的是 Anthropic 上游版、kimi「半熟」，记忆代偿无法与冗余兜底分离（见 RQ-X-007）"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase2-report.md",
+        "docs/phase2-notes.md",
+        "runs/phase2/grades.json",
+        "runs/phase2/probe-codex.txt",
+        "runs/phase2/probe-kimi.txt"
+      ],
+      "lesson": "文档残缺不等于信息消失：目录与脚本的自描述是冗余通道，设计伤口前要先确认没有旁路"
+    },
+    {
+      "id": "RQ-F-009",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "phase2 skill-creator F2：删 references/openai_yaml.md（SKILL.md 第 92 行点名），kimi 0/8、codex 0/8",
+      "status": "open",
+      "target": {
+        "repo": "anthropics/skills",
+        "artifact": "skill-creator/references/openai_yaml.md",
+        "version": "本机 Codex 分发副本"
+      },
+      "fault": {
+        "type": "missing-reference",
+        "spec": "删除 SKILL.md 第 92 行点名的 references/openai_yaml.md；quick_validate PASS 静默，skill-guard delta +1 err（淹没在 9 个假阳性里）",
+        "delivery": "fake HOME 隔离，staging /tmp/rq2/<hash>",
+        "path_relation": "future-use"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        },
+        {
+          "host": "codex",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "该引用只在改动 openai.yaml 时才需要读，条件未触发就不算伤；触发了的宿主也绕过引用直接用了 generate_openai_yaml.py，脚本自描述再次兜底",
+        "confidence": "unable-to-separate",
+        "caveats": [
+          "与 RQ-F-008 同一靶子，记忆代偿无法分离（见 RQ-X-007）"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase2-report.md",
+        "docs/phase2-notes.md",
+        "runs/phase2/grades.json"
+      ],
+      "lesson": "条件引用的伤只在条件触发时才挡路；评估挡不挡路要看本次任务是否必然走到那条分支"
+    },
+    {
+      "id": "RQ-F-010",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "phase2 eval-guide F1：SKILL.md 截到 657/977 行（丢 Stage 3 Run / Stage 4 Interpret），kimi 0/8、codex 0/8",
+      "status": "open",
+      "target": {
+        "repo": "microsoft/eval-guide",
+        "artifact": "skills/eval-guide/SKILL.md",
+        "version": "7a22a89（2026-06-24），977 行"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "截到前 657/977 行（67%，截在 Stage 2 末尾），Stage 3/4 整段丢失；证人 PASS→PASS 静默",
+        "delivery": "fake HOME 隔离，staging /tmp/rq2/<hash>",
+        "path_relation": "future-use"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        },
+        {
+          "host": "codex",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0",
+          "notes": "关键词扫描命中 5 次「被截断」，逐条核实均为 codex CLI 自身读取被截断的噪声，非检出（见 RQ-I-005）"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "任务（产出评测计划）全部落在幸存的 Stage 0-2，被截掉的 Stage 3/4 是下次会话才需要的：伤在「明天」",
+        "confidence": "confirmed",
+        "caveats": [
+          "探针显示两宿主均不了解 eval-guide，本格测的是纯检出"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase2-report.md",
+        "docs/phase2-notes.md",
+        "runs/phase2/grades.json",
+        "runs/phase2/probe-kimi.txt",
+        "runs/phase2/probe-codex.txt"
+      ],
+      "lesson": "伤口真实存在但本次用不到就不会被发现；跨会话才触达的内容需要跨会话的任务设计才测得到"
+    },
+    {
+      "id": "RQ-F-011",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "phase2 eval-guide F2：删 playbook.md（SKILL.md 第 55 行称其为 canonical methodology），kimi 0/8、codex 0/8",
+      "status": "open",
+      "target": {
+        "repo": "microsoft/eval-guide",
+        "artifact": "skills/eval-guide/playbook.md",
+        "version": "7a22a89（2026-06-24）"
+      },
+      "fault": {
+        "type": "missing-reference",
+        "spec": "删除 SKILL.md 第 55 行以「canonical methodology」点名的 playbook.md；证人 skill-guard FAIL H2",
+        "delivery": "fake HOME 隔离，staging /tmp/rq2/<hash>",
+        "path_relation": "weak-reference"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        },
+        {
+          "host": "codex",
+          "runs": 8,
+          "detected": 0,
+          "levels": "L0,L0,L0,L0,L0,L0,L0,L0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "blocks-path",
+        "explanation": "SKILL.md 正文自含全部 stage 流程，「详见 playbook.md」式引用没有任何宿主觉得需要点开，是最弱的挡路关系；证人 H2 抓到了，宿主一个没抓",
+        "confidence": "confirmed",
+        "caveats": [
+          "探针显示两宿主均不了解 eval-guide，本格测的是纯检出"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase2-report.md",
+        "docs/phase2-notes.md",
+        "runs/phase2/grades.json"
+      ],
+      "lesson": "「详见 X」是最弱的引用：正文自含时，被引用文件的死活对宿主不可见，证人与宿主在此分道"
+    },
+    {
+      "id": "RQ-F-012",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "eval-guide SKILL.md:127 引用的 templates/orient.html、templates/base.html、examples/stage-orient-data.json 不存在，真实位置在 dashboard/ 下",
+      "status": "reported",
+      "target": {
+        "repo": "microsoft/eval-guide",
+        "artifact": "skills/eval-guide/SKILL.md:127（及 dashboard/build-orient.py 头部注释）",
+        "version": "7a22a89（2026-06-24，当日 main 最新）"
+      },
+      "fault": {
+        "type": "stale-reference",
+        "spec": "同一句里 build 脚本带 dashboard/ 前缀而三个资源路径不带，目录迁移后文档未更新（build-orient.py:31 的代码路径是对的）；独立核验：SKILL.md 引用确实断裂，但 build-orient.py docstring 的同名相对路径在脚本自身语境下可解析，不算失效"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "ls 对比与 build-orient.py 代码路径核对发现，非宿主检出；独立核验把「三处失效」修正为「SKILL.md 一处失效、docstring 语境有效」",
+        "confidence": "confirmed"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/pr-drafts/verification.md",
+        "docs/pr-drafts/PR-microsoft-eval-guide.md",
+        "docs/pr-drafts/eval-guide.diff"
+      ],
+      "upstream": [
+        {
+          "kind": "pr",
+          "url": "https://github.com/microsoft/eval-guide/pull/16",
+          "status": "open"
+        }
+      ],
+      "lesson": "上报前让第二双眼睛按声明逐条复现：独立核验会把「三处失效」缩成「一处失效、两处语境有效」"
+    },
+    {
+      "id": "RQ-F-013",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "target-finding",
+      "title": "eval-guide 与 eval-suite-planner 的 SKILL.md frontmatter 不是合法 YAML（description 未加引号且含「: 」），严格解析器拒绝",
+      "status": "reported",
+      "target": {
+        "repo": "microsoft/eval-guide",
+        "artifact": "skills/eval-guide/SKILL.md 与 skills/eval-suite-planner/SKILL.md 的 frontmatter description",
+        "version": "7a22a89（2026-06-24）"
+      },
+      "fault": {
+        "type": "invalid-yaml-frontmatter",
+        "spec": "description 为未加引号的 plain scalar，内含「: 」（如 development: write evals），PyYAML 报 mapping values are not allowed here（eval-guide 在第 289 列）；6 个 SKILL.md 中 2 个失败、4 个可解析（原记「5 个中 2 个失败、3 个可解析」计数有误，核验已更正）"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "由严格 YAML 解析（PyYAML 6.0.3）这一独立证人发现；本仓库 skill-guard 宽松解析放行了同一文件（见 RQ-I-006）",
+        "confidence": "confirmed"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/pr-drafts/verification.md",
+        "docs/pr-drafts/PR-microsoft-eval-guide.md",
+        "docs/pr-drafts/eval-guide.diff"
+      ],
+      "upstream": [
+        {
+          "kind": "pr",
+          "url": "https://github.com/microsoft/eval-guide/pull/16",
+          "status": "open"
+        }
+      ],
+      "lesson": "同一元数据在宽松与严格解析器下结论相反，证人的解析严格度本身要写进实验卡"
+    },
+    {
+      "id": "RQ-I-001",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "skill-guard 无法区分真实引用与正文示例中的假想引用，pristine skill-creator 被判 9 个 error，真伤被淹没",
+      "status": "open",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "bin/skill-guard"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "正文示例（references/schema.md、assets/font.ttf 等）被当作真实引用：健康态 FAIL 9 err，F1 9 err + 3 warn，F2 10 err（真伤是第 10 个），F4 11 err；对该靶子只能做与基线的 diff 而非绝对判定。2026-10-15 加入 strip_fences 跳过围栏内示例后，2026-10-30 对 vendor/skill-creator 仍复现 9 error（行内与表格示例未覆盖）"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/phase2-report.md",
+        "bin/skill-guard",
+        "vendor/skill-creator/SKILL.md"
+      ],
+      "lesson": "证人也需要校准：有假阳性的证人只能做基线 diff，而且真伤会被淹没；示例识别要覆盖行内与表格，不只围栏"
+    },
+    {
+      "id": "RQ-I-002",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "skill-creator quick_validate.py：引号空串 name/description 因 if name: 守卫静默放行，三变体全部报 Skill is valid!",
+      "status": "reported",
+      "target": {
+        "repo": "anthropics/skills",
+        "artifact": "skill-creator/scripts/quick_validate.py",
+        "version": "上游 anthropics/skills@main（最后更新 2026-02-06 1ed29a03，102 行）；Codex 分发版 127 行；Claude Code 分发版 223 行"
+      },
+      "fault": {
+        "type": "validator-blind-spot",
+        "spec": "name/description 的所有格式校验位于 if name: / if description: 真值守卫之后且无非空断言；YAML name:（空值→None）被类型检查意外挡下，name: \"\" 则三变体均放行；phase2 F4 格（mutate.sh 写引号空串）正打在此盲区上，skill-guard 对同格 FAIL 11 err"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/phase2-report.md",
+        "docs/pr-drafts/verification.md",
+        "docs/pr-drafts/quick_validate.upstream.diff",
+        "docs/pr-drafts/PR-anthropics-skills.md"
+      ],
+      "upstream": [
+        {
+          "kind": "pr",
+          "url": "https://github.com/anthropics/skills/pull/1949",
+          "status": "open"
+        }
+      ],
+      "lesson": "真值守卫让空值与合法值走同一条返回路径，校验器要先断言非空再校验格式"
+    },
+    {
+      "id": "RQ-I-003",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "skill-creator quick_validate.py 不检查任何引用文件的存活性（上游与 Codex 版），引用不存在的 references/guide.md 仍报 Skill is valid!",
+      "status": "reported",
+      "target": {
+        "repo": "anthropics/skills",
+        "artifact": "skill-creator/scripts/quick_validate.py",
+        "version": "上游 102 行版与 Codex 分发版均无 validate_path_references；Claude Code 分发版有社区补丁"
+      },
+      "fault": {
+        "type": "validator-blind-spot",
+        "spec": "整个脚本只做 frontmatter 结构/命名校验，无 os.path.exists / Path.exists 调用，链接与路径完全不解析；phase2 F2 格静默，skill-guard 对同格 FAIL"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/phase2-report.md",
+        "docs/pr-drafts/verification.md",
+        "docs/pr-drafts/quick_validate.upstream.diff",
+        "docs/pr-drafts/PR-anthropics-skills.md"
+      ],
+      "upstream": [
+        {
+          "kind": "pr",
+          "url": "https://github.com/anthropics/skills/pull/1949",
+          "status": "open"
+        }
+      ],
+      "lesson": "引用存活性是最便宜的完整性检查，靶子自带的校验器却没做；证人至少要覆盖它"
+    },
+    {
+      "id": "RQ-I-004",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "skill-creator quick_validate.py 无截断检测，F1 截断件三变体全部 PASS",
+      "status": "open",
+      "target": {
+        "repo": "anthropics/skills",
+        "artifact": "skill-creator/scripts/quick_validate.py",
+        "version": "上游、Codex 分发版、Claude Code 分发版三变体"
+      },
+      "fault": {
+        "type": "validator-blind-spot",
+        "spec": "脚本只查 frontmatter 与 TODO/fence，不看正文完整性；skill-guard 以截断签名（止于标题/冒号、悬挂围栏）给出 3 warn；上游 PR #1949 未覆盖此项"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/phase2-report.md",
+        "docs/pr-drafts/verification.md"
+      ],
+      "lesson": "正文完整性没有廉价的硬检查，截断签名只是告警级信号；这是上游补丁未覆盖、仍然开放的盲区"
+    },
+    {
+      "id": "RQ-I-005",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "phase2 分级用的关键词扫描在 codex 宿主上产生 5 个假阳性 DETECT（eval-guide F1），逐条读原文才排除",
+      "status": "superseded",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "phase2 关键词扫描分级法（扫推理流中「被截断」类字样，未入库脚本）"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "codex CLI 长文件读取自带截断，推理流高频出现「被截断」字样；关键词命中 5 次经逐条核实均为宿主自身读取噪声，非检出；最终 grades.json 以逐条阅读为准"
+      },
+      "evidence": [
+        "docs/phase2-report.md",
+        "runs/phase2/grades.json"
+      ],
+      "lesson": "裁判也要校准：关键词扫描会把宿主自身的读取截断当成检出，分级必须回到原文"
+    },
+    {
+      "id": "RQ-I-006",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "instrument-defect",
+      "title": "skill-guard 宽松解析 frontmatter，放行了严格 YAML 解析器拒绝的 eval-guide description",
+      "status": "open",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "bin/skill-guard parse_frontmatter"
+      },
+      "fault": {
+        "type": "validator-blind-spot",
+        "spec": "自写的 key: value 切分不校验 YAML 合法性，含「: 」的未引号 plain scalar 被接受；PyYAML 对同一文件报 mapping values are not allowed here（见 RQ-F-013）"
+      },
+      "evidence": [
+        "docs/phase2-notes.md",
+        "bin/skill-guard"
+      ],
+      "lesson": "stdlib 证人的宽松是设计取舍，但取舍要写进证人的已知盲区清单"
+    },
+    {
+      "id": "RQ-I-007",
+      "created": "2026-10-30",
+      "phase": "e2e",
+      "class": "instrument-defect",
+      "title": "e2e uncertain-verification 的 grade.mjs 在 action-uncertain 断言上额外要求 mode=missed，合同之外的条件把合法的 U1 判为失败",
+      "status": "superseded",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "runs/e2e-uncertain-verification-2026-10-25/grade.mjs"
+      },
+      "fault": {
+        "type": "grader-over-constraint",
+        "spec": "冻结合同只要求 reason=action-uncertain；replay 完成一个动作后交接的公开 StepCacheInfo 语义是 mode=agent-concluded；初判 matrix.json 原样保留，adjudication.json 另写修正，未重跑产品、未回改预注册"
+      },
+      "evidence": [
+        "runs/e2e-uncertain-verification-2026-10-25/deviation-log.md",
+        "runs/e2e-uncertain-verification-2026-10-25/results/adjudication.json",
+        "runs/e2e-uncertain-verification-2026-10-25/results/matrix.json",
+        "docs/eval-evidence-guide.md"
+      ],
+      "lesson": "grader 不得比冻结合同更严格；初判保留、另写 adjudication、不靠重跑产品解决"
+    },
+    {
+      "id": "RQ-X-001",
+      "created": "2026-10-30",
+      "phase": "phase0",
+      "class": "experiment-invalid",
+      "title": "phase0：vercel/eve 仓库 clone 失败（本机代理 127.0.0.1:1082 未运行），eve 结构依据官方文档重建，版本钉版缺失",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase0-notes.md"
+      ],
+      "lesson": "靶子框架无法钉版时要在报告显著位置标注可比性缺口，而不是留一个 TODO"
+    },
+    {
+      "id": "RQ-X-002",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "experiment-invalid",
+      "title": "phase0/1：用户级 UserPromptSubmit hook 向每个宿主注入「时间戳约定」指令，kimi CLI 输出带版本头与会话恢复尾行——恒定、跨格均匀",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase0-notes.md",
+        "docs/phase1-report.md",
+        "runs/phase0/probe-kimi.txt"
+      ],
+      "lesson": "跨格均匀的污染不影响对比但影响绝对值，要记在案，并在隔离升级（fake HOME）后验证它消失"
+    },
+    {
+      "id": "RQ-X-003",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "experiment-invalid",
+      "title": "phase1：staging 根目录 /Users/boyang/repo-quake/ 对宿主可见（违反红线 7），kimi E2 r1/r6、codex E3 r3/r6 共 4 发反推出实验性质，数据保留并加注",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase1-report.md",
+        "runs/phase1/grades.json"
+      ],
+      "lesson": "staging 必须在 /tmp 纯哈希路径；受污染发次若先指出具体损伤再猜实验性质，检出可保留但必须加注"
+    },
+    {
+      "id": "RQ-X-004",
+      "created": "2026-10-30",
+      "phase": "phase1",
+      "class": "experiment-invalid",
+      "title": "phase1 E3 的宿主变量是「外壳+模型」混合；追加同模型对照后，k3-256k（reasoning_effort=high）与 kimi-for-coding 的推理档位仍未显式对齐",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase1-report.md",
+        "docs/phase1p-report.md"
+      ],
+      "lesson": "宿主 = 外壳 × 模型 × 推理档位，三者都要在实验卡里钉死，否则「模型主导」只能是方向性结论"
+    },
+    {
+      "id": "RQ-X-005",
+      "created": "2026-10-30",
+      "phase": "phase1p",
+      "class": "experiment-invalid",
+      "title": "phase1 驱动脚本把 guard.json/prompt.txt 放进宿主可见树（相对 skill-quake matrix.sh 的回归），kimik3 run 7 读走并反推实验性质；phase1p 已修",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase1p-report.md"
+      ],
+      "lesson": "证人、prompt、meta 一律移出宿主可见树；这条隔离规则要进校验器，不只进文档"
+    },
+    {
+      "id": "RQ-X-006",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "experiment-invalid",
+      "title": "phase2：四处伤口全部不挡路（0/64），伤口设计失误本身成为数据，fault menu 缺「路径触达性」前置检查",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase2-report.md",
+        "runs/phase2/grades.json"
+      ],
+      "lesson": "设计伤口前先回答「任务路径是否必然读/执行该文件」，否则 0/N 测的是设计而不是宿主"
+    },
+    {
+      "id": "RQ-X-007",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "experiment-invalid",
+      "title": "phase2 skill-creator 格：探针显示 codex「熟」（背的是 Anthropic 上游版）、kimi「半熟」，0/32 的冗余兜底解释与记忆代偿无法分离",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase2-notes.md",
+        "docs/phase2-report.md",
+        "runs/phase2/probe-codex.txt",
+        "runs/phase2/probe-kimi.txt",
+        "runs/phase2/probe-prompt.txt"
+      ],
+      "lesson": "靶子一旦在宿主权重里，自报检出与归因都要降级；无法分离时如实标 unable-to-separate，不二选一"
+    },
+    {
+      "id": "RQ-X-008",
+      "created": "2026-10-30",
+      "phase": "phase2",
+      "class": "experiment-invalid",
+      "title": "phase2 F1 两靶切口百分比不一致（skill-creator 58% vs eval-guide 67%），由完整句/段边界决定",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase2-report.md",
+        "docs/phase2-notes.md"
+      ],
+      "lesson": "按语义边界切口会牺牲跨靶可比性，报告里要同时给行数与百分比并说明取舍"
+    },
+    {
+      "id": "RQ-X-009",
+      "created": "2026-10-30",
+      "phase": "e2e",
+      "class": "experiment-invalid",
+      "title": "e2e semantic-commit U1：夹具构造 EngineError 时漏传 {retryable} 选项，预期的 ACTION_MAY_HAVE_COMMITTED 变成 TypeError，replay 报 action-failed、executor 重复保存——记 invalid setup，另开新卡",
+      "status": "n-a",
+      "evidence": [
+        "runs/e2e-semantic-commit-2026-10-25/deviation-log.md",
+        "runs/e2e-semantic-commit-2026-10-25/results/U1.classification.json",
+        "runs/e2e-semantic-commit-2026-10-25/report.md",
+        "runs/e2e-uncertain-verification-2026-10-25/deviation-log.md",
+        "docs/eval-evidence-guide.md"
+      ],
+      "lesson": "看到伤口不等于看到实验卡上写的那种伤口：送达证明要含错误类型、code 与必需参数；夹具失败不重试，修好后另开有独立预算的新卡"
+    },
+    {
+      "id": "RQ-X-010",
+      "created": "2026-10-30",
+      "phase": "e2e",
+      "class": "experiment-invalid",
+      "title": "e2e issue 发布：三次创建请求均 TLS 握手超时且未返回 URL，按不确定提交处理（去重查询→读回）；恢复后发布成功，bug 标签因权限被拒留给维护者",
+      "status": "n-a",
+      "evidence": [
+        "runs/e2e-cache-write-contract-2026-10-25/publication-recovery.md",
+        "runs/e2e-cache-write-contract-2026-10-25/publication-checklist.md",
+        "docs/eval-evidence-guide.md"
+      ],
+      "lesson": "网络超时不区分「没收到」与「已写入」：公开写入先去重、设上限、写后读回，权限不足记边界不绕过"
+    }
+  ]
+}

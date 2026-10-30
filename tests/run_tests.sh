@@ -69,6 +69,12 @@ if ! python3 -m unittest discover -s tests -p 'test_*.py'; then
   fails=$((fails+1))
 fi
 
+# ledger-check: the fault ledger must validate against the live repo tree
+# (ids, enums, detected<=runs, levels==runs, evidence paths exist). Unit tests
+# for the checker itself live in tests/test_ledger_check.py (discovered above).
+out=$(python3 bin/ledger-check ledger/ledger.json 2>&1); rc=$?
+if [ "$rc" -eq 0 ]; then echo "ok   [ledger-check]"; else echo "FAIL [ledger-check]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
+
 echo "---"
 if [ "$fails" -eq 0 ]; then
   echo "ALL TESTS PASSED"

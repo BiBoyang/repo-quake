@@ -1,0 +1,358 @@
+#!/usr/bin/env python3
+"""ledger-check — mechanical validator for the repo-quake fault ledger.
+
+Philosophy (same as skill-guard): the checker only accepts or rejects. It does
+not judge whether an attribution is right; it checks that every entry is
+well-formed, internally consistent and backed by evidence that exists on disk.
+
+Checks (any failure => exit 1):
+  - the file parses as JSON with the skeleton
+    {"version": 1, "updated": "YYYY-MM-DD", "entries": [...]}
+  - every entry carries the required fields with the right types; unknown
+    fields are errors (typo guard)
+  - id matches ^RQ-[FIX]-\\d{3}$, its letter agrees with `class`, ids are unique
+  - enum fields hold the documented values (class, status, path_relation,
+    primary_factor, confidence, upstream.kind / upstream.status)
+  - class rules: experiment-invalid <=> status n-a; target-finding and
+    instrument-defect carry `target`; target-finding carries `fault` and
+    `attribution`
+  - cells: runs > 0, 0 <= detected <= runs, `levels` has exactly `runs`
+    comma-separated L0..L3 segments and its L2/L3 count equals `detected`
+  - evidence: at least one repo-root-relative path, each existing under --root
+  - upstream: http(s) url plus kind/status enums
+
+Usage: ledger-check <ledger.json> [--root DIR]
+  --root defaults to the parent of the ledger file's directory, i.e. the repo
+  root when checking ledger/ledger.json in place.
+
+Exit codes: 0 ok, 1 validation errors, 2 usage / unreadable input.
+Field semantics: ledger/SCHEMA.md.
+"""
+import argparse
+import datetime
+import json
+import re
+import sys
+from pathlib import Path
+
+ID_RE = re.compile(r"^RQ-([FIX])-(\d{3})$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+PHASE_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+LEVEL_RE = re.compile(r"^L[0-3]$")
+URL_RE = re.compile(r"^https?://\S+$")
+
+CLASSES = {"target-finding": "F", "instrument-defect": "I", "experiment-invalid": "X"}
+STATUSES = {"open", "reported", "acknowledged", "fixed", "wontfix", "superseded", "n-a"}
+PATH_RELATIONS = {"blocks-path", "redundant-backstop", "future-use", "weak-reference", "unknown"}
+PRIMARY_FACTORS = {"blocks-path", "reaches-eyes", "willing-to-report", "witness"}
+CONFIDENCES = {"confirmed", "likely", "unable-to-separate"}
+UPSTREAM_KINDS = {"issue", "pr"}
+UPSTREAM_STATUSES = {"open", "merged", "closed-unmerged", "none"}
+DETECTED_LEVELS = {"L2", "L3"}
+
+TOP_KEYS = {"version", "updated", "entries"}
+ENTRY_KEYS = {"id", "created", "phase", "class", "title", "status", "target", "fault", "cells",
+              "attribution", "observation", "evidence", "upstream", "lesson"}
+TARGET_KEYS = {"repo", "artifact", "version"}
+FAULT_KEYS = {"type", "spec", "delivery", "path_relation"}
+CELL_KEYS = {"host", "model", "runs", "detected", "levels", "notes"}
+ATTRIBUTION_KEYS = {"primary_factor", "explanation", "confidence", "caveats"}
+OBSERVATION_KEYS = {"detected", "reported", "contained", "recovered", "reverified"}
+UPSTREAM_KEYS = {"kind", "url", "status"}
+
+
+def is_int(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def nonempty_str(value):
+    return isinstance(value, str) and value.strip() != ""
+
+
+def check_keys(obj, allowed, where, errors):
+    for key in sorted(set(obj) - allowed):
+        errors.append(f"{where}: unknown field '{key}'")
+
+
+def check_str(obj, key, where, errors, required=True):
+    if key not in obj:
+        if required:
+            errors.append(f"{where}: missing required field '{key}'")
+        return None
+    if not nonempty_str(obj[key]):
+        errors.append(f"{where}.{key}: must be a non-empty string")
+        return None
+    return obj[key]
+
+
+def check_enum(value, allowed, where, errors):
+    if value is not None and value not in allowed:
+        errors.append(f"{where}: '{value}' not in {sorted(allowed)}")
+
+
+def check_date(value, where, errors):
+    if value is None:
+        return
+    if not DATE_RE.match(value):
+        errors.append(f"{where}: '{value}' is not YYYY-MM-DD")
+        return
+    try:
+        datetime.date.fromisoformat(value)
+    except ValueError:
+        errors.append(f"{where}: '{value}' is not a real calendar date")
+
+
+def check_target(target, where, errors):
+    if not isinstance(target, dict):
+        errors.append(f"{where}: must be an object")
+        return
+    check_keys(target, TARGET_KEYS, where, errors)
+    check_str(target, "repo", where, errors)
+    check_str(target, "artifact", where, errors)
+    check_str(target, "version", where, errors, required=False)
+
+
+def check_fault(fault, where, errors):
+    if not isinstance(fault, dict):
+        errors.append(f"{where}: must be an object")
+        return
+    check_keys(fault, FAULT_KEYS, where, errors)
+    check_str(fault, "type", where, errors)
+    check_str(fault, "spec", where, errors)
+    check_str(fault, "delivery", where, errors, required=False)
+    relation = check_str(fault, "path_relation", where, errors, required=False)
+    check_enum(relation, PATH_RELATIONS, f"{where}.path_relation", errors)
+
+
+def check_cells(cells, where, errors):
+    if not isinstance(cells, list) or not cells:
+        errors.append(f"{where}: must be a non-empty array")
+        return
+    for i, cell in enumerate(cells):
+        cw = f"{where}[{i}]"
+        if not isinstance(cell, dict):
+            errors.append(f"{cw}: must be an object")
+            continue
+        check_keys(cell, CELL_KEYS, cw, errors)
+        check_str(cell, "host", cw, errors)
+        check_str(cell, "model", cw, errors, required=False)
+        check_str(cell, "notes", cw, errors, required=False)
+        runs = cell.get("runs")
+        detected = cell.get("detected")
+        if not is_int(runs) or runs <= 0:
+            errors.append(f"{cw}.runs: must be an integer > 0")
+            runs = None
+        if not is_int(detected) or detected < 0:
+            errors.append(f"{cw}.detected: must be an integer >= 0")
+            detected = None
+        if runs is not None and detected is not None and detected > runs:
+            errors.append(f"{cw}: detected {detected} > runs {runs}")
+        if "levels" in cell:
+            levels = cell["levels"]
+            if not nonempty_str(levels):
+                errors.append(f"{cw}.levels: must be a non-empty string")
+                continue
+            segments = [s.strip() for s in levels.split(",")]
+            bad = [s for s in segments if not LEVEL_RE.match(s)]
+            if bad:
+                errors.append(f"{cw}.levels: segments must be L0..L3, got {bad}")
+            if runs is not None and len(segments) != runs:
+                errors.append(f"{cw}.levels: {len(segments)} segment(s) but runs = {runs}")
+            hits = sum(1 for s in segments if s in DETECTED_LEVELS)
+            if detected is not None and not bad and hits != detected:
+                errors.append(f"{cw}: levels contain {hits} L2/L3 segment(s) but detected = {detected}")
+
+
+def check_attribution(attribution, where, errors):
+    if not isinstance(attribution, dict):
+        errors.append(f"{where}: must be an object")
+        return
+    check_keys(attribution, ATTRIBUTION_KEYS, where, errors)
+    factor = check_str(attribution, "primary_factor", where, errors)
+    check_enum(factor, PRIMARY_FACTORS, f"{where}.primary_factor", errors)
+    check_str(attribution, "explanation", where, errors)
+    confidence = check_str(attribution, "confidence", where, errors)
+    check_enum(confidence, CONFIDENCES, f"{where}.confidence", errors)
+    if "caveats" in attribution:
+        caveats = attribution["caveats"]
+        as_list = isinstance(caveats, list) and bool(caveats) and all(nonempty_str(c) for c in caveats)
+        if not (nonempty_str(caveats) or as_list):
+            errors.append(f"{where}.caveats: must be a non-empty string or a non-empty array of strings")
+
+
+def check_observation(observation, where, errors):
+    if not isinstance(observation, dict):
+        errors.append(f"{where}: must be an object")
+        return
+    check_keys(observation, OBSERVATION_KEYS, where, errors)
+    if "detected" not in observation:
+        errors.append(f"{where}: missing required field 'detected'")
+    for key, value in observation.items():
+        if key in OBSERVATION_KEYS and not isinstance(value, bool):
+            errors.append(f"{where}.{key}: must be true or false")
+
+
+def check_evidence(evidence, where, root, errors):
+    if not isinstance(evidence, list) or not evidence:
+        errors.append(f"{where}: must be a non-empty array of repo-relative paths")
+        return 0
+    checked = 0
+    for i, item in enumerate(evidence):
+        ew = f"{where}[{i}]"
+        if not nonempty_str(item):
+            errors.append(f"{ew}: must be a non-empty string")
+            continue
+        path = Path(item)
+        if path.is_absolute() or ".." in path.parts or "\\" in item:
+            errors.append(f"{ew}: '{item}' must be a repo-root-relative path without '..'")
+            continue
+        if not (root / path).exists():
+            errors.append(f"{ew}: '{item}' does not exist under {root}")
+        checked += 1
+    return checked
+
+
+def check_upstream(upstream, where, errors):
+    if not isinstance(upstream, list) or not upstream:
+        errors.append(f"{where}: must be a non-empty array")
+        return
+    for i, item in enumerate(upstream):
+        uw = f"{where}[{i}]"
+        if not isinstance(item, dict):
+            errors.append(f"{uw}: must be an object")
+            continue
+        check_keys(item, UPSTREAM_KEYS, uw, errors)
+        kind = check_str(item, "kind", uw, errors)
+        check_enum(kind, UPSTREAM_KINDS, f"{uw}.kind", errors)
+        url = check_str(item, "url", uw, errors)
+        if url is not None and not URL_RE.match(url):
+            errors.append(f"{uw}.url: '{url}' is not an http(s) URL")
+        status = check_str(item, "status", uw, errors)
+        check_enum(status, UPSTREAM_STATUSES, f"{uw}.status", errors)
+
+
+def check_entry(entry, index, root, seen_ids, errors):
+    where = f"entries[{index}]"
+    if not isinstance(entry, dict):
+        errors.append(f"{where}: must be an object")
+        return 0, None
+    if nonempty_str(entry.get("id")):
+        where = entry["id"]
+    check_keys(entry, ENTRY_KEYS, where, errors)
+
+    entry_id = check_str(entry, "id", where, errors)
+    cls = check_str(entry, "class", where, errors)
+    check_enum(cls, CLASSES, f"{where}.class", errors)
+    letter = None
+    if entry_id is not None:
+        match = ID_RE.match(entry_id)
+        if not match:
+            errors.append(f"{where}.id: '{entry_id}' does not match ^RQ-[FIX]-\\d{{3}}$")
+        else:
+            letter = match.group(1)
+            if entry_id in seen_ids:
+                errors.append(f"{where}.id: duplicate id '{entry_id}' (first seen at entries[{seen_ids[entry_id]}])")
+            seen_ids.setdefault(entry_id, index)
+    if letter is not None and cls in CLASSES and CLASSES[cls] != letter:
+        errors.append(f"{where}: id letter '{letter}' does not match class '{cls}' (expected '{CLASSES[cls]}')")
+
+    check_date(check_str(entry, "created", where, errors), f"{where}.created", errors)
+    phase = check_str(entry, "phase", where, errors)
+    if phase is not None and not PHASE_RE.match(phase):
+        errors.append(f"{where}.phase: '{phase}' must be lowercase letters, digits and hyphens")
+    check_str(entry, "title", where, errors)
+    check_str(entry, "lesson", where, errors)
+    status = check_str(entry, "status", where, errors)
+    check_enum(status, STATUSES, f"{where}.status", errors)
+    if cls == "experiment-invalid" and status is not None and status != "n-a":
+        errors.append(f"{where}.status: experiment-invalid entries must use 'n-a', got '{status}'")
+    if cls in ("target-finding", "instrument-defect") and status == "n-a":
+        errors.append(f"{where}.status: 'n-a' is reserved for experiment-invalid entries")
+
+    if "target" in entry:
+        check_target(entry["target"], f"{where}.target", errors)
+    elif cls in ("target-finding", "instrument-defect"):
+        errors.append(f"{where}: {cls} entries require 'target'")
+    if "fault" in entry:
+        check_fault(entry["fault"], f"{where}.fault", errors)
+    elif cls == "target-finding":
+        errors.append(f"{where}: target-finding entries require 'fault'")
+    if "attribution" in entry:
+        check_attribution(entry["attribution"], f"{where}.attribution", errors)
+    elif cls == "target-finding":
+        errors.append(f"{where}: target-finding entries require 'attribution'")
+    if "cells" in entry:
+        check_cells(entry["cells"], f"{where}.cells", errors)
+    if "observation" in entry:
+        check_observation(entry["observation"], f"{where}.observation", errors)
+    if "upstream" in entry:
+        check_upstream(entry["upstream"], f"{where}.upstream", errors)
+    checked = check_evidence(entry.get("evidence"), f"{where}.evidence", root, errors)
+    return checked, cls
+
+
+def validate(doc, root):
+    """Return (errors, summary) for a parsed ledger document; evidence resolves under root."""
+    errors = []
+    summary = {"entries": 0, "by_class": {"F": 0, "I": 0, "X": 0}, "cells": 0, "evidence": 0}
+    root = Path(root)
+    if not isinstance(doc, dict):
+        return ["top level: must be an object"], summary
+    check_keys(doc, TOP_KEYS, "top level", errors)
+    if not is_int(doc.get("version")) or doc.get("version") != 1:
+        errors.append("top level: 'version' must be the integer 1")
+    check_date(check_str(doc, "updated", "top level", errors), "top level.updated", errors)
+    entries = doc.get("entries")
+    if not isinstance(entries, list):
+        errors.append("top level: 'entries' must be an array")
+        return errors, summary
+    seen_ids = {}
+    for index, entry in enumerate(entries):
+        checked, cls = check_entry(entry, index, root, seen_ids, errors)
+        summary["entries"] += 1
+        summary["evidence"] += checked
+        if cls in CLASSES:
+            summary["by_class"][CLASSES[cls]] += 1
+        if isinstance(entry, dict) and isinstance(entry.get("cells"), list):
+            summary["cells"] += len(entry["cells"])
+    return errors, summary
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(prog="ledger-check", description="validate repo-quake ledger/ledger.json")
+    parser.add_argument("ledger", help="path to ledger.json")
+    parser.add_argument("--root", help="repo root for evidence paths (default: parent of the ledger's directory)")
+    args = parser.parse_args(argv)
+    ledger = Path(args.ledger)
+    root = Path(args.root) if args.root else ledger.resolve().parent.parent
+    if not ledger.is_file():
+        print(f"ledger-check: {ledger}: not a file", file=sys.stderr)
+        return 2
+    if not root.is_dir():
+        print(f"ledger-check: root {root}: not a directory", file=sys.stderr)
+        return 2
+    try:
+        text = ledger.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"ledger-check: {ledger}: {exc}", file=sys.stderr)
+        return 2
+    try:
+        doc = json.loads(text)
+    except json.JSONDecodeError as exc:
+        print(f"ERROR   {ledger}: invalid JSON: {exc}")
+        print("FAIL  (1 error(s))")
+        return 1
+    errors, summary = validate(doc, root)
+    for err in errors:
+        print(f"ERROR   {err}")
+    if errors:
+        print(f"FAIL  ({len(errors)} error(s)) in {summary['entries']} entries")
+        return 1
+    by = summary["by_class"]
+    print(f"OK    {summary['entries']} entries (F={by['F']} I={by['I']} X={by['X']}), "
+          f"{summary['cells']} cells, {summary['evidence']} evidence path(s) exist under {root}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

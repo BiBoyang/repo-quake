@@ -88,3 +88,14 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 ## License
 
 Apache-2.0 (see LICENSE).
+
+## Fault ledger（缺陷台账）
+
+`ledger/ledger.json` structures every target finding, instrument defect and
+experiment-validity event narrated in `docs/` (the evidence guide's three ledgers)
+with per-cell x/N counts, evidence paths and upstream links; schema and conventions
+live in [`ledger/SCHEMA.md`](ledger/SCHEMA.md). Attribution there is interpretation, not measurement.
+
+```bash
+python3 bin/ledger-check ledger/ledger.json
+```
