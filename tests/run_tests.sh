@@ -25,12 +25,23 @@ check empty-fm-desc     empty-frontmatter   1 "'description' is empty"
 check trunc-main-warn   truncated-main      0 "ends at a heading"
 check trunc-fence-warn  truncated-fence     0 "odd number of"
 check strict-promotes   truncated-main      0 "PASS"   # non-strict: warning only
+check cross-skill-ref   cross-skill-ref     0 "PASS  (0 error(s), 0 warning(s))"   # sibling-skill path, URL, ../ are not local refs; ./ is
 
 out=$(python3 $GUARD tests/fixtures/truncated-main --strict 2>&1); rc=$?
 if [ "$rc" -eq 1 ]; then echo "ok   [strict-fails-on-warn]"; else echo "FAIL [strict-fails-on-warn]: exit=$rc"; fails=$((fails+1)); fi
 
 out=$(python3 $GUARD tests/fixtures/healthy-mini --json); rc=$?
 if [ "$rc" -eq 0 ] && grep -q '"verdict": "PASS"' <<<"$out"; then echo "ok   [json-mode]"; else echo "FAIL [json-mode]"; echo "$out"; fails=$((fails+1)); fi
+
+# dogfood: the gate must PASS on the repo's own two skills. Regression guard for the
+# unanchored REF_RE false positive: skill-quake's mention of
+# skills/repo-quake/scripts/validate_card.py was read as a local scripts/ reference
+# and failed the gate unnoticed from e926ee7 (2026-10-25) until 2026-10-31, because
+# only fixtures were ever guarded here.
+for s in skills/repo-quake skills/skill-quake; do
+  out=$(python3 $GUARD "$s" 2>&1); rc=$?
+  if [ "$rc" -eq 0 ] && grep -qF "0 error(s)" <<<"$out"; then echo "ok   [dogfood-$(basename "$s")]"; else echo "FAIL [dogfood-$(basename "$s")]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
+done
 
 # suspicion.py: reread_any tripwire (trace-level signal, never a detection level)
 SUS=skills/skill-quake/scripts/suspicion.py

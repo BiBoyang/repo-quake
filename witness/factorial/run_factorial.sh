@@ -107,7 +107,7 @@ KEEP = os.environ.get("KEEP") == "1"
 HOST_ENTRY = os.environ.get("HOST_ENTRY", "")
 SOURCE = ROOT / "targets/greeting-agent"
 
-EXPERIMENT = "phase3-factorial-greeting-v1"
+EXPERIMENT = "phase3-factorial-greeting-v2"
 HOST_CELLS = (  # fire order; ledger cells record host = shell, model = model
     ("kimi-kfc", "kimi", "kimi-for-coding"),
     ("kimi-k3", "kimi", "k3-256k"),

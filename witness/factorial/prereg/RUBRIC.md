@@ -1,6 +1,6 @@
 # phase3 分级 rubric（冻结）
 
-- 实验：`phase3-factorial-greeting-v1`（见 `EXPERIMENT-CARD.md`）。
+- 实验：`phase3-factorial-greeting-v2`（见 `EXPERIMENT-CARD.md`）。
 - 冻结：本文件的 sha256 登记在 `EXPERIMENT-CARD.md` 的冻结哈希块里，`run_factorial.sh --dry-run` 每次复核，
   开火前改动会让 dry-run 变红、驱动拒绝开火。开火后不回改本文件：分级规则有误时，保留初判，另写 adjudication
   （`docs/eval-evidence-guide.md`「判分器故障」）；偏离写 deviation log。

@@ -1,8 +1,8 @@
 # phase3 实验卡：伤口 path_relation × 外壳 × 模型（冻结）
 
-- 实验 id：`phase3-factorial-greeting-v1`。
+- 实验 id：`phase3-factorial-greeting-v2`。
 - `phase: phase3` 约定：本期所有 run 目录、报告、deviation log 和台账条目的 `phase` 字段一律写 `phase3`。
-- 冻结：2026-10-30。本文件、`RUBRIC.md`、`INVALID-RULES.md` 和 `cards/W1.md`–`W5.md` 随同一次提交入库；
+- 冻结：v2 于 2026-10-31；v1 于 2026-10-30 冻结、从未开火，由 v2 取代（沿革见 §14）。本文件、`RUBRIC.md`、`INVALID-RULES.md` 和 `cards/W1.md`–`W5.md` 随同一次提交入库；
   §13 登记了这些文件、全部物料和冻结 prompt 的 sha256，`run_factorial.sh --dry-run` 每次复核，任何改动都会让
   dry-run 变红，驱动也会拒绝开火。冻结后不回改：开火前发现规则有误，就另开新卡（新 id、新预算）；开火后的
   修正写 adjudication，偏离写 deviation log（`skills/repo-quake/references/measurement.md`）。
@@ -117,6 +117,7 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 
 - `witness/eve_guard.py` 健康基线：PASS，0 err，0 warn。
 - `bin/skill-guard agent/skills/tone-guide` 健康基线：PASS，0 err，0 warn。
+- `bin/skill-guard` 版本：v2 登记 sha256 `18c06ef5…`（REF_RE 带左锚点，见 §14）；v1 登记的 `0bc4628a…` 在本靶六个变体上读数相同。
 - RQ-I-001 校准声明：skill-guard 有已知假阳性类（正文示例路径被当作真实引用）。tone-guide 正文没有 `references/`、
   `assets/`、`scripts/` 路径，这一类不会触发，所以健康基线干净，变体上的 FAIL 都是相对干净基线的变化。仍按基线差分解读。
 - 各臂读数（与 `cards/` 的预测一致；dry-run 每次复核）：
@@ -204,7 +205,7 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 ```json
 {
   "schema_version": "1.0",
-  "id": "phase3-factorial-greeting-v1",
+  "id": "phase3-factorial-greeting-v2",
   "phase": "phase3",
   "claim": "Whether a host reports a wound in targets/greeting-agent is explained by the wound's path_relation (blocks-path detected, the four non-blocking classes missed), with the weak-reference class modulated by shell x model.",
   "target": {
@@ -291,13 +292,35 @@ b20686a9dfa6780d18656ae3857c43f95ed6fc7202366eb93404ce0dcdb3afd9  tree:variant:W
 b865f94aa566363b71164c940f2940054d05b2dc43f10d471634c5b30662b510  tree:variant:W4
 dc8ceef5813f83abd86a2ee486dcca5b547a4270477d705c03f1863754a8006e  tree:variant:W5
 321bc09c0605a62870fe614ce7413c3f666ca6020a24eba1a5786ea31ab1a2a3  text:prompt-template
-d2634cce72c9452ec8736f9a4bd6f1be29c137a66bd9b8a16a5931354b83b881  witness/factorial/prereg/RUBRIC.md
-839a39741f3960194f5a02d8c979808cc8b71d2375b57fcde133442a9e88b5d7  witness/factorial/prereg/INVALID-RULES.md
+ec4940cd936f7fe994bc78abefa362a35d48bc3dbdcce2f1b633d8d4449931c1  witness/factorial/prereg/RUBRIC.md
+8e1319751fddbd678f6b258fe7370144160bdcaa88bdb7895b676ce2de0ee0f1  witness/factorial/prereg/INVALID-RULES.md
 6e420c5697f54963a3c1898f3f4b742750700a13216b1ecccd72b185f0e4cad2  witness/factorial/cards/W1.md
 dc944330b84a2531ef1f095cc03efa00298b321bc6e18e42ebff87521d2ee8be  witness/factorial/cards/W2.md
 3b900aeed1424b3fd06c3d75161aa9f870b113cf558afebb9dfb5ab090bb4fe7  witness/factorial/cards/W3.md
 6e69be3a063c9b67cdb9b413c5d5c0f9d1eac80785a3144dbfbc0b1cfbaa0771  witness/factorial/cards/W4.md
 d5f7b5fdde38e130c0224b282c7425c8e97859edb59648dd91a26145e8888bf6  witness/factorial/cards/W5.md
 7695edaad06fd4172930875afad229d2ce86e1e524355a91184f2f4a8279fe1f  witness/eve_guard.py
-0bc4628a096f38559eb189fd1fe16421f5479e940220c2b13116880a9cefbe08  bin/skill-guard
+18c06ef57119d12961a26021b59a13417115dbaf9c40d8de13a20a2857e0fcd0  bin/skill-guard
 ```
+
+## 14. 卡片沿革
+
+| 版本 | 冻结日期 | 开火 | 变更 |
+|---|---|---|---|
+| v1 | 2026-10-30 | 0 发 | 首次冻结，17 条哈希。 |
+| v2 | 2026-10-31 | 0 发 | 证人 `bin/skill-guard` 版本变更；`RUBRIC.md`、`INVALID-RULES.md` 只改实验 id 行；物料、prompt、五张伤口卡逐字节不变。 |
+
+v1 → v2 的原因与证据：
+
+- 2026-10-31，`tests/run_tests.sh` 新增的 dogfood 检查发现 `bin/skill-guard` 的 REF_RE 没有左锚点：`skills/skill-quake/SKILL.md`
+  提到的 `skills/repo-quake/scripts/validate_card.py` 被截成 `scripts/validate_card.py`，再相对 skill-quake 目录解析，gate 对
+  skill-quake 自 e926ee7（2026-10-25）起 FAIL。修复：REF_RE 加 `(?<![\w./-])` 负向后顾并允许 `./` 前缀。fixture
+  `tests/fixtures/cross-skill-ref` 在旧版 guard 下 3 err，新版 0 err；`tests/fixtures/missing-ref` 在新版下仍 FAIL。这是 RQ-I 类
+  仪器缺陷，与 RQ-I-001 的"正文假想引用"是不同子类。
+- 证人读数不变：新版 guard 对 C0–W5 六个变体的读数与 §8 的表逐格一致，dry-run 的 `[witness]` 段在两个 guard 版本下都 ok。
+  tone-guide 正文没有 `references/`、`assets/`、`scripts/` 路径，两类假阳性都不会在本靶上触发。所以 v2 不改 §1 的假设、
+  §3 的臂、§4 的预算档位和 §9 的分析规则。
+- 按本卡开头的冻结规则，开火前改冻结物不回改原卡而另开新卡：v1 从未开火，预算消耗 0 发，由 v2 取代；v2 的预算独立计数，
+  上限仍为 72 / 136 / 168。
+- 哈希变更 3 条：`bin/skill-guard` `0bc4628a…` → `18c06ef5…`；`RUBRIC.md` `d2634cce…` → `ec4940cd…`；
+  `INVALID-RULES.md` `839a3974…` → `8e131975…`。其余 14 条不变。

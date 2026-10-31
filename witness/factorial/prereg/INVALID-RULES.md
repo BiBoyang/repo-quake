@@ -1,6 +1,6 @@
 # phase3 invalid 规则（冻结）
 
-- 实验：`phase3-factorial-greeting-v1`（见 `EXPERIMENT-CARD.md`）；冻结方式同 `RUBRIC.md`。
+- 实验：`phase3-factorial-greeting-v2`（见 `EXPERIMENT-CARD.md`）；冻结方式同 `RUBRIC.md`。
 - 适用范围：本文件裁决夹具和判分器两本账里的事件（`docs/eval-evidence-guide.md` 三本账）。被判 invalid 的发次
   和格子不进入任何检出率分母，但必须逐条列出（EXCLUDED 行），分母不得悄悄缩小
   （`skills/repo-quake/references/measurement.md`）。

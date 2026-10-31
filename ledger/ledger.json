@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-10-30",
+  "updated": "2026-10-31",
   "entries": [
     {
       "id": "RQ-F-001",
@@ -947,6 +947,31 @@
         "docs/eval-evidence-guide.md"
       ],
       "lesson": "网络超时不区分「没收到」与「已写入」：公开写入先去重、设上限、写后读回，权限不足记边界不绕过"
+    },
+    {
+      "id": "RQ-I-008",
+      "created": "2026-10-31",
+      "phase": "phase3",
+      "class": "instrument-defect",
+      "title": "skill-guard REF_RE 无左锚点，skill-quake 正文里的跨 skill 路径 skills/repo-quake/scripts/validate_card.py 被截成本地 scripts/ 引用判缺失，gate 对自家 skill 自 e926ee7（2026-10-25）起 FAIL，至 2026-10-31 才由新增的 dogfood 检查发现；fixture 旧版 3 err、新版 0 err",
+      "status": "fixed",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "bin/skill-guard REF_RE",
+        "version": "e926ee7（2026-10-25）至 00bc8d7（2026-10-30）；修复前 sha256 0bc4628a…，修复后 18c06ef5…（phase3 实验卡 v1 → v2 的唯一证人变更）"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "REF_RE 从文本任意位置匹配 (references|assets|scripts)/…，长路径中的 scripts/ 片段、URL 路径、../ 路径都被当作本 skill 的引用并相对 skill 根解析；skills/skill-quake/SKILL.md Step 0.5 提到的 skills/repo-quake/scripts/validate_card.py 因此触发缺失 ERROR。与 RQ-I-001 的「正文假想引用」是不同子类：那里是不存在的示例路径，这里是存在于别处的真实路径被错误定位。修复：加 (?<![\\w./-]) 负向后顾并允许 ./ 前缀；tests/fixtures/cross-skill-ref 在旧版 guard 下 3 err、新版 0 err，tests/fixtures/missing-ref 在新版下仍 FAIL；tests/run_tests.sh 此前只对 fixtures 跑 gate、从未对 skills/ 下两个真实 skill 跑，新增 dogfood 检查。tone-guide 正文无 references/、assets/、scripts/ 路径，phase3 六个变体的读数在两个 guard 版本下逐格相同"
+      },
+      "evidence": [
+        "bin/skill-guard",
+        "tests/fixtures/cross-skill-ref/SKILL.md",
+        "tests/run_tests.sh",
+        "skills/skill-quake/SKILL.md",
+        "witness/factorial/prereg/EXPERIMENT-CARD.md"
+      ],
+      "lesson": "证人也要被自己的测试覆盖：只对 fixtures 跑 gate、不对真实 skill 跑，规则就不挡路；路径正则必须带边界锚点，否则长路径的任何片段都会成为本地引用"
     }
   ]
 }
