@@ -1,0 +1,21 @@
+{"t_ms": 1794755583902, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794755584039, "tag_on_screen": 2, "distinct_markers": 2, "total_markers": 2, "first_partial_count": 1, "max_marker": "P02", "notices": []}
+{"t_ms": 1794755584085, "tag_on_screen": 4, "distinct_markers": 4, "total_markers": 4, "first_partial_count": 1, "max_marker": "P04", "notices": []}
+{"t_ms": 1794755584126, "tag_on_screen": 6, "distinct_markers": 6, "total_markers": 6, "first_partial_count": 1, "max_marker": "P06", "notices": []}
+{"t_ms": 1794755584174, "tag_on_screen": 8, "distinct_markers": 8, "total_markers": 8, "first_partial_count": 1, "max_marker": "P08", "notices": []}
+{"t_ms": 1794755584213, "tag_on_screen": 10, "distinct_markers": 10, "total_markers": 10, "first_partial_count": 1, "max_marker": "P10", "notices": []}
+{"t_ms": 1794755584257, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": ["• Reconnecting... 1/5 (0s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794755584513, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584560, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 14, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584611, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 16, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584655, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 18, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584698, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 20, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584745, "tag_on_screen": 12, "distinct_markers": 12, "total_markers": 23, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794755584791, "tag_on_screen": 12, "distinct_markers": 13, "total_markers": 25, "first_partial_count": 2, "max_marker": "P13", "notices": []}
+{"t_ms": 1794755584834, "tag_on_screen": 12, "distinct_markers": 15, "total_markers": 27, "first_partial_count": 2, "max_marker": "P15", "notices": []}
+{"t_ms": 1794755584880, "tag_on_screen": 12, "distinct_markers": 17, "total_markers": 29, "first_partial_count": 2, "max_marker": "P17", "notices": []}
+{"t_ms": 1794755584936, "tag_on_screen": 12, "distinct_markers": 19, "total_markers": 31, "first_partial_count": 2, "max_marker": "P19", "notices": []}
+{"t_ms": 1794755584977, "tag_on_screen": 12, "distinct_markers": 21, "total_markers": 33, "first_partial_count": 2, "max_marker": "P21", "notices": []}
+{"t_ms": 1794755585017, "tag_on_screen": 12, "distinct_markers": 23, "total_markers": 35, "first_partial_count": 2, "max_marker": "P23", "notices": []}
+{"t_ms": 1794755585060, "tag_on_screen": 12, "distinct_markers": 24, "total_markers": 36, "first_partial_count": 2, "max_marker": "P24", "notices": []}
+{"t_ms": 1794755585107, "tag_on_screen": 0, "distinct_markers": 24, "total_markers": 24, "first_partial_count": 1, "max_marker": "P24", "notices": []}

@@ -1,0 +1,36 @@
+{
+  "available": true,
+  "bytes": 47203,
+  "indexed": true,
+  "alt_screen_on": [
+    69
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794755582926,
+  "esc_2J": 0,
+  "esc_3J": 0,
+  "tag_seen": true,
+  "tag_contiguous": false,
+  "tag_first_ms": 1794755584004,
+  "notices": [
+    "Reconnecting... 1/5",
+    "└ Stream disconnected before completion: stream closed before response.completed"
+  ],
+  "notices_timed": [
+    {
+      "text": "Reconnecting... 1/5",
+      "t_ms": 1794755584251
+    },
+    {
+      "text": "└ Stream disconnected before completion: stream closed before response.completed",
+      "t_ms": 1794755584251
+    }
+  ],
+  "first_seen_ms": {
+    "first_marker": 1794755584004,
+    "partial_last": 1794755584241,
+    "first_new": 1794755584787,
+    "answer_last": 1794755585028
+  }
+}

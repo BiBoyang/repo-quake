@@ -1,0 +1,132 @@
+{
+  "window": [
+    "2026-11-15 23:06:26",
+    "2026-11-15 23:17:02"
+  ],
+  "denials": 60,
+  "by_target": {
+    "codex -> /private/var/run/mDNSResponder": 60
+  },
+  "first": [
+    {
+      "time": "2026-11-15 23:06:40.596012+0800",
+      "process": "codex",
+      "pid": 62277,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:51.779453+0800",
+      "process": "codex",
+      "pid": 75771,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:51.938851+0800",
+      "process": "codex",
+      "pid": 75771,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:56.170399+0800",
+      "process": "codex",
+      "pid": 75771,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:58.557433+0800",
+      "process": "codex",
+      "pid": 75771,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:59.752162+0800",
+      "process": "codex",
+      "pid": 76222,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:11:59.902106+0800",
+      "process": "codex",
+      "pid": 76222,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:00.540371+0800",
+      "process": "codex",
+      "pid": 76222,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:06.296245+0800",
+      "process": "codex",
+      "pid": 76222,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:07.540731+0800",
+      "process": "codex",
+      "pid": 76881,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:07.676142+0800",
+      "process": "codex",
+      "pid": 76881,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:07.810428+0800",
+      "process": "codex",
+      "pid": 76881,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:14.009018+0800",
+      "process": "codex",
+      "pid": 76881,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:15.258779+0800",
+      "process": "codex",
+      "pid": 78192,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:15.417712+0800",
+      "process": "codex",
+      "pid": 78192,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:15.468424+0800",
+      "process": "codex",
+      "pid": 78192,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:21.488899+0800",
+      "process": "codex",
+      "pid": 78192,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:22.736316+0800",
+      "process": "codex",
+      "pid": 79074,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:22.868578+0800",
+      "process": "codex",
+      "pid": 79074,
+      "target": "/private/var/run/mDNSResponder"
+    },
+    {
+      "time": "2026-11-15 23:12:22.956113+0800",
+      "process": "codex",
+      "pid": 79074,
+      "target": "/private/var/run/mDNSResponder"
+    }
+  ]
+}

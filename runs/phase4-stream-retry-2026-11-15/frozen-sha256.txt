@@ -1,0 +1,7 @@
+66fcde0a3c5741cb66719fd1fa13a98fa39ebb3ffef6c33d718b231fbb037562  <EVIDENCE_ROOT>/card-frozen.json
+e7fef77a7d9d37f87a4b9a0d139ce6bcc4eefb7416f12cdda9c73ee51e142171  <HOME>/repo-quake/witness/stream-retry/mock.mjs
+1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763  <HOME>/repo-quake/witness/stream-retry/content.json
+e507c4b8fb5c9882207e19b0fc4896cbd4447fe1dbe926c68bb41388f1738410  <HOME>/repo-quake/witness/stream-retry/runner.py
+506b8d112f11be4c6d773193910373ef1e85a33cda9bbb398be89cb2dbb0f8b9  <HOME>/repo-quake/witness/stream-retry/grading.py
+dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750  <HOME>/repo-quake/witness/stream-retry/rawtap.py
+c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1  <HOME>/repo-quake/witness/stream-retry/version_witness.py

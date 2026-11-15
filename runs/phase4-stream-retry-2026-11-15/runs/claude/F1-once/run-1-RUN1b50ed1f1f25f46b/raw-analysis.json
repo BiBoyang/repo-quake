@@ -1,0 +1,31 @@
+{
+  "available": true,
+  "bytes": 9713,
+  "indexed": true,
+  "alt_screen_on": [
+    593
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794755245876,
+  "esc_2J": 1,
+  "esc_3J": 0,
+  "tag_seen": true,
+  "tag_contiguous": true,
+  "tag_first_ms": 1794755246823,
+  "notices": [
+    "API error · Retrying in 1s · attempt 1/10"
+  ],
+  "notices_timed": [
+    {
+      "text": "API error · Retrying in 1s · attempt 1/10",
+      "t_ms": 1794755246982
+    }
+  ],
+  "first_seen_ms": {
+    "first_marker": 1794755246823,
+    "partial_last": 1794755247947,
+    "first_new": 1794755247947,
+    "answer_last": 1794755248216
+  }
+}

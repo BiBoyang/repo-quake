@@ -13,6 +13,7 @@ This directory keeps the source fixtures, preregistered experiment cards, indepe
 - `e2e-deferred-2026-10-25/` — no-change recording behavior and direct `ACTION_MAY_HAVE_COMMITTED` evidence.
 - `e2e-identity-2026-10-25/` — context/ambiguity attempts with a documented sequence of fixture errors and an actual 9-run budget overrun; only A1 is valid.
 - `e2e-identity-reset-2026-10-25/` — corrected small-card reset with valid `target-ambiguous` and full `StepTraceSession` uncertain-commit evidence, plus a separate U1 verification card and overrun disclosure.
+- `phase4-stream-retry-2026-11-15/` — redacted public copy of the phase-4 retest (Claude Code and codex interactive, 36 runs): records, screen captures, raw-byte analyses and delivery logs; request bodies, session files and raw terminal bytes stay private (`EXPORT.md`).
 
 ## Artifact policy
 

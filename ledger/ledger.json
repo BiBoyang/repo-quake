@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-10-31",
+  "updated": "2026-11-15",
   "entries": [
     {
       "id": "RQ-F-001",
@@ -972,6 +972,305 @@
         "witness/factorial/prereg/EXPERIMENT-CARD.md"
       ],
       "lesson": "证人也要被自己的测试覆盖：只对 fixtures 跑 gate、不对真实 skill 跑，规则就不挡路；路径正则必须带边界锚点，否则长路径的任何片段都会成为本地引用"
+    },
+    {
+      "id": "RQ-F-014",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "target-finding",
+      "title": "Kimi Code 2.5.3 把没有停止原因的流（F6：半截后 HTTP 正文正常结束，无 finish_reason、无 [DONE]）当成正常结束：交互 3/3、-p 3/3 只发 1 个请求、无提示，-p 退出码 0，会话记 finishReason end_turn 与 turn.ended completed",
+      "status": "reported",
+      "target": {
+        "repo": "MoonshotAI/kimi-code",
+        "artifact": "OpenAI 兼容 provider（type = \"kimi\"）的流结束判定与会话记录",
+        "version": "2.5.3（sha256 70c39581…）"
+      },
+      "fault": {
+        "type": "missing-terminator",
+        "spec": "F6：Chat Completions 流发 P01–P12 后，以分块编码的结束块正常收尾，没有任何非空 finish_reason，也没有 data: [DONE]。对照一：同样的半截后 TCP FIN（F1），Kimi Code 走连接错误路径重发。对照二：同一 F6 下，Claude Code 2.1.282 提示 Connection closed before the response finished 并重发，codex 0.169.0 提示 stream closed before response.completed 并重发（phase4 补测各 3/3）",
+        "delivery": "本地 mock 的送达日志逐请求记录事件序列与收尾方式（主矩阵 11-14）；issue 正文附单文件 Python mock 的最小复现（带 Content-Length），已在本机用一次性 HOME 跑通",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "kimi",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "交互 TUI：屏上只有 P01–P12，无提示，1 个请求"
+        },
+        {
+          "host": "kimi",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "kimi -p：stdout 只有 P01–P12，退出码 0，1 个请求"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "故障在必经的正式回答请求上，证人在场（mock 字节日志、会话记录）。客户端没有把'缺停止原因'当异常，反而补了一个 end_turn，于是检测、提示、重发三条路都没走：缺的是产品一侧的检测本身",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次，另有最小复现",
+          "只测了 2.5.3；2.6.0 已发布未复测",
+          "Kimi Code 没有用 phase4 的新证人补测"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase4-report.md",
+        "docs/phase4-disclosure.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/MoonshotAI/kimi-code/issues/4964",
+          "status": "open"
+        }
+      ],
+      "lesson": "流没给停止原因，客户端就不该替它补一个：补出来的 end_turn 同时关掉了检测、提示和重发三条路"
+    },
+    {
+      "id": "RQ-F-015",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "target-finding",
+      "title": "Kimi Code 2.5.3 断流重发时把半截作为最后一条 assistant 消息带回、不带 partial 标记（F1、FLONG × 交互、-p，12/12）；显示取决于服务端：mock 从头重写时屏上半截与完整回答各一份（12/12），mock 接着写时恰好一份（12/12）",
+      "status": "open",
+      "target": {
+        "repo": "MoonshotAI/kimi-code",
+        "artifact": "断流后重发请求的 messages 构造",
+        "version": "2.5.3（sha256 70c39581…）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "F1：P01–P12 后 TCP FIN；FLONG：L001–L160 后 TCP FIN。重发请求末尾是 role=assistant 的半截，只有 role 和 content，没有 partial=True。Kimi 平台 Partial Mode 文档要求续写时最后一条 assistant 消息带 partial=True；不带时服务端怎么做，文档没写",
+        "delivery": "mock 送达日志与逐请求请求体。主矩阵（11-14）的 mock 一律从头重写；续写对照（11-15）的 mock 对末尾的 assistant 半截只回剩余段落，并逐请求记录决定",
+        "path_relation": "blocks-path"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "客户端行为（重发带回半截、不带标记）是确定的；屏上和下一轮上下文会不会重复，取决于服务端对'不带 partial 的末尾 assistant 消息'是续写还是重写。mock 的两个分支给出相反结果，结论由证人（mock 的服务端假设）决定",
+        "confidence": "unable-to-separate",
+        "caveats": [
+          "真实服务端分支未测（需要付费调用，按约束不做）",
+          "主矩阵原记作 ghost，按复验改记为重写分支 duplicate",
+          "逐次屏上提示未统计，所以不给 cells",
+          "Kimi Code 没有用 phase4 的新证人补测"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase4-report.md",
+        "docs/phase4-disclosure.md",
+        "skills/repo-quake/references/fault-catalog.md"
+      ],
+      "lesson": "重发把半截带回去，就把'屏上会不会重复'交给了服务端：要么带文档要求的续写标记，要么别带"
+    },
+    {
+      "id": "RQ-F-016",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "target-finding",
+      "title": "Claude Code 2.1.282 与 codex 0.169.0 断流重发后最终都只剩一份完整回答：交互 F1、F6、FLONG 补测 18/18 retracted（各 3/3），非交互 18/18 半截从不打印；Claude Code 断开后 7–76 ms 就收掉半截，codex 在重发期间让半截与从头重写的新回答同屏（FLONG 约 31 秒），重发结束才收成一份；Claude Code -p 断流重发不给任何提示（9/9）",
+      "status": "open",
+      "target": {
+        "repo": "anthropics/claude-code; openai/codex",
+        "artifact": "断流后自动重发时的显示（交互 TUI 与 -p / exec）",
+        "version": "Claude Code 2.1.282（原生二进制 fcfd8371…）；codex-cli 0.169.0（原生二进制 739cda86…）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "一次性故障打在正式回答的第一次请求上：F1 为 P01–P12 后 TCP FIN；F6 为 P01–P12 后 HTTP 正文正常结束但无终止事件；FLONG 为 L001–L160（每帧 150 ms）后 TCP FIN。之后的请求健康。补测给失败那次的每段追加只有它才有的标记，窗口 110×400，原始字节由 pipe-pane 带时刻记录",
+        "delivery": "补测：mock 送达日志（毫秒时刻、故障来源、收尾方式）、逐请求请求体、下一轮请求和会话文件；36 次运行全部判分，regrade 从证据文件重判 36/36 不变。非交互：主矩阵（11-14）",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "claude",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F1，补测：retracted 3/3；提示 API error · Retrying in 1s · attempt 1/10，在屏 0.48–0.64 s 后消失"
+        },
+        {
+          "host": "claude",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F6，补测：retracted 3/3；提示 Connection closed before the response finished · Retrying in 1s · attempt 1/1"
+        },
+        {
+          "host": "claude",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 FLONG，补测：retracted 3/3；断开前 150 段与横幅同屏"
+        },
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F1，补测：retracted 3/3；提示 Reconnecting... 1/5 与 Stream disconnected before completion；重发期间半截与新回答同屏"
+        },
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F6，补测：retracted 3/3；提示 stream closed before response.completed；重发期间同屏"
+        },
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 FLONG，补测：retracted 3/3；重发期间约 31 秒同屏"
+        },
+        {
+          "host": "claude",
+          "model": "mock-model（本地 mock）",
+          "runs": 9,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1,L1,L1,L1",
+          "notes": "claude -p，F1、F6、FLONG 各 3 次（主矩阵）：not shown 9/9；重发成功但 stdout、stderr 都没有任何提示，退出码 0，所以记 L1"
+        },
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 9,
+          "detected": 9,
+          "levels": "L2,L2,L2,L2,L2,L2,L2,L2,L2",
+          "notes": "codex exec，F1、F6、FLONG 各 3 次（主矩阵）：not shown 9/9；stderr 有 ERROR: Reconnecting... 1/5"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "主矩阵对这两个工具的'收回'结论来自证人缺陷（见 RQ-I-009），本条是补测用失败标记、完整画面与原始字节重测后的结果。detected 按'用户得到过错误或重试提示'计（原始字节可证，一闪而过也算）：L2 = 给过提示，L1 = 客户端察觉并重发但没告诉用户",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "tmux 不是真终端，codex 同屏时长在真终端里没测",
+          "沙箱下被测离线",
+          "冻结前试跑 17 次（未计入）参考了结论"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "contained": true,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase4-report.md",
+        "docs/phase4-disclosure.md",
+        "runs/phase4-stream-retry-2026-11-15/summary.md",
+        "runs/phase4-stream-retry-2026-11-15/runs.jsonl",
+        "examples/experiment-card-phase4-stream-retry.json"
+      ],
+      "lesson": "'最后只剩一份'可以经由很不一样的过程：断开即收、或者重发期间两份同屏；收回要用失败那次独有的标记和完整画面来证，不能只看最终画面"
+    },
+    {
+      "id": "RQ-I-009",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "instrument-defect",
+      "title": "11-14 主矩阵的显示证人把 Claude Code、codex 判成'收回半截'3/3 × 12 格：非交互 18 次其实从没打印半截（应为 not shown），交互 18 次的证据只撑得住 3 次；Claude Code 交互'无提示'也是误读",
+      "status": "fixed",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "主矩阵 runner.py 与 regrade_interactive.py（未入库）→ witness/stream-retry",
+        "version": "11-14 主矩阵装置；修复版 witness/stream-retry（runner.py e507c4b8…、grading.py 506b8d11…）"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "六处缺陷：①中途截图由【P01】触发，重发的回答也有【P01】，Claude Code 交互 F1、F6 有 6 张截图截在重发开始之后，其中 5 张已能看到 P13 以后；②35 行窗口加备用屏幕（ESC[?1049h，Claude Code 第 593 字节、codex 第 69 字节），tmux 历史与当前屏逐字节相同，codex 的 9 张截图里提示词已滚出屏幕；③regrade_interactive.py 把最终画面当中途画面传入，'中途看到过半截'从未真正检查；④提示只从最终画面读，一闪而过的重试提示全部漏掉；⑤F0 无条件判 healthy；⑥continued 能被'服务端重写、客户端藏起半截'和'FLONG 只剩 L161–L200'骗过。修复见 witness/stream-retry/README.md 的返工对照表，判分规则有对抗测试和五处变异检查"
+      },
+      "evidence": [
+        "witness/stream-retry/README.md",
+        "witness/stream-retry/grading.py",
+        "tests/test_stream_retry.py",
+        "docs/phase4-report.md"
+      ],
+      "lesson": "'收回'要三个证人：失败那次独有的标记被截到、最终画面能证明完整、重发不带半截；用两次都会输出的编号触发截图，测到的只是'最后剩一份'"
+    },
+    {
+      "id": "RQ-I-010",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "instrument-defect",
+      "title": "phase4 新 mock 把 codex 收到 response.completed 后立即挂断记成 client-abort，试跑中 codex 的健康对照 2/2 判 control_failed；冻结前修复",
+      "status": "fixed",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "witness/stream-retry/mock.mjs 的 runStream()",
+        "version": "试跑版（修复前）→ 冻结版 e7fef77a…"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "mock 每写一帧后 sleep；codex 收到终止事件 response.completed 就关闭连接，响应的 close 事件在 mock 走到收尾动作之前触发，送达记录成 ending=client-abort，判分器据此认为正式请求没有干净结束。修复：所有数据帧（含终止证人）都写完之后的挂断，保留计划中的收尾方式，并记 client_closed_first；tests/test_stream_retry.py 有回归测试"
+      },
+      "evidence": [
+        "witness/stream-retry/mock.mjs",
+        "tests/test_stream_retry.py",
+        "docs/phase4-disclosure.md"
+      ],
+      "lesson": "健康对照要判分而不是默认：它在冻结前就抓到了证人自己的毛病"
+    },
+    {
+      "id": "RQ-X-011",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "experiment-invalid",
+      "title": "11-14 主矩阵的效度事件：UTC 08:24–08:36 同机另一执行者占用相同端口（非交互整批作废重跑，Claude Code 交互'每次都断'第 1 次未筛）；Claude Code 交互'每次都断'跑在旧 mock 上，非流式回退拿到完整回答却记成 n/a；FLONG 补跑后未再跑 F0；卡上 max_runs 108、实跑约 210 次未记偏离；mock 未记哈希且用过两版；codex 只哈希了 codex.js",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase4-report.md",
+        "docs/phase4-disclosure.md"
+      ],
+      "lesson": "执行者共用机器就共用端口：每个执行者用自己的端口和控制面令牌，只用自己启动的 mock；补跑之后重跑 F0；预算超了先记偏离再跑"
+    },
+    {
+      "id": "RQ-X-012",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "experiment-invalid",
+      "title": "主矩阵与续写对照的隔离与存档失误：env -i 加临时 HOME 下，Claude Code 在 LaunchServices 注册了临时 HOME 里的 URL Handler（11-15 注销），Kimi Code 在 auto_install=false 下仍拉取 25 次更新清单、临时 HOME 多出 fd；cleanup.py 原地改写证据（主矩阵 1387 个文件、续写对照 41 个）",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase4-disclosure.md",
+        "skills/repo-quake/SKILL.md",
+        "witness/stream-retry/export_public.py"
+      ],
+      "lesson": "env -i 加临时 HOME 只是缩小爆炸半径，不是隔离：事后要审计系统登记、用网络沙箱，证据只在副本上脱敏"
+    },
+    {
+      "id": "RQ-X-013",
+      "created": "2026-11-15",
+      "phase": "phase4",
+      "class": "experiment-invalid",
+      "title": "phase4 补测的诚实清单：冻结前试跑 17 次（未计入）参考了结论；计数矩阵期间本机同时运行测试（假 TUI 端到端，独立的 mock 与 tmux）可能影响毫秒级时间；tmux 不是真终端；沙箱让被测离线，codex 每次启动约 3 次域名解析被拦（共 60 次）",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase4-disclosure.md",
+        "runs/phase4-stream-retry-2026-11-15/summary.md"
+      ],
+      "lesson": "试跑和并行任务都要写进披露：它们不改判定，但会改时间数字和结论的来路"
     }
   ]
 }

@@ -1,0 +1,35 @@
+{
+  "tool": "codex",
+  "ready": true,
+  "danger": [],
+  "banner": true,
+  "executed": {
+    "pid": 62277,
+    "path": "/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+    "sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002"
+  },
+  "raw": {
+    "available": true,
+    "bytes": 16522,
+    "indexed": false,
+    "alt_screen_on": [
+      69
+    ],
+    "alt_screen_on_count": 1,
+    "alt_screen_off_count": 0,
+    "alt_screen_on_ms": null,
+    "esc_2J": 0,
+    "esc_3J": 0,
+    "tag_seen": false,
+    "tag_contiguous": false,
+    "tag_first_ms": null,
+    "notices_timed": [],
+    "first_seen_ms": {}
+  },
+  "at": "2026-11-15T15:06:39.169+00:00",
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true
+}

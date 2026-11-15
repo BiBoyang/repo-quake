@@ -1,0 +1,10 @@
+{"t_ms": 1794755280813, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794755281004, "tag_on_screen": 5, "distinct_markers": 5, "total_markers": 5, "first_partial_count": 1, "max_marker": "P05", "notices": []}
+{"t_ms": 1794755281124, "tag_on_screen": 11, "distinct_markers": 11, "total_markers": 11, "first_partial_count": 1, "max_marker": "P11", "notices": []}
+{"t_ms": 1794755281192, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": ["✻ Connection closed before the response finished · Retrying in 1s · attempt 1/1"]}
+{"t_ms": 1794755281670, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794755281876, "tag_on_screen": 0, "distinct_markers": 5, "total_markers": 5, "first_partial_count": 1, "max_marker": "P05", "notices": []}
+{"t_ms": 1794755281974, "tag_on_screen": 0, "distinct_markers": 10, "total_markers": 10, "first_partial_count": 1, "max_marker": "P10", "notices": []}
+{"t_ms": 1794755282063, "tag_on_screen": 0, "distinct_markers": 15, "total_markers": 15, "first_partial_count": 1, "max_marker": "P15", "notices": []}
+{"t_ms": 1794755282167, "tag_on_screen": 0, "distinct_markers": 20, "total_markers": 20, "first_partial_count": 1, "max_marker": "P20", "notices": []}
+{"t_ms": 1794755282324, "tag_on_screen": 0, "distinct_markers": 24, "total_markers": 24, "first_partial_count": 1, "max_marker": "P24", "notices": []}

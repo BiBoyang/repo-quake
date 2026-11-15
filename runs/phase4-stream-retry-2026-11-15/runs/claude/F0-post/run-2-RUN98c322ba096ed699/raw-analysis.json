@@ -1,0 +1,24 @@
+{
+  "available": true,
+  "bytes": 8091,
+  "indexed": true,
+  "alt_screen_on": [
+    593
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794755496199,
+  "esc_2J": 1,
+  "esc_3J": 0,
+  "tag_seen": false,
+  "tag_contiguous": false,
+  "tag_first_ms": null,
+  "notices": [],
+  "notices_timed": [],
+  "first_seen_ms": {
+    "first_marker": 1794755497430,
+    "partial_last": 1794755497646,
+    "first_new": 1794755497646,
+    "answer_last": 1794755497931
+  }
+}
