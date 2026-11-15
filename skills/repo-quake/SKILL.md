@@ -57,12 +57,21 @@ Plus the generalization layer:
    task's intent.** An agent under test that "should only read files" once
    installed a crontab entry on the experimenter's real machine. Fake HOME,
    sandboxed runtime, or container — default to the strongest you can afford.
+   A fake HOME plus `env -i` narrows the blast radius but is not containment:
+   one client under test registered an app bundle from its fake HOME with the
+   OS (macOS LaunchServices), another kept fetching update manifests with
+   auto-install off, and subjects inherit the experimenter's environment
+   unless they start from an allowlist. Audit OS-level registrations after
+   the run.
 10. **Environment failures are not data.** A run blocked by scaffolding
     (permissions, quota, network) is archived for audit and excluded from
     detection rates. Mark absent cells N/A rather than inventing numbers.
 11. **Pin and record versions.** Target version, host version, model, effort
     level, and test date go in every cell's meta. An update prompt that replaces
-    the pinned binary mid-matrix is a real observed accident.
+    the pinned binary mid-matrix is a real observed accident. Hash what
+    actually executes — resolve launchers and wrappers (a package's JS
+    launcher is not the native binary it spawns) — and hash the mock and
+    fixtures too, before and after the matrix.
 
 ## Pre-flight: freeze the experiment card
 
@@ -145,6 +154,17 @@ form. Grading is judgment; that is why it lives here and not in the witness.
   never arrived" are separated by bytes you must show.
 - A mock's authority is inversely proportional to the tested client's
   strictness: the more tolerant the client, the deeper your dialect errors hide.
+- A mock also encodes server semantics, not just bytes. When a client's
+  behavior depends on how the server answers — e.g. a retry that sends the
+  failed partial back as the last assistant message, expecting a
+  continuation — grade both branches (continue and restart) unless the real
+  API's behavior has been captured. A "duplicate" produced by an
+  always-restart mock is a mock artifact until the continue branch has run.
+- Executors that share a machine share ports. One fails to bind, its harness
+  "reuses" whatever answers the health check, and both matrices are silently
+  contaminated. Give each executor its own ports and a control-plane token,
+  refuse to reuse a mock you did not start, and check that the listener PID is
+  your own child — the PID check alone only catches start-up races.
 - `strings` absence ≠ code absence (inlined matches never reach rodata; search
   for handler-evidence strings, not event names).
 - Request count is not retry evidence (auxiliary requests exist).
