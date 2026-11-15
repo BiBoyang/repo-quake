@@ -1041,7 +1041,7 @@
       "created": "2026-11-15",
       "phase": "phase4",
       "class": "target-finding",
-      "title": "Kimi Code 2.5.3 断流重发时把半截作为最后一条 assistant 消息带回、不带 partial 标记（F1、FLONG × 交互、-p，12/12）；显示取决于服务端：mock 从头重写时屏上半截与完整回答各一份（12/12），mock 接着写时恰好一份（12/12）",
+      "title": "待验证的观察（未确认为缺陷，未报上游）：Kimi Code 2.5.3 断流重发时把半截作为最后一条 assistant 消息带回、不带 partial 标记（F1、FLONG × 交互、-p，12/12）；显示取决于服务端：mock 从头重写时屏上半截与完整回答各一份（12/12），mock 接着写时恰好一份（12/12）",
       "status": "open",
       "target": {
         "repo": "MoonshotAI/kimi-code",
@@ -1059,7 +1059,9 @@
         "explanation": "客户端行为（重发带回半截、不带标记）是确定的；屏上和下一轮上下文会不会重复，取决于服务端对'不带 partial 的末尾 assistant 消息'是续写还是重写。mock 的两个分支给出相反结果，结论由证人（mock 的服务端假设）决定",
         "confidence": "unable-to-separate",
         "caveats": [
+          "按负责人的决定不报上游；真实服务端的行为验证之前，不当成已确认的缺陷",
           "真实服务端分支未测（需要付费调用，按约束不做）",
+          "只测了 2.5.3；2.6.0 已发布未复测",
           "主矩阵原记作 ghost，按复验改记为重写分支 duplicate",
           "逐次屏上提示未统计，所以不给 cells",
           "Kimi Code 没有用 phase4 的新证人补测"
@@ -1074,7 +1076,7 @@
         "docs/phase4-disclosure.md",
         "skills/repo-quake/references/fault-catalog.md"
       ],
-      "lesson": "重发把半截带回去，就把'屏上会不会重复'交给了服务端：要么带文档要求的续写标记，要么别带"
+      "lesson": "重发把半截带回去、又不带文档要求的续写标记，屏上和对话会不会重复就取决于没写进文档的服务端行为；验证之前只能算待查的观察"
     },
     {
       "id": "RQ-F-016",

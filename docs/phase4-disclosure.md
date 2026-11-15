@@ -33,7 +33,7 @@
 | Claude Code 2.1.282 | `fcfd837103965c64de34a6b9b94370d77a347ea71819715a27d5f0ef01775ea4` | 启动文件是符号链接，指向这个原生二进制；补测每次运行都用 `lsof` 核对，18/18 一致 |
 | codex-cli 0.169.0 启动壳 `codex.js` | `e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af` | 主矩阵只记了这一个 |
 | codex-cli 0.169.0 原生二进制 | `739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002` | `codex.js` execve 的对象；补测每次运行用 `lsof` 核对，18/18 一致 |
-| Kimi Code 2.5.3 | `70c39581c5f3d045aa64f47374c0c2fd6f8e45013ffd51fd38ac32c4e6122ce8` | 续写对照前后一致 |
+| Kimi Code 2.5.3 | `70c39581c5f3d045aa64f47374c0c2fd6f8e45013ffd51fd38ac32c4e6122ce8` | 续写对照前后一致；Kimi Code 的结果都来自 2.5.3，2.6.0 已发布，没有复测 |
 | node（运行 `codex.js` 和 mock） | v25.4.0，`d8c9ba1203a4026fb18277599eb5ed328d48bb7feae9c26cd4b80d9bf68b85cf` | |
 | tmux | 3.5a | |
 | `witness/stream-retry/mock.mjs` | `e7fef77a7d9d37f87a4b9a0d139ce6bcc4eefb7416f12cdda9c73ee51e142171` | 补测时冻结。主矩阵前后用过两个没记哈希的 mock 版本（`a207fda8…`、`4482f1d9…`） |
@@ -62,7 +62,12 @@
   - 加了重叠截图；
   - 修了 mock 的一个毛病：codex 收到 `response.completed` 后立刻挂断，被记成了"客户端中途断开"。这个毛病是健康对照判失败时暴露出来的。
 - 卡里的结论参考了试跑。
-- 矩阵结束后又改过：`export_public.py`（替换规则改成最长的先替换）、`summarize.py`；`tests/test_stream_retry.py` 补了一个测试：变异检查发现，"画面不完整"这条规则原来没有测试单独兜住。这些都不影响已产生的数据，`regrade` 从证据文件重判，36/36 结果不变。
+- 矩阵结束后又改过：
+  - `export_public.py`：替换规则改成最长的先替换；代码里的禁用串只留通用模式（本机用户路径、邮箱、身份类字段名、请求体结构），项目内部名字放进仓库外的私有清单，用 `--deny-file` 传入。公开副本用最终版重新导出，源目录的哈希清单摘要和第一次导出相同（`c860d01d…`）；
+  - `summarize.py`；
+  - `tests/test_stream_retry.py`：补了两个测试。一个是变异检查发现"画面不完整"这条规则原来没有测试单独兜住；另一个覆盖"请求体或私有词混进副本就导出失败"。
+
+  这些都不影响已产生的数据，`regrade` 从证据文件重判，36/36 结果不变。
 
 **主矩阵的偏离（由 11-15 复验整理）。**
 - 卡上写的 `max_runs` 是 108，实际约 210 次，没有记偏离；
@@ -97,7 +102,8 @@
 ## 7. Posting gate 记录
 
 - [x] 第三方发现先开上游：Kimi Code 的发现一已提 [MoonshotAI/kimi-code#4964](https://github.com/MoonshotAI/kimi-code/issues/4964)，2026-11-15 14:29Z 由负责人提交，只读回读状态是 OPEN，标题与草稿一致。
-- [ ] 发现二（Kimi Code 重发不带 `partial` 标记）和发现三里 codex 的"重叠"，都还没有上游 issue。公开前要么先提，要么在公开版里明确写成"未上报的观察"。由负责人决定。
+- [x] Kimi Code 重发不带 `partial` 标记那一条：按负责人的决定不报上游，报告里写成"待验证的观察"，不当成已确认的缺陷（真实服务端的行为没有测）。
+- [ ] 发现二里 codex 的"重叠"还没有上游 issue。公开前要么先提，要么在公开版里写明是未上报的观察，由负责人决定。
 - [x] 每个数字都对照了一手来源：
   - 补测数字来自 `runs.jsonl`、逐次 `record.json` 和送达日志；
   - 主矩阵和续写对照的数字由复验对照过，本期又抽查了四项：Kimi Code 重发带半截 12/12 加 12/12；F6 是 3+3 次单请求；非交互 18 次一次都没打印过半截；前后 F0。
