@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "id": "phase4-stream-retry-interactive-v1",
+  "claim": "In the interactive TUIs of Claude Code 2.1.282 and codex-cli 0.169.0, after a once-fault on the main answer (F1 mid-stream FIN, F6 clean end without terminator, FLONG long partial then FIN) and an automatic retry that carries nothing, the failed attempt's partial is shown and then removed, and the final complete screen reads the full answer exactly once (retracted); pilot runs (uncounted) additionally suggest codex keeps the partial on screen while the retry streams and removes it when the retry completes, while Claude Code removes it at the failure.",
+  "target": {
+    "name": "Claude Code + codex-cli interactive TUIs (retry display)",
+    "version": "Claude Code 2.1.282 (native sha256 fcfd837103965c64de34a6b9b94370d77a347ea71819715a27d5f0ef01775ea4); codex-cli 0.169.0 (codex.js sha256 e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af, executed native binary sha256 739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002)"
+  },
+  "task": {
+    "prompt_sha256": "2294655f1a14a801b1ad597692250341b2d915a70b486e383ac11153f89cfb65",
+    "path_reachability": "Every run asks for one plain-text answer with no tools, so the main answer request is the only path; the once-fault is pinned to it by the run's random mark, the streaming flag and the absence of a structured-output (title) format, and the mock's delivery log proves per run which request received it. The follow-up turn (prompt sha256 2377dffeecfdc44ba3259a34b1ab2c66b2afa6f1bbe7fe4d27397ebe2c1ee113) only reads back what the client sends next."
+  },
+  "hosts": [
+    {"id": "claude-2.1.282-interactive", "name": "claude", "version": "2.1.282", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "codex-0.169.0-interactive", "name": "codex", "version": "0.169.0", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"}
+  ],
+  "arms": [
+    {"id": "F0-pre", "fault": "F0 healthy stream, before the fault series", "role": "negative_control"},
+    {"id": "F0-tag", "fault": "F0 healthy stream whose first 12 paragraphs carry the failed-attempt tag (witness positive control)", "role": "positive_control"},
+    {"id": "F1-once", "fault": "F1 once: P01-P12 then TCP FIN, no terminator; later requests healthy", "role": "treatment"},
+    {"id": "F6-once", "fault": "F6 once: P01-P12 then a clean HTTP end with no terminator; later requests healthy", "role": "treatment"},
+    {"id": "FLONG-once", "fault": "FLONG once: L001-L160 at 150 ms per frame then TCP FIN; the healthy answer is L001-L200", "role": "treatment"},
+    {"id": "F0-post", "fault": "F0 healthy stream, after the fault series (rerun after any supplementary run)", "role": "negative_control"}
+  ],
+  "controls": {"negative": "F0-pre", "positive": "F0-tag"},
+  "witness": {
+    "delivery": "mock.mjs delivery.jsonl per request (ms timestamps, fault and its source, events, bytes, ending, continuation decision, request sha256) plus every request body; the retry body and the follow-up body are parsed for assistant-role history carrying the partial or the tag.",
+    "checker": "witness/stream-retry frozen at mock.mjs e7fef77a7d9d37f8, content.json 1e7aa28970310b2c, runner.py e507c4b8fb5c9882, grading.py 506b8d112f11be4c, rawtap.py dadfc1666abe8b4b (sha256 prefixes; full hashes in each matrix manifest): tag-keyed mid capture every 30 ms with timestamps, overlap capture, FLONG pre-FIN capture, final screen completeness (banner and mark on a 110x400 alternate screen), raw terminal bytes via tmux pipe-pane with a per-chunk time index, follow-up request, stored session file.",
+    "blind_spots": [
+      "Raw bytes prove the partial was written to the terminal, not how long a person could see it; visibility shorter than the capture interval (about 30-60 ms) has no screen capture.",
+      "Final-screen completeness is banner-plus-mark; an app that elides the middle of a transcript would defeat it (not observed in the probe or pilot screens).",
+      "tmux is not a real terminal emulator; render timing may differ from desktop terminals.",
+      "The network sandbox makes the subjects run offline; behaviour that depends on reaching vendor services is out of scope.",
+      "The mock restarts on retry by default; a continue branch is only exercised if a retry carries the partial."
+    ]
+  },
+  "grading": {
+    "rubric": "witness/stream-retry/README.md (判定) implemented by grading.grade(); labels are notes, the record is the five observation fields per skills/repo-quake/references/fault-catalog.md §stream",
+    "primary_metric": "per run: detected / reported / contained / recovered from the retry-display outcome (not_shown, retracted, fork, continued, duplicate, accepted_partial, reported_failure); secondary, not changing the verdict: tag-keyed mid capture before the retry start, transient overlap during the retry, notices from raw bytes, follow-up request contents"
+  },
+  "sampling": {"runs_per_cell": 3},
+  "invalid_rules": [
+    "input or prompt gate fails (a confirmation prompt on screen, or the input box never appears): invalid, rerun once at the end of the tool's sequence",
+    "harness exception or the run hits the 300 s cap: invalid, rerun once",
+    "the executed binary (lsof on the pane process) differs from the pinned native binary: invalid",
+    "version or sha256 drift between the before and after witnesses: the whole matrix is invalid",
+    "mock port busy, wrong instance on /health, or listener pid not the runner's child: abort before any dispatch",
+    "F0-pre or F0-tag not passing for a tool: that tool's fault cells are not run (setup invalid), not graded",
+    "after any supplementary run, F0-post is run again (3 runs) and both F0-post sets are reported"
+  ],
+  "budget": {"max_runs": 48},
+  "isolation": {
+    "mode": "env -i allowlist, fresh seeded HOME per run, sandbox-exec allowing outbound connections to localhost only (no DNS), private tmux server with an empty config, update checks off, Claude Code deep-link registration off; mock on a loopback ephemeral port with a control-plane token",
+    "pristine_original_unreachable": false,
+    "contamination": "No mutated copy exists in this design: faults are injected on the wire by the mock and the subject binaries are unmodified, so the pristine-original rule does not apply. The subjects run as the experimenter's user and could read the evidence root, but they are deterministic clients that receive no tool calls from the mock. Pilot runs (uncounted, N=1-2 per cell, 2026-11-15) informed the claim and are disclosed."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Loopback mock only; no paid model, no vendor endpoint (outbound blocked by the sandbox); temporary HOMEs inside the evidence root; LaunchServices registrations audited after the matrix."
+  }
+}

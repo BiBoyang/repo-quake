@@ -93,6 +93,19 @@ if [ "$rc" -eq 0 ]; then echo "ok   [ledger-check]"; else echo "FAIL [ledger-che
 out=$(RQ_FACTORIAL_META="$tmp/fm" RQ_FACTORIAL_STAGE="$tmp/fs" bash witness/factorial/run_factorial.sh --dry-run 2>&1); rc=$?
 if [ "$rc" -eq 0 ] && grep -q "DRY-RUN GREEN" <<<"$out"; then echo "ok   [factorial-dry-run]"; else echo "FAIL [factorial-dry-run]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
 
+# stream-retry (phase4, witness/stream-retry/): the grader, mock, version witness,
+# public export and a fake-TUI end-to-end calibration run in tests/test_stream_retry.py
+# (discovered above; the mock and end-to-end classes skip without node/tmux/sandbox-exec).
+# Here: the frozen phase-4 card validates, and the mock parses.
+out=$(python3 skills/repo-quake/scripts/validate_card.py examples/experiment-card-phase4-stream-retry.json 2>&1); rc=$?
+if [ "$rc" -eq 0 ] && grep -q "planned_runs=36" <<<"$out"; then echo "ok   [stream-retry-card]"; else echo "FAIL [stream-retry-card]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
+if command -v node >/dev/null 2>&1; then
+  out=$(node --check witness/stream-retry/mock.mjs 2>&1); rc=$?
+  if [ "$rc" -eq 0 ]; then echo "ok   [stream-retry-mock-parses]"; else echo "FAIL [stream-retry-mock-parses]"; echo "$out"; fails=$((fails+1)); fi
+else
+  echo "skip [stream-retry-mock-parses]: node not installed"
+fi
+
 echo "---"
 if [ "$fails" -eq 0 ]; then
   echo "ALL TESTS PASSED"
