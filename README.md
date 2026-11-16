@@ -52,13 +52,15 @@ without deleting or rewriting evidence.
 | 1 | Vercel eve agent dir | blocking wounds 8/8, non-blocking 0/8; detection = f(read, report, path) | [docs/phase1-report.md](docs/phase1-report.md) |
 | 1′ | pydantic-ai greeter | loud faults 8/8, stealth 0/16; byte-level payload proof | [docs/phase1p-report.md](docs/phase1p-report.md) |
 | 2 | three examiner skills | 0/64 — redundancy, conditionality, and future-tense wounds don't block paths | [docs/phase2-report.md](docs/phase2-report.md) |
-| 4 | Claude Code / codex / Kimi Code: display after a mid-stream retry | Kimi Code takes a terminator-less stream as a finished turn (TUI 3/3, `-p` 3/3; [#4964](https://github.com/MoonshotAI/kimi-code/issues/4964)); its retry sends the partial back without `partial` 12/12 (consequence unverified, not reported); Claude Code and codex end with one answer 18/18 (codex shows both copies while retrying) | [docs/phase4-report.md](docs/phase4-report.md) |
+| 4 | Claude Code / codex / Kimi Code: display after a mid-stream retry | Kimi Code takes a terminator-less stream as a finished turn (TUI 3/3, `-p` 3/3; [#4964](https://github.com/MoonshotAI/kimi-code/issues/4964)); its retry sends the partial back without `partial` 12/12 (consequence unverified, not reported); Claude Code and codex end with one answer 18/18 (codex shows both copies while retrying, and keeps all six attempts on screen when the retries run out, 6/6 exploratory; [#47538](https://github.com/openai/codex/issues/47538)) | [docs/phase4-report.md](docs/phase4-report.md) |
 
 Upstream outcomes so far: alibaba/skill-up
 [#253](https://github.com/alibaba/skill-up/issues/253)/[#257](https://github.com/alibaba/skill-up/pull/257),
 [#263](https://github.com/alibaba/skill-up/issues/263)/[#265](https://github.com/alibaba/skill-up/pull/265),
 [#280](https://github.com/alibaba/skill-up/issues/280)/[#281](https://github.com/alibaba/skill-up/pull/281);
-MoonshotAI/kimi-code [#4012](https://github.com/MoonshotAI/kimi-code/issues/4012);
+MoonshotAI/kimi-code [#4012](https://github.com/MoonshotAI/kimi-code/issues/4012),
+[#4964](https://github.com/MoonshotAI/kimi-code/issues/4964);
+openai/codex [#47538](https://github.com/openai/codex/issues/47538#issuecomment-6905066983) (comment with a repro);
 anthropics/skills [#1949](https://github.com/anthropics/skills/pull/1949);
 microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 (drafts in `docs/pr-drafts/`).

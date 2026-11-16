@@ -1,0 +1,506 @@
+{
+ "always": false,
+ "invalid": null,
+ "max_copies_of_line_01": 2,
+ "final_copies_of_line_01": 1,
+ "final_lines": [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26",
+  "27",
+  "28",
+  "29",
+  "30",
+  "31",
+  "32",
+  "33",
+  "34",
+  "35",
+  "36",
+  "37",
+  "38",
+  "39",
+  "40"
+ ],
+ "mock_log": "attempt 1: cut after 20 lines\nattempt 2: complete\n",
+ "samples": [
+  {
+   "t": 0.01,
+   "copies_of_line_01": 0,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.13,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.24,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.35,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.46,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.68,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.79,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 0.91,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.13,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.24,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.35,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.58,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.69,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 1.91,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.02,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.13,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.35,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.46,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.59,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.82,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 2.93,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.04,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.26,
+   "copies_of_line_01": 1,
+   "reconnecting": true,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.37,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.48,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.59,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.7,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 3.93,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.04,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.15,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.37,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.48,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.7,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.81,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 4.92,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.14,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.25,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.47,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.58,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.69,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 5.91,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.02,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.13,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.35,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.46,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.68,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.8,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 6.91,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.13,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.24,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.5,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.61,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.72,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 7.84,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.07,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.18,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.28,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.51,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.63,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.84,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 8.95,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 9.07,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 9.29,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": false
+  },
+  {
+   "t": 9.39,
+   "copies_of_line_01": 2,
+   "reconnecting": false,
+   "error": false,
+   "line_40": true
+  },
+  {
+   "t": 9.61,
+   "copies_of_line_01": 1,
+   "reconnecting": false,
+   "error": false,
+   "line_40": true
+  }
+ ]
+}

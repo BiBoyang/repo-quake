@@ -1,0 +1,61 @@
+{"t_ms": 1794793126277, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794793126425, "tag_on_screen": 0, "distinct_markers": 2, "total_markers": 2, "first_partial_count": 1, "max_marker": "P02", "notices": []}
+{"t_ms": 1794793126464, "tag_on_screen": 0, "distinct_markers": 4, "total_markers": 4, "first_partial_count": 1, "max_marker": "P04", "notices": []}
+{"t_ms": 1794793126510, "tag_on_screen": 0, "distinct_markers": 6, "total_markers": 6, "first_partial_count": 1, "max_marker": "P06", "notices": []}
+{"t_ms": 1794793126552, "tag_on_screen": 0, "distinct_markers": 8, "total_markers": 8, "first_partial_count": 1, "max_marker": "P08", "notices": []}
+{"t_ms": 1794793126593, "tag_on_screen": 0, "distinct_markers": 10, "total_markers": 10, "first_partial_count": 1, "max_marker": "P10", "notices": []}
+{"t_ms": 1794793126638, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": ["• Reconnecting... 1/5 (0s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793126885, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793126926, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 13, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793126976, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 15, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127020, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 17, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127063, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 19, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127101, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 21, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127144, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 23, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127188, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["◦ Reconnecting... 2/5 (0s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793127324, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["◦ Reconnecting... 2/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793127541, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["• Reconnecting... 2/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793127635, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127676, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 25, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127717, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 27, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127760, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 29, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127804, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 31, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127846, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 33, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127897, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 35, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793127936, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["• Reconnecting... 3/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793128142, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["◦ Reconnecting... 3/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793128359, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["◦ Reconnecting... 3/5 (2s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793128717, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["• Reconnecting... 3/5 (2s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793128759, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793128803, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 37, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793128870, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 40, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793128909, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 42, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793128948, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 44, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793128991, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 46, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793129036, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793129074, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (2s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793129342, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["◦ Reconnecting... 4/5 (3s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793129919, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (3s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793130317, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793130534, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["◦ Reconnecting... 4/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793130622, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130666, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 50, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130717, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 53, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130760, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 55, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130799, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 57, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130843, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 59, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793130890, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793131123, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793131295, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (5s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793131717, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (5s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793132313, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (6s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793132941, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (6s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793133336, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (7s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793133504, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (7s • esc to interrupt)", "└ Stream disconnected before completion: stream closed before response.completed"]}
+{"t_ms": 1794793133996, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134040, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 61, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134083, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 63, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134146, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 66, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134189, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 68, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134239, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 71, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794793134277, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 72, "first_partial_count": 6, "max_marker": "P12", "notices": ["■ stream disconnected before completion: stream closed before response.completed"]}

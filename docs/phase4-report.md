@@ -1,13 +1,14 @@
-# repo-quake Phase 4 报告：回答断在一半、自动重发之后，屏幕和对话还一致吗（2026-11-14 → 11-15）
+# repo-quake Phase 4 报告：回答断在一半、自动重发之后，屏幕和对话还一致吗（2026-11-14 → 11-16）
 
 问题：模型的流式回答断在中途，CLI 自动重发之后，**屏幕上（或 stdout 里）显示的，和 CLI 存下来、下一轮要发给模型的对话，是否一致？**
 
 被测：Claude Code 2.1.282、codex-cli 0.169.0、Kimi Code 2.5.3，交互（TUI）和非交互（`claude -p`、`codex exec`、`kimi -p`）两种模式。Kimi Code 的结果都是在 2.5.3 上测得的；2.6.0 已经发布，没有复测。全部只连本机回环地址上的 mock，没有调用任何付费模型。
 
-数据来自三轮，下文都用这三个名字：
+数据来自三轮，另有一批探索性补跑，下文都用这些名字：
 - **主矩阵（11-14）**：三个工具 × 两种模式 × 六种条件，每格 3 次，由另一个 agent 执行。
 - **续写对照（11-15）**：只测 Kimi Code，把 mock 改成"会接着半截往下写"。
 - **补测（11-15）**：只测 Claude Code 和 codex 的交互模式，用修好的装置 `witness/stream-retry/` 重跑，每格 3 次，共 36 次。
+- **探索性补跑（11-16）**：只测 codex 交互，正式回答的每次请求都断（F1-always、F6-always 各 3 次，前后 F0 对照各 3 次），用补测的装置，没有预注册，见发现二末尾。
 
 做补测的原因：11-15 的一次独立复验推翻了主矩阵对这两个工具的结论（见"更正"一节）。
 
@@ -17,7 +18,7 @@
 |---|---|---|---|---|---|
 | Claude Code 2.1.282 | 交互 | retracted 3/3（补测） | retracted 3/3（补测） | retracted 3/3（补测） | 作废（旧 mock，见更正） |
 | Claude Code 2.1.282 | `-p` | not shown 3/3 | not shown 3/3 | not shown 3/3 | reported failure 3/3 |
-| codex 0.169.0 | 交互 | retracted 3/3（补测）¹ | retracted 3/3（补测）¹ | retracted 3/3（补测）¹ | reported failure 3/3 |
+| codex 0.169.0 | 交互 | retracted 3/3（补测）¹ | retracted 3/3（补测）¹ | retracted 3/3（补测）¹ | reported failure 3/3¹ |
 | codex 0.169.0 | `exec` | not shown 3/3 | not shown 3/3 | not shown 3/3 | reported failure 3/3 |
 | Kimi Code 2.5.3 | 交互 | 重发带回半截 3/3² | **accepted partial 3/3** | 重发带回半截 3/3² | reported failure 3/3 |
 | Kimi Code 2.5.3 | `-p` | 重发带回半截 3/3² | **accepted partial 3/3**（退出码 0） | 重发带回半截 3/3² | reported failure 3/3 |
@@ -35,7 +36,7 @@
 - **accepted partial**：不重发、不提示，把半截当成完整回答；
 - **reported failure**：恢复不了，但把错误告诉了用户。
 
-¹ codex 在重发过程中，会把失败的半截和从头重写的新回答同时留在屏上，重发完成时才收成一份（见发现二）。
+¹ codex 在重发过程中，会把失败的半截和从头重写的新回答同时留在屏上，重发完成时才收成一份；重试次数用完时，几次尝试的半截首尾相接、一直留在最终画面上（11-16 探索性补跑 6/6）。见发现二；两点都已补到上游 [openai/codex#47538](https://github.com/openai/codex/issues/47538)。
 
 ² Kimi Code 重发时会把半截带回去。最终显示取决于服务端怎么处理：
 - 服务端从头重写：屏上半截和完整回答各一份（主矩阵，12/12）；
@@ -111,6 +112,13 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
 - codex `exec` 每次都在 stderr 写 `ERROR: Reconnecting... 1/5`（9/9）；
 - Claude Code `-p` 不给任何提示（stdout 和 stderr 都没有，9/9），退出码 0。用户不会知道中间断过一次。
 
+**重试次数用完时（codex，11-16 探索性补跑，没有预注册）。**补测只测了"断一次"。主矩阵里 codex 交互 F1-always 的最终画面上有两份以上的 P01–P12，但那是 35 行窗口，数不清总份数。为了在补充上游证据之前测准，11-16 用补测的装置对 codex 0.169.0 另跑了 F1-always、F6-always 各 3 次，前后 F0 对照 healthy 6/6：
+- codex 一共发 6 次正式请求（第一次，加上 `Reconnecting... 1/5` 到 `5/5`），每次的 P01–P12 都接在同一条消息后面。报错 `■ stream disconnected before completion: …` 之后也不收，最终画面上 6 份首尾相接，6/6；
+- 会话文件里这一轮没有 assistant 记录（0 条），下一轮不会带上它。错的只是显示，但会一直留在屏上；
+- 原因在源码里（rust-v0.169.0）：收到"要重试"的错误时，TUI 只改状态栏，不清掉已经流出的文字，重发的片段接着往后追加。重发成功时以完成的消息为准，收成一份；失败收尾时没有完成的消息可依，拼接的流就原样留下。这段代码在今天的 main 上没变。
+
+上游：[openai/codex#47538](https://github.com/openai/codex/issues/47538)（9-23 开）就是这个问题。原帖在 0.156.1 上只看了重发完成后的画面，没复现出来。codex 的贡献规则不收外部 PR，要求已有 issue 就把新信息补在原帖下，所以没有新开 issue，而是 11-16 在原帖下补了两种情况的数据、源码位置和最小复现（[评论](https://github.com/openai/codex/issues/47538#issuecomment-6905066983)，读回逐字一致）。最小复现对 0.169.0 实测过：只断一次时，两份同屏约 6 秒后收成一份；每次都断时，每重发一次多一份，最后 6 份留在屏上。证据：`runs/phase4-codex-retries-exhausted-2026-11-16/`。
+
 ## 更正：哪些数字改了、为什么
 
 这些更正来自 11-15 的独立复验（一个只读的子 agent），以及本期补测。主矩阵的原始汇总保留不动，这里只列改了什么。
@@ -154,6 +162,7 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
 - **测试和矩阵同时跑过。**正式矩阵运行期间（15:06–15:17Z），本机运行过多次 `tests/test_stream_retry.py`，其中包括一个假 TUI 的端到端测试。它用自己的 mock、端口和 tmux 服务器，和矩阵互不相通，但会争用 CPU，毫秒级的时间数字可能因此略有偏移。判定不依赖这些时间，时间只作为另外的观察记录。
 - **tmux 不是真终端。**渲染节奏可能和 iTerm2、Terminal.app 不同。codex 的"重叠"在真终端里会持续多久，没有测。
 - **沙箱下工具处于离线状态。**codex 在 `check_for_update_on_startup=false` 下，每次启动仍会做大约 3 次域名解析：矩阵期间共 60 次，全部被沙箱拦下，去向不明。Claude Code 0 次。这些都不影响 mock 连接，但联网时客户端的行为可能不同。
+- **11-16 的探索性补跑没有预注册。**它是在看到主矩阵的旧线索和上游评论的预测之后才跑的，结论方向事先已有预期。它不进实验卡的 x/N，单独列出；前后 F0 对照、版本和二进制核对、隔离与补测相同。
 - **续写分支对 Claude Code、codex 不适用。**它们的重发都不带半截（18/18），mock 用的是重写分支。
 - **下一轮证人多发了一个请求。**每次运行在最终截屏之后，再发一句"好的，谢谢。"，用来看下一次请求里带了什么。这不影响判定，但每次运行因此多一个请求。
 - **主矩阵和续写对照的污染。**
@@ -169,14 +178,15 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
 - **posting gate**（`skills/repo-quake/references/reporting.md`）：
   - 发现一已有上游 issue #4964；
   - Kimi Code 不带 `partial` 标记那一条，按决定不报上游，本报告写成待验证的观察；
-  - 发现二里 codex 的"重叠"还没有上游 issue：公开前要么先提，要么写明是未上报的观察，由负责人决定；
+  - 发现二里 codex 的"重叠"和重试用完时的拼接，11-16 补在上游 [openai/codex#47538](https://github.com/openai/codex/issues/47538) 下（[评论](https://github.com/openai/codex/issues/47538#issuecomment-6905066983)，读回逐字一致），没有新开 issue；
   - 本报告和这一期的提交只在本地，没有推送。
 
 ## 证据
 
 - 实验卡（冻结）：`examples/experiment-card-phase4-stream-retry.json`
 - 补测公开副本：`runs/phase4-stream-retry-2026-11-15/`。包括 `summary.md`、逐次 `record.json`、截屏、原始字节分析和送达日志；请求体、会话文件和原始字节没有公开（见该目录的 `EXPORT.md`）。
+- 探索性补跑公开副本：`runs/phase4-codex-retries-exhausted-2026-11-16/`。逐次份数在 `retries-exhausted-counts.json`；`upstream-repro/` 里是最小复现、发出的评论原文和最小复现的截屏。
 - 装置与测试：`witness/stream-retry/`、`tests/test_stream_retry.py`
 - 披露文件：`docs/phase4-disclosure.md`
 - 执行提示词模板：`plans/TASK-stream-retry-display.md`
-- 台账：`ledger/ledger.json` 的 RQ-F-014 至 RQ-F-016、RQ-I-009、RQ-I-010、RQ-X-011 至 RQ-X-013
+- 台账：`ledger/ledger.json` 的 RQ-F-014 至 RQ-F-017、RQ-I-009、RQ-I-010、RQ-X-011 至 RQ-X-014

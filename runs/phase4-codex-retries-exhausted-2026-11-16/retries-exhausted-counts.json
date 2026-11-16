@@ -1,0 +1,92 @@
+[
+ {
+  "condition": "F1-always",
+  "run": 1,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: Transport error: network error: error decoding response body"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F1-always/run-1-RUN3cc00de989ae5c79/final-view.txt"
+ },
+ {
+  "condition": "F1-always",
+  "run": 2,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: Transport error: network error: error decoding response body"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F1-always/run-2-RUN7b5ba1a1d21e9bba/final-view.txt"
+ },
+ {
+  "condition": "F1-always",
+  "run": 3,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: Transport error: network error: error decoding response body"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F1-always/run-3-RUNa1a2b006a05ea0ca/final-view.txt"
+ },
+ {
+  "condition": "F6-always",
+  "run": 1,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: stream closed before response.completed"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F6-always/run-1-RUNae24bd2d3e03cf5b/final-view.txt"
+ },
+ {
+  "condition": "F6-always",
+  "run": 2,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: stream closed before response.completed"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F6-always/run-2-RUNae2c58a99680a01f/final-view.txt"
+ },
+ {
+  "condition": "F6-always",
+  "run": 3,
+  "verdict": "reported_failure",
+  "main_attempts": 6,
+  "copies_of_each_P01_P12_on_final_screen": [
+   6
+  ],
+  "other_markers_on_final_screen": [],
+  "error_line": [
+   "■ stream disconnected before completion: stream closed before response.completed"
+  ],
+  "session_assistant_entries": 0,
+  "evidence": "runs/codex/F6-always/run-3-RUN4f57091acc2d4fbd/final-view.txt"
+ }
+]

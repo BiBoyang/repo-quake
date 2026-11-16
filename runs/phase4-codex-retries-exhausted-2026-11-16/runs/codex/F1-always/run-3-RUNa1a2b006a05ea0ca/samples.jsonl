@@ -1,0 +1,59 @@
+{"t_ms": 1794792985167, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794792985299, "tag_on_screen": 0, "distinct_markers": 2, "total_markers": 2, "first_partial_count": 1, "max_marker": "P02", "notices": []}
+{"t_ms": 1794792985341, "tag_on_screen": 0, "distinct_markers": 4, "total_markers": 4, "first_partial_count": 1, "max_marker": "P04", "notices": []}
+{"t_ms": 1794792985385, "tag_on_screen": 0, "distinct_markers": 6, "total_markers": 6, "first_partial_count": 1, "max_marker": "P06", "notices": []}
+{"t_ms": 1794792985430, "tag_on_screen": 0, "distinct_markers": 8, "total_markers": 8, "first_partial_count": 1, "max_marker": "P08", "notices": []}
+{"t_ms": 1794792985473, "tag_on_screen": 0, "distinct_markers": 10, "total_markers": 10, "first_partial_count": 1, "max_marker": "P10", "notices": []}
+{"t_ms": 1794792985520, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": ["• Reconnecting... 1/5 (0s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792985734, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 12, "first_partial_count": 1, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792985826, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 15, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792985869, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 17, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792985933, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 18, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792985972, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 21, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986016, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986060, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["◦ Reconnecting... 2/5 (0s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792986215, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["◦ Reconnecting... 2/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792986429, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": ["• Reconnecting... 2/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792986481, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 24, "first_partial_count": 2, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986525, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 26, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986566, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 28, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986610, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 30, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986654, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 32, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986698, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 34, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986738, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792986787, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["• Reconnecting... 3/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792987000, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["◦ Reconnecting... 3/5 (1s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792987231, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": ["◦ Reconnecting... 3/5 (2s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792987553, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 36, "first_partial_count": 3, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987598, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 38, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987636, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 40, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987679, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 42, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987730, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 44, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987773, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 46, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792987817, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (2s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792988220, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["◦ Reconnecting... 4/5 (3s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792988800, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (3s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792989232, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": ["• Reconnecting... 4/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792989371, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 48, "first_partial_count": 4, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989416, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 49, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989456, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 51, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989501, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 53, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989541, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 55, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989587, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 57, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989628, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 59, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792989672, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792990031, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (4s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792990251, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (5s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792990611, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (5s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792991217, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (6s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792991812, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (6s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792992205, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["◦ Reconnecting... 5/5 (7s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792992428, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": ["• Reconnecting... 5/5 (7s • esc to interrupt)", "└ Stream disconnected before completion: Transport error: network error: error decoding response body"]}
+{"t_ms": 1794792992739, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 60, "first_partial_count": 5, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992782, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 62, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992823, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 64, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992867, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 66, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992907, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 68, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992946, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 70, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792992988, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 72, "first_partial_count": 6, "max_marker": "P12", "notices": []}
+{"t_ms": 1794792993032, "tag_on_screen": 0, "distinct_markers": 12, "total_markers": 72, "first_partial_count": 6, "max_marker": "P12", "notices": ["■ stream disconnected before completion: Transport error: network error: error decoding response body"]}

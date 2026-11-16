@@ -14,6 +14,7 @@ This directory keeps the source fixtures, preregistered experiment cards, indepe
 - `e2e-identity-2026-10-25/` — context/ambiguity attempts with a documented sequence of fixture errors and an actual 9-run budget overrun; only A1 is valid.
 - `e2e-identity-reset-2026-10-25/` — corrected small-card reset with valid `target-ambiguous` and full `StepTraceSession` uncertain-commit evidence, plus a separate U1 verification card and overrun disclosure.
 - `phase4-stream-retry-2026-11-15/` — redacted public copy of the phase-4 retest (Claude Code and codex interactive, 36 runs): records, screen captures, raw-byte analyses and delivery logs; request bodies, session files and raw terminal bytes stay private (`EXPORT.md`).
+- `phase4-codex-retries-exhausted-2026-11-16/` — exploratory, not preregistered: codex 0.169.0 interactive with every attempt cut (F1/F6-always, 3 each, F0 before and after). All six attempts stay concatenated on the final screen 6/6. Includes the minimal repro and the comment posted to openai/codex#47538 (`upstream-repro/`).
 
 ## Artifact policy
 

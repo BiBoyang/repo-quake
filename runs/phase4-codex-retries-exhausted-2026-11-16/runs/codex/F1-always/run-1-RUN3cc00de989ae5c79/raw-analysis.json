@@ -1,0 +1,61 @@
+{
+  "available": true,
+  "bytes": 62558,
+  "indexed": true,
+  "alt_screen_on": [
+    69
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794792842241,
+  "esc_2J": 0,
+  "esc_3J": 0,
+  "tag_seen": false,
+  "tag_contiguous": false,
+  "tag_first_ms": null,
+  "notices": [
+    "Reconnecting... 1/5",
+    "└ Stream disconnected before completion: Transport error: network error: error decoding response body",
+    "Reconnecting... 2/5",
+    "Reconnecting... 3/5",
+    "Reconnecting... 4/5",
+    "Reconnecting... 5/5",
+    "■ stream disconnected before completion: Transport error: network error: error decoding response body"
+  ],
+  "notices_timed": [
+    {
+      "text": "Reconnecting... 1/5",
+      "t_ms": 1794792843602
+    },
+    {
+      "text": "└ Stream disconnected before completion: Transport error: network error: error decoding response body",
+      "t_ms": 1794792843602
+    },
+    {
+      "text": "Reconnecting... 2/5",
+      "t_ms": 1794792844122
+    },
+    {
+      "text": "Reconnecting... 3/5",
+      "t_ms": 1794792844880
+    },
+    {
+      "text": "Reconnecting... 4/5",
+      "t_ms": 1794792845933
+    },
+    {
+      "text": "Reconnecting... 5/5",
+      "t_ms": 1794792847899
+    },
+    {
+      "text": "■ stream disconnected before completion: Transport error: network error: error decoding response body",
+      "t_ms": 1794792851125
+    }
+  ],
+  "first_seen_ms": {
+    "first_marker": 1794792843359,
+    "partial_last": 1794792843591,
+    "first_new": null,
+    "answer_last": null
+  }
+}

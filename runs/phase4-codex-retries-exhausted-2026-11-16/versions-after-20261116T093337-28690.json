@@ -1,0 +1,62 @@
+{
+  "tools": {
+    "codex": {
+      "launcher": "/opt/homebrew/bin/codex",
+      "realpath": "/opt/homebrew/lib/node_modules/@openai/codex/bin/codex.js",
+      "realpath_sha256": "e14fc83739c13c1074b12bd1acce4010c893c7f6fbfc1593b4a31d74cabb57af",
+      "realpath_stat": {
+        "size": 9154,
+        "mtime_ns": 1794639517354256660
+      },
+      "shebang": "/usr/bin/env node",
+      "native": {
+        "path": "/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+        "sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002",
+        "stat": {
+          "size": 280704736,
+          "mtime_ns": 1794639578904852519
+        }
+      },
+      "version": "codex-cli 0.169.0",
+      "expected": "0.169.0",
+      "expected_ok": true
+    }
+  },
+  "files": {
+    "harness:mock.mjs": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/mock.mjs",
+      "sha256": "e7fef77a7d9d37f87a4b9a0d139ce6bcc4eefb7416f12cdda9c73ee51e142171"
+    },
+    "harness:content.json": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/content.json",
+      "sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763"
+    },
+    "harness:runner.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/runner.py",
+      "sha256": "e507c4b8fb5c9882207e19b0fc4896cbd4447fe1dbe926c68bb41388f1738410"
+    },
+    "harness:grading.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/grading.py",
+      "sha256": "506b8d112f11be4c6d773193910373ef1e85a33cda9bbb398be89cb2dbb0f8b9"
+    },
+    "harness:version_witness.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/version_witness.py",
+      "sha256": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1"
+    },
+    "harness:rawtap.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/rawtap.py",
+      "sha256": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+    }
+  },
+  "runtime": {
+    "node": {
+      "path": "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+      "sha256": "d8c9ba1203a4026fb18277599eb5ed328d48bb7feae9c26cd4b80d9bf68b85cf",
+      "version": "v25.4.0"
+    },
+    "tmux": {
+      "path": "/opt/homebrew/bin/tmux",
+      "version": "tmux 3.5a"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-11-15",
+  "updated": "2026-11-16",
   "entries": [
     {
       "id": "RQ-F-001",
@@ -1170,7 +1170,8 @@
           "每格 3 次",
           "tmux 不是真终端，codex 同屏时长在真终端里没测",
           "沙箱下被测离线",
-          "冻结前试跑 17 次（未计入）参考了结论"
+          "冻结前试跑 17 次（未计入）参考了结论",
+          "codex 的重发期间同屏已补在 openai/codex#47538（11-16 评论）；Claude Code 部分未报上游"
         ]
       },
       "observation": {
@@ -1185,7 +1186,14 @@
         "runs/phase4-stream-retry-2026-11-15/runs.jsonl",
         "examples/experiment-card-phase4-stream-retry.json"
       ],
-      "lesson": "'最后只剩一份'可以经由很不一样的过程：断开即收、或者重发期间两份同屏；收回要用失败那次独有的标记和完整画面来证，不能只看最终画面"
+      "lesson": "'最后只剩一份'可以经由很不一样的过程：断开即收、或者重发期间两份同屏；收回要用失败那次独有的标记和完整画面来证，不能只看最终画面",
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/openai/codex/issues/47538#issuecomment-6905066983",
+          "status": "open"
+        }
+      ]
     },
     {
       "id": "RQ-I-009",
@@ -1273,6 +1281,89 @@
         "runs/phase4-stream-retry-2026-11-15/summary.md"
       ],
       "lesson": "试跑和并行任务都要写进披露：它们不改判定，但会改时间数字和结论的来路"
+    },
+    {
+      "id": "RQ-F-017",
+      "created": "2026-11-16",
+      "phase": "phase4",
+      "class": "target-finding",
+      "title": "codex 0.169.0 交互：断流后重试次数用完时，6 次尝试的 P01–P12 首尾相接留在最终画面上（F1-always 3/3、F6-always 3/3，探索性补跑，未预注册）；会话文件这一轮 0 条 assistant，只错在显示；已补在 openai/codex#47538",
+      "status": "reported",
+      "target": {
+        "repo": "openai/codex",
+        "artifact": "交互 TUI 的流式回答显示：收到 will_retry 的错误只改状态栏（chatwidget/streaming.rs 的 on_stream_error），已流出的文字不清，失败收尾时按拼接的流定稿",
+        "version": "codex-cli 0.169.0（原生二进制 739cda86…）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "always 故障打在正式回答的每一次请求上：F1 为 P01–P12 后 TCP FIN；F6 为 P01–P12 后 HTTP 正文正常结束、不发 response.completed。codex 共发 6 次正式请求（第一次加 Reconnecting... 1/5 至 5/5）后报错结束本轮",
+        "delivery": "mock 送达日志：每次运行 6 次正式请求都送出 P01–P12 并按故障收尾；窗口 110×400，最终画面横幅与本次提示词同屏；前后 F0 对照 healthy 6/6；另有最小复现 retry_dup_mock.py 两种模式各 1 次",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F1-always：报错 stream disconnected before completion: Transport error…；最终画面 6 份 P01–P12 首尾相接，3/3"
+        },
+        {
+          "host": "codex",
+          "model": "mock-model（本地 mock）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L2,L2,L2",
+          "notes": "交互 F6-always：报错 stream closed before response.completed；最终画面 6 份 P01–P12 首尾相接，3/3"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "失败检出了也告诉了用户（L2），缺陷在显示层：份数来自独立证人（最终画面逐段计数、mock 送达日志、会话文件），不是宿主自报。源码只读核对：will_retry 只进 on_stream_error、它只改状态栏；成功时以完成的消息为准收成一份，失败收尾没有完成的消息可依，拼接的流原样定稿",
+        "confidence": "confirmed",
+        "caveats": [
+          "探索性补跑，未预注册（RQ-X-014）",
+          "每格 3 次，另有最小复现各 1 次",
+          "tmux 不是真终端",
+          "只测了 0.169.0；main 上 on_stream_error 未变（源码只读核对）",
+          "Claude Code 的每次都断没有用新装置测"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": true,
+        "recovered": false
+      },
+      "evidence": [
+        "docs/phase4-report.md",
+        "docs/phase4-disclosure.md",
+        "runs/phase4-codex-retries-exhausted-2026-11-16/README.md",
+        "runs/phase4-codex-retries-exhausted-2026-11-16/retries-exhausted-counts.json",
+        "runs/phase4-codex-retries-exhausted-2026-11-16/summary.md",
+        "runs/phase4-codex-retries-exhausted-2026-11-16/upstream-repro/comment-47538.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/openai/codex/issues/47538#issuecomment-6905066983",
+          "status": "open"
+        }
+      ],
+      "lesson": "客户端知道这次尝试作废了，屏幕却没被告知：重试的边界没落到显示层，作废的半截就一份份叠在画面上"
+    },
+    {
+      "id": "RQ-X-014",
+      "created": "2026-11-16",
+      "phase": "phase4",
+      "class": "experiment-invalid",
+      "title": "phase4 11-16 探索性补跑没有预注册：codex 每次都断（F1-always、F6-always 各 3 次，前后 F0 各 3 次）是在看到主矩阵 35 行窗口的旧线索和上游 #47538 评论的预测之后才跑的，不进实验卡的 x/N；最小复现两种模式各 1 次由仓库外的驱动脚本执行",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase4-disclosure.md",
+        "runs/phase4-codex-retries-exhausted-2026-11-16/README.md"
+      ],
+      "lesson": "为补上游证据事后加测的数据要单独记账：方向是先有预期再去测的，可以当证据，不能算进预注册的率"
     }
   ]
 }

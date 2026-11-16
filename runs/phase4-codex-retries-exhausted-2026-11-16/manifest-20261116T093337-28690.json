@@ -1,0 +1,129 @@
+{
+  "label": "20261116T093337-28690",
+  "started_at": "2026-11-16T01:33:38.369+00:00",
+  "argv": [
+    "runner.py",
+    "matrix",
+    "--out",
+    "<EVIDENCE_ROOT>",
+    "--tools",
+    "codex",
+    "--runs",
+    "3",
+    "--conditions",
+    "F0-pre,F1-always,F6-always,F0-post",
+    "--bin",
+    "codex=/opt/homebrew/bin/codex",
+    "--expect",
+    "codex=0.169.0",
+    "--path-env",
+    "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:<HOME>/.local/bin"
+  ],
+  "mode": "interactive",
+  "tools": [
+    "codex"
+  ],
+  "conditions": [
+    "F0-pre",
+    "F1-always",
+    "F6-always",
+    "F0-post"
+  ],
+  "runs": 3,
+  "harness_sha256": {
+    "mock.mjs": "e7fef77a7d9d37f87a4b9a0d139ce6bcc4eefb7416f12cdda9c73ee51e142171",
+    "content.json": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "runner.py": "e507c4b8fb5c9882207e19b0fc4896cbd4447fe1dbe926c68bb41388f1738410",
+    "grading.py": "506b8d112f11be4c6d773193910373ef1e85a33cda9bbb398be89cb2dbb0f8b9",
+    "version_witness.py": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1",
+    "rawtap.py": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+  },
+  "mock": {
+    "port": 63005,
+    "pid": 28694,
+    "instance": "726f1d5e13453129",
+    "host": "127.0.0.1",
+    "content_sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "continuation": "restart",
+    "delay_ms": 20,
+    "long_delay_ms": 150
+  },
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true,
+  "quiet_s": 60.0,
+  "settle_s": 3.0,
+  "poll_s": 0.03,
+  "slow_poll_s": 0.3,
+  "followup": true,
+  "card": null,
+  "card_sha256": null,
+  "ended_at": "2026-11-16T01:41:30.423+00:00",
+  "versions_equal": true,
+  "version_diff": [],
+  "pids": [
+    {
+      "pid": 28700,
+      "tool": "codex",
+      "run": "run-1-RUN471d58be271f0612"
+    },
+    {
+      "pid": 28921,
+      "tool": "codex",
+      "run": "run-2-RUN6d807b5dbc4c1f2a"
+    },
+    {
+      "pid": 29141,
+      "tool": "codex",
+      "run": "run-3-RUN25487983d4cd3034"
+    },
+    {
+      "pid": 29328,
+      "tool": "codex",
+      "run": "run-1-RUN3cc00de989ae5c79"
+    },
+    {
+      "pid": 31428,
+      "tool": "codex",
+      "run": "run-2-RUN7b5ba1a1d21e9bba"
+    },
+    {
+      "pid": 33540,
+      "tool": "codex",
+      "run": "run-3-RUNa1a2b006a05ea0ca"
+    },
+    {
+      "pid": 35647,
+      "tool": "codex",
+      "run": "run-1-RUNae24bd2d3e03cf5b"
+    },
+    {
+      "pid": 38099,
+      "tool": "codex",
+      "run": "run-2-RUNae2c58a99680a01f"
+    },
+    {
+      "pid": 40671,
+      "tool": "codex",
+      "run": "run-3-RUN4f57091acc2d4fbd"
+    },
+    {
+      "pid": 43054,
+      "tool": "codex",
+      "run": "run-1-RUNc082454037569b48"
+    },
+    {
+      "pid": 43257,
+      "tool": "codex",
+      "run": "run-2-RUNda0280f2ea8ac39f"
+    },
+    {
+      "pid": 43506,
+      "tool": "codex",
+      "run": "run-3-RUNdb841541b477c55d"
+    }
+  ],
+  "status": 0
+}

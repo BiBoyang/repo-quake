@@ -1,0 +1,61 @@
+{
+  "available": true,
+  "bytes": 64121,
+  "indexed": true,
+  "alt_screen_on": [
+    69
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794793196126,
+  "esc_2J": 0,
+  "esc_3J": 0,
+  "tag_seen": false,
+  "tag_contiguous": false,
+  "tag_first_ms": null,
+  "notices": [
+    "Reconnecting... 1/5",
+    "└ Stream disconnected before completion: stream closed before response.completed",
+    "Reconnecting... 2/5",
+    "Reconnecting... 3/5",
+    "Reconnecting... 4/5",
+    "Reconnecting... 5/5",
+    "■ stream disconnected before completion: stream closed before response.completed"
+  ],
+  "notices_timed": [
+    {
+      "text": "Reconnecting... 1/5",
+      "t_ms": 1794793197468
+    },
+    {
+      "text": "└ Stream disconnected before completion: stream closed before response.completed",
+      "t_ms": 1794793197468
+    },
+    {
+      "text": "Reconnecting... 2/5",
+      "t_ms": 1794793197970
+    },
+    {
+      "text": "Reconnecting... 3/5",
+      "t_ms": 1794793198672
+    },
+    {
+      "text": "Reconnecting... 4/5",
+      "t_ms": 1794793199827
+    },
+    {
+      "text": "Reconnecting... 5/5",
+      "t_ms": 1794793201908
+    },
+    {
+      "text": "■ stream disconnected before completion: stream closed before response.completed",
+      "t_ms": 1794793205746
+    }
+  ],
+  "first_seen_ms": {
+    "first_marker": 1794793197227,
+    "partial_last": 1794793197455,
+    "first_new": null,
+    "answer_last": null
+  }
+}
