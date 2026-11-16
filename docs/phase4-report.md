@@ -179,7 +179,7 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
   - 发现一已有上游 issue #4964；
   - Kimi Code 不带 `partial` 标记那一条，按决定不报上游，本报告写成待验证的观察；
   - 发现二里 codex 的"重叠"和重试用完时的拼接，11-16 补在上游 [openai/codex#47538](https://github.com/openai/codex/issues/47538) 下（[评论](https://github.com/openai/codex/issues/47538#issuecomment-6905066983)，读回逐字一致），没有新开 issue；
-  - 本报告和这一期的提交只在本地，没有推送。
+  - 本报告和这一期的提交随 repo-quake v0.2.0 一起推送（2026-11-16）。本文件在推送前定稿，推送后的本地与远端 SHA 核对不在这里，按 `reporting.md` 在推送之后单独做。
 
 ## 证据
 
