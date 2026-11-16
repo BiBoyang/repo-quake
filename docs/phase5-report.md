@@ -13,7 +13,7 @@
 
 | 被测 | 结论 | x/N |
 |---|---|---|
-| metacodes TUI（main 1707da0c） | 断流后自动重发一次；断掉那次已经显示的文字或思考**留在屏上**，重发的完整回答直接接在下面，中间没有任何提示；存下的对话和下一轮请求里只有重发那份（屏上有、模型没见过） | fork 15/15 |
+| metacodes TUI（main 1707da0c） | 断流后自动重发一次；断掉那次已经显示的文字或思考**留在屏上**，重发的完整回答直接接在下面，中间没有任何提示。这是 [#465](https://github.com/metask-ai/metacodes/pull/465) 正文里写明并接受了的取舍，不是新缺陷。本期新增的是实测 15/15、只有思考时整段思考也留屏、屏上那段模型从没见过（存下的对话和下一轮请求里都没有）、原始字节里零提示 | fork 15/15 |
 | metacodes `-p`、`--json` | 断掉那次从不打印；stdout 只有一份完整回答，退出码 0；stderr 每次都有一行 `[ERROR agent …] stream returned error … at turn 1`，尽管这一轮已经恢复 | not shown 30/30 |
 | metacodes `--stream-json` | 断掉那次的文字和思考都流出来了，随后用 `output_segment_end … "disposition":"discarded"` 收回；没有重发事件 | retracted 15/15 |
 | Claude Code 2.1.282（TUI 和 `-p`） | F4 带着第一次的回答续写，F5 从头重发；原始字节、最终画面、stderr 里都没有一句提示。9 月"用户侧零信号"仍成立，这次有字节级证据 | 12/12 无提示 |
@@ -69,7 +69,15 @@
 - `--json` 的结果行是 `stop_reason: end_turn`、`text_kind: final`、`continuations: 0`，不提重发；但 `input_tokens` 是 48（健康时 24），也就是断掉那次的用量算进去了。
 - `--stream-json`：段 0 是 `discarded`，F1/F6 里装着 12 段正文，FLONG 160 段，FTHINK 里是 6 行思考、0 行正文；段 1 是 `final`。没有落在段外的行，也没有重发事件，最后 `run_end … end_turn`。
 
-**和以前的结论对照。** 11-12/13 的流中断笔记写过"TUI 有可见输出后断流只发 1 个请求"；那是 #465 之前。#461/#465 之后每个请求默认重发一次（`STREAM_RETRIES_PER_REQUEST = 1`），即使已经有可见输出，TUI 也照样重发。于是现在的 TUI 是"重发成功，但屏幕上留着断掉那次"。11-13 那次在 06ea8075 上的单次观察这回有了 15/15。
+**和以前的结论对照：这是 #465 写明的取舍。** 11-12/13 的流中断笔记写过"TUI 有可见输出后断流只发 1 个请求"；那是 #465 之前。[#465](https://github.com/metask-ai/metacodes/pull/465)（修 #461，wayfind 写，2026-11-13 由 BiBoyang 合入）之后，每个请求默认重发一次（`STREAM_RETRIES_PER_REQUEST = 1`），已有可见输出也重发。它的正文在"Things a reviewer may want to weigh"里写明了 TUI 的后果："The partial text stays in scrollback, followed by the retried answer."，并说 TUI 在第 3 次之前照旧不显示 `retry_notice`。所以"重发成功，但屏上留着断掉那次"是合入时就写明、接受了的取舍，不是新缺陷。
+
+第 5 期在这个取舍上新增的是四点：
+- **实测**：#465 的正文只描述了行为；本期是 15/15 的计数，外加 11-13 在 06ea8075 上的那次单次观察。
+- **只有思考时也留屏**：#465 正文说的是 partial text；FTHINK 显示，断掉那次一个字正文都没有、只有思考时，整段思考同样留在屏上（6/6）。#465 的测试只检查了思考不进历史，没有检查屏上。
+- **屏上那段模型从没见过**：存下的对话（`transcript.jsonl`）和下一轮请求里都没有它（15/15）。用户看到的上文，和模型下一轮拿到的上文不一致。
+- **原始字节里零提示**：不只最终画面上没有，终端收到的字节里也没有（15/15），符合正文说的"第 3 次之前不显示"。
+
+要不要据此提一个 enhancement（标出被丢弃的那次、第一次重发也给提示），由负责人定；草稿见文末。
 
 **不测的：** 网页端（`--web`/`serve`）和 AgentCore C ABI 宿主，这套装置驱动不了（它只会开 tmux 和读 stdout），记 N/A。11-13 的读码笔记说网页端收到 `discarded` 后只在控制台打 `unhandled event`、半截留在页面上；本期没有复测。
 
@@ -118,7 +126,12 @@
 - F5：stdout 只有一个换行，stderr 只有 `dsh: reasoning:` 下流出的那段思考，然后退出码 1。
 - 会话日志（`session.v4.jsonl.zstd`）两种都记着 `turn/end` 的 `reason.kind: max-tokens`。
 
-**和 9 月对照。** 9 月的发现是"机器那边记得清清楚楚，用户只拿到一个光秃秃的 exit 1"（当时唯一的失败痕迹是 pnpm 包装器打的 `[ELIFECYCLE] Command failed with exit code 1.`，直接跑 dsh 的用户连这行都看不到）。0.2.2-rc.3 直接跑 npm 装的 dsh，仍然如此，三种协议 18/18。headless 的 README 写着失败时 stderr 会打 `dsh: <code>: <message>`；F4/F5 是"这一轮带着 `max-tokens` 正常结束"，不走那条失败路径，所以一句诊断都没有。F1–F3 和 9 月一样是静默重发；F6 是第一次测，同样静默重发。
+**和 9 月对照。** 9 月的发现是"机器那边记得清清楚楚，用户只拿到一个光秃秃的 exit 1"（当时唯一的失败痕迹是 pnpm 包装器打的 `[ELIFECYCLE] Command failed with exit code 1.`，直接跑 dsh 的用户连这行都看不到）。0.2.2-rc.3 直接跑 npm 装的 dsh，仍然如此，三种协议 18/18。这和 0.2.2-rc.3 headless README 的"Exit mapping"一致：最后一个 `turn/end` 是 completed 才退出 0，其他结果都退出 1，只有 `error` 原因才在 stderr 打 `dsh: <code>: <message>`。`max-tokens` 属于"其他结果"，所以退出 1 却一句话都不说。缺的是一行给人看的说明，不是检测。F1–F3 和 9 月一样是静默重发；F6 是第一次测，同样静默重发。
+
+**上游相近的讨论。** deepseek-harness 关了 issue（`hasIssuesEnabled=false`），CONTRIBUTING.md 写明 bug 在 GitHub Discussions 报。已有三条相近的讨论，都没覆盖"退出码 1、stderr 没有诊断"这一点：
+- [#12347](https://github.com/deepseek-ai/deepseek-harness/discussions/12347)（General，0.2.1-rc.2）：headless 下一步只有思考就撞上长度上限，最终答案为空、stderr 为空，原帖说退出"看起来正常"，没写退出码；它看的是 JSON 事件日志。原帖期望里也提到"至少以显式错误或非零退出码结束"。本期 0.2.2-rc.3（npm CLI、默认输出）测到的是退出码 1。这个差别来自版本、来自输出模式，还是来自 PyPI SDK 包装，没有核实：没跑 0.2.1-rc.2；0.2.1-rc.2 到 0.2.2-rc.3 之间的升级指南里没有提到退出码映射的变化。
+- [#11298](https://github.com/deepseek-ai/deepseek-harness/discussions/11298)（General，0.1.2-rc.1）：max-tokens 走正常完成路径，turn 被标成完成，界面显示"完成"。
+- [#10743](https://github.com/deepseek-ai/deepseek-harness/discussions/10743)（Ideas，0.2.1-rc.2）：长度截断后自动续写的需求，界面只有一个手动 Continue 按钮。
 
 ## 第四部分：skill-up 修复复验
 
@@ -163,8 +176,9 @@
 
 ## 还没做的、要你定的
 
-- **metacodes 的 TUI 问题要不要开 issue、是否指派给 BiBoyang**：由你定。草稿在工作区根目录 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`，没有发。
-- **dsh 的"光秃秃的退出码 1"要不要报上游**：由你定。草稿 `dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`，没有发。按 posting gate，第三方的发现要先有上游 issue，再公开报告。
+- **metacodes TUI 留屏**：#465 已写明这是取舍，是否在它之上开一个 enhancement（标出被丢弃的那次、第一次重发也给提示）由负责人定，指派也由负责人定（TUI 归他本人管）。enhancement 草稿在工作区根目录 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`，没有发。
+- **dsh 的"光秃秃的退出码 1"**：上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。发不发由负责人定。Discussion 草稿（General 分类，标题带 `[Bug]`）是 `dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`，没有发。按 posting gate，第三方的发现要先在上游报过，本报告才能公开。
+- **#12347 那边的退出码**：要核实"0.2.1-rc.2 退出看起来正常、0.2.2-rc.3 退出码 1"是不是版本差别，需要另装 0.2.1-rc.2 跑一次；要下载，没做。
 - **Claude `-p` 续写后只打印最后一条消息**：要不要补一个"回答中途长度截断 + 续写分支 mock"的小实验来验证。
 - **推送**：repo-quake 的改动只在本地分支 `feat/phase5-stream-retest` 提交，没有推送。
 - skill-up #280 和 #281 的状态没有变化，不需要动作；#281 对这个夹具的结果可以补进 PR 讨论，要不要补由你定。

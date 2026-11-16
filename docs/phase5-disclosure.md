@@ -12,6 +12,7 @@
   - deepseek-harness：经用户同意，从 registry.npmmirror.com 用 `npm install --ignore-scripts` 把 `@deepseek-ai/dsh@0.2.2-rc.3` 装进证据目录里的隔离前缀，npm 缓存也放在那里。没有全局安装。
   - skill-up：用本地克隆里已有的 v0.15.0 和 #281 head（8c9e12b）源码，`git archive` 到证据目录后构建；经用户同意，从 proxy.golang.org 下载了一个缺的 Go 模块（`github.com/openai/openai-go/v3 v3.86.0`，2,356,710 字节），它进了本机的 Go 模块缓存。
   - GitHub 上 alibaba/skill-up 的 issue、PR、发布页，deepseek-ai/deepseek-harness 的发布页，npm 的包元数据：只读查询。
+  - 报告写完后补查（只读）：metask-ai/metacodes 的 PR #465 正文；deepseek-ai/deepseek-harness 的仓库设置（issue 已关、Discussions 开着）、CONTRIBUTING.md、Discussions #12347、#11298、#10743 和近期讨论的标题。
 - **没碰过的：**
   - 任何真实的模型端点。没有付费调用，也没有任何凭据：metacodes 用 `METASK_API_KEY=dummy`，dsh 用 `MOCK_API_KEY=mock`，Claude Code、codex 用 `mock`。
   - 用户真实的 `~/.claude`、`~/.codex`、`~/.metacodes`、`~/.skill-up`、dsh 的默认 home：每次运行都是新的临时 HOME。
@@ -77,8 +78,8 @@
 
 ## 7. Posting gate 记录
 
-- [ ] 第三方发现先开上游：dsh 的"长度截断后光秃秃的退出码 1"没有上游 issue，草稿在工作区根目录（`dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`），发不发由负责人定。在此之前，本期报告只在本地提交，不公开。
-- [ ] metacodes 的 TUI 发现：metacodes 由负责人本人负责，是否开 issue、是否指派由负责人定；草稿 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`。
+- [ ] 第三方发现先在上游报：dsh 的"长度截断后光秃秃的退出码 1"。上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。Discussion 草稿（General 分类，标题带 `[Bug]`）在工作区根目录（`dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`），发不发由负责人定。在此之前，本期报告只在本地提交，不公开。
+- [ ] metacodes 的 TUI 留屏：[#465](https://github.com/metask-ai/metacodes/pull/465) 正文已写明这是取舍（不是新缺陷）。本期的实测和补充（只有思考时也留屏、屏上那段模型没见过、原始字节零提示）要不要写成 enhancement、是否指派，由负责人定；enhancement 草稿 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`。
 - [x] codex 的 F4/F5 行为变化：不是缺陷（报告写明了原因、不再重试），不需要上游动作。
 - [x] Claude Code `-p` 续写后只打印最后一条消息：写成待验证的观察，没有报上游。
 - [x] skill-up：#253、#263 已关、修复已合，本期只复验；#280、#281 状态没有变化，没有写入。

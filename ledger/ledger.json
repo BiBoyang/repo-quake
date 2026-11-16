@@ -1370,7 +1370,7 @@
       "created": "2026-11-16",
       "phase": "phase5",
       "class": "target-finding",
-      "title": "metacodes（main 1707da0c）TUI 断流后自动重发一次，但断掉那次已显示的正文或思考留在屏上、重发的完整回答接在下面、全程无提示：F1、F6、FLONG、FTHINK1、FTHINK6 各 3/3（fork 15/15）；存下的对话和下一轮请求只有重发那份（屏上有、模型没见过）",
+      "title": "metacodes（main 1707da0c）TUI 断流后自动重发一次，断掉那次已显示的正文或思考留在屏上、重发的完整回答接在下面、全程无提示：F1、F6、FLONG、FTHINK1、FTHINK6 各 3/3（fork 15/15）。留屏是 #465 正文写明并接受的取舍；本期新增实测计数、只有思考时整段思考也留屏、屏上那段模型没见过（transcript 与下一轮请求都没有）、原始字节零提示",
       "status": "open",
       "target": {
         "repo": "metask-ai/metacodes",
@@ -1427,13 +1427,14 @@
       ],
       "attribution": {
         "primary_factor": "witness",
-        "explanation": "产品检出了断流并重发成功（recovered），缺陷在显示层：屏上留着的内容由独立证人逐段计数（失败那次独有的标记、最终画面、原始字节），对话一侧由 transcript 与下一轮请求证明没有它。读码：TUI 不处理 discarded 段与 thinking_discarded，第一次重发的提示被门控隐藏",
+        "explanation": "产品检出了断流并重发成功（recovered）；留屏是 #465 合入时写明的取舍（正文：the partial text stays in scrollback, followed by the retried answer；第 3 次之前不显示 retry_notice）。本条记的是独立证人对它的实测：屏上留着的内容逐段计数（失败那次独有的标记、最终画面、原始字节），对话一侧由 transcript 与下一轮请求证明没有它；只有思考时整段思考也留屏，#465 正文与测试没有覆盖屏上这一面",
         "confidence": "confirmed",
         "caveats": [
           "每格 3 次",
           "tmux 不是真终端",
           "FTHINK 的重发是普通回答，没有思考",
-          "网页端与 C ABI 宿主没测"
+          "网页端与 C ABI 宿主没测",
+          "是否在 #465 的取舍之上提 enhancement 由负责人定（草稿未发）"
         ]
       },
       "observation": {
@@ -1448,7 +1449,14 @@
         "runs/phase5-metacodes-2026-11-16/summary.md",
         "examples/experiment-card-phase5-metacodes.json"
       ],
-      "lesson": "重发成功不等于显示正确：终端 scrollback 收不回，宿主要么在流结束前把可见输出留在可替换的区域，要么至少把断掉的那段标出来"
+      "lesson": "写明了的取舍也要实测：'半截留在 scrollback' 一句话背后，是屏上上文和模型上文的长期不一致，只有思考时更看不出来",
+      "upstream": [
+        {
+          "kind": "pr",
+          "url": "https://github.com/metask-ai/metacodes/pull/465",
+          "status": "merged"
+        }
+      ]
     },
     {
       "id": "RQ-F-019",
@@ -1561,12 +1569,14 @@
       ],
       "attribution": {
         "primary_factor": "willing-to-report",
-        "explanation": "检测是准的（退出码变了、会话日志记 max-tokens），只是没有翻译成一句给人看的话；2026-09 在 0.1.7-rc.2 上的同一观察，换到直接运行 npm 包后依然如此",
+        "explanation": "检测是准的（退出码变了、会话日志记 max-tokens），只是没有翻译成一句给人看的话；0.2.2-rc.3 headless README 的 Exit mapping 只给 error 原因打 dsh: <code>: <message>，max-tokens 属于'其他结果'退出 1 而不说话。2026-09 在 0.1.7-rc.2 上的同一观察，换到直接运行 npm 包后依然如此",
         "confidence": "confirmed",
         "caveats": [
           "安装时没跑 5 个包的安装脚本（用户选择）",
           "只测非交互",
-          "2026-09 的对照是从源码经 pnpm 运行"
+          "2026-09 的对照是从源码经 pnpm 运行",
+          "上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖'退出码 1、stderr 无诊断'",
+          "#12347（0.2.1-rc.2）说退出'看起来正常'而没写退出码；与本期退出码 1 的差别是否来自版本，没有核实"
         ]
       },
       "observation": {
