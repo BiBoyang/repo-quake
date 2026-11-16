@@ -121,3 +121,28 @@ python3 witness/stream-retry/export_public.py --src "$OUT" --dst runs/<本期目
 - **tmux 不是真终端。** 渲染节奏和真实终端（iTerm2、Terminal.app）可能不同。
 - **沙箱下工具处于离线状态。** 一个联网时行为不同的客户端（例如会做更新检查），在这里表现的是离线时的行为。
 - **只看最终状态。** 判定按最终状态做；中途的重叠作为另外的观察单独记录。
+
+## 第 5 期新增（2026-11-16）
+
+第 5 期用这套装置复测 metacodes、deepseek-harness，复查 9 月交互附录，见 `docs/phase5-report.md`。改动：
+
+| 改动 | 在哪 | 为什么 |
+|---|---|---|
+| 被测适配器 `metacodes`（TUI 和 `-p`）、`metacodes-json`、`metacodes-sjson`；`dsh-cc`、`dsh-resp`、`dsh-anth` | `runner.py` | metacodes 讲 Anthropic Messages（`--base-url …/v1/messages`）；dsh 每次运行一个新的 `DSH_HOME`，home 层 `cordis.patch.yml` 把默认模型指到 pi-ai 的 mock 路由，`api` 选协议 |
+| 新故障 FTHINK1、FTHINK6：只流一段思考（R01–R06，带失败标记），一个字的正文都没有就断开（FIN／干净收尾无终止事件）；F0T：健康回答前先有一段完整、带签名、带标记的思考 | `mock.mjs`（三种方言） | 推理模型先流思考，线上的断流几乎都断在思考里；F0T 是思考的阳性对照 |
+| 思考的阳性对照判 `tag_visible` 或 `thinking_hidden`（这个模式从不显示思考，是结果不是失败） | `grading.py` | 否则"没看到思考的标记"说明不了"撤回了" |
+| 非交互输出按模式读：`--json` 读结果行的 `text`；`--stream-json` 按协议把 `text`/`thinking` 行归到当时开着的段，`discarded` 段整段丢掉；stdout 里出现过失败标记就算显示过（`emitted`） | `grading.display_of()`，`load_observation()` 从 `stdout.txt` 重新推导 | 结构化输出的"显示"是消费者读到的东西，不是原样的 stdout |
+| `reported` 记在所有重发分支的判定上，另记 `checks.notice_where`（final、raw-only、none） | `grading._result()` | 第 4 期只在 fork 上记；要区分"一闪而过""常驻""没有" |
+| F4、F5（一次性）走 `_grade_signal`：有没有跟进请求、带没带第一次（`length_continued` / `length_retried`）、提示在哪；提示词表加宽（`SIGNAL_RE`：token、limit、incomplete、truncat、continu、resum、截断、不完整、续写、上限），只用于 F4/F5 | `grading.py` | 长度截断不是断线，客户端的措辞会围绕 token、上限、续写；宽词表在第 4 期 36 次运行上校准过，没有多抓一行 |
+| 被测自己固定 UI 里含提示词的行可以排除（`Tool.chrome_re`，随运行记录，regrade 照用） | `runner.py`、`grading.notices(ignore=)` | metacodes 空输入框写着 `Try "fix typecheck errors"`，不排除的话每个健康对照都判失败（试跑发现） |
+| mock 的 `aux_match`：被测声明自己辅助请求的特征串，命中的请求记 `aux`、不吃一次性故障 | `mock.mjs`、`Tool.aux_markers` | dsh 的标题请求是纯文本，又带着本次的随机标记 |
+| 会话文件：zstd 压缩的 dsh v4 日志、metacodes 的 `blocks`、thinking 块；停止原因认 dsh 的 `reason.kind` | `grading.read_session_text()`、`content_text()`、`stop_reasons_in_file()` | 新被测的存储格式 |
+
+试跑发现、冻结前修好的两处装置缺陷（台账 RQ-I-011、RQ-I-012）：
+- codex 的标题请求走 `/v1/responses` 的结构化输出，新加的思考字段在那条路径上没有默认值，mock 崩溃；有回归测试，做过变异检查。
+- metacodes 空输入框那行被当成错误提示，见上表。
+
+新的已知盲区：
+- FTHINK 的重发是普通回答，没有思考；真实的推理模型会再想一遍。
+- `--stream-json` 的读法假设消费者按协议归段；不按协议的消费者看到的是 `emitted`。
+- F4 的续写分支没有建模：mock 对续写请求总是从头写，所以"续写之后显示什么"只是 restart 分支下的观察。

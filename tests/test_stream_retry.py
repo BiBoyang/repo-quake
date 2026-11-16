@@ -62,7 +62,7 @@ def screen(body: str) -> str:
 
 def req(seq, fault="F0", source="always", ending="clean", aux=False, stream=True, carried=False,
         carried_tag=False, decision=None, started=None):
-    ok = ending == "clean" and fault == "F0"
+    ok = ending == "clean" and fault in ("F0", "F0T")
     return {"seq": seq, "fault": fault, "fault_source": source, "ending": ending, "aux": aux, "stream": stream,
             "witnesses": {"anthropic_message_stop": ok}, "carries_partial": carried, "carries_tag": carried_tag,
             "continuation": {"decision": decision} if decision else None,
@@ -167,7 +167,9 @@ class RetryOutcomes(unittest.TestCase):
     def test_not_shown(self):
         r = g(obs("F1-once", screen(P(1, 24)), [self.faulted(), req(3)]))
         self.assertEqual(r["verdict"], "not_shown", r["reason"])
-        self.assertEqual(r["fields"], {"detected": True, "contained": True, "recovered": True})
+        # phase 5: every retry-branch verdict records `reported` from the notices
+        self.assertEqual(r["fields"], {"detected": True, "contained": True, "recovered": True, "reported": False})
+        self.assertEqual(r["checks"]["notice_where"], "none")
 
     def test_not_shown_needs_the_byte_witness(self):
         r = g(obs("F1-once", screen(P(1, 24)), [self.faulted(), req(3)], raw={"available": False}))
@@ -272,7 +274,200 @@ class RetryOutcomes(unittest.TestCase):
         self.assertEqual(g(obs("F1-always", screen(P(1, 24)), reqs, tag=None, raw=raw))["verdict"], "n/a")
 
 
+def R(tag=None):
+    """The thinking paragraphs of content.json, optionally tagged (FTHINK / F0T / F5)."""
+    return "\n".join(f"{p} {tag}" if tag else p for p in C.data["reasoning"])
+
+
+class Phase5Grading(unittest.TestCase):
+    """FTHINK, the thinking positive control, `reported` from notices, F4/F5 signals."""
+    fthink = staticmethod(lambda ending="fin", fault="FTHINK1": req(2, fault, "once", ending))
+
+    def test_reported_reads_every_channel(self):
+        raw = {"available": True, "tag_seen": True, "notices": ["API error · Retrying in 1s · attempt 1/10"]}
+        r = g(obs("F1-once", screen(P(1, 24)), [req(2, "F1", "once", "fin"), req(3)], raw=raw))
+        self.assertEqual((r["verdict"], r["fields"]["reported"], r["checks"]["notice_where"]), ("retracted", True, "raw-only"))
+        err = "\x1b[31m[ERROR agent req=1]\x1b[0m stream returned error RequestFailed at turn 1\n"
+        r = g(obs("F1-once", P(1, 24), [req(2, "F1", "once", "fin"), req(3)], mode="noninteractive", raw=None,
+                  complete=None, stderr=err, exit_code=0))
+        self.assertEqual((r["verdict"], r["fields"]["reported"], r["checks"]["notice_where"]), ("not_shown", True, "final"))
+
+    def test_fthink_fork_keeps_the_thinking_on_screen(self):
+        final = screen(R(TAG) + "\n" + P(1, 24))
+        r = g(obs("FTHINK1-once", final, [self.fthink(), req(3)]))
+        self.assertEqual(r["verdict"], "fork", r["reason"])
+        self.assertEqual(r["checks"]["final_reasoning_markers"], [f"R0{i}" for i in range(1, 7)])
+
+    def test_fthink_retracted_by_a_discarded_segment(self):
+        # stream-json: the tagged thinking was emitted, the consumer's display dropped it
+        r = g({**obs("FTHINK6-once", P(1, 24), [self.fthink("clean", "FTHINK6"), req(3)], mode="noninteractive",
+                     raw=None, complete=None, exit_code=0), "emitted": R(TAG) + P(1, 24)})
+        self.assertEqual(r["verdict"], "retracted", r["reason"])
+        self.assertEqual(r["checks"]["emitted_tag_count"], 6)
+
+    def test_fthink_never_emitted_is_not_shown(self):
+        r = g({**obs("FTHINK1-once", P(1, 24), [self.fthink(), req(3)], mode="noninteractive", raw=None,
+                     complete=None, exit_code=0), "emitted": P(1, 24)})
+        self.assertEqual(r["verdict"], "not_shown", r["reason"])
+
+    def test_thinking_positive_control(self):
+        raw = {"available": True, "tag_seen": True, "notices": []}
+        ok = g(obs("F0T-tag", screen(R(TAG) + "\n" + P(1, 24)), [req(2, "F0T", "once")], raw=raw))
+        self.assertEqual(ok["verdict"], "tag_visible", ok["reason"])
+        hidden = g({**obs("F0T-tag", P(1, 24), [req(2, "F0T", "once")], mode="noninteractive", raw=None,
+                          complete=None, exit_code=0), "emitted": P(1, 24)})
+        self.assertEqual(hidden["verdict"], "thinking_hidden", hidden["reason"])
+        broken = g(obs("F0T-tag", screen(R(TAG) + "\n" + P(1, 12)), [req(2, "F0T", "once")], raw=raw))
+        self.assertEqual(broken["verdict"], "control_failed")
+
+    def test_subject_chrome_is_not_a_notice(self):
+        # metacodes' empty input box contains "errors"; the exclusion travels with the run
+        mc = sys.modules.get("runner") or __import__("runner")
+        chrome = mc.Metacodes.chrome_re
+        final = "╭─ metacodes v0.12.1-dev ─╮\n❯ RUNmark 写\n" + P(1, 24) + '\n❯ Try "fix typecheck errors"\n ? for shortcuts\n'
+        bad = g(obs("F0-pre", final, [req(2)], tag=None))
+        self.assertEqual(bad["verdict"], "control_failed")
+        ok = g({**obs("F0-pre", final, [req(2)], tag=None), "chrome": chrome})
+        self.assertEqual(ok["verdict"], "healthy", ok["reason"])
+        raw = grading.raw_analysis(final.encode(), None, C, ignore=grading.chrome_pattern(chrome))
+        self.assertEqual(raw["notices"], [])
+        self.assertEqual(grading.notices("❯ API error: something", C, ignore=grading.chrome_pattern(chrome)),
+                         ["❯ API error: something"])
+
+    def test_thinking_markers_are_not_foreign_in_a_healthy_run(self):
+        r = g(obs("F0-pre", screen("【R01】想一想\n" + P(1, 24)), [req(2)], tag=None))
+        self.assertEqual(r["verdict"], "healthy", r["reason"])
+
+
+class SignalGrading(unittest.TestCase):
+    """F4 (length stop after a full answer and an overflow) and F5 (thinking only)."""
+    f4 = staticmethod(lambda: req(2, "F4", "once", "clean"))
+
+    def test_signal_vocabulary_is_wider_only_for_f4_f5(self):
+        line = "⎿  Output token limit hit · continuing"
+        self.assertEqual(grading.notices(line, C), [])
+        self.assertEqual(grading.notices(line, C, grading.SIGNAL_RE), [line])
+        # model content about truncation never counts
+        self.assertEqual(grading.notices("【P18】L2 明确告知，工具直接说明回答被截断，用户不会被误导。", C, grading.SIGNAL_RE), [])
+
+    def test_continued_without_a_notice(self):
+        final = screen(P(1, 24, TAG, 12) + "\n" + para("Q", 2, 1, 24) + "\n" + P(1, 24))
+        r = g(obs("F4-once", final, [self.f4(), req(3, carried=True, carried_tag=True)]))
+        self.assertEqual(r["verdict"], "length_continued", r["reason"])
+        # recovered/contained depend on the server branch: not recorded for a continuation
+        self.assertEqual(r["fields"], {"detected": True, "reported": False})
+        self.assertEqual(r["checks"]["signal_where"], "none")
+        self.assertTrue(r["checks"]["first_attempt_on_final"])
+        # -p prints the last message only: the first attempt is gone from stdout
+        last_only = g(obs("F4-once", P(1, 24), [self.f4(), req(3, carried=True, carried_tag=True)],
+                          mode="noninteractive", raw=None, complete=None, exit_code=0))
+        self.assertFalse(last_only["checks"]["first_attempt_on_final"])
+
+    def test_fresh_retry_with_a_transient_notice(self):
+        raw = {"available": True, "tag_seen": True, "notices": ["• Reconnecting... 1/5"], "signals_extra": []}
+        r = g(obs("F4-once", screen(P(1, 24)), [self.f4(), req(3)], raw=raw))
+        self.assertEqual(r["verdict"], "length_retried", r["reason"])
+        self.assertEqual(r["fields"], {"detected": True, "reported": True, "recovered": True, "contained": True})
+        self.assertEqual(r["checks"]["signal_where"], "raw-only")
+
+    def test_fresh_retry_leaving_the_first_attempt(self):
+        final = screen(P(1, 24, TAG, 12) + "\n" + para("Q", 2, 1, 24) + "\n" + P(1, 24))
+        r = g(obs("F4-once", final, [self.f4(), req(3)]))
+        self.assertEqual(r["verdict"], "length_retried")
+        self.assertFalse(r["fields"]["contained"])
+
+    def test_no_follow_up(self):
+        out = P(1, 24, TAG, 12) + "\n" + para("Q", 2, 1, 24)
+        silent = g(obs("F4-once", out, [self.f4()], mode="noninteractive", raw=None, complete=None, exit_code=0))
+        self.assertEqual(silent["verdict"], "accepted_silently")
+        bare = g(obs("F4-once", out, [self.f4()], mode="noninteractive", raw=None, complete=None, exit_code=1))
+        self.assertEqual((bare["verdict"], bare["fields"]), ("exit_code_only", {"detected": True, "reported": False}))
+        told = g(obs("F5-once", "", [req(2, "F5", "once", "clean")], mode="noninteractive", raw=None, complete=None,
+                     exit_code=1, stderr="error: stopped (max_tokens_exhausted): the reply was cut off\n"))
+        self.assertEqual(told["verdict"], "reported_failure")
+
+    def test_not_delivered(self):
+        self.assertEqual(g(obs("F5-once", screen(P(1, 24)), [req(2), req(3)]))["verdict"], "n/a")
+
+
+class StructuredStdout(unittest.TestCase):
+    def lines(self, *objs):
+        return "".join(json.dumps(o, ensure_ascii=False) + "\n" for o in objs) + "\n"
+
+    def test_stream_json_drops_discarded_segments_with_their_thinking(self):
+        out = self.lines(
+            {"type": "turn_begin", "turn": 1},
+            {"type": "output_segment_begin", "index": 0, "turn": 1, "group": 0},
+            {"type": "thinking", "text": f"【R01】想 {TAG}\n"},
+            {"type": "text", "text": f"【P01】半截 {TAG}\n"},
+            {"type": "output_segment_end", "index": 0, "turn": 1, "group": 0, "disposition": "discarded", "bytes": 9},
+            {"type": "output_segment_begin", "index": 1, "turn": 1, "group": 0},
+            {"type": "text", "text": "【P01】完整\n"},
+            {"type": "output_segment_end", "index": 1, "turn": 1, "group": 0, "disposition": "final", "bytes": 9},
+            {"type": "thinking", "text": "【R02】段外\n"},
+            {"type": "run_end", "turns": 1, "tool_calls": 0, "stop_reason": "end_turn"})
+        d = grading.stream_json_display(out)
+        self.assertNotIn(TAG, d["display"])
+        self.assertIn("【P01】完整", d["display"])
+        self.assertIn("【R02】段外", d["display"])  # nothing tells the consumer to drop it
+        self.assertEqual((d["extra"]["discarded_segments"], d["extra"]["lines_outside_segments"],
+                          d["extra"]["run_end_stop_reason"]), (1, 1, "end_turn"))
+        self.assertEqual(d["extra"]["segments"][0]["thinking_markers"], ["R01"])
+
+    def test_result_line(self):
+        out = self.lines({"type": "result", "stop_reason": "end_turn", "text": P(1, 24), "text_kind": "final"})
+        d = grading.result_line_display(out)
+        self.assertEqual(grading.counts(d["display"]), {f"P{i:02d}": 1 for i in range(1, 25)})
+        self.assertEqual(d["extra"]["stop_reason"], "end_turn")
+
+    def test_regrade_re_derives_the_display(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run = Path(tmp)
+            inputs = {"condition": "F1-once", "mode": "noninteractive", "profile": "short", "tag": TAG,
+                      "requests": [req(2, "F1", "once", "fin"), req(3)], "final": {"complete": None},
+                      "exit_code": 0, "display_kind": "stream-json"}
+            (run / "record.json").write_text(json.dumps({"verdict": "?", "observation_inputs": inputs}), encoding="utf-8")
+            out = self.lines(
+                {"type": "output_segment_begin", "index": 0},
+                *({"type": "text", "text": f"【P{i:02d}】x {TAG}\n"} for i in range(1, 13)),
+                {"type": "output_segment_end", "index": 0, "disposition": "discarded", "bytes": 1},
+                {"type": "output_segment_begin", "index": 1},
+                *({"type": "text", "text": f"【P{i:02d}】y\n"} for i in range(1, 25)),
+                {"type": "output_segment_end", "index": 1, "disposition": "final", "bytes": 1})
+            (run / "stdout.txt").write_text(out, encoding="utf-8")
+            self.assertEqual(g(grading.load_observation(run, C))["verdict"], "retracted")
+
+
 class Bodies(unittest.TestCase):
+    def test_dsh_session_log(self):
+        rows = [{"type": "user/message", "seq": 8, "data": {"role": "user", "content": [{"type": "text", "text": "RUNx"}]}},
+                {"type": "assistant/message", "seq": 14, "data": {"turn": 1, "message": {"role": "assistant",
+                 "content": [{"type": "text", "text": "【P01】a"}]}}},
+                {"type": "turn/end", "seq": 16, "data": {"turn": 1, "reason": {"kind": "max-tokens"}}}]
+        raw = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
+        self.assertEqual(grading.assistant_texts_in_file(raw), ["【P01】a"])
+        self.assertEqual(grading.stop_reasons_in_file(raw), ["max-tokens"])
+        claude = json.dumps({"message": {"role": "assistant", "stop_reason": "end_turn"}})
+        self.assertEqual(grading.stop_reasons_in_file(claude + "\n" + raw), ["end_turn", "max-tokens"])
+        with tempfile.TemporaryDirectory() as tmp:
+            from compression import zstd
+            path = Path(tmp) / "session.v4.jsonl.zstd"
+            path.write_bytes(zstd.compress(raw.encode("utf-8")))
+            self.assertEqual(grading.read_session_text(path), raw)
+
+    def test_metacodes_transcript_blocks(self):
+        raw = (json.dumps({"role": "user", "blocks": [{"type": "text", "text": "RUNx"}]}) + "\n"
+               + json.dumps({"role": "assistant", "delivered": False,
+                             "blocks": [{"type": "thinking", "thinking": "【R01】a"}, {"type": "text", "text": "【P01】b"}]}) + "\n")
+        self.assertEqual(grading.assistant_texts_in_file(raw), ["【R01】a【P01】b"])
+
+    def test_request_witness_sees_carried_thinking(self):
+        body = {"messages": [{"role": "user", "content": "RUNmark go"},
+                             {"role": "assistant", "content": [{"type": "thinking", "thinking": f"【R01】x {TAG}", "signature": "s"}]}]}
+        w = grading.request_witness(json.dumps(body).encode(), "anthropic", "RUNmark", TAG)
+        self.assertTrue(w["carries_tag"])
+        self.assertFalse(w["carries_partial"])
+
     def test_request_witness_parses_escaped_json(self):
         body = {"input": [{"role": "user", "content": [{"type": "input_text", "text": "RUNmark go"}]},
                           {"role": "assistant", "content": [{"type": "output_text", "text": f"【P01】x {TAG}"}]}]}
@@ -482,6 +677,79 @@ class MockIntegration(unittest.TestCase):
         entry = m.log(1)[-1]
         self.assertEqual(entry["ending"], "clean")
         self.assertTrue(entry["witnesses"]["responses_completed"])
+
+    def test_fthink_streams_tagged_thinking_and_nothing_else(self):
+        m = self.mock()
+        anth = lambda mark: {"model": "m", "stream": True, "messages": [{"role": "user", "content": mark}]}
+        resp = lambda mark: {"model": "m", "stream": True, "input": [{"role": "user", "content": mark}]}
+        for path, body in (("/v1/messages", anth), ("/v1/chat/completions", lambda mark: cc(mark)),
+                           ("/v1/responses", resp)):
+            for fault, clean in (("FTHINK1", False), ("FTHINK6", True)):
+                mark = f"RUN{fault}{path.replace('/', '')}"
+                m.control({"once": {"fault": fault, "match": mark, "tag": TAG}})
+                text, done = m.post(path, body(mark))
+                self.assertEqual(done, clean, (path, fault))
+                self.assertEqual(text.count(TAG), 6, (path, fault))
+                self.assertIn("【R06】", text)
+                self.assertNotIn("【P01】", text)
+                entry = m.log()[-1]
+                self.assertEqual((entry["fault"], entry["ending"]), (fault, "clean" if clean else "fin"))
+                self.assertFalse(any(entry["witnesses"].values()), (path, fault))
+                text, done = m.post(path, body(mark))       # the retry: a plain healthy answer
+                self.assertTrue(done and "【P24】" in text and TAG not in text and "【R01】" not in text)
+
+    def test_f0t_is_a_complete_thinking_block_then_the_answer(self):
+        m = self.mock()
+        m.control({"once": {"fault": "F0T", "match": "RUNt", "tag": TAG}})
+        text, done = m.post("/v1/messages", {"model": "m", "stream": True, "messages": [{"role": "user", "content": "RUNt"}]})
+        self.assertTrue(done)
+        events = [json.loads(line[6:]) for line in text.splitlines() if line.startswith("data: ")]
+        kinds = [(e["type"], (e.get("delta") or e.get("content_block") or {}).get("type"), e.get("index")) for e in events]
+        self.assertIn(("content_block_delta", "signature_delta", 0), kinds)
+        self.assertIn(("content_block_start", "text", 1), kinds)
+        self.assertEqual(text.count(TAG), 6)                    # the thinking is tagged, the answer is not
+        self.assertEqual(kinds[-1][0], "message_stop")
+        self.assertTrue(m.log(1)[-1]["witnesses"]["anthropic_message_stop"])
+        m.control({"once": {"fault": "F0T", "match": "RUNu", "tag": TAG}})
+        text, done = m.post("/v1/responses", {"model": "m", "stream": True, "input": [{"role": "user", "content": "RUNu"}]})
+        self.assertTrue(done and "response.completed" in text and text.count(TAG) >= 6 and "【P24】" in text)
+
+    def test_structured_title_requests_on_every_endpoint(self):
+        # pilot 2026-11-16: codex's title request on /v1/responses crashed the phase-5 mock
+        m = self.mock()
+        fmt = {"format": {"type": "json_schema", "name": "t", "schema": {}}}
+        bodies = (("/v1/responses", {"model": "m", "stream": True, "input": [{"role": "user", "content": "x"}], "text": fmt}),
+                  ("/v1/chat/completions", cc("x", structured=True)),
+                  ("/v1/messages", {"model": "m", "stream": True, "messages": [{"role": "user", "content": "x"}],
+                                    "output_format": {"type": "json_schema", "schema": {}}}))
+        for path, body in bodies:
+            text, done = m.post(path, body)
+            self.assertTrue(done, path)
+            self.assertIn("流式输出完整性报告", json.loads(json.dumps(text)), path)
+        self.assertEqual([e["aux"] for e in m.log(3)], [True, True, True])
+        with urllib.request.urlopen(f"{m.base}/health", timeout=5) as r:   # still alive
+            self.assertTrue(json.load(r)["ok"])
+
+    def test_aux_match_marks_a_plain_title_request(self):
+        # deepseek-harness asks for its session title in plain text, carrying the run's mark
+        m = self.mock()
+        title = "Create a concise title for an AI coding-assistant session"
+        m.control({"aux_match": [title], "once": {"fault": "F1", "match": "RUNd", "tag": TAG}})
+        text, done = m.post("/v1/chat/completions", {"model": "m", "stream": True, "messages": [
+            {"role": "system", "content": title}, {"role": "user", "content": "RUNd"}]})
+        self.assertTrue(done and "流式输出完整性报告" in text and "【P" not in text)   # served as auxiliary
+        text, done = m.post("/v1/chat/completions", cc("RUNd"))                       # the main answer gets the fault
+        self.assertFalse(done)
+        rows = m.log(2)
+        self.assertEqual([(r["aux"], r["aux_reason"], r["fault"]) for r in rows], [(True, "marker", "F0"), (False, None, "F1")])
+        m.control({"reset": True})
+        self.assertEqual(m.control()["aux_match"], [])
+
+    def test_f5_tags_its_thinking(self):
+        m = self.mock()
+        m.control({"once": {"fault": "F5", "match": "RUNf5", "tag": TAG}})
+        text, done = m.post("/v1/messages", {"model": "m", "stream": True, "messages": [{"role": "user", "content": "RUNf5"}]})
+        self.assertTrue(done and '"max_tokens"' in text and text.count(TAG) == 6 and "【P01】" not in text)
 
     def test_refuses_unsafe_starts(self):
         env = {"PATH": os.environ.get("PATH", ""), "MOCK_CONTROL_TOKEN": "x" * 20}

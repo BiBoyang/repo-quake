@@ -13,9 +13,11 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-ORDER = ["F0-pre", "F0-tag", "F1-once", "F6-once", "FLONG-once", "F1-always", "F0-post"]
-VERDICT_ORDER = ["healthy", "tag_visible", "not_shown", "retracted", "fork", "continued", "duplicate",
-                 "accepted_partial", "reported_failure", "control_failed", "n/a", "invalid"]
+ORDER = ["F0-pre", "F0-tag", "F0T-tag", "F1-once", "F2-once", "F3-once", "F4-once", "F5-once", "F6-once",
+         "FLONG-once", "FTHINK1-once", "FTHINK6-once", "F1-always", "F0-post"]
+VERDICT_ORDER = ["healthy", "tag_visible", "thinking_hidden", "not_shown", "retracted", "fork", "continued",
+                 "duplicate", "length_continued", "length_retried", "accepted_partial", "accepted_silently",
+                 "exit_code_only", "reported_failure", "control_failed", "n/a", "invalid"]
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -144,6 +146,20 @@ def main(argv=None) -> int:
         lines.append("")
     if nonint:
         lines += ["## 判定总表（非交互模式）", ""] + verdict_table(nonint, "noninteractive") + [""]
+        lines += ["## 逐次证人（非交互，故障格）", "",
+                  "| 工具 | 条件 | 次 | 判定 | 退出码 | 正式请求 | stdout 里的失败标记 | 消费者读到的失败标记 | 丢弃段 | stderr/结果里的提示 |",
+                  "|---|---|---:|---|---:|---:|---:|---:|---:|---|"]
+        for r in sorted(nonint, key=lambda x: (x["tool"], cond_key(x["condition"]), x["run_index"])):
+            if not r["condition"].endswith("-once"):
+                continue
+            d = r.get("display") or {}
+            extra = d.get("extra") or {}
+            mains = sum(1 for q in r.get("requests") or [] if not q.get("aux"))
+            notes = "；".join(r.get("notices_final") or []) or "无"
+            lines.append(f"| {r['tool']} | {r['condition']} | {r['run_index']} | {r['verdict']} | {r.get('exit_code')} | "
+                         f"{mains} | {d.get('emitted_tag_count', d.get('final_tag_count'))} | {d.get('final_tag_count')} | "
+                         f"{extra.get('discarded_segments', '—')} | {notes[:160]} |")
+        lines.append("")
     for name, title in (("egress.json", "沙箱拦下的外连"), ("lsregister.json", "LaunchServices 登记")):
         path = root / name
         if path.exists():

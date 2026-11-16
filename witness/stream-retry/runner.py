@@ -89,6 +89,12 @@ class Tool:
     banner_re = r"$^"
     endpoint = "cc"
     session_globs = ("**/*.jsonl",)
+    # how a consumer reads non-interactive stdout (grading.DISPLAY_KINDS)
+    display_kind = "plain"
+    # fixed UI text of the subject that contains a notice word (grading.notices `ignore`)
+    chrome_re: str | None = None
+    # body substrings of the subject's auxiliary requests (mock `aux_match`), beyond structured output
+    aux_markers: tuple[str, ...] = ()
 
     def __init__(self, binary: str, expected: str | None):
         self.binary = binary
@@ -203,6 +209,96 @@ class Kimi(Tool):
         return [self.binary, "-p", prompt] if mode == "noninteractive" else [self.binary]
 
 
+class Metacodes(Tool):
+    """metacodes (phase 5): the TUI, and headless `-p` with plain stdout.
+
+    It speaks Anthropic Messages to the mock through `--base-url`. The environment is the
+    reference set from the 2026-11 stream-interruption notes: a dummy Metask key, no model
+    probe, no TinyKG daemon; Jev's default re-ranking consult is turned off as well (the
+    sandbox would refuse it anyway). There is no update check at start-up (`update` is an
+    explicit subcommand). State, sessions and transcripts live under $HOME/.metacodes."""
+    name = "metacodes"
+    ready_re = r"\? for shortcuts|❯"
+    banner_re = r"metacodes v\d+\.\d+\.\d+"
+    endpoint = "anthropic"
+    session_globs = (".metacodes/projects/*/*/transcript.jsonl",)
+    headless_flags: tuple[str, ...] = ()
+    # the empty input box reads `Try "fix typecheck errors"` (shell mode: "fix lint errors")
+    chrome_re = r'^(?:❯\s*)?Try "fix (?:typecheck|lint) errors"$'
+
+    def env(self, home):
+        return {"METASK_API_KEY": "dummy", "METACODES_NO_PROBE": "1", "METACODES_KG_AUTOSTART": "0",
+                "METACODES_JEV_URL": "off"}
+
+    def argv(self, base_url, mode, prompt):
+        args = [self.binary, "--base-url", f"{base_url}/v1/messages"]
+        if mode == "noninteractive":
+            args += ["-p", prompt, *self.headless_flags]
+        return args
+
+
+class MetacodesJson(Metacodes):
+    """metacodes `-p --json`: one NDJSON result line; the consumer reads its `text`."""
+    name = "metacodes-json"
+    headless_flags = ("--json",)
+    display_kind = "result-line"
+
+
+class MetacodesStreamJson(Metacodes):
+    """metacodes `-p --stream-json`: a consumer keeps what no `discarded` segment retracts."""
+    name = "metacodes-sjson"
+    headless_flags = ("--stream-json",)
+    display_kind = "stream-json"
+
+
+class Dsh(Tool):
+    """deepseek-harness (phase 5): `dsh --profile headless <task>`, non-interactive only.
+
+    The npm package lives under an isolated prefix; `--bin` points at its launcher
+    (node_modules/.bin/dsh -> @deepseek-ai/dsh/lib/bin.js, run by node on PATH). Each run
+    gets a fresh DSH_HOME whose home-level cordis.patch.yml routes the default model to the
+    mock through the pi-ai adapter, as in the 2026-09 article (§2), where `api` picks the
+    wire protocol. Telemetry is off (DSH_TELEMETRY_DISABLED). The first-prompt title request
+    is plain text carrying the run's mark, so its system prompt is declared auxiliary."""
+    name = "dsh-cc"
+    api = "openai-completions"
+    endpoint = "cc"
+    base_suffix = "/v1"
+    session_globs = ("dsh-home/sessions/*/*/session.v4.jsonl.zstd",)
+    aux_markers = ("Create a concise title for an AI coding-assistant session",)
+
+    def env(self, home):
+        return {"DSH_HOME": str(home / "dsh-home"), "DSH_TELEMETRY_DISABLED": "1", "MOCK_API_KEY": "mock"}
+
+    def seed(self, home, cwd, base_url):
+        dsh_home = home / "dsh-home"
+        dsh_home.mkdir(parents=True, exist_ok=True)
+        (dsh_home / "cordis.patch.yml").write_text(
+            "# repo-quake: route the default model to the loopback mock (home-level patch layer)\n"
+            "- id: agent-default-model\n  config:\n    provider: mock\n    model: mock-model\n"
+            "- id: llm-pi-ai\n  config:\n    providers:\n      mock:\n        apiKeyEnv: MOCK_API_KEY\n"
+            f"        api: {self.api}\n        baseURL: {base_url}{self.base_suffix}\n"
+            "        models:\n          - id: mock-model\n", encoding="utf-8")
+
+    def argv(self, base_url, mode, prompt):
+        if mode != "noninteractive":
+            raise SetupError("dsh is driven only in headless mode here")
+        return [self.binary, "--profile", "headless", prompt]
+
+
+class DshResponses(Dsh):
+    name = "dsh-resp"
+    api = "openai-responses"
+    endpoint = "responses"
+
+
+class DshAnthropic(Dsh):
+    name = "dsh-anth"
+    api = "anthropic-messages"
+    endpoint = "anthropic"
+    base_suffix = ""
+
+
 class Fake(Tool):
     """Calibration subject (tests/fixtures/stream-retry/fake_tui.py)."""
     name = "fake"
@@ -225,7 +321,9 @@ class Fake(Tool):
         return args
 
 
-TOOL_CLASSES = {"claude": Claude, "codex": Codex, "kimi": Kimi, "fake": Fake}
+TOOL_CLASSES = {"claude": Claude, "codex": Codex, "kimi": Kimi, "fake": Fake, "metacodes": Metacodes,
+                "metacodes-json": MetacodesJson, "metacodes-sjson": MetacodesStreamJson,
+                "dsh-cc": Dsh, "dsh-resp": DshResponses, "dsh-anth": DshAnthropic}
 
 
 # ---------------- mock ----------------
@@ -430,7 +528,7 @@ def request_view(ctx: Context, entry: dict, mark: str, tag: str | None) -> dict:
         return ctx.views[key]
     witness = grading.request_witness(ctx.mock.body(entry["seq"]), entry.get("endpoint"), mark, tag)
     keep = ("seq", "started_ms", "body_ms", "first_byte_ms", "ended_ms", "endpoint", "fault", "fault_source", "stream",
-            "aux", "tools_count", "profile", "tag_applied", "events_count", "bytes_sent", "ending", "witnesses",
+            "aux", "aux_reason", "tools_count", "profile", "tag_applied", "events_count", "bytes_sent", "ending", "witnesses",
             "continuation", "req_bytes", "req_sha256", "user_agent", "frame_delay_ms", "client_closed_first")
     view = {k: entry.get(k) for k in keep}
     view.update({k: witness[k] for k in ("has_mark", "assistant_messages", "assistant_marker_counts",
@@ -466,23 +564,24 @@ def copy_requests(ctx: Context, views: list[dict], dest: Path) -> None:
 
 def conversation_witness(ctx: Context, home: Path, globs, mark: str, tag: str | None, profile: str,
                          started_ms: int) -> dict | None:
-    found = []
+    found, found_errors = [], []
     for pattern in globs:
         for path in sorted(home.glob(pattern)):
             try:
                 st = path.stat()
                 if st.st_size > 50_000_000 or st.st_mtime * 1000 < started_ms - 3000:
                     continue
-                raw = path.read_text(encoding="utf-8", errors="replace")
-            except OSError:
+                raw = grading.read_session_text(path)
+            except Exception as exc:  # noqa: BLE001 - OSError, a missing zstd module, a corrupt log
+                found_errors.append(f"{rel(path, ctx.out)}: {type(exc).__name__}")
                 continue
             if mark not in raw:
                 continue
             texts = grading.assistant_texts_in_file(raw)
-            found.append((st.st_mtime, path, texts))
+            found.append((st.st_mtime, path, texts, raw))
     if not found:
-        return None
-    _, path, texts = max(found, key=lambda item: item[0])
+        return {"path": None, "read_errors": found_errors} if found_errors else None
+    _, path, texts, raw = max(found, key=lambda item: item[0])
     joined = "\n".join(texts)
     full = ctx.content.full_markers(profile)
     allc = grading.counts(joined)
@@ -492,9 +591,10 @@ def conversation_witness(ctx: Context, home: Path, globs, mark: str, tag: str | 
         "all_assistant_counts": allc,
         "last_assistant_counts": grading.counts(texts[-1]) if texts else {},
         "tag_count": grading.tag_count(joined, tag),
+        "reasoning_markers": sorted(grading.reasoning_counts(joined)),
         "full_present": all(allc.get(m, 0) >= 1 for m in full),
         "duplicated": any(allc.get(m, 0) > 1 for m in full),
-        "stop_reasons": grading.stop_reasons_in_file(path.read_text(encoding="utf-8", errors="replace"))[-5:],
+        "stop_reasons": grading.stop_reasons_in_file(raw)[-5:],
     }
 
 
@@ -515,11 +615,11 @@ def run_interactive(ctx: Context, tool: Tool, condition: str, run_index: int) ->
     ctx.mock.refresh()
     since_seq = max((e["seq"] for e in ctx.mock.entries), default=0)
     once = None
-    if kind == "once":
+    if kind in ("once", "tag"):
+        # F0-tag / F0T-tag: a healthy answer whose first attempt carries the tag
         once = {"fault": fault, "match": mark, "tag": tag}
-    elif kind == "tag":
-        once = {"fault": "F0", "match": mark, "tag": tag}
-    ctx.mock.control({"reset": True, "always": fault if kind == "always" else "F0", "profile": profile, "once": once})
+    ctx.mock.control({"reset": True, "always": fault if kind == "always" else "F0", "profile": profile, "once": once,
+                      "aux_match": list(tool.aux_markers)})
 
     record = {"tool": tool.name, "expected_version": tool.expected, "mode": "interactive", "condition": condition,
               "run_index": run_index, "mark": mark, "tag": tag, "profile": profile, "started_at": iso(started),
@@ -592,7 +692,8 @@ def run_interactive(ctx: Context, tool: Tool, condition: str, run_index: int) ->
             tags_on = c.count(tag) if tag else 0
             visible = grading.counts(screen)
             sample = (tags_on, len(visible), sum(visible.values()), visible.get(first_partial, 0),
-                      max(visible) if visible else None, tuple(grading.notices(screen, ctx.content)))
+                      max(visible) if visible else None,
+                      tuple(grading.notices(screen, ctx.content, ignore=grading.chrome_pattern(tool.chrome_re))))
             if sample != last_sample:
                 samples.append({"t_ms": now_ms(), "tag_on_screen": sample[0], "distinct_markers": sample[1],
                                 "total_markers": sample[2], "first_partial_count": sample[3],
@@ -712,13 +813,15 @@ def run_interactive(ctx: Context, tool: Tool, condition: str, run_index: int) ->
     part_m = ctx.content.partial_markers(profile)
     needles = {"first_marker": f"【{full_m[0]}】", "partial_last": f"【{part_m[-1]}】",
                "first_new": f"【{full_m[len(part_m)]}】", "answer_last": f"【{full_m[-1]}】"}
-    raw_info = grading.raw_analysis(raw, tag, ctx.content, grading.load_index(ev / "raw-index.jsonl"), needles)
+    raw_info = grading.raw_analysis(raw, tag, ctx.content, grading.load_index(ev / "raw-index.jsonl"), needles,
+                                    ignore=grading.chrome_pattern(tool.chrome_re))
     write_json(ev / "raw-analysis.json", raw_info)
     with (ev / "samples.jsonl").open("w", encoding="utf-8") as handle:
         for s in samples:
             handle.write(json.dumps(s, ensure_ascii=False) + "\n")
     conversation = conversation_witness(ctx, home, tool.session_globs, mark, tag, profile, started)
     obs = {"condition": condition, "mode": "interactive", "profile": profile, "tag": tag, "requests": reqs,
+           "chrome": tool.chrome_re,
            "final": {"text": final_view, "complete": complete}, "mid": mid, "raw": raw_info,
            "next_request": next_req, "invalid": record["invalid"]}
     result = grading.grade(obs, ctx.content)
@@ -736,6 +839,7 @@ def run_interactive(ctx: Context, tool: Tool, condition: str, run_index: int) ->
                        "L_unique": sum(1 for k in grading.counts(prefin["text"]) if k.startswith("L"))} if prefin else None,
             "final_counts": grading.counts(final_view), "final_complete": complete,
             "final_tag_count": grading.tag_count(final_view, tag),
+            "final_reasoning": grading.reasoning_counts(final_view),
             "samples": len(samples),
             "tag_visible_ms": tag_window(samples),
         },
@@ -744,6 +848,7 @@ def run_interactive(ctx: Context, tool: Tool, condition: str, run_index: int) ->
         "verdict": result["verdict"], "verdict_reason": result["reason"], "fields": result["fields"],
         "checks": result["checks"], "notices_final": result["notices_final"], "notices_raw": result["notices_raw"],
         "observation_inputs": {"condition": condition, "mode": "interactive", "profile": profile, "tag": tag,
+                               "chrome": tool.chrome_re,
                                "requests": reqs, "final": {"complete": complete}, "next_request": next_req,
                                "invalid": record["invalid"]},
     })
@@ -797,8 +902,9 @@ def run_noninteractive(ctx: Context, tool: Tool, condition: str, run_index: int)
     started = now_ms()
     ctx.mock.refresh()
     since_seq = max((e["seq"] for e in ctx.mock.entries), default=0)
-    once = {"fault": fault if kind == "once" else "F0", "match": mark, "tag": tag} if kind in ("once", "tag") else None
-    ctx.mock.control({"reset": True, "always": fault if kind == "always" else "F0", "profile": profile, "once": once})
+    once = {"fault": fault, "match": mark, "tag": tag} if kind in ("once", "tag") else None
+    ctx.mock.control({"reset": True, "always": fault if kind == "always" else "F0", "profile": profile, "once": once,
+                      "aux_match": list(tool.aux_markers)})
     record = {"tool": tool.name, "expected_version": tool.expected, "mode": "noninteractive", "condition": condition,
               "run_index": run_index, "mark": mark, "tag": tag, "profile": profile, "started_at": iso(started),
               "mock": {"instance": ctx.mock.instance, "port": ctx.mock.port}, "invalid": None,
@@ -867,19 +973,30 @@ def run_noninteractive(ctx: Context, tool: Tool, condition: str, run_index: int)
             for t_ms, text in lines[name]:
                 handle.write(json.dumps({"stream": name, "t_ms": t_ms, "text": text}, ensure_ascii=False) + "\n")
     conversation = conversation_witness(ctx, home, tool.session_globs, mark, tag, profile, started)
+    # what the consumer reads (plain stdout, a result line's text, or the kept stream-json
+    # segments); `emitted` is every stdout byte, and a tag there was shown to the consumer
+    shown = grading.display_of(tool.display_kind, stdout)
+    if tool.display_kind != "plain":
+        (ev / "display.txt").write_text(shown["display"], encoding="utf-8")
     obs = {"condition": condition, "mode": "noninteractive", "profile": profile, "tag": tag, "requests": reqs,
-           "final": {"text": stdout, "complete": None}, "mid": None, "raw": None, "stderr": stderr,
-           "exit_code": code, "invalid": record["invalid"]}
+           "chrome": tool.chrome_re,
+           "final": {"text": shown["display"], "complete": None}, "emitted": stdout, "mid": None, "raw": None,
+           "stderr": stderr, "exit_code": code, "invalid": record["invalid"]}
     result = grading.grade(obs, ctx.content)
     record.update({
         "duration_s": round((now_ms() - started) / 1000, 1), "exit_code": code, "requests": reqs,
-        "display": {"final_counts": grading.counts(stdout), "final_tag_count": grading.tag_count(stdout, tag)},
+        "display": {"kind": tool.display_kind, "final_counts": grading.counts(shown["display"]),
+                    "final_tag_count": grading.tag_count(shown["display"], tag),
+                    "emitted_counts": grading.counts(stdout), "emitted_tag_count": grading.tag_count(stdout, tag),
+                    "final_reasoning": grading.reasoning_counts(shown["display"]),
+                    "emitted_reasoning": grading.reasoning_counts(stdout), "extra": shown["extra"]},
         "conversation": conversation,
         "verdict": result["verdict"], "verdict_reason": result["reason"], "fields": result["fields"],
         "checks": result["checks"], "notices_final": result["notices_final"], "notices_raw": [],
         "observation_inputs": {"condition": condition, "mode": "noninteractive", "profile": profile, "tag": tag,
+                               "chrome": tool.chrome_re,
                                "requests": reqs, "final": {"complete": None}, "exit_code": code,
-                               "invalid": record["invalid"]},
+                               "display_kind": tool.display_kind, "invalid": record["invalid"]},
     })
     write_json(ev / "record.json", record)
     with (ctx.out / "runs-noninteractive.jsonl").open("a", encoding="utf-8") as handle:
@@ -926,7 +1043,8 @@ def probe(ctx: Context, tool: Tool) -> dict:
     flag.unlink(missing_ok=True)
     raw = raw_path.read_bytes() if raw_path.exists() else b""
     result = {"tool": tool.name, "ready": ready, "danger": danger, "banner": bool(re.search(tool.banner_re, screen)),
-              "executed": exe, "raw": {k: v for k, v in grading.raw_analysis(raw, None, ctx.content).items()
+              "executed": exe, "raw": {k: v for k, v in grading.raw_analysis(
+                  raw, None, ctx.content, ignore=grading.chrome_pattern(tool.chrome_re)).items()
                                        if k != "notices"}, "at": iso(), "tmux": [ctx.tmux.width, ctx.tmux.height],
               "sandbox": ctx.args.sandbox}
     write_json(ctx.out / "probes" / f"{tool.name}.json", result)
@@ -1057,7 +1175,7 @@ def do_regrade(ctx: Context) -> int:
 
 def do_egress(ctx: Context) -> int:
     a = ctx.args
-    names = {"claude", "codex", "node", "kimi", "env", "sandbox-exec"}
+    names = {"claude", "codex", "node", "kimi", "env", "sandbox-exec", "metacodes", "dsh"}
     predicate = 'eventMessage CONTAINS "deny(1) network-outbound"'
     r = sh("log", "show", "--style", "ndjson", "--start", a.start, "--end", a.end, "--predicate", predicate, timeout=600)
     hits = []

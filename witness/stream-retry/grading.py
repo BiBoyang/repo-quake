@@ -22,12 +22,25 @@ HERE = Path(__file__).resolve().parent
 DEFAULT_CONTENT = HERE / "content.json"
 
 MARKER_RE = re.compile(r"【(P\d{2}|L\d{3}|Q\d{2}|ACK)】")
+# Thinking paragraphs (content.json "reasoning"). Counted on their own: they never enter
+# the answer markers, so a client that renders thinking does not trip "foreign markers".
+REASONING_RE = re.compile(r"【(R\d{2})】")
 TAG_RE = re.compile(r"〔x[0-9a-f]{6}〕")
 NOTICE_RE = re.compile(
     r"(?i)retry|retrying|reconnect|重试|重连|error|错误|interrupted|disconnected|"
     r"unexpected eof|terminated|timed out|timeout|failed"
 )
+# Phase 5, F4/F5 only: a length stop or a think-only answer is not a broken connection, so
+# a client may word its notice around tokens, limits or continuation instead. Calibrated
+# against healthy runs before the matrix (it must find nothing in F0); see README.
+SIGNAL_RE = re.compile(
+    NOTICE_RE.pattern
+    + r"|max[ _]?tokens?|token limit|output limit|output token|incomplete|truncat|continu|resum|"
+    r"截断|不完整|续写|上限"
+)
 MIN_QUIET_S = 40  # measured max gap between attempts was 33-40 s (2026-11-14)
+CONTROL_FAULTS = ("F0", "F0T")      # healthy answers; F0T also streams a thinking block first
+SIGNAL_FAULTS = ("F4", "F5")        # a protocol-level stop the client may continue or retry
 
 ALT_ON = (b"\x1b[?1049h", b"\x1b[?1047h", b"\x1b[?47h")
 ALT_OFF = (b"\x1b[?1049l", b"\x1b[?1047l", b"\x1b[?47l")
@@ -46,6 +59,7 @@ _BREAKING_CSI = set(b"ABCDEFGHJKdfr")
 FIELDS = {
     "healthy": {},
     "tag_visible": {},
+    "thinking_hidden": {},
     "not_shown": {"detected": True, "contained": True, "recovered": True},
     "retracted": {"detected": True, "contained": True, "recovered": True},
     "fork": {"detected": True, "recovered": True, "contained": False, "reported": False},
@@ -53,8 +67,16 @@ FIELDS = {
     "duplicate": {"detected": True, "recovered": True, "contained": False},
     "accepted_partial": {"detected": False, "reported": False},
     "reported_failure": {"detected": True, "reported": True, "recovered": False},
+    # F4/F5 (grade_signal): fields are filled per run
+    "length_continued": {"detected": True},
+    "length_retried": {"detected": True},
+    "accepted_silently": {"detected": False, "reported": False},
+    "exit_code_only": {"detected": True, "reported": False},
 }
 VERDICTS = set(FIELDS) | {"control_failed", "n/a", "invalid"}
+# Retry-branch verdicts whose `reported` field is read from the notices (phase 5): a notice
+# in the final display, stderr, or (interactive) the raw byte stream.
+NOTICE_REPORTED = ("not_shown", "retracted", "fork", "continued", "duplicate")
 
 
 class Content:
@@ -104,6 +126,10 @@ def tag_count(text: str | None, tag: str | None) -> int:
     return compact(text).count(tag)
 
 
+def reasoning_counts(text: str | None) -> dict[str, int]:
+    return dict(Counter(REASONING_RE.findall(compact(text))))
+
+
 def strip_ansi(data: bytes | str) -> str:
     """Terminal byte stream -> plain text; cursor moves and erases become newlines."""
     if isinstance(data, str):
@@ -130,12 +156,22 @@ def is_content_line(line: str, content: Content) -> bool:
     return c in content.corpus
 
 
-def notices(text: str | None, content: Content) -> list[str]:
-    """Lines matching the notice vocabulary that are not model content, de-duplicated."""
+def chrome_pattern(pattern: str | None) -> re.Pattern | None:
+    return re.compile(pattern) if pattern else None
+
+
+def notices(text: str | None, content: Content, vocabulary: re.Pattern = NOTICE_RE,
+            ignore: re.Pattern | None = None) -> list[str]:
+    """Lines matching the notice vocabulary that are not model content, de-duplicated.
+    `ignore` is a subject's own fixed UI text that happens to contain a notice word (phase 5:
+    metacodes' empty input box reads `Try "fix typecheck errors"`); it is recorded with the
+    run, so a regrade applies the same exclusion."""
     seen, out = set(), []
     for line in (text or "").splitlines():
         s = line.strip()
-        if not s or not NOTICE_RE.search(s) or is_content_line(s, content):
+        if not s or not vocabulary.search(s) or is_content_line(s, content):
+            continue
+        if ignore is not None and ignore.search(s):
             continue
         s = s[:200]
         if s not in seen:
@@ -172,13 +208,14 @@ def first_seen_ms(raw: bytes, index: list[dict] | None, needle: str) -> int | No
 
 
 def raw_analysis(raw: bytes, tag: str | None, content: Content, index: list[dict] | None = None,
-                 needles: dict[str, str] | None = None) -> dict:
+                 needles: dict[str, str] | None = None, ignore: re.Pattern | None = None) -> dict:
     """Byte-level witness: alternate screen, clears, the failed-attempt tag, notices,
     and (with a rawtap index) when each of them first reached the terminal."""
     text = strip_ansi(raw)
     flat = compact(text)
     tag_seen = bool(tag) and tag in flat
-    notice_list = notices(text, content)
+    notice_list = notices(text, content, ignore=ignore)
+    signal_list = [s for s in notices(text, content, SIGNAL_RE, ignore) if s not in notice_list]
     alt_offsets = [raw.find(s) for s in ALT_ON if s in raw]
     return {
         "available": len(raw) > 0,
@@ -195,6 +232,10 @@ def raw_analysis(raw: bytes, tag: str | None, content: Content, index: list[dict
         "tag_first_ms": first_seen_ms(raw, index, tag) if tag_seen else None,
         "notices": notice_list,
         "notices_timed": [{"text": n, "t_ms": first_seen_ms(raw, index, compact(n))} for n in notice_list],
+        # phase 5: lines only the wider F4/F5 vocabulary catches (never used by grade() for F0-F6)
+        "signals_extra": signal_list,
+        "signals_extra_timed": [{"text": n, "t_ms": first_seen_ms(raw, index, compact(n))} for n in signal_list],
+        "reasoning_seen": sorted(reasoning_counts(text)),
         "first_seen_ms": {name: first_seen_ms(raw, index, needle) for name, needle in (needles or {}).items()},
     }
 
@@ -223,12 +264,21 @@ def no_retry_due(fault_seen: bool, healthy_retry: bool, last_request_change: flo
 
 
 # ---------------- grading ----------------
-def _result(verdict: str, reason: str, checks: dict, notice_final: list, notice_raw: list) -> dict:
-    fields = dict(FIELDS.get(verdict, {}))
-    if verdict == "fork" and notice_final:
-        fields["reported"] = True
-    return {"verdict": verdict, "reason": reason, "fields": fields, "checks": checks,
+def _result(verdict: str, reason: str, checks: dict, notice_final: list, notice_raw: list,
+            fields: dict | None = None) -> dict:
+    out = dict(FIELDS.get(verdict, {}))
+    if verdict in NOTICE_REPORTED:
+        # phase 5: `reported` on every retry-branch verdict; checks["notice_where"] says where
+        out["reported"] = bool(notice_final or notice_raw)
+    out.update(fields or {})
+    return {"verdict": verdict, "reason": reason, "fields": out, "checks": checks,
             "notices_final": notice_final, "notices_raw": notice_raw}
+
+
+def _notice_where(notice_final: list, notice_raw: list) -> str:
+    if notice_final:
+        return "final"
+    return "raw-only" if notice_raw else "none"
 
 
 def _terminal_ok(req: dict) -> bool:
@@ -256,9 +306,15 @@ def grade(obs: dict, content: Content) -> dict:
     complete = final.get("complete")
     mid = obs.get("mid")
     raw = obs.get("raw") or {}
+    # Non-interactive: `final.text` is what the consumer is meant to read (stdout, or the
+    # result text / the kept segments of a structured output); `emitted` is every byte the
+    # process wrote to stdout. Both are append-only, so a tag in `emitted` was shown.
+    emitted = obs.get("emitted") if not interactive else None
+    chrome = chrome_pattern(obs.get("chrome"))
     fc = counts(final_text)
     tag_final = tag_count(final_text, tag)
-    notice_final = notices(final_text + "\n" + (obs.get("stderr") or ""), content)
+    tag_emitted = tag_count(emitted, tag) if emitted is not None else None
+    notice_final = notices(final_text + "\n" + (obs.get("stderr") or ""), content, ignore=chrome)
     notice_raw = list(raw.get("notices") or []) if interactive else []
     reqs = sorted(obs.get("requests") or [], key=lambda r: r["seq"])
     main = [r for r in reqs if not r.get("aux")]
@@ -272,21 +328,22 @@ def grade(obs: dict, content: Content) -> dict:
         "main_stream_requests": len(main_stream), "final_full_once": full_once,
         "final_full_present": full_present, "final_duplicated": duplicated,
         "final_foreign_markers": foreign[:10], "final_tag_count": tag_final,
-        "final_complete": complete,
+        "final_complete": complete, "final_reasoning_markers": sorted(reasoning_counts(final_text)),
+        "emitted_tag_count": tag_emitted, "notice_where": _notice_where(notice_final, notice_raw),
     }
 
-    def out(verdict: str, reason: str) -> dict:
-        return _result(verdict, reason, checks, notice_final, notice_raw)
+    def out(verdict: str, reason: str, fields: dict | None = None) -> dict:
+        return _result(verdict, reason, checks, notice_final, notice_raw, fields)
 
     if obs.get("invalid"):
         return out("invalid", str(obs["invalid"]))
 
-    # ---- healthy controls (negative: F0-pre/F0-post; positive: F0-tag) ----
-    if fault == "F0":
+    # ---- healthy controls (negative: F0-pre/F0-post; positive: F0-tag, F0T-tag) ----
+    if fault in CONTROL_FAULTS:
         problems = []
         if not main_stream:
             problems.append("no marked main streaming request reached the mock")
-        if any(r.get("fault") != "F0" for r in reqs):
+        if any(r.get("fault") != fault for r in reqs):
             problems.append("a marked request was served a fault")
         if len(main) != 1:
             problems.append(f"expected exactly one main request, saw {len(main)}")
@@ -302,6 +359,21 @@ def grade(obs: dict, content: Content) -> dict:
             problems.append("an error/retry notice appeared in a healthy run")
         if not interactive and obs.get("exit_code") not in (0, None):
             problems.append(f"non-zero exit code {obs.get('exit_code')}")
+        if kind == "tag" and fault == "F0T":
+            # Thinking positive control (phase 5). The healthy checks must pass; the tag on
+            # the thinking then says whether this mode shows thinking at all, which is what
+            # a negative FTHINK result has to be read against.
+            want = len(content.data["reasoning"])
+            seen_raw = bool(interactive and raw.get("tag_seen"))
+            seen_mid = bool(mid and mid.get("trigger") == "tag" and tag_count(mid.get("text"), tag) > 0)
+            checks.update({"thinking_tag_expected": want, "thinking_tag_raw": seen_raw, "thinking_tag_mid": seen_mid})
+            if problems:
+                return out("control_failed", "; ".join(problems))
+            if tag_final or tag_emitted or seen_raw:
+                return out("tag_visible", f"thinking positive control: the tagged thinking reached the display "
+                                          f"({tag_final}/{want} tags on the final display)")
+            return out("thinking_hidden", "thinking positive control: this mode never shows thinking "
+                                          "(tag absent from the raw bytes, the final display and stdout)")
         if kind == "tag":
             want = len(partial)
             if tag_final != want:
@@ -318,6 +390,11 @@ def grade(obs: dict, content: Content) -> dict:
 
     partial_on_final = tag_final > 0 or any(fc.get(m, 0) for m in partial)
     notice_any = bool(notice_final or notice_raw)
+
+    # ---- F4 / F5 once (phase 5): a clean protocol-level stop, not a broken stream ----
+    if fault in SIGNAL_FAULTS and kind == "once":
+        return _grade_signal(obs, content, checks, out, fault, interactive, main, tag, tag_final,
+                             tag_emitted, full_present, mid, raw, final_text)
 
     # ---- persistent fault ----
     if kind == "always":
@@ -342,7 +419,7 @@ def grade(obs: dict, content: Content) -> dict:
     retry = next((r for r in later if r.get("fault") == "F0" and _terminal_ok(r)), None)
     shown_mid = bool(tag and mid and mid.get("trigger") == "tag" and tag_count(mid.get("text"), tag) > 0)
     shown_raw = bool(interactive and raw.get("available") and raw.get("tag_seen"))
-    shown_stdout = (not interactive) and tag_final > 0
+    shown_stdout = (not interactive) and (tag_final > 0 or bool(tag_emitted))
     shown = shown_mid or shown_raw or shown_stdout
     checks.update({
         "fault_seq": first["seq"], "retry_seq": retry["seq"] if retry else None,
@@ -400,6 +477,141 @@ def grade(obs: dict, content: Content) -> dict:
     return out("not_shown", "the failed attempt's tag never reached the terminal; clean retry; one complete answer")
 
 
+def _grade_signal(obs: dict, content: Content, checks: dict, out, fault: str, interactive: bool,
+                  main: list[dict], tag: str | None, tag_final: int, tag_emitted: int | None,
+                  full_present: bool, mid: dict | None, raw: dict, final_text: str) -> dict:
+    """F4 (a length stop after the full answer plus an overflow) and F5 (thinking only, then
+    a length stop), once. Graded: what the client did with a clean stop it may continue or
+    retry (a follow-up request, and whether it carried the first attempt), whether the user
+    was told (the wider SIGNAL_RE vocabulary, raw bytes included), and the final display.
+    `contained` is recorded for a fresh retry only: what a continuation should display
+    depends on a server branch this mock does not model (it always restarts)."""
+    faulted = [r for r in main if r.get("fault") == fault and r.get("fault_source") == "once"]
+    if not faulted:
+        return out("n/a", f"armed fault {fault} was not delivered to a marked main request")
+    first = faulted[0]
+    later = [r for r in main if r["seq"] > first["seq"]]
+    follow = next((r for r in later if r.get("fault") == "F0" and r.get("ending") == "clean"
+                   and (r.get("stream") is False or _terminal_ok(r))), None)
+    sig_final = notices(final_text + "\n" + (obs.get("stderr") or ""), content, SIGNAL_RE,
+                        chrome_pattern(obs.get("chrome")))
+    sig_raw = (list(raw.get("notices") or []) + list(raw.get("signals_extra") or [])) if interactive else []
+    reported = bool(sig_final or sig_raw)
+    carried = bool(follow and (follow.get("carries_partial") or follow.get("carries_tag")))
+    shown = bool(tag_final or tag_emitted or (interactive and raw.get("tag_seen"))
+                 or (mid and mid.get("trigger") == "tag" and tag_count(mid.get("text"), tag) > 0))
+    checks.update({
+        "fault_seq": first["seq"], "follow_seq": follow["seq"] if follow else None,
+        "later_main_requests": len(later), "follow_carried_first": carried,
+        "follow_trailing_role": follow.get("trailing_role") if follow else None,
+        "signals_final": sig_final[:10], "signals_raw": sig_raw[:10],
+        "signal_where": "final" if sig_final else ("raw-only" if sig_raw else "none"),
+        "first_attempt_shown": shown,
+        "final_q_markers": sum(1 for m in counts(final_text) if m.startswith("Q")),
+        "exit_code": obs.get("exit_code"),
+    })
+    if follow is None:
+        if later:
+            return out("n/a", "later requests exist but none completed cleanly")
+        if reported:
+            return out("reported_failure", "no follow-up request; a notice was shown")
+        if not interactive and obs.get("exit_code") not in (0, None):
+            return out("exit_code_only", f"no follow-up request and no notice; exit code {obs.get('exit_code')}")
+        if len(main) == 1:
+            return out("accepted_silently", "one request; the stop was taken as the end of the answer; no notice")
+        return out("n/a", "no follow-up request and insufficient evidence")
+    # whether the first attempt is still on the final display (its tag, or F4's overflow Q markers)
+    checks["first_attempt_on_final"] = bool(tag_final or checks["final_q_markers"])
+    if carried:
+        # what a continuation should display (and whether it completes the answer) depends
+        # on the server branch the mock does not model: record detected and reported only
+        return out("length_continued", "a follow-up request carried the first attempt (continuation)",
+                   {"reported": reported})
+    if interactive and checks.get("final_complete") is not True:
+        return out("n/a", "fresh follow-up request, but the final screen is not proven complete")
+    return out("length_retried", "a fresh follow-up request (it carried nothing of the first attempt)",
+               {"reported": reported, "recovered": bool(full_present), "contained": tag_final == 0})
+
+
+# ---------------- structured stdout (phase 5: metacodes --json / --stream-json) ----------------
+def _json_lines(stdout: str) -> tuple[list[dict], int]:
+    objs, bad = [], 0
+    for line in (stdout or "").splitlines():
+        if not line.strip():
+            continue
+        try:
+            obj = json.loads(line)
+        except json.JSONDecodeError:
+            bad += 1
+            continue
+        if isinstance(obj, dict):
+            objs.append(obj)
+        else:
+            bad += 1
+    return objs, bad
+
+
+def result_line_display(stdout: str) -> dict:
+    """`--json`: one NDJSON result line; the consumer reads its `text`."""
+    objs, bad = _json_lines(stdout)
+    results = [o for o in objs if o.get("type") == "result"]
+    last = results[-1] if results else {}
+    keep = ("stop_reason", "text_kind", "turns", "continuations", "input_tokens", "output_tokens", "cost_usd")
+    return {"display": last.get("text") or "", "extra": {"result_lines": len(results), "unparsed_lines": bad,
+                                                          **{k: last.get(k) for k in keep}}}
+
+
+def stream_json_display(stdout: str) -> dict:
+    """`--stream-json`: what a consumer that follows the protocol keeps. `text`/`thinking`
+    lines belong to the output segment open when they arrive; a segment closed with
+    `disposition: discarded` is dropped, thinking inside it included. Lines outside any
+    segment are kept (nothing tells the consumer to drop them)."""
+    objs, bad = _json_lines(stdout)
+    order: list[tuple[int | None, str, str]] = []
+    segments: dict[int, dict] = {}
+    open_index = None
+    run_end = None
+    types = Counter()
+    for o in objs:
+        t = o.get("type")
+        types[t] += 1
+        if t == "output_segment_begin":
+            open_index = o.get("index")
+            segments.setdefault(open_index, {"index": open_index, "disposition": None, "bytes": None})
+        elif t == "output_segment_end":
+            seg = segments.setdefault(o.get("index"), {"index": o.get("index"), "disposition": None, "bytes": None})
+            seg["disposition"], seg["bytes"] = o.get("disposition"), o.get("bytes")
+            if open_index == o.get("index"):
+                open_index = None
+        elif t in ("text", "thinking"):
+            order.append((open_index, t, o.get("text") or ""))
+        elif t == "run_end":
+            run_end = o.get("stop_reason")
+    dropped = {i for i, s in segments.items() if s.get("disposition") == "discarded"}
+    kept = [(i, t, x) for i, t, x in order if i not in dropped]
+    seg_rows = []
+    for i, s in sorted(segments.items(), key=lambda kv: (kv[0] is None, kv[0])):
+        text = "".join(x for j, t, x in order if j == i and t == "text")
+        thinking = "".join(x for j, t, x in order if j == i and t == "thinking")
+        seg_rows.append({**s, "text_markers": len(counts(text)), "thinking_markers": sorted(reasoning_counts(thinking)),
+                         "text_chars": len(text), "thinking_chars": len(thinking)})
+    return {
+        "display": "".join(x for _, _, x in kept),
+        "extra": {"segments": seg_rows, "discarded_segments": len(dropped),
+                  "lines_outside_segments": sum(1 for i, _, _ in order if i is None),
+                  "thinking_lines": sum(1 for _, t, _ in order if t == "thinking"),
+                  "run_end_stop_reason": run_end, "line_types": dict(types), "unparsed_lines": bad},
+    }
+
+
+DISPLAY_KINDS = {"plain": None, "result-line": result_line_display, "stream-json": stream_json_display}
+
+
+def display_of(kind: str | None, stdout: str) -> dict:
+    fn = DISPLAY_KINDS.get(kind or "plain")
+    return fn(stdout) if fn else {"display": stdout or "", "extra": {}}
+
+
 # ---------------- request bodies and stored sessions ----------------
 STOP_RE = re.compile(r'"(?:stop_reason|finishReason|finish_reason)"\s*:\s*"([^"]+)"')
 
@@ -412,8 +624,14 @@ def content_text(value) -> str:
     if isinstance(value, dict):
         if isinstance(value.get("text"), str):
             return value["text"]
+        # phase 5: a thinking block (Anthropic `thinking`, stored or sent back) counts as
+        # assistant output, so a retry that carries tagged thinking is seen carrying it
+        if isinstance(value.get("thinking"), str):
+            return value["thinking"]
         if "content" in value:
             return content_text(value["content"])
+        if "blocks" in value:  # metacodes transcript.jsonl entries
+            return content_text(value["blocks"])
     return ""
 
 
@@ -491,8 +709,24 @@ def assistant_texts_in_file(raw: str) -> list[str]:
     return texts
 
 
+# deepseek-harness session logs (v4) end a turn with `"reason": {"kind": "completed"}`
+STOP_KIND_RE = re.compile(r'"(?:stop_reason|finishReason|finish_reason)"\s*:\s*"([^"]+)"'
+                          r'|"reason"\s*:\s*\{\s*"kind"\s*:\s*"([^"]+)"')
+
+
 def stop_reasons_in_file(raw: str) -> list[str]:
-    return STOP_RE.findall(raw)
+    return [m.group(1) or m.group(2) for m in STOP_KIND_RE.finditer(raw)]
+
+
+def read_session_text(path: Path | str) -> str:
+    """A stored session file as text; zstd-compressed logs (`*.zst`, `*.zstd`, deepseek-
+    harness `session.v4.jsonl.zstd`) are decompressed with Python 3.14's compression.zstd."""
+    path = Path(path)
+    data = path.read_bytes()
+    if path.suffix in (".zst", ".zstd"):
+        from compression import zstd  # Python >= 3.14
+        data = zstd.decompress(data)
+    return data.decode("utf-8", "replace")
 
 
 # ---------------- evidence directory -> observation ----------------
@@ -509,8 +743,13 @@ def load_observation(run_dir: Path | str, content: Content) -> dict:
     interactive = obs.get("mode") == "interactive"
     final_name = "final-view.txt" if interactive else "stdout.txt"
     final_path = run_dir / final_name
+    final_text = final_path.read_text(encoding="utf-8", errors="replace") if final_path.exists() else ""
+    if not interactive:
+        # the display is re-derived from stdout by the same pure function the run used
+        obs["emitted"] = final_text
+        final_text = display_of(obs.get("display_kind"), final_text)["display"]
     obs["final"] = {
-        "text": final_path.read_text(encoding="utf-8", errors="replace") if final_path.exists() else "",
+        "text": final_text,
         "complete": (obs.get("final") or {}).get("complete"),
     }
     mid_meta = run_dir / "mid.json"
@@ -521,7 +760,8 @@ def load_observation(run_dir: Path | str, content: Content) -> dict:
         obs["mid"] = {"text": mid_text.read_text(encoding="utf-8", errors="replace"),
                       "ts_ms": meta.get("ts_ms"), "trigger": meta.get("trigger")}
     raw_path = run_dir / "raw.bin"
-    obs["raw"] = (raw_analysis(raw_path.read_bytes(), obs.get("tag"), content, load_index(run_dir / "raw-index.jsonl"))
+    obs["raw"] = (raw_analysis(raw_path.read_bytes(), obs.get("tag"), content, load_index(run_dir / "raw-index.jsonl"),
+                               ignore=chrome_pattern(obs.get("chrome")))
                   if raw_path.exists() else None)
     stderr_path = run_dir / "stderr.txt"
     if stderr_path.exists():
