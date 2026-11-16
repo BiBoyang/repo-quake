@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "phase5-stream-retry-metacodes-v1",
+  "claim": "In metacodes 0.12.1-dev built from upstream main 1707da0c, after a once-fault on the main answer (F1 mid-stream FIN, F6 clean end without terminator, FLONG long partial then FIN, and the production trigger FTHINK: a reasoning model streams thinking first and the stream drops before any text, as FTHINK1 with a FIN and FTHINK6 with a clean end), the request is re-issued once and the stored conversation keeps only the retried answer; what the user sees differs by host: the TUI keeps the failed attempt (text or thinking) in scrollback with the retried answer appended below it and no notice (fork); headless -p and --json never print the failed attempt and leave one err-level stderr line naming the stream error although the run succeeds (not shown); --stream-json emits the failed attempt and then closes its segment as discarded, thinking included, with no retry event (retracted for a consumer that follows the protocol). Predictions come from reading the source at 1707da0c and from uncounted pilot runs on 2026-11-16 (N=1 per cell), both disclosed.",
+  "target": {
+    "name": "metacodes (Zig) TUI and headless hosts: retry display after a dropped stream",
+    "version": "metacodes 0.12.1-dev+1707da0c6768 (upstream/main 1707da0c676863f62d99d58b1e33d0956cf21d1d, zig 0.16.0, ReleaseSmall, aarch64-macos); executed binary sha256 ee7718a91d7d3baa5288e9f54c8bdbaae0eae2720b4896818658be3bdad2cd64"
+  },
+  "task": {
+    "prompt_sha256": "2294655f1a14a801b1ad597692250341b2d915a70b486e383ac11153f89cfb65",
+    "path_reachability": "Every run asks for one plain-text answer with no tools, so the main answer request is the only path; the once-fault is pinned to it by the run's random mark, the streaming flag and the absence of a structured-output format, and the mock's delivery log proves per run which request received it. metacodes speaks Anthropic Messages to the mock through --base-url; it re-issues a request whose stream gave no answer once by default (STREAM_RETRIES_PER_REQUEST = 1, #461/#465) unless a tool call had started, and the answer here never calls a tool. The TUI follow-up turn (prompt sha256 2377dffeecfdc44ba3259a34b1ab2c66b2afa6f1bbe7fe4d27397ebe2c1ee113) only reads back what the client sends next."
+  },
+  "hosts": [
+    {"id": "metacodes-tui", "name": "metacodes", "version": "0.12.1-dev+1707da0c6768", "model": "claude-sonnet-4-20250514 as named by the client (loopback mock answers)", "effort": "not applicable (mock provider)"},
+    {"id": "metacodes-p", "name": "metacodes", "version": "0.12.1-dev+1707da0c6768", "model": "claude-sonnet-4-20250514 as named by the client (loopback mock answers)", "effort": "not applicable (mock provider)"},
+    {"id": "metacodes-json", "name": "metacodes-json", "version": "0.12.1-dev+1707da0c6768", "model": "claude-sonnet-4-20250514 as named by the client (loopback mock answers)", "effort": "not applicable (mock provider)"},
+    {"id": "metacodes-sjson", "name": "metacodes-sjson", "version": "0.12.1-dev+1707da0c6768", "model": "claude-sonnet-4-20250514 as named by the client (loopback mock answers)", "effort": "not applicable (mock provider)"}
+  ],
+  "arms": [
+    {"id": "F0-pre", "fault": "F0 healthy stream, before the fault series", "role": "negative_control"},
+    {"id": "F0-tag", "fault": "F0 healthy stream whose first 12 paragraphs carry the failed-attempt tag (witness positive control for text)", "role": "positive_control"},
+    {"id": "F0T-tag", "fault": "F0T healthy stream with a complete, tagged thinking block (R01-R06, signature) before the untagged full answer: whether this host shows thinking at all (positive control for thinking; 'thinking_hidden' is a result, not a failure)", "role": "positive_control"},
+    {"id": "F1-once", "fault": "F1 once: P01-P12 then TCP FIN, no terminator; later requests healthy", "role": "treatment"},
+    {"id": "F6-once", "fault": "F6 once: P01-P12 then a clean HTTP end with no terminator; later requests healthy", "role": "treatment"},
+    {"id": "FLONG-once", "fault": "FLONG once: L001-L160 at 150 ms per frame then TCP FIN; the healthy answer is L001-L200", "role": "treatment"},
+    {"id": "FTHINK1-once", "fault": "FTHINK1 once: a thinking block R01-R06 (tagged, no signature, no text) then TCP FIN; later requests healthy (plain answer, no thinking)", "role": "treatment"},
+    {"id": "FTHINK6-once", "fault": "FTHINK6 once: the same thinking then a clean HTTP end with no terminator; later requests healthy", "role": "treatment"},
+    {"id": "F0-post", "fault": "F0 healthy stream, after the fault series (rerun after any supplementary run)", "role": "negative_control"}
+  ],
+  "controls": {"negative": "F0-pre", "positive": "F0-tag"},
+  "witness": {
+    "delivery": "mock.mjs delivery.jsonl per request (ms timestamps, fault and its source, events, bytes, ending, continuation decision, request sha256) plus every request body; the retry body and the TUI follow-up body are parsed for assistant-role history (text and thinking blocks) carrying the partial or the tag.",
+    "checker": "witness/stream-retry at the hashes in frozen-sha256.txt (phase-5 additions: Metacodes, MetacodesJson and MetacodesStreamJson adapters; FTHINK1, FTHINK6 and F0T in the mock for Anthropic, Chat Completions and Responses; the thinking positive control; `reported` read from notices on every retry-branch verdict; a per-subject chrome exclusion for metacodes' empty input box `Try \"fix typecheck errors\"`; --json is read as its result line's text, --stream-json as the text and thinking a consumer keeps after dropping `discarded` segments, and a tag anywhere in stdout counts as shown). TUI: tag-keyed mid capture every 30 ms, overlap capture, FLONG pre-FIN capture, final screen completeness (banner `metacodes vX.Y.Z` and mark on a 110x400 screen), raw terminal bytes via tmux pipe-pane with a per-chunk time index, follow-up request, stored transcript (.metacodes/projects/*/*/transcript.jsonl).",
+    "blind_spots": [
+      "Raw bytes prove text was written to the terminal, not how long a person could see it; visibility shorter than the capture interval (about 30-60 ms) has no screen capture.",
+      "Final-screen completeness is banner-plus-mark; an app that elides the middle of a transcript would defeat it (not observed in the probe or pilot screens).",
+      "tmux is not a real terminal emulator; render timing may differ from desktop terminals.",
+      "The network sandbox makes the subject run offline; Jev's default consult is turned off and TinyKG is not started, so memory-related requests do not occur.",
+      "The mock restarts on retry by default; a continue branch is only exercised if a retry carries the partial.",
+      "FTHINK's healthy retry carries no thinking; a real reasoning model would think again before answering.",
+      "The --stream-json reading assumes a consumer that assigns text and thinking lines to the segment open when they arrive, as the stream_json_backend.zig header asks; a consumer that ignores dispositions sees the failed attempt (recorded as emitted_tag_count).",
+      "The web UI and AgentCore C ABI hosts are not driven by this harness and are not measured."
+    ]
+  },
+  "grading": {
+    "rubric": "witness/stream-retry/README.md (判定) implemented by grading.grade(); labels are notes, the record is the five observation fields per skills/repo-quake/references/fault-catalog.md §stream; phase 5 records `reported` on every retry-branch verdict, from notices in the final display, stderr or (TUI) the raw byte stream, with checks.notice_where saying which",
+    "primary_metric": "per run: detected / reported / contained / recovered from the retry-display outcome (not_shown, retracted, fork, continued, duplicate, accepted_partial, reported_failure); secondary, not changing the verdict: tag-keyed mid capture before the retry start, transient overlap, notices from raw bytes and stderr, follow-up request and stored transcript contents, --stream-json segment dispositions"
+  },
+  "sampling": {"runs_per_cell": 3},
+  "invalid_rules": [
+    "input or prompt gate fails (a confirmation prompt on screen, or the input box never appears): invalid, rerun once at the end of the host's sequence",
+    "harness exception or the run hits the 300 s cap: invalid, rerun once",
+    "the executed binary (lsof on the pane process) differs from the pinned binary: invalid",
+    "version or sha256 drift between the before and after witnesses: the whole matrix is invalid",
+    "mock port busy, wrong instance on /health, or listener pid not the runner's child: abort before any dispatch",
+    "F0-pre or F0-tag not passing for a host: that host's fault cells are not run (setup invalid), not graded",
+    "after any supplementary run, F0-post is run again (3 runs) and both F0-post sets are reported"
+  ],
+  "budget": {"max_runs": 140},
+  "isolation": {
+    "mode": "env -i allowlist (PATH, TERM, LANG, a fresh HOME per run, METASK_API_KEY=dummy, METACODES_NO_PROBE=1, METACODES_KG_AUTOSTART=0, METACODES_JEV_URL=off), sandbox-exec allowing outbound connections to localhost only (no DNS), private tmux server with an empty config; metacodes has no start-up update check (update is an explicit subcommand), and the executed binary is hashed before, during (lsof) and after; mock on a loopback ephemeral port with a control-plane token",
+    "pristine_original_unreachable": false,
+    "contamination": "No mutated copy exists in this design: faults are injected on the wire by the mock and the subject binary is unmodified. The subject runs as the experimenter's user and could read the evidence root, but it is a deterministic client that receives no tool calls from the mock. Pilot runs (uncounted, N=1 per cell, 2026-11-16) informed the claim and are disclosed. One executor at a time on this machine: the Claude Code / codex appendix and the deepseek-harness matrix run after this matrix, never alongside it."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Loopback mock only; no paid model, no vendor endpoint (outbound blocked by the sandbox); temporary HOMEs inside the evidence root; the metacodes checkout is untouched (a detached temporary worktree is built and removed afterwards); LaunchServices registrations audited after the matrix."
+  }
+}

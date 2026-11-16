@@ -1,0 +1,27 @@
+{
+  "available": true,
+  "bytes": 32084,
+  "indexed": true,
+  "alt_screen_on": [
+    69
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794819151318,
+  "esc_2J": 0,
+  "esc_3J": 0,
+  "tag_seen": false,
+  "tag_contiguous": false,
+  "tag_first_ms": null,
+  "notices": [],
+  "notices_timed": [],
+  "signals_extra": [],
+  "signals_extra_timed": [],
+  "reasoning_seen": [],
+  "first_seen_ms": {
+    "first_marker": 1794819152487,
+    "partial_last": 1794819152723,
+    "first_new": 1794819152744,
+    "answer_last": 1794819152977
+  }
+}

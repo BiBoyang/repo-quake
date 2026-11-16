@@ -1,0 +1,36 @@
+{
+  "tool": "metacodes",
+  "ready": true,
+  "danger": [],
+  "banner": true,
+  "executed": {
+    "pid": 90786,
+    "path": "<HOME>/Desktop/metacodes/.notes-verify/phase5-mc-main/zig-out/bin/metacodes",
+    "sha256": "ee7718a91d7d3baa5288e9f54c8bdbaae0eae2720b4896818658be3bdad2cd64"
+  },
+  "raw": {
+    "available": true,
+    "bytes": 191935,
+    "indexed": false,
+    "alt_screen_on": [],
+    "alt_screen_on_count": 0,
+    "alt_screen_off_count": 0,
+    "alt_screen_on_ms": null,
+    "esc_2J": 0,
+    "esc_3J": 0,
+    "tag_seen": false,
+    "tag_contiguous": false,
+    "tag_first_ms": null,
+    "notices_timed": [],
+    "signals_extra": [],
+    "signals_extra_timed": [],
+    "reasoning_seen": [],
+    "first_seen_ms": {}
+  },
+  "at": "2026-11-16T08:19:18.117+00:00",
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true
+}

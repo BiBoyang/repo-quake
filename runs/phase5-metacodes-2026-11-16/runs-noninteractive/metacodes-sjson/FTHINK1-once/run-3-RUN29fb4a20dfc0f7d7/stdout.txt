@@ -1,0 +1,64 @@
+{"type":"turn_begin","turn":1}
+{"type":"output_segment_begin","index":0,"turn":1,"group":0}
+{"type":"usage","input_tokens":24,"output_tokens":1,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}
+{"type":"thinking","text":"【R01】让我想想这份报告的结构应该先搭骨架再填肉。 〔x0d05ad〕\n"}
+{"type":"thinking","text":"【R02】骨架分两翼：内容证人一翼，终止证人一翼。 〔x0d05ad〕\n"}
+{"type":"thinking","text":"【R03】填肉时注意每个段落都要带编号，方便事后定位截断点。 〔x0d05ad〕\n"}
+{"type":"thinking","text":"【R04】再检查一下各协议的终止方言是否写对，不能一套字节打天下。 〔x0d05ad〕\n"}
+{"type":"thinking","text":"【R05】最后确认阳性对照是否覆盖所有故障形态，防止假阴性。 〔x0d05ad〕\n"}
+{"type":"thinking","text":"【R06】思考完毕，接下来本该输出正文——但本故障形态下正文永远不会到来。 〔x0d05ad〕\n"}
+{"type":"output_segment_end","index":0,"turn":1,"group":0,"disposition":"discarded","bytes":0}
+{"type":"output_segment_begin","index":1,"turn":1,"group":0}
+{"type":"usage","input_tokens":24,"output_tokens":1,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}
+{"type":"text","text":"【P01】第一节：问题定义。流式输出的完整性判定，本质上是一个\"两个证人\"问题：内容证人与终止证人。\n"}
+{"type":"text","text":"【P02】内容证人回答\"这段话说到哪了\"，终止证人回答\"这次生成是否正常收场\"。两者缺一不可。\n"}
+{"type":"text","text":"【P03】在 OpenAI Chat Completions 协议里，终止证人是末 chunk 的 finish_reason 与最后的 [DONE] 哨兵。\n"}
+{"type":"text","text":"【P04】在 OpenAI Responses 协议里，终止证人是 response.completed 事件本身，不存在 [DONE] 概念。\n"}
+{"type":"text","text":"【P05】在 Anthropic Messages 协议里，终止证人是 message_stop 事件与流的有序关闭。\n"}
+{"type":"text","text":"【P06】当两个证人同时缺席——例如连接中途断开——客户端面对的只是一段戛然而止的正文。\n"}
+{"type":"text","text":"【P07】检出率测评要回答的问题：各家 harness 在证人缺席时，能否发现自己拿到的是半截回答？\n"}
+{"type":"text","text":"【P08】本节完。以下进入第二节，讨论故障注入的工程实现。\n"}
+{"type":"text","text":"【P09】第二节：注入方法。确定性故障注入的首选是本地 mock provider，因为它控制发出的每一个字节。\n"}
+{"type":"text","text":"【P10】mock 侧日志天然构成送达证明：记录实际写出的字节数与事件序列，排除\"故障没送达\"的干扰。\n"}
+{"type":"text","text":"【P11】mitmproxy 手术是兜底方案：对不接受自定义 base_url 的工具，在真实响应流上做截断。\n"}
+{"type":"text","text":"【P12】手术包括三种刀法：直接断连接、删终止事件、削掉 SSE 帧结尾的空行。\n"}
+{"type":"text","text":"【P13】每种故障形态都必须配一个阳性对照，证明注入链路本身工作正常。\n"}
+{"type":"text","text":"【P14】没有阳性对照的\"未检出\"结论是不可靠的——可能只是手术刀没有碰到血管。\n"}
+{"type":"text","text":"【P15】本节完。以下进入第三节，讨论判定分级与记录方式。\n"}
+{"type":"text","text":"【P16】第三节：判定分级。L0 静默，半截回答当完整交付，是最危险的形态。\n"}
+{"type":"text","text":"【P17】L1 错对象，有信号但没有告诉用户回答不完整，或者把锅甩给了别的环节。\n"}
+{"type":"text","text":"【P18】L2 明确告知，工具直接说明回答被截断，用户不会被误导。检出线划在这里。\n"}
+{"type":"text","text":"【P19】L3 告知加恢复，在 L2 基础上自动重试或续写成功，是最理想的工程形态。\n"}
+{"type":"text","text":"【P20】除用户可见行为外，还要记录 transcript 打标维度：落盘会话里这条回复有没有被标记。\n"}
+{"type":"text","text":"【P21】用户可见性与机器可见性必须分开记录，二者不一致的案例恰恰是文章的好素材。\n"}
+{"type":"text","text":"【P22】每格故障跑三次取一致结果，不一致记为 flaky 并加注，不做平均主义处理。\n"}
+{"type":"text","text":"【P23】最终产出是一张工具乘以故障的检出率矩阵，外加一两个戏剧性案例的深挖。\n"}
+{"type":"text","text":"【P24】本报告完。三个证人齐了：内容完整、终止信号送达、流正常关闭。\n"}
+{"type":"usage","input_tokens":0,"output_tokens":1024,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}
+{"type":"turn_end","turn":1,"tool_calls":0}
+{"type":"output_segment_end","index":1,"turn":1,"group":0,"disposition":"final","bytes":2732}
+{"type":"run_end","turns":1,"tool_calls":0,"stop_reason":"end_turn"}
+【P01】第一节：问题定义。流式输出的完整性判定，本质上是一个"两个证人"问题：内容证人与终止证人。
+【P02】内容证人回答"这段话说到哪了"，终止证人回答"这次生成是否正常收场"。两者缺一不可。
+【P03】在 OpenAI Chat Completions 协议里，终止证人是末 chunk 的 finish_reason 与最后的 [DONE] 哨兵。
+【P04】在 OpenAI Responses 协议里，终止证人是 response.completed 事件本身，不存在 [DONE] 概念。
+【P05】在 Anthropic Messages 协议里，终止证人是 message_stop 事件与流的有序关闭。
+【P06】当两个证人同时缺席——例如连接中途断开——客户端面对的只是一段戛然而止的正文。
+【P07】检出率测评要回答的问题：各家 harness 在证人缺席时，能否发现自己拿到的是半截回答？
+【P08】本节完。以下进入第二节，讨论故障注入的工程实现。
+【P09】第二节：注入方法。确定性故障注入的首选是本地 mock provider，因为它控制发出的每一个字节。
+【P10】mock 侧日志天然构成送达证明：记录实际写出的字节数与事件序列，排除"故障没送达"的干扰。
+【P11】mitmproxy 手术是兜底方案：对不接受自定义 base_url 的工具，在真实响应流上做截断。
+【P12】手术包括三种刀法：直接断连接、删终止事件、削掉 SSE 帧结尾的空行。
+【P13】每种故障形态都必须配一个阳性对照，证明注入链路本身工作正常。
+【P14】没有阳性对照的"未检出"结论是不可靠的——可能只是手术刀没有碰到血管。
+【P15】本节完。以下进入第三节，讨论判定分级与记录方式。
+【P16】第三节：判定分级。L0 静默，半截回答当完整交付，是最危险的形态。
+【P17】L1 错对象，有信号但没有告诉用户回答不完整，或者把锅甩给了别的环节。
+【P18】L2 明确告知，工具直接说明回答被截断，用户不会被误导。检出线划在这里。
+【P19】L3 告知加恢复，在 L2 基础上自动重试或续写成功，是最理想的工程形态。
+【P20】除用户可见行为外，还要记录 transcript 打标维度：落盘会话里这条回复有没有被标记。
+【P21】用户可见性与机器可见性必须分开记录，二者不一致的案例恰恰是文章的好素材。
+【P22】每格故障跑三次取一致结果，不一致记为 flaky 并加注，不做平均主义处理。
+【P23】最终产出是一张工具乘以故障的检出率矩阵，外加一两个戏剧性案例的深挖。
+【P24】本报告完。三个证人齐了：内容完整、终止信号送达、流正常关闭。

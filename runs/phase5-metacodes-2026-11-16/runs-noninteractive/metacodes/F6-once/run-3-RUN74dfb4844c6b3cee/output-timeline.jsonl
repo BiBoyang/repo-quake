@@ -1,0 +1,25 @@
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P01】第一节：问题定义。流式输出的完整性判定，本质上是一个\"两个证人\"问题：内容证人与终止证人。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P02】内容证人回答\"这段话说到哪了\"，终止证人回答\"这次生成是否正常收场\"。两者缺一不可。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P03】在 OpenAI Chat Completions 协议里，终止证人是末 chunk 的 finish_reason 与最后的 [DONE] 哨兵。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P04】在 OpenAI Responses 协议里，终止证人是 response.completed 事件本身，不存在 [DONE] 概念。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P05】在 Anthropic Messages 协议里，终止证人是 message_stop 事件与流的有序关闭。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P06】当两个证人同时缺席——例如连接中途断开——客户端面对的只是一段戛然而止的正文。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P07】检出率测评要回答的问题：各家 harness 在证人缺席时，能否发现自己拿到的是半截回答？\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P08】本节完。以下进入第二节，讨论故障注入的工程实现。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P09】第二节：注入方法。确定性故障注入的首选是本地 mock provider，因为它控制发出的每一个字节。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P10】mock 侧日志天然构成送达证明：记录实际写出的字节数与事件序列，排除\"故障没送达\"的干扰。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P11】mitmproxy 手术是兜底方案：对不接受自定义 base_url 的工具，在真实响应流上做截断。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P12】手术包括三种刀法：直接断连接、删终止事件、削掉 SSE 帧结尾的空行。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P13】每种故障形态都必须配一个阳性对照，证明注入链路本身工作正常。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P14】没有阳性对照的\"未检出\"结论是不可靠的——可能只是手术刀没有碰到血管。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P15】本节完。以下进入第三节，讨论判定分级与记录方式。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P16】第三节：判定分级。L0 静默，半截回答当完整交付，是最危险的形态。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P17】L1 错对象，有信号但没有告诉用户回答不完整，或者把锅甩给了别的环节。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P18】L2 明确告知，工具直接说明回答被截断，用户不会被误导。检出线划在这里。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P19】L3 告知加恢复，在 L2 基础上自动重试或续写成功，是最理想的工程形态。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P20】除用户可见行为外，还要记录 transcript 打标维度：落盘会话里这条回复有没有被标记。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P21】用户可见性与机器可见性必须分开记录，二者不一致的案例恰恰是文章的好素材。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P22】每格故障跑三次取一致结果，不一致记为 flaky 并加注，不做平均主义处理。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P23】最终产出是一张工具乘以故障的检出率矩阵，外加一两个戏剧性案例的深挖。\n"}
+{"stream": "stdout", "t_ms": 1794817615497, "text": "【P24】本报告完。三个证人齐了：内容完整、终止信号送达、流正常关闭。\n"}
+{"stream": "stderr", "t_ms": 1794817614210, "text": "\u001b[31m[ERROR agent req=3b4bd5080001]\u001b[0m stream returned error StreamIncomplete at turn 1\n"}

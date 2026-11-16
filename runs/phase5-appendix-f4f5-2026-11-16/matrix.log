@@ -1,0 +1,63 @@
+{"tool": "claude", "ready": true, "danger": [], "banner": true, "executed": {"pid": 18691, "path": "<HOME>/.local/share/claude/versions/2.1.282", "sha256": "fcfd837103965c64de34a6b9b94370d77a347ea71819715a27d5f0ef01775ea4"}, "raw": {"available": true, "bytes": 2142, "indexed": false, "alt_screen_on": [593], "alt_screen_on_count": 1, "alt_screen_off_count": 0, "alt_screen_on_ms": null, "esc_2J": 1, "esc_3J": 0, "tag_seen": false, "tag_contiguous": false, "tag_first_ms": null, "notices_timed": [], "signals_extra": [], "signals_extra_timed": [], "reasoning_seen": [], "first_seen_ms": {}}, "at": "2026-11-16T08:50:13.310+00:00", "tmux": [110, 400], "sandbox": true}
+{"tool": "codex", "ready": true, "danger": [], "banner": true, "executed": {"pid": 18735, "path": "/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex", "sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002"}, "raw": {"available": true, "bytes": 16385, "indexed": false, "alt_screen_on": [69], "alt_screen_on_count": 1, "alt_screen_off_count": 0, "alt_screen_on_ms": null, "esc_2J": 0, "esc_3J": 0, "tag_seen": false, "tag_contiguous": false, "tag_first_ms": null, "notices_timed": [], "signals_extra": [], "signals_extra_timed": [], "reasoning_seen": [], "first_seen_ms": {}}, "at": "2026-11-16T08:50:16.084+00:00", "tmux": [110, 400], "sandbox": true}
+{"tool": "claude", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 7.5, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 7.6, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 7.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-tag", "run": 1, "verdict": "tag_visible", "requests": 2, "seconds": 7.7, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F0-tag", "run": 2, "verdict": "tag_visible", "requests": 2, "seconds": 7.6, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F0-tag", "run": 3, "verdict": "tag_visible", "requests": 2, "seconds": 7.3, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F4-once", "run": 1, "verdict": "length_continued", "requests": 3, "seconds": 8.5, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F4-once", "run": 2, "verdict": "length_continued", "requests": 3, "seconds": 8.8, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F4-once", "run": 3, "verdict": "length_continued", "requests": 3, "seconds": 8.7, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F5-once", "run": 1, "verdict": "length_retried", "requests": 3, "seconds": 7.9, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F5-once", "run": 2, "verdict": "length_retried", "requests": 3, "seconds": 7.9, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F5-once", "run": 3, "verdict": "length_retried", "requests": 3, "seconds": 8.0, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 7.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 7.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 7.6, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 8.1, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 7.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 7.9, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-tag", "run": 1, "verdict": "tag_visible", "requests": 2, "seconds": 7.8, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F0-tag", "run": 2, "verdict": "tag_visible", "requests": 2, "seconds": 7.8, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F0-tag", "run": 3, "verdict": "tag_visible", "requests": 2, "seconds": 7.7, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F4-once", "run": 1, "verdict": "reported_failure", "requests": 2, "seconds": 65.3, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F4-once", "run": 2, "verdict": "reported_failure", "requests": 2, "seconds": 65.3, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F4-once", "run": 3, "verdict": "reported_failure", "requests": 2, "seconds": 65.3, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 1, "verdict": "reported_failure", "requests": 2, "seconds": 64.4, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 2, "verdict": "reported_failure", "requests": 2, "seconds": 64.7, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 3, "verdict": "reported_failure", "requests": 2, "seconds": 64.4, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 7.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 7.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 7.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 1, "seconds": 1.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-tag", "run": 1, "verdict": "tag_visible", "requests": 1, "seconds": 1.2, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F0-tag", "run": 2, "verdict": "tag_visible", "requests": 1, "seconds": 1.7, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F0-tag", "run": 3, "verdict": "tag_visible", "requests": 1, "seconds": 1.2, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "claude", "condition": "F4-once", "run": 1, "verdict": "length_continued", "requests": 2, "seconds": 2.7, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F4-once", "run": 2, "verdict": "length_continued", "requests": 2, "seconds": 2.7, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F4-once", "run": 3, "verdict": "length_continued", "requests": 2, "seconds": 2.8, "reason": "a follow-up request carried the first attempt (continuation)"}
+{"tool": "claude", "condition": "F5-once", "run": 1, "verdict": "length_retried", "requests": 2, "seconds": 1.7, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F5-once", "run": 2, "verdict": "length_retried", "requests": 2, "seconds": 1.7, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F5-once", "run": 3, "verdict": "length_retried", "requests": 2, "seconds": 1.7, "reason": "a fresh follow-up request (it carried nothing of the first attempt)"}
+{"tool": "claude", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "claude", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 1, "seconds": 1.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-tag", "run": 1, "verdict": "tag_visible", "requests": 1, "seconds": 1.2, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F0-tag", "run": 2, "verdict": "tag_visible", "requests": 1, "seconds": 1.2, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F0-tag", "run": 3, "verdict": "tag_visible", "requests": 1, "seconds": 1.2, "reason": "positive control: tagged partial visible in raw bytes, mid capture and final display"}
+{"tool": "codex", "condition": "F4-once", "run": 1, "verdict": "reported_failure", "requests": 1, "seconds": 1.7, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F4-once", "run": 2, "verdict": "reported_failure", "requests": 1, "seconds": 1.8, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F4-once", "run": 3, "verdict": "reported_failure", "requests": 1, "seconds": 1.8, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 1, "verdict": "reported_failure", "requests": 1, "seconds": 1.2, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 2, "verdict": "reported_failure", "requests": 1, "seconds": 0.7, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F5-once", "run": 3, "verdict": "reported_failure", "requests": 1, "seconds": 0.7, "reason": "no follow-up request; a notice was shown"}
+{"tool": "codex", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "codex", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 1, "seconds": 1.2, "reason": "healthy control: one clean request, full answer exactly once"}
+matrix rc interactive=0 noninteractive=0

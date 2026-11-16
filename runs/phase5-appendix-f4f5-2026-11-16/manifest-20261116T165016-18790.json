@@ -1,0 +1,228 @@
+{
+  "label": "20261116T165016-18790",
+  "started_at": "2026-11-16T08:50:16.847+00:00",
+  "argv": [
+    "runner.py",
+    "matrix",
+    "--out",
+    "<EVIDENCE_ROOT>",
+    "--tools",
+    "claude",
+    "codex",
+    "--runs",
+    "3",
+    "--bin",
+    "claude=<HOME>/.local/bin/claude",
+    "--bin",
+    "codex=/opt/homebrew/bin/codex",
+    "--expect",
+    "claude=2.1.282",
+    "--expect",
+    "codex=0.169.0",
+    "--path-env",
+    "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:<HOME>/.local/bin",
+    "--conditions",
+    "F0-pre,F0-tag,F4-once,F5-once,F0-post",
+    "--card",
+    "<EVIDENCE_ROOT>/card-frozen.json"
+  ],
+  "mode": "interactive",
+  "tools": [
+    "claude",
+    "codex"
+  ],
+  "conditions": [
+    "F0-pre",
+    "F0-tag",
+    "F4-once",
+    "F5-once",
+    "F0-post"
+  ],
+  "runs": 3,
+  "harness_sha256": {
+    "mock.mjs": "d9115c9385ccc48a3dfe7bc54d68eff6faf994bab5a6a004dc9a948a1bef7ac8",
+    "content.json": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "runner.py": "0bd3acf518be7e0b5cf6f068d6445cef604fd8417eec959696d869512692d471",
+    "grading.py": "1cc52258b4c28563a4d48a442cbd5a3850a3fdc0fec1cddeed83fa1565b7608e",
+    "version_witness.py": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1",
+    "rawtap.py": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+  },
+  "mock": {
+    "port": 61736,
+    "pid": 18795,
+    "instance": "1a98c408f5785cd7",
+    "host": "127.0.0.1",
+    "content_sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "continuation": "restart",
+    "delay_ms": 20,
+    "long_delay_ms": 150
+  },
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true,
+  "quiet_s": 60.0,
+  "settle_s": 3.0,
+  "poll_s": 0.03,
+  "slow_poll_s": 0.3,
+  "followup": true,
+  "card": "<EVIDENCE_ROOT>/card-frozen.json",
+  "card_sha256": "0e860304892e99adf72377d92e96778bda5d5e4b06820a860aad301418edb196",
+  "ended_at": "2026-11-16T08:59:55.238+00:00",
+  "versions_equal": true,
+  "version_diff": [],
+  "pids": [
+    {
+      "pid": 18821,
+      "tool": "claude",
+      "run": "run-1-RUNf9245005898ccb81"
+    },
+    {
+      "pid": 19000,
+      "tool": "claude",
+      "run": "run-2-RUN597a89dfe121d230"
+    },
+    {
+      "pid": 19248,
+      "tool": "claude",
+      "run": "run-3-RUN1b3ae417a8cb201e"
+    },
+    {
+      "pid": 19446,
+      "tool": "claude",
+      "run": "run-1-RUN3f79b45df52e9f68"
+    },
+    {
+      "pid": 19637,
+      "tool": "claude",
+      "run": "run-2-RUNe9d6327a41b154ff"
+    },
+    {
+      "pid": 19878,
+      "tool": "claude",
+      "run": "run-3-RUNa9c3879189fa66f9"
+    },
+    {
+      "pid": 20173,
+      "tool": "claude",
+      "run": "run-1-RUN39ec2a25987ed7e1"
+    },
+    {
+      "pid": 20455,
+      "tool": "claude",
+      "run": "run-2-RUN15bbf98afa0e97cf"
+    },
+    {
+      "pid": 20856,
+      "tool": "claude",
+      "run": "run-3-RUNd6bd6a763e752cf3"
+    },
+    {
+      "pid": 21113,
+      "tool": "claude",
+      "run": "run-1-RUN34fc812e384cd68e"
+    },
+    {
+      "pid": 21294,
+      "tool": "claude",
+      "run": "run-2-RUN812a25575eea7ca5"
+    },
+    {
+      "pid": 21497,
+      "tool": "claude",
+      "run": "run-3-RUN4c3edfa3ec5d292e"
+    },
+    {
+      "pid": 21750,
+      "tool": "claude",
+      "run": "run-1-RUN4a9f95f13d4ebd2d"
+    },
+    {
+      "pid": 21995,
+      "tool": "claude",
+      "run": "run-2-RUN44b62bea20ed4579"
+    },
+    {
+      "pid": 22199,
+      "tool": "claude",
+      "run": "run-3-RUN7f4d46e3d45b918f"
+    },
+    {
+      "pid": 22404,
+      "tool": "codex",
+      "run": "run-1-RUNe66aef71ec4a3cd8"
+    },
+    {
+      "pid": 22621,
+      "tool": "codex",
+      "run": "run-2-RUNa083336f26a64088"
+    },
+    {
+      "pid": 22861,
+      "tool": "codex",
+      "run": "run-3-RUN8dfd4215124af338"
+    },
+    {
+      "pid": 23056,
+      "tool": "codex",
+      "run": "run-1-RUN5ad683d7c9609a61"
+    },
+    {
+      "pid": 23233,
+      "tool": "codex",
+      "run": "run-2-RUN4053711716633167"
+    },
+    {
+      "pid": 23500,
+      "tool": "codex",
+      "run": "run-3-RUN22769930132488c1"
+    },
+    {
+      "pid": 23734,
+      "tool": "codex",
+      "run": "run-1-RUNcb20b860e687c8a1"
+    },
+    {
+      "pid": 27260,
+      "tool": "codex",
+      "run": "run-2-RUN82e11732859fe6b1"
+    },
+    {
+      "pid": 30684,
+      "tool": "codex",
+      "run": "run-3-RUN85b0c6e776053a43"
+    },
+    {
+      "pid": 34076,
+      "tool": "codex",
+      "run": "run-1-RUN8bdd5b7db4065806"
+    },
+    {
+      "pid": 36064,
+      "tool": "codex",
+      "run": "run-2-RUN1e7d8b992292d60f"
+    },
+    {
+      "pid": 38209,
+      "tool": "codex",
+      "run": "run-3-RUNe31d8deff7344ed0"
+    },
+    {
+      "pid": 40180,
+      "tool": "codex",
+      "run": "run-1-RUNef00304da7155a33"
+    },
+    {
+      "pid": 40374,
+      "tool": "codex",
+      "run": "run-2-RUNde9162e483fddba8"
+    },
+    {
+      "pid": 40530,
+      "tool": "codex",
+      "run": "run-3-RUNa2a1cd48329707f3"
+    }
+  ],
+  "status": 0
+}

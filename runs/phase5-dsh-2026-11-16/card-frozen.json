@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "id": "phase5-dsh-headless-recheck-v1",
+  "claim": "Re-check of the 2026-09-25 deepseek-harness rows (0.1.7-rc.2, three wire protocols) on 0.2.2-rc.3 (npm, 2026-11-13): in `dsh --profile headless`, a once-fault that breaks the stream (F1 FIN, F2 terminator missing, F3 half an event then FIN, and the never-tested F6 partial with a clean HTTP end and no terminator) is re-issued silently and the run exits 0 with one complete answer on stdout and nothing on stderr; a clean length stop (F4: full answer plus overflow, then length) or a think-only length stop (F5) is not retried and ends with exit 1 and no dsh diagnostic on stderr (F4 prints the text first, F5 only streams its reasoning under `dsh: reasoning:`), while the session log records `max-tokens` for the turn. That is the 2026-09 'the machine record is exact, the user gets a bare exit 1', predicted to still hold on all three protocols. Predictions come from uncounted pilot runs on 2026-11-16 (N=1 per cell), disclosed.",
+  "target": {
+    "name": "deepseek-harness CLI, headless profile (non-interactive), over Chat Completions, Responses and Anthropic Messages via the pi-ai adapter",
+    "version": "@deepseek-ai/dsh 0.2.2-rc.3 (npm dist-tag next; GitHub tag dsh-v0.2.2-rc.3, 2026-11-13), installed with --ignore-scripts into an isolated prefix; launcher lib/bin.js and the installed tree are hashed before and after (tree manifest in the evidence root), node v25.4.0"
+  },
+  "task": {
+    "prompt_sha256": "2294655f1a14a801b1ad597692250341b2d915a70b486e383ac11153f89cfb65",
+    "path_reachability": "Every run asks for one plain-text answer with no tools, so the main answer request is the only path; the once-fault is pinned to it by the run's random mark and the streaming flag; dsh's first-prompt title request also carries the mark, as plain text, so the mock is told its system-prompt signature (aux_match) and serves it as auxiliary; the delivery log proves per run which request received the fault."
+  },
+  "hosts": [
+    {"id": "dsh-0.2.2-rc.3-cc", "name": "dsh-cc", "version": "0.2.2-rc.3", "model": "mock-model via pi-ai api openai-completions (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "dsh-0.2.2-rc.3-resp", "name": "dsh-resp", "version": "0.2.2-rc.3", "model": "mock-model via pi-ai api openai-responses (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "dsh-0.2.2-rc.3-anth", "name": "dsh-anth", "version": "0.2.2-rc.3", "model": "mock-model via pi-ai api anthropic-messages (loopback mock)", "effort": "not applicable (mock provider)"}
+  ],
+  "arms": [
+    {"id": "F0-pre", "fault": "F0 healthy stream, before the fault series", "role": "negative_control"},
+    {"id": "F1-once", "fault": "F1 once: P01-P12 (tagged) then TCP FIN, no terminator", "role": "treatment"},
+    {"id": "F2-once", "fault": "F2 once: the full answer (P01-P12 tagged), terminator missing, clean close", "role": "treatment"},
+    {"id": "F3-once", "fault": "F3 once: P01-P12 (tagged), half an SSE event, then FIN", "role": "treatment"},
+    {"id": "F4-once", "fault": "F4 once: P01-P24 (P01-P12 tagged) plus Q01-Q24, then a length stop in the protocol's dialect", "role": "treatment"},
+    {"id": "F5-once", "fault": "F5 once: reasoning R01-R06 (tagged), no text, then a length stop", "role": "treatment"},
+    {"id": "F6-once", "fault": "F6 once: P01-P12 (tagged) then a clean HTTP end with no terminator (not tested in 2026-09)", "role": "treatment"},
+    {"id": "F0-post", "fault": "F0 healthy stream, after the fault series (rerun after any supplementary run)", "role": "negative_control"}
+  ],
+  "controls": {"negative": "F0-pre"},
+  "witness": {
+    "delivery": "mock.mjs delivery.jsonl per request (fault and its source, aux and aux_reason, events, bytes, ending) plus every request body; the retry body is parsed for assistant-role history carrying the partial or the tag.",
+    "checker": "witness/stream-retry at the hashes in frozen-sha256.txt (phase-5 additions for this card: Dsh adapters with a per-run DSH_HOME patch layer; the mock's aux_match; session-log reading of zstd-compressed dsh v4 logs and their turn/end reason kinds). Stdout is the consumer's display (final answer only); stderr is read for notices with the base vocabulary (F1/F2/F3/F6) and the wider SIGNAL_RE vocabulary (F4/F5); exit code recorded; session log: assistant messages, tag, stop reasons.",
+    "blind_spots": [
+      "Non-interactive only: dsh 0.2.2-rc.3 has no terminal UI in this install (web UI out of scope), so the display is stdout plus stderr.",
+      "Stdout carries the final answer only; reasoning streams to stderr, which the grading reads for notices but not as the answer display (stderr tags are recorded separately).",
+      "Installed with --ignore-scripts (user decision): five packages' install scripts did not run; the subject started and answered, but a code path that needs them would be missing.",
+      "A continuation is never exercised here: dsh does not follow up on F4/F5 in the pilots.",
+      "The network sandbox makes the subject run offline; telemetry is turned off (DSH_TELEMETRY_DISABLED)."
+    ]
+  },
+  "grading": {
+    "rubric": "witness/stream-retry grading.grade (F0-F3, F6: not_shown / retracted / fork / continued / duplicate / accepted_partial / reported_failure, `reported` from stderr notices) and grading._grade_signal (F4/F5: length_continued / length_retried / reported_failure / exit_code_only / accepted_silently); labels are notes, the record is the five observation fields; the 2026-09 L-levels are compared on the observations, not re-assigned",
+    "primary_metric": "per run: detected / reported / contained / recovered; secondary: exit code, stderr wording, session-log stop reasons (the machine record), request ladder"
+  },
+  "sampling": {"runs_per_cell": 3},
+  "invalid_rules": [
+    "harness exception or the run hits the 300 s cap: invalid, rerun once",
+    "version or sha256 drift between the before and after witnesses (launcher, node, harness, or the installed tree manifest): the whole matrix is invalid",
+    "mock port busy, wrong instance on /health, or listener pid not the runner's child: abort before any dispatch",
+    "F0-pre not passing for a host: that host's fault cells are not run (setup invalid), not graded",
+    "after any supplementary run, F0-post is run again (3 runs) and both F0-post sets are reported"
+  ],
+  "budget": {"max_runs": 90},
+  "isolation": {
+    "mode": "env -i allowlist (PATH with node, TERM, LANG, a fresh HOME and DSH_HOME per run, DSH_TELEMETRY_DISABLED=1, MOCK_API_KEY=mock), sandbox-exec allowing outbound connections to localhost only (no DNS); the npm install itself ran outside the sandbox with --ignore-scripts into its own prefix and its own npm cache; mock on a loopback ephemeral port with a control-plane token",
+    "pristine_original_unreachable": false,
+    "contamination": "No mutated copy exists in this design: faults are injected on the wire by the mock and the subject is unmodified. The subject runs as the experimenter's user and could read the evidence root, but receives no tool calls from the mock. Pilot runs (uncounted, N=1 per cell, 2026-11-16) informed the claim and are disclosed. One executor at a time: this matrix runs after the metacodes matrix and the Claude Code / codex appendix."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Loopback mock only; no paid model, no vendor endpoint (outbound blocked by the sandbox); temporary HOMEs inside the evidence root; the npm install is confined to its own prefix and cache inside the evidence root."
+  }
+}

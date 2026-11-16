@@ -1,0 +1,17 @@
+{"t_ms": 1794817226431, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794817226481, "tag_on_screen": 1, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794817226521, "tag_on_screen": 3, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794817226563, "tag_on_screen": 4, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794817226602, "tag_on_screen": 6, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794817226687, "tag_on_screen": 6, "distinct_markers": 1, "total_markers": 1, "first_partial_count": 1, "max_marker": "P01", "notices": []}
+{"t_ms": 1794817226732, "tag_on_screen": 6, "distinct_markers": 3, "total_markers": 3, "first_partial_count": 1, "max_marker": "P03", "notices": []}
+{"t_ms": 1794817226777, "tag_on_screen": 6, "distinct_markers": 5, "total_markers": 5, "first_partial_count": 1, "max_marker": "P05", "notices": []}
+{"t_ms": 1794817226827, "tag_on_screen": 6, "distinct_markers": 7, "total_markers": 7, "first_partial_count": 1, "max_marker": "P07", "notices": []}
+{"t_ms": 1794817226869, "tag_on_screen": 6, "distinct_markers": 9, "total_markers": 9, "first_partial_count": 1, "max_marker": "P09", "notices": []}
+{"t_ms": 1794817226913, "tag_on_screen": 6, "distinct_markers": 11, "total_markers": 11, "first_partial_count": 1, "max_marker": "P11", "notices": []}
+{"t_ms": 1794817226956, "tag_on_screen": 6, "distinct_markers": 14, "total_markers": 14, "first_partial_count": 1, "max_marker": "P14", "notices": []}
+{"t_ms": 1794817226998, "tag_on_screen": 6, "distinct_markers": 15, "total_markers": 15, "first_partial_count": 1, "max_marker": "P15", "notices": []}
+{"t_ms": 1794817227038, "tag_on_screen": 6, "distinct_markers": 17, "total_markers": 17, "first_partial_count": 1, "max_marker": "P17", "notices": []}
+{"t_ms": 1794817227091, "tag_on_screen": 6, "distinct_markers": 20, "total_markers": 20, "first_partial_count": 1, "max_marker": "P20", "notices": []}
+{"t_ms": 1794817227143, "tag_on_screen": 6, "distinct_markers": 22, "total_markers": 22, "first_partial_count": 1, "max_marker": "P22", "notices": []}
+{"t_ms": 1794817227188, "tag_on_screen": 6, "distinct_markers": 24, "total_markers": 24, "first_partial_count": 1, "max_marker": "P24", "notices": []}

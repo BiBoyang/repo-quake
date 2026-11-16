@@ -1,0 +1,66 @@
+{
+  "tools": {
+    "metacodes": {
+      "launcher": "<HOME>/Desktop/metacodes/.notes-verify/phase5-mc-main/zig-out/bin/metacodes",
+      "realpath": "<HOME>/Desktop/metacodes/.notes-verify/phase5-mc-main/zig-out/bin/metacodes",
+      "realpath_sha256": "ee7718a91d7d3baa5288e9f54c8bdbaae0eae2720b4896818658be3bdad2cd64",
+      "realpath_stat": {
+        "size": 5839352,
+        "mtime_ns": 1794815166107532392
+      },
+      "shebang": null,
+      "native": {
+        "path": "<HOME>/Desktop/metacodes/.notes-verify/phase5-mc-main/zig-out/bin/metacodes",
+        "sha256": "ee7718a91d7d3baa5288e9f54c8bdbaae0eae2720b4896818658be3bdad2cd64",
+        "stat": {
+          "size": 5839352,
+          "mtime_ns": 1794815166107532392
+        }
+      },
+      "version": "metacodes 0.12.1-dev+1707da0c6768\ncommit 1707da0c676863f62d99d58b1e33d0956cf21d1d\nzig 0.16.0\ntarget aarch64-macos-none ReleaseSmall\nagentcore-abi v1 revision 28\nconfig-schema 1\nripgrep 15.2.0 (e89fff89ac) expected sha256 a326a1fb48074202e9ad41e4cd1e389eeea372c8c6f7d7e80da81176d5d9430e\ntinykg 0.3.0 (0b04014ba8d0bcb1f9f73c63c12e49f3c2ee1ece) expected sha256 dd53db2aa5219e899daac3caac2332648ac392550fa6f431b5900a1d495688e1\nlayout development",
+      "expected": "0.12.1-dev+1707da0c6768",
+      "expected_ok": true
+    }
+  },
+  "files": {
+    "harness:mock.mjs": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/mock.mjs",
+      "sha256": "d9115c9385ccc48a3dfe7bc54d68eff6faf994bab5a6a004dc9a948a1bef7ac8"
+    },
+    "harness:content.json": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/content.json",
+      "sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763"
+    },
+    "harness:runner.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/runner.py",
+      "sha256": "0bd3acf518be7e0b5cf6f068d6445cef604fd8417eec959696d869512692d471"
+    },
+    "harness:grading.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/grading.py",
+      "sha256": "1cc52258b4c28563a4d48a442cbd5a3850a3fdc0fec1cddeed83fa1565b7608e"
+    },
+    "harness:version_witness.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/version_witness.py",
+      "sha256": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1"
+    },
+    "harness:rawtap.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/rawtap.py",
+      "sha256": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+    },
+    "card": {
+      "path": "<EVIDENCE_ROOT>/card-frozen.json",
+      "sha256": "32f1bc2846dfc2303c47a712df44b3fec9c3c2619f61a7ed477cb6da9725eb98"
+    }
+  },
+  "runtime": {
+    "node": {
+      "path": "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+      "sha256": "d8c9ba1203a4026fb18277599eb5ed328d48bb7feae9c26cd4b80d9bf68b85cf",
+      "version": "v25.4.0"
+    },
+    "tmux": {
+      "path": "/opt/homebrew/bin/tmux",
+      "version": "tmux 3.5a"
+    }
+  }
+}

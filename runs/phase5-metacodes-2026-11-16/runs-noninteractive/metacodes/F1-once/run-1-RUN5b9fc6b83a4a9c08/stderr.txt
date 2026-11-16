@@ -1,0 +1,1 @@
+[31m[ERROR agent req=9a6aa1480001][0m stream returned error RequestFailed at turn 1

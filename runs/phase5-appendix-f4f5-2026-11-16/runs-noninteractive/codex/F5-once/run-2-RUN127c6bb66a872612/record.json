@@ -1,0 +1,172 @@
+{
+  "tool": "codex",
+  "expected_version": "0.169.0",
+  "mode": "noninteractive",
+  "condition": "F5-once",
+  "run_index": 2,
+  "mark": "RUN127c6bb66a872612",
+  "tag": "〔x9e6ae7〕",
+  "profile": "short",
+  "started_at": "2026-11-16T09:00:36.064+00:00",
+  "mock": {
+    "instance": "75faf2f6846872ca",
+    "port": 63572
+  },
+  "invalid": null,
+  "evidence_dir": "runs-noninteractive/codex/F5-once/run-2-RUN127c6bb66a872612",
+  "duration_s": 0.7,
+  "exit_code": 1,
+  "requests": [
+    {
+      "seq": 32,
+      "started_ms": 1794819636260,
+      "body_ms": 1794819636260,
+      "first_byte_ms": 1794819636260,
+      "ended_ms": 1794819636513,
+      "endpoint": "responses",
+      "fault": "F5",
+      "fault_source": "once",
+      "stream": true,
+      "aux": false,
+      "tools_count": 9,
+      "profile": "short",
+      "tag_applied": true,
+      "events_count": 12,
+      "bytes_sent": 7021,
+      "ending": "clean",
+      "witnesses": {
+        "cc_done": false,
+        "cc_finish_chunk": false,
+        "responses_completed": false,
+        "responses_incomplete": true,
+        "anthropic_message_stop": false
+      },
+      "continuation": null,
+      "req_bytes": 39898,
+      "req_sha256": "87534c0f0834a1d95f2cf505ae22f4be025df7ffe2126cbd97ed055cda8889c6",
+      "user_agent": "codex_exec/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex_exec; 0.169.0)",
+      "frame_delay_ms": 20,
+      "client_closed_first": true,
+      "has_mark": true,
+      "assistant_messages": 0,
+      "assistant_marker_counts": {},
+      "carries_partial": false,
+      "carries_tag": false,
+      "trailing_role": "user",
+      "partial_flag": false
+    }
+  ],
+  "display": {
+    "kind": "plain",
+    "final_counts": {},
+    "final_tag_count": 0,
+    "emitted_counts": {},
+    "emitted_tag_count": 0,
+    "final_reasoning": {},
+    "emitted_reasoning": {},
+    "extra": {}
+  },
+  "conversation": {
+    "path": "homes/codex/run-2-RUN127c6bb66a872612/codex/sessions/2026/11/16/rollout-2026-11-16T17-00-36-01a1e396-3bff-7763-8598-4d917c7e6f85.jsonl",
+    "assistant_entries": 0,
+    "all_assistant_counts": {},
+    "last_assistant_counts": {},
+    "tag_count": 0,
+    "reasoning_markers": [],
+    "full_present": false,
+    "duplicated": false,
+    "stop_reasons": []
+  },
+  "verdict": "reported_failure",
+  "verdict_reason": "no follow-up request; a notice was shown",
+  "fields": {
+    "detected": true,
+    "reported": true,
+    "recovered": false
+  },
+  "checks": {
+    "profile": "short",
+    "requests": 1,
+    "main_requests": 1,
+    "main_stream_requests": 1,
+    "final_full_once": false,
+    "final_full_present": false,
+    "final_duplicated": false,
+    "final_foreign_markers": [],
+    "final_tag_count": 0,
+    "final_complete": null,
+    "final_reasoning_markers": [],
+    "emitted_tag_count": 0,
+    "notice_where": "final",
+    "fault_seq": 32,
+    "follow_seq": null,
+    "later_main_requests": 0,
+    "follow_carried_first": false,
+    "follow_trailing_role": null,
+    "signals_final": [
+      "ERROR: Incomplete response returned, reason: max_output_tokens"
+    ],
+    "signals_raw": [],
+    "signal_where": "final",
+    "first_attempt_shown": false,
+    "final_q_markers": 0,
+    "exit_code": 1
+  },
+  "notices_final": [
+    "ERROR: Incomplete response returned, reason: max_output_tokens"
+  ],
+  "notices_raw": [],
+  "observation_inputs": {
+    "condition": "F5-once",
+    "mode": "noninteractive",
+    "profile": "short",
+    "tag": "〔x9e6ae7〕",
+    "chrome": null,
+    "requests": [
+      {
+        "seq": 32,
+        "started_ms": 1794819636260,
+        "body_ms": 1794819636260,
+        "first_byte_ms": 1794819636260,
+        "ended_ms": 1794819636513,
+        "endpoint": "responses",
+        "fault": "F5",
+        "fault_source": "once",
+        "stream": true,
+        "aux": false,
+        "tools_count": 9,
+        "profile": "short",
+        "tag_applied": true,
+        "events_count": 12,
+        "bytes_sent": 7021,
+        "ending": "clean",
+        "witnesses": {
+          "cc_done": false,
+          "cc_finish_chunk": false,
+          "responses_completed": false,
+          "responses_incomplete": true,
+          "anthropic_message_stop": false
+        },
+        "continuation": null,
+        "req_bytes": 39898,
+        "req_sha256": "87534c0f0834a1d95f2cf505ae22f4be025df7ffe2126cbd97ed055cda8889c6",
+        "user_agent": "codex_exec/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex_exec; 0.169.0)",
+        "frame_delay_ms": 20,
+        "client_closed_first": true,
+        "has_mark": true,
+        "assistant_messages": 0,
+        "assistant_marker_counts": {},
+        "carries_partial": false,
+        "carries_tag": false,
+        "trailing_role": "user",
+        "partial_flag": false
+      }
+    ],
+    "final": {
+      "complete": null
+    },
+    "exit_code": 1,
+    "display_kind": "plain",
+    "invalid": null
+  }
+}

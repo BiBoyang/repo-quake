@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "id": "phase5-appendix-f4f5-recheck-v1",
+  "claim": "Re-check of the 2026-09-25 interactive appendix (12 runs, made under the alternate-screen blind spot) with the phase-4 witness: for a once-fault that ends the main answer with a clean protocol-level length stop (F4: the full answer, an overflow, then max_tokens / response.incomplete) or with thinking only and a length stop (F5), Claude Code 2.1.282 continues F4 (it sends the first attempt back with a 'resume' user message) and re-issues F5 afresh, without any user-visible notice in the raw byte stream or on the final screen, in the TUI and in -p alike; codex-cli 0.169.0 no longer retries either (the 2026-09 codex 0.156.1 did, with 'Reconnecting... 1/5'): it shows a persistent 'Incomplete response returned, reason: max_output_tokens' in the TUI and in exec (exit 1, empty stdout). So the 2026-09 statements 'interactive and non-interactive behave the same' and 'Claude Code gives the user zero signal' are predicted to hold at these versions, and codex's 2026-09 'detect, retry, recover' is predicted to have changed to 'detect and report, no retry'. Predictions come from uncounted pilot runs on 2026-11-16 (N=1 per cell), disclosed.",
+  "target": {
+    "name": "Claude Code + codex-cli, TUI and non-interactive: handling of a clean length stop (F4) and a think-only length stop (F5)",
+    "version": "Claude Code 2.1.282 (native sha256 fcfd837103965c64de34a6b9b94370d77a347ea71819715a27d5f0ef01775ea4); codex-cli 0.169.0 (executed native binary sha256 739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002)"
+  },
+  "task": {
+    "prompt_sha256": "2294655f1a14a801b1ad597692250341b2d915a70b486e383ac11153f89cfb65",
+    "path_reachability": "Every run asks for one plain-text answer with no tools, so the main answer request is the only path; the once-fault is pinned to it by the run's random mark, the streaming flag and the absence of a structured-output (title) format, and the mock's delivery log proves per run which request received it. The TUI follow-up turn (prompt sha256 2377dffeecfdc44ba3259a34b1ab2c66b2afa6f1bbe7fe4d27397ebe2c1ee113) only reads back what the client sends next."
+  },
+  "hosts": [
+    {"id": "claude-2.1.282-tui", "name": "claude", "version": "2.1.282", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "codex-0.169.0-tui", "name": "codex", "version": "0.169.0", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "claude-2.1.282-p", "name": "claude", "version": "2.1.282", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"},
+    {"id": "codex-0.169.0-exec", "name": "codex", "version": "0.169.0", "model": "mock-model (loopback mock)", "effort": "not applicable (mock provider)"}
+  ],
+  "arms": [
+    {"id": "F0-pre", "fault": "F0 healthy stream, before the fault series", "role": "negative_control"},
+    {"id": "F0-tag", "fault": "F0 healthy stream whose first 12 paragraphs carry the failed-attempt tag (witness positive control)", "role": "positive_control"},
+    {"id": "F4-once", "fault": "F4 once: P01-P24 (P01-P12 tagged) plus the overflow Q01-Q24, then stop_reason max_tokens (Anthropic) / a response.incomplete event with reason max_output_tokens (Responses); later requests healthy", "role": "treatment"},
+    {"id": "F5-once", "fault": "F5 once: thinking R01-R06 (tagged) and no text, then the same length stop; later requests healthy", "role": "treatment"},
+    {"id": "F0-post", "fault": "F0 healthy stream, after the fault series (rerun after any supplementary run)", "role": "negative_control"}
+  ],
+  "controls": {"negative": "F0-pre", "positive": "F0-tag"},
+  "witness": {
+    "delivery": "mock.mjs delivery.jsonl per request plus every request body; the follow-up request after the fault is parsed for assistant-role history (text and thinking) carrying the first attempt and for its trailing role.",
+    "checker": "witness/stream-retry at the hashes in frozen-sha256.txt (the same files as the phase-5 metacodes card). F4/F5 are graded by grading._grade_signal: a follow-up request that carries the first attempt is length_continued (detected, reported), one that carries nothing is length_retried (detected, reported, recovered, contained), no follow-up is reported_failure / exit_code_only / accepted_silently; notices use the wider SIGNAL_RE vocabulary (adds token/limit/incomplete/truncation/continue words), which found nothing in the 36 phase-4 runs of these two binaries beyond the base vocabulary, raw bytes included. TUI witnesses: tag-keyed mid capture every 30 ms, final screen completeness (banner and mark on a 110x400 screen), raw terminal bytes via tmux pipe-pane with a per-chunk time index, follow-up request, stored session file and its stop reasons.",
+    "blind_spots": [
+      "Raw bytes prove text was written to the terminal, not how long a person could see it; visibility shorter than the capture interval (about 30-60 ms) has no screen capture.",
+      "A continuation's display (and whether it completes the answer) depends on how the server answers a 'resume' request; this mock always restarts, so length_continued records detected and reported only.",
+      "F4's first attempt already holds the whole answer plus an overflow, so it cannot show whether a client that prints only the last message after a continuation (as -p appears to) would lose the first part against a server that continues; that needs a mid-answer length stop and a continuing mock (not in this card).",
+      "tmux is not a real terminal emulator; render timing may differ from desktop terminals.",
+      "The network sandbox makes the subjects run offline; codex still attempts DNS lookups at start-up (blocked, counted by the egress step)."
+    ]
+  },
+  "grading": {
+    "rubric": "grading._grade_signal (F4/F5) and grading.grade (controls), witness/stream-retry; labels are notes, the record is the five observation fields; the 2026-09 L-levels are not re-assigned, the comparison is made on the observations (follow-up request, notice text and where it appears, final display, session file)",
+    "primary_metric": "per run: whether a follow-up request was made and what it carried; whether any user-visible notice appeared (raw bytes, final screen, stderr) and its wording; detected / reported / recovered / contained as recorded by _grade_signal"
+  },
+  "sampling": {"runs_per_cell": 3},
+  "invalid_rules": [
+    "input or prompt gate fails (a confirmation prompt on screen, or the input box never appears): invalid, rerun once at the end of the tool's sequence",
+    "harness exception or the run hits the 300 s cap: invalid, rerun once",
+    "the executed binary (lsof on the pane process) differs from the pinned native binary: invalid",
+    "version or sha256 drift between the before and after witnesses: the whole matrix is invalid",
+    "mock port busy, wrong instance on /health, or listener pid not the runner's child: abort before any dispatch",
+    "F0-pre or F0-tag not passing for a host: that host's fault cells are not run (setup invalid), not graded",
+    "after any supplementary run, F0-post is run again (3 runs) and both F0-post sets are reported"
+  ],
+  "budget": {"max_runs": 80},
+  "isolation": {
+    "mode": "env -i allowlist, fresh seeded HOME per run, sandbox-exec allowing outbound connections to localhost only (no DNS), private tmux server with an empty config, update checks off (DISABLE_AUTOUPDATER, check_for_update_on_startup=false), Claude Code deep-link registration off; mock on a loopback ephemeral port with a control-plane token",
+    "pristine_original_unreachable": false,
+    "contamination": "No mutated copy exists in this design: faults are injected on the wire by the mock and the subject binaries are unmodified. The subjects run as the experimenter's user and could read the evidence root, but they are deterministic clients that receive no tool calls from the mock. Pilot runs (uncounted, N=1 per cell, 2026-11-16) informed the claim and are disclosed; one pilot batch was cut short by a mock crash on codex's structured title request over /v1/responses, fixed with a regression test before this card was frozen. One executor at a time: this matrix runs after the metacodes matrix and before the deepseek-harness matrix."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Loopback mock only; no paid model, no vendor endpoint (outbound blocked by the sandbox); temporary HOMEs inside the evidence root; LaunchServices registrations audited after the matrix."
+  }
+}

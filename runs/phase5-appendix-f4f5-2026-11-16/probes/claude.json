@@ -1,0 +1,38 @@
+{
+  "tool": "claude",
+  "ready": true,
+  "danger": [],
+  "banner": true,
+  "executed": {
+    "pid": 18691,
+    "path": "<HOME>/.local/share/claude/versions/2.1.282",
+    "sha256": "fcfd837103965c64de34a6b9b94370d77a347ea71819715a27d5f0ef01775ea4"
+  },
+  "raw": {
+    "available": true,
+    "bytes": 2142,
+    "indexed": false,
+    "alt_screen_on": [
+      593
+    ],
+    "alt_screen_on_count": 1,
+    "alt_screen_off_count": 0,
+    "alt_screen_on_ms": null,
+    "esc_2J": 1,
+    "esc_3J": 0,
+    "tag_seen": false,
+    "tag_contiguous": false,
+    "tag_first_ms": null,
+    "notices_timed": [],
+    "signals_extra": [],
+    "signals_extra_timed": [],
+    "reasoning_seen": [],
+    "first_seen_ms": {}
+  },
+  "at": "2026-11-16T08:50:13.310+00:00",
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true
+}

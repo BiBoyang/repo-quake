@@ -1364,6 +1364,476 @@
         "runs/phase4-codex-retries-exhausted-2026-11-16/README.md"
       ],
       "lesson": "为补上游证据事后加测的数据要单独记账：方向是先有预期再去测的，可以当证据，不能算进预注册的率"
+    },
+    {
+      "id": "RQ-F-018",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "metacodes（main 1707da0c）TUI 断流后自动重发一次，但断掉那次已显示的正文或思考留在屏上、重发的完整回答接在下面、全程无提示：F1、F6、FLONG、FTHINK1、FTHINK6 各 3/3（fork 15/15）；存下的对话和下一轮请求只有重发那份（屏上有、模型没见过）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "TUI 流式渲染（src/repl/tui/tui_backend.zig：output_segment_begin/end 与 thinking_discarded 为空操作，retry_notice 在 attempt < 3 时不显示）与每个请求默认重发一次（src/core/agent_loop.zig 的 STREAM_RETRIES_PER_REQUEST = 1，退避 500 ms）",
+        "version": "0.12.1-dev+1707da0c6768（upstream/main 1707da0c，ReleaseSmall，二进制 sha256 ee7718a9…）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "一次性故障打在正式回答的第一次请求上：F1 为 P01–P12 后 TCP FIN；F6 为 P01–P12 后 HTTP 正文正常结束、无 message_stop；FLONG 为 L001–L160 后 FIN；FTHINK1、FTHINK6 只有一段思考 R01–R06、没有正文，再 FIN 或干净收尾。失败那次每段带只有它才有的标记；窗口 110×400，原始字节带时刻。断开到重发开始 583–643 ms；最终画面上失败那次的标记 F1/F6 12 个、FLONG 160 个、FTHINK 6 段思考，原始字节里 0 条提示；transcript.jsonl 与下一轮请求里标记 0/15",
+        "delivery": "mock 送达日志（毫秒时刻、故障来源、收尾方式）、逐请求请求体、下一轮请求、transcript.jsonl；每次运行 lsof 核对执行的二进制 27/27；前后 F0 healthy 6/6，文字与思考的阳性对照各 3/3",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "TUI F1：fork 3/3，无提示"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "TUI F6：fork 3/3，无提示"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "TUI FLONG：fork 3/3，160 段留屏，无提示"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "TUI FTHINK1：fork 3/3，思考留屏，无提示"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "TUI FTHINK6：fork 3/3，思考留屏，无提示"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "产品检出了断流并重发成功（recovered），缺陷在显示层：屏上留着的内容由独立证人逐段计数（失败那次独有的标记、最终画面、原始字节），对话一侧由 transcript 与下一轮请求证明没有它。读码：TUI 不处理 discarded 段与 thinking_discarded，第一次重发的提示被门控隐藏",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "tmux 不是真终端",
+          "FTHINK 的重发是普通回答，没有思考",
+          "网页端与 C ABI 宿主没测"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false,
+        "contained": false,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md",
+        "runs/phase5-metacodes-2026-11-16/summary.md",
+        "examples/experiment-card-phase5-metacodes.json"
+      ],
+      "lesson": "重发成功不等于显示正确：终端 scrollback 收不回，宿主要么在流结束前把可见输出留在可替换的区域，要么至少把断掉的那段标出来"
+    },
+    {
+      "id": "RQ-F-019",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "metacodes（main 1707da0c）headless 断流重发恢复后，stderr 仍打 [ERROR agent …] stream returned error RequestFailed|StreamIncomplete at turn 1（-p、--json、--stream-json 各 15/15，退出码 0）；--json 结果行不提重发（end_turn、continuations 0）而 input_tokens 算了两次（48 对 24）；--stream-json 只用 discarded 段收回，没有重发事件",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "headless 的错误日志、--json 结果行与 --stream-json 事件（src/repl/headless.zig、src/repl/stream_json_backend.zig）",
+        "version": "0.12.1-dev+1707da0c6768（upstream/main 1707da0c）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "同 RQ-F-018 的五种一次性故障；非交互下失败那次从不打印（not shown 30/30），--stream-json 把它放在 disposition 为 discarded 的段里（FTHINK 的 6 行思考也在段内，retracted 15/15）",
+        "delivery": "mock 送达日志与逐请求请求体；stdout、stderr 带时刻逐行记录；--stream-json 按段重建；前后 F0 healthy 18/18",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes -p",
+          "model": "mock（本地回环）",
+          "runs": 15,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1",
+          "notes": "not shown 15/15；stderr 一行 ERROR，退出码 0"
+        },
+        {
+          "host": "metacodes --json",
+          "model": "mock（本地回环）",
+          "runs": 15,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1",
+          "notes": "not shown 15/15；结果行 end_turn/final，不提重发"
+        },
+        {
+          "host": "metacodes --stream-json",
+          "model": "mock（本地回环）",
+          "runs": 15,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1,L1",
+          "notes": "retracted 15/15（按协议丢弃 discarded 段）；无重发事件"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "检测和恢复都在，问题出在怎么告诉人和机器：给人看的 stderr 用 ERROR 级别写一个其实已经恢复的失败，给机器看的结果行不说重发过，只能从 token 数倒推",
+        "confidence": "confirmed",
+        "caveats": [
+          "级别为 L1 是按'有信号但措辞错位'定的，不是用户实验"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": true,
+        "contained": true,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md",
+        "runs/phase5-metacodes-2026-11-16/summary.md"
+      ],
+      "lesson": "一条日志的级别也是对用户说的话：恢复了的失败写成 ERROR，和没说一样会误导"
+    },
+    {
+      "id": "RQ-F-020",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "deepseek-harness 0.2.2-rc.3 headless：长度截断（F4）与只有思考的截断（F5）以退出码 1 结束、stderr 没有一句 dsh 诊断，会话日志却记 max-tokens：三种协议 × 两种故障 18/18；F1、F2、F3、F6（首测）静默重发恢复 36/36",
+      "status": "open",
+      "target": {
+        "repo": "deepseek-ai/deepseek-harness",
+        "artifact": "dsh-headless 运行器的结束诊断（README：失败时 stderr 打 dsh: <code>: <message>；以 max-tokens 结束的一轮不走这条路）",
+        "version": "@deepseek-ai/dsh 0.2.2-rc.3（npm，--ignore-scripts；lib/bin.js 36f86742…，安装树摘要 3de4349a…）"
+      },
+      "fault": {
+        "type": "length-stop",
+        "spec": "一次性故障：F4 为 P01–P24 加溢出段 Q01–Q24 后以长度上限收尾（finish_reason length / response.incomplete max_output_tokens / stop_reason max_tokens）；F5 为只有思考 R01–R06、无正文后同样收尾。F4 下 stdout 打出全部内容、stderr 为空；F5 下 stdout 只有一个换行、stderr 只有 dsh: reasoning: 下的思考；两者退出码都是 1；session.v4 日志 turn/end 的 reason.kind 为 max-tokens",
+        "delivery": "mock 送达日志与逐请求请求体（标题请求经 aux_match 识别为辅助请求，72/72）；stdout、stderr、退出码；zstd 会话日志解压后读停止原因；前后 F0 healthy 18/18",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "dsh (openai-completions)",
+          "model": "mock（本地回环）",
+          "runs": 6,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1",
+          "notes": "F4 3/3、F5 3/3：退出码 1，无诊断"
+        },
+        {
+          "host": "dsh (openai-responses)",
+          "model": "mock（本地回环）",
+          "runs": 6,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1",
+          "notes": "同上"
+        },
+        {
+          "host": "dsh (anthropic-messages)",
+          "model": "mock（本地回环）",
+          "runs": 6,
+          "detected": 0,
+          "levels": "L1,L1,L1,L1,L1,L1",
+          "notes": "同上"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "检测是准的（退出码变了、会话日志记 max-tokens），只是没有翻译成一句给人看的话；2026-09 在 0.1.7-rc.2 上的同一观察，换到直接运行 npm 包后依然如此",
+        "confidence": "confirmed",
+        "caveats": [
+          "安装时没跑 5 个包的安装脚本（用户选择）",
+          "只测非交互",
+          "2026-09 的对照是从源码经 pnpm 运行"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md",
+        "runs/phase5-dsh-2026-11-16/summary.md",
+        "examples/experiment-card-phase5-dsh.json"
+      ],
+      "lesson": "退出码不是说明：机器那边记得清清楚楚的原因，要原样说给跑命令的人听"
+    },
+    {
+      "id": "RQ-F-021",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "skill-up #253 复验已修（v0.15.0 源码自建）：原帖的 Go 复现对符号链接的 skill 目录返回 [. SKILL.md references references/a.md]（修前只有 [.]），端到端经符号链接路径运行时假引擎在工作区看到 SKILL.md 与 references/a.md（1/1）；上游 3 个回归测试通过",
+      "status": "fixed",
+      "target": {
+        "repo": "alibaba/skill-up",
+        "artifact": "internal/agent/skill.go 的 ListSkillFiles 与 installSkill",
+        "version": "v0.15.0（bce6f1cb…，自建二进制 031e5cfd…）"
+      },
+      "fault": {
+        "type": "symlinked-source",
+        "spec": "skill 源目录本身是符号链接：filepath.Walk 不跟随符号链接的根，修前只选中链接节点、安装 0 个文件且不报错，with_skill 实际没有 skill。v0.15.0 先 EvalSymlinks 再遍历，并在 0 个文件时报错",
+        "delivery": "原帖复现写成 Go 测试放进源码副本运行（GOPROXY=off）；端到端用 custom 引擎的假脚本列出工作区文件，沙箱只放行 localhost",
+        "path_relation": "blocks-path"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "复验靠独立证人：原帖的函数级输出，和端到端时引擎在工作区实际看到的文件清单",
+        "confidence": "confirmed",
+        "caveats": [
+          "测的是 v0.15.0 源码自建的二进制，不是官方发布包"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reverified": true
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/alibaba/skill-up/issues/253",
+          "status": "closed-fixed"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/alibaba/skill-up/pull/257",
+          "status": "merged"
+        }
+      ],
+      "lesson": "修复要按原帖的复现再跑一遍：函数级和端到端各一次，结果对得上才算复验"
+    },
+    {
+      "id": "RQ-F-022",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "skill-up #263 复验已修（v0.15.0 源码自建）：custom 引擎在子进程结束后才写结果、用例超时 3 秒时，outputs/agent/run/session-result.json 仍然存在（exit_code 124，stderr 写明是合成产物），1/1；上游 6 个超时相关测试通过",
+      "status": "fixed",
+      "target": {
+        "repo": "alibaba/skill-up",
+        "artifact": "internal/agent/custom_local.go 的 maybeSynthesizeTimeoutOutput 与 custom.go 的 synthesizeTimeoutOutput",
+        "version": "v0.15.0（bce6f1cb…，自建二进制 031e5cfd…）"
+      },
+      "fault": {
+        "type": "deadline-kill",
+        "spec": "用例超时时 skill-up 直接杀掉 custom 引擎，引擎来不及写 ${output_file}，修前这一格只剩输入文件。v0.15.0 在没有可用输出时合成一个 exit_code 124 的结果，并写明 transcript 随进程丢失",
+        "delivery": "端到端：假引擎 sleep 30 秒后才写结果，cases.defaults.timeout_seconds 为 3，env -i 临时 HOME、沙箱只放行 localhost",
+        "path_relation": "blocks-path"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "复验靠落盘产物本身：超时后结果文件存在、字段正确",
+        "confidence": "confirmed",
+        "caveats": [
+          "只跑了 local 传输"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": true,
+        "reverified": true
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/alibaba/skill-up/issues/263",
+          "status": "closed-fixed"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/alibaba/skill-up/pull/265",
+          "status": "merged"
+        }
+      ],
+      "lesson": "被杀的进程留不下记录，就由杀它的一方留：合成的结果写明自己是合成的，比什么都没有强"
+    },
+    {
+      "id": "RQ-F-023",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "skill-up #280 在 v0.15.0 上仍复现：frontmatter 的 name/description 为空、正文引用的三个附件都不存在、结尾截断在半句的 skill，validate 照样输出 ✓ eval.yaml is valid、退出码 0（1/1）；#281 head（8c9e12b）的 validate --skill 报出 5 处、--strict 退出码 1，半句截断本身查不出（#281 写明的范围）",
+      "status": "reported",
+      "target": {
+        "repo": "alibaba/skill-up",
+        "artifact": "skill-up validate（不解析 SKILL.md、不查引用）",
+        "version": "v0.15.0（自建 031e5cfd…）；对照 #281 head 8c9e12b（自建 ff6aff9e…）"
+      },
+      "fault": {
+        "type": "truncation",
+        "spec": "受损夹具：frontmatter name、description 留空；正文引用 references/format-rules.md、assets/template.md、scripts/check.sh 均不存在；最后一句截断。v0.15.0：validate <eval.yaml> 通过，validate --skill 为未知参数",
+        "delivery": "本地夹具，env -i 临时 HOME、沙箱只放行 localhost；#281 用本地 PR 分支构建（与 PR 当前 head 相同）",
+        "path_relation": "blocks-path"
+      },
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "工具链在 skill 内容这一层没有任何检查：eval 配置层会硬失败，skill 层一律放行。#281 提供了显式的 --skill 检查，但默认只给警告，也不在 eval 校验时自动运行",
+        "confidence": "confirmed",
+        "caveats": [
+          "#281 未合入，结论按其当前 head"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/alibaba/skill-up/issues/280",
+          "status": "open"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/alibaba/skill-up/pull/281",
+          "status": "open"
+        }
+      ],
+      "lesson": "配置层的校验再严，也挡不住内容层的损坏；要查就要单独查 skill 本身"
+    },
+    {
+      "id": "RQ-F-024",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "target-finding",
+      "title": "待验证：claude -p（2.1.282）在 max_tokens 续写之后只打印最后一条消息（F4 3/3：stdout 里既没有第一次的回答，也没有溢出段）；本期 mock 对续写总是从头写，stdout 因此看起来完整，真实服务端接着写时可能只剩后半截、退出码 0、无提示",
+      "status": "open",
+      "target": {
+        "repo": "anthropics/claude-code",
+        "artifact": "-p 模式的最终输出（续写之后的取值）",
+        "version": "Claude Code 2.1.282（原生二进制 fcfd8371…）"
+      },
+      "fault": {
+        "type": "length-stop",
+        "spec": "F4：P01–P24（前 12 段带标记）加溢出段 Q01–Q24 后 stop_reason max_tokens。客户端续写：带着第一次的回答，再加用户消息 Output token limit hit. Resume directly…；mock 从头回答 P01–P24。-p 的 stdout 只有第二次的 P01–P24（标记 0、Q 0），TUI 则两份都留在屏上",
+        "delivery": "mock 送达日志与续写请求体；stdout、stderr、退出码；会话文件 stop_reason 依次为 max_tokens、end_turn",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "claude -p",
+          "model": "mock-model（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "stdout 只有最后一条消息，无提示，退出码 0"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "客户端一侧的行为测到了（只打印最后一条消息），后果取决于真实服务端如何回答续写请求，本期没有测",
+        "confidence": "unable-to-separate",
+        "caveats": [
+          "mock 总是从头写",
+          "要验证需在回答中途给长度截断，并让 mock 只回剩下的部分"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase5-report.md",
+        "docs/phase5-disclosure.md",
+        "runs/phase5-appendix-f4f5-2026-11-16/summary.md"
+      ],
+      "lesson": "续写把一份回答拆成两条消息，只取最后一条的输出就只剩后半截；服务端从头写的 mock 会把这种问题藏起来"
+    },
+    {
+      "id": "RQ-I-011",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "instrument-defect",
+      "title": "phase5 试跑：给 mock 加思考字段后，codex 的标题请求（/v1/responses 的结构化输出）让 mock 崩溃（sel.reasoning 未定义），codex 交互试跑中断；冻结前修复并补回归测试、做过变异检查",
+      "status": "fixed",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "witness/stream-retry/mock.mjs 的 buildResponses 与 buildStructuredStream",
+        "version": "试跑版 → 冻结版 d9115c93…"
+      },
+      "fault": {
+        "type": "thrown-error",
+        "spec": "buildResponses 先求了 reasoning 摘要文本，结构化输出路径构造的 sel 没有 reasoning 字段，Node 进程异常退出，之后的控制面请求被拒绝连接。修复：缺省回落到 content.json 的 reasoning，结构化路径显式给空数组；回归测试覆盖三种端点的结构化标题请求，把修复改回去时测试失败、从副本还原后 cmp 一致"
+      },
+      "evidence": [
+        "witness/stream-retry/mock.mjs",
+        "tests/test_stream_retry.py",
+        "docs/phase5-disclosure.md"
+      ],
+      "lesson": "给 mock 加字段要过一遍所有构造路径，辅助请求那条最容易忘"
+    },
+    {
+      "id": "RQ-I-012",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "instrument-defect",
+      "title": "phase5 试跑：提示词表里的 error 把 metacodes 空输入框的 Try \"fix typecheck errors\" 当成错误提示，所有健康对照都会判 control_failed；冻结前改为按工具排除固定 UI 文本，随运行记录",
+      "status": "fixed",
+      "target": {
+        "repo": "BiBoyang/repo-quake",
+        "artifact": "witness/stream-retry/grading.py 的 notices() 与 runner.py 的 Tool.chrome_re",
+        "version": "试跑版 → 冻结版 grading.py 1cc52258…"
+      },
+      "fault": {
+        "type": "false-positive",
+        "spec": "NOTICE_RE 含 error，metacodes 的空输入框占位符写着 fix typecheck errors（shell 模式为 fix lint errors），每一屏都有。修复：Tool.chrome_re 只排除这一行的固定写法，记进 observation_inputs，regrade 照用；测试覆盖'不排除就失败、排除后健康、真错误行照样算'",
+        "path_relation": "unknown"
+      },
+      "evidence": [
+        "witness/stream-retry/grading.py",
+        "witness/stream-retry/runner.py",
+        "tests/test_stream_retry.py",
+        "docs/phase5-disclosure.md"
+      ],
+      "lesson": "判分词表会撞上被测自己的 UI 词汇；排除要按工具、按整行写死，并随证据一起保存"
+    },
+    {
+      "id": "RQ-X-015",
+      "created": "2026-11-16",
+      "phase": "phase5",
+      "class": "experiment-invalid",
+      "title": "phase5 的诚实清单：冻结前试跑 metacodes 24 次、附录 13 次、dsh 24 次（未计入）参考了卡上的预测；超出任务的加测（metacodes 的 F0-tag、F0T-tag，附录的非交互宿主与 F0-tag，dsh 三种协议）；dsh 未跑安装脚本；skill-up 测的是源码自建二进制；reported 口径相对 phase4 放宽；tmux 不是真终端；沙箱下 codex 启动时 55 次域名解析被拦",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase5-disclosure.md",
+        "docs/phase5-report.md"
+      ],
+      "lesson": "复测要把'这一期和上一期哪里不一样'写在最前面：口径、版本、安装方式，任何一项变了，旧数字都只能并排放，不能直接比"
     }
   ]
 }

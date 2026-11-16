@@ -1,0 +1,34 @@
+{
+  "available": true,
+  "bytes": 43097,
+  "indexed": true,
+  "alt_screen_on": [
+    69
+  ],
+  "alt_screen_on_count": 1,
+  "alt_screen_off_count": 0,
+  "alt_screen_on_ms": 1794819247778,
+  "esc_2J": 0,
+  "esc_3J": 0,
+  "tag_seen": true,
+  "tag_contiguous": false,
+  "tag_first_ms": 1794819248850,
+  "notices": [],
+  "notices_timed": [],
+  "signals_extra": [
+    "■ Incomplete response returned, reason: max_output_tokens"
+  ],
+  "signals_extra_timed": [
+    {
+      "text": "■ Incomplete response returned, reason: max_output_tokens",
+      "t_ms": 1794819249888
+    }
+  ],
+  "reasoning_seen": [],
+  "first_seen_ms": {
+    "first_marker": 1794819248850,
+    "partial_last": 1794819249078,
+    "first_new": 1794819249098,
+    "answer_last": 1794819249328
+  }
+}

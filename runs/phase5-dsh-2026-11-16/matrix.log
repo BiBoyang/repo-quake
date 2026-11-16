@@ -1,0 +1,73 @@
+{"tool": "dsh-cc", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-cc", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-cc", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-cc", "condition": "F1-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.2, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F1-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.2, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F1-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.2, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F2-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F2-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F2-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F3-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F3-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F3-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F4-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F4-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F4-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F5-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F5-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F5-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 2.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-cc", "condition": "F6-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F6-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F6-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.3, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-cc", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-cc", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-cc", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F1-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F1-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F1-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F2-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F2-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F2-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F3-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.7, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F3-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F3-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F4-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F4-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F4-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 3.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F5-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F5-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F5-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-resp", "condition": "F6-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F6-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F6-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-resp", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 3.2, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-resp", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F0-pre", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F0-pre", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F0-pre", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F1-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F1-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F1-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F2-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F2-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F2-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F3-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F3-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F3-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F4-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F4-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F4-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 3.3, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F5-once", "run": 1, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F5-once", "run": 2, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F5-once", "run": 3, "verdict": "exit_code_only", "requests": 2, "seconds": 2.2, "reason": "no follow-up request and no notice; exit code 1"}
+{"tool": "dsh-anth", "condition": "F6-once", "run": 1, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F6-once", "run": 2, "verdict": "not_shown", "requests": 3, "seconds": 3.2, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F6-once", "run": 3, "verdict": "not_shown", "requests": 3, "seconds": 3.8, "reason": "the failed attempt's tag never reached the terminal; clean retry; one complete answer"}
+{"tool": "dsh-anth", "condition": "F0-post", "run": 1, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F0-post", "run": 2, "verdict": "healthy", "requests": 2, "seconds": 2.8, "reason": "healthy control: one clean request, full answer exactly once"}
+{"tool": "dsh-anth", "condition": "F0-post", "run": 3, "verdict": "healthy", "requests": 2, "seconds": 2.7, "reason": "healthy control: one clean request, full answer exactly once"}
+matrix rc=0

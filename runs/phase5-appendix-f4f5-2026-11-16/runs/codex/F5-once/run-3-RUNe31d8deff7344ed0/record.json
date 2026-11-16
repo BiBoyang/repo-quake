@@ -1,0 +1,370 @@
+{
+  "tool": "codex",
+  "expected_version": "0.169.0",
+  "mode": "interactive",
+  "condition": "F5-once",
+  "run_index": 3,
+  "mark": "RUNe31d8deff7344ed0",
+  "tag": "〔x2a0522〕",
+  "profile": "short",
+  "started_at": "2026-11-16T08:58:27.007+00:00",
+  "mock": {
+    "instance": "1a98c408f5785cd7",
+    "port": 61736
+  },
+  "invalid": null,
+  "timeline": {
+    "done_reason": "no retry within the quiet window",
+    "final_ms": 1794819568864,
+    "enter_ms": 1794819508489,
+    "followup_ms": 1794819569163,
+    "timeout": false
+  },
+  "evidence_dir": "runs/codex/F5-once/run-3-RUNe31d8deff7344ed0",
+  "duration_s": 64.4,
+  "executed": {
+    "pid": 38209,
+    "path": "/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/bin/codex",
+    "sha256": "739cda86e15d30a6e2b40cf8dcbbfb988aaf48b305b27065573bb8e9fd41d002"
+  },
+  "requests": [
+    {
+      "seq": 86,
+      "started_ms": 1794819508552,
+      "body_ms": 1794819508552,
+      "first_byte_ms": 1794819508552,
+      "ended_ms": 1794819508698,
+      "endpoint": "responses",
+      "fault": "F0",
+      "fault_source": "always",
+      "stream": true,
+      "aux": true,
+      "tools_count": 0,
+      "profile": "aux",
+      "tag_applied": false,
+      "events_count": 7,
+      "bytes_sent": 1755,
+      "ending": "clean",
+      "witnesses": {
+        "cc_done": false,
+        "cc_finish_chunk": false,
+        "responses_completed": true,
+        "responses_incomplete": false,
+        "anthropic_message_stop": false
+      },
+      "continuation": null,
+      "req_bytes": 24171,
+      "req_sha256": "88e2b272fa54e89717547f2a08e42cfc76d6eb0db3f388a4d50b3cd383ca68a9",
+      "user_agent": "codex-tui/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex-tui; 0.169.0)",
+      "frame_delay_ms": 20,
+      "client_closed_first": true,
+      "has_mark": true,
+      "assistant_messages": 0,
+      "assistant_marker_counts": {},
+      "carries_partial": false,
+      "carries_tag": false,
+      "trailing_role": "user",
+      "partial_flag": false
+    },
+    {
+      "seq": 85,
+      "started_ms": 1794819508520,
+      "body_ms": 1794819508521,
+      "first_byte_ms": 1794819508521,
+      "ended_ms": 1794819508776,
+      "endpoint": "responses",
+      "fault": "F5",
+      "fault_source": "once",
+      "stream": true,
+      "aux": false,
+      "tools_count": 13,
+      "profile": "short",
+      "tag_applied": true,
+      "events_count": 12,
+      "bytes_sent": 7021,
+      "ending": "clean",
+      "witnesses": {
+        "cc_done": false,
+        "cc_finish_chunk": false,
+        "responses_completed": false,
+        "responses_incomplete": true,
+        "anthropic_message_stop": false
+      },
+      "continuation": null,
+      "req_bytes": 50013,
+      "req_sha256": "30d70342e90d677098b89282000ec8674baac6723246c1ff1e06a305bb156335",
+      "user_agent": "codex-tui/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex-tui; 0.169.0)",
+      "frame_delay_ms": 20,
+      "client_closed_first": true,
+      "has_mark": true,
+      "assistant_messages": 0,
+      "assistant_marker_counts": {},
+      "carries_partial": false,
+      "carries_tag": false,
+      "trailing_role": "user",
+      "partial_flag": false
+    }
+  ],
+  "followup_requests": [
+    {
+      "seq": 87,
+      "started_ms": 1794819569210,
+      "body_ms": 1794819569211,
+      "first_byte_ms": 1794819569211,
+      "ended_ms": 1794819569359,
+      "endpoint": "responses",
+      "fault": "F0",
+      "fault_source": "always",
+      "stream": true,
+      "aux": false,
+      "tools_count": 13,
+      "profile": "ack",
+      "tag_applied": false,
+      "events_count": 7,
+      "bytes_sent": 1655,
+      "ending": "clean",
+      "witnesses": {
+        "cc_done": false,
+        "cc_finish_chunk": false,
+        "responses_completed": true,
+        "responses_incomplete": false,
+        "anthropic_message_stop": false
+      },
+      "continuation": {
+        "mode": "restart",
+        "trailing_assistant": false,
+        "partial_flag": false,
+        "trailing_family": null,
+        "trailing_max": null,
+        "decision": "none"
+      },
+      "req_bytes": 50884,
+      "req_sha256": "33c9a9fea78f4c07152a2f0e09ca0e86401e3d46c01cdbc66f6f392e940d0d8b",
+      "user_agent": "codex-tui/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex-tui; 0.169.0)",
+      "frame_delay_ms": 20,
+      "client_closed_first": true,
+      "has_mark": true,
+      "assistant_messages": 0,
+      "assistant_marker_counts": {},
+      "carries_partial": false,
+      "carries_tag": false,
+      "trailing_role": "user",
+      "partial_flag": false
+    }
+  ],
+  "display": {
+    "mid": {
+      "ts_ms": 1794819508633,
+      "tag_count": 1,
+      "lag_vs_retry_start_ms": null
+    },
+    "overlap": null,
+    "prefin": null,
+    "final_counts": {},
+    "final_complete": true,
+    "final_tag_count": 0,
+    "final_reasoning": {},
+    "samples": 3,
+    "tag_visible_ms": [
+      [
+        1794819508633,
+        1794819508764
+      ]
+    ]
+  },
+  "raw": {
+    "available": true,
+    "bytes": 24388,
+    "indexed": true,
+    "alt_screen_on": [
+      69
+    ],
+    "alt_screen_on_count": 1,
+    "alt_screen_off_count": 0,
+    "alt_screen_on_ms": 1794819507451,
+    "esc_2J": 0,
+    "esc_3J": 0,
+    "tag_seen": true,
+    "tag_contiguous": false,
+    "tag_first_ms": 1794819508596,
+    "notices": [],
+    "notices_timed": [],
+    "signals_extra": [
+      "■ Incomplete response returned, reason: max_output_tokens"
+    ],
+    "signals_extra_timed": [
+      {
+        "text": "■ Incomplete response returned, reason: max_output_tokens",
+        "t_ms": 1794819508761
+      }
+    ],
+    "reasoning_seen": [
+      "R01"
+    ],
+    "first_seen_ms": {
+      "first_marker": null,
+      "partial_last": null,
+      "first_new": null,
+      "answer_last": null
+    }
+  },
+  "conversation": {
+    "path": "homes/codex/run-3-RUNe31d8deff7344ed0/codex/sessions/2026/11/16/rollout-2026-11-16T16-58-27-01a1e394-45cf-7663-a666-18fdcc81c2db.jsonl",
+    "assistant_entries": 1,
+    "all_assistant_counts": {
+      "ACK": 1
+    },
+    "last_assistant_counts": {
+      "ACK": 1
+    },
+    "tag_count": 0,
+    "reasoning_markers": [],
+    "full_present": false,
+    "duplicated": false,
+    "stop_reasons": []
+  },
+  "next_request": {
+    "seq": 87,
+    "carries_tag": false,
+    "assistant_messages": 0,
+    "assistant_marker_counts": {},
+    "full_present": false,
+    "duplicated": false
+  },
+  "verdict": "reported_failure",
+  "verdict_reason": "no follow-up request; a notice was shown",
+  "fields": {
+    "detected": true,
+    "reported": true,
+    "recovered": false
+  },
+  "checks": {
+    "profile": "short",
+    "requests": 2,
+    "main_requests": 1,
+    "main_stream_requests": 1,
+    "final_full_once": false,
+    "final_full_present": false,
+    "final_duplicated": false,
+    "final_foreign_markers": [],
+    "final_tag_count": 0,
+    "final_complete": true,
+    "final_reasoning_markers": [],
+    "emitted_tag_count": null,
+    "notice_where": "none",
+    "fault_seq": 85,
+    "follow_seq": null,
+    "later_main_requests": 0,
+    "follow_carried_first": false,
+    "follow_trailing_role": null,
+    "signals_final": [
+      "■ Incomplete response returned, reason: max_output_tokens"
+    ],
+    "signals_raw": [
+      "■ Incomplete response returned, reason: max_output_tokens"
+    ],
+    "signal_where": "final",
+    "first_attempt_shown": true,
+    "final_q_markers": 0,
+    "exit_code": null
+  },
+  "notices_final": [],
+  "notices_raw": [],
+  "observation_inputs": {
+    "condition": "F5-once",
+    "mode": "interactive",
+    "profile": "short",
+    "tag": "〔x2a0522〕",
+    "chrome": null,
+    "requests": [
+      {
+        "seq": 86,
+        "started_ms": 1794819508552,
+        "body_ms": 1794819508552,
+        "first_byte_ms": 1794819508552,
+        "ended_ms": 1794819508698,
+        "endpoint": "responses",
+        "fault": "F0",
+        "fault_source": "always",
+        "stream": true,
+        "aux": true,
+        "tools_count": 0,
+        "profile": "aux",
+        "tag_applied": false,
+        "events_count": 7,
+        "bytes_sent": 1755,
+        "ending": "clean",
+        "witnesses": {
+          "cc_done": false,
+          "cc_finish_chunk": false,
+          "responses_completed": true,
+          "responses_incomplete": false,
+          "anthropic_message_stop": false
+        },
+        "continuation": null,
+        "req_bytes": 24171,
+        "req_sha256": "88e2b272fa54e89717547f2a08e42cfc76d6eb0db3f388a4d50b3cd383ca68a9",
+        "user_agent": "codex-tui/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex-tui; 0.169.0)",
+        "frame_delay_ms": 20,
+        "client_closed_first": true,
+        "has_mark": true,
+        "assistant_messages": 0,
+        "assistant_marker_counts": {},
+        "carries_partial": false,
+        "carries_tag": false,
+        "trailing_role": "user",
+        "partial_flag": false
+      },
+      {
+        "seq": 85,
+        "started_ms": 1794819508520,
+        "body_ms": 1794819508521,
+        "first_byte_ms": 1794819508521,
+        "ended_ms": 1794819508776,
+        "endpoint": "responses",
+        "fault": "F5",
+        "fault_source": "once",
+        "stream": true,
+        "aux": false,
+        "tools_count": 13,
+        "profile": "short",
+        "tag_applied": true,
+        "events_count": 12,
+        "bytes_sent": 7021,
+        "ending": "clean",
+        "witnesses": {
+          "cc_done": false,
+          "cc_finish_chunk": false,
+          "responses_completed": false,
+          "responses_incomplete": true,
+          "anthropic_message_stop": false
+        },
+        "continuation": null,
+        "req_bytes": 50013,
+        "req_sha256": "30d70342e90d677098b89282000ec8674baac6723246c1ff1e06a305bb156335",
+        "user_agent": "codex-tui/0.169.0 (Mac OS 27.3.0; arm64) xterm-256color (codex-tui; 0.169.0)",
+        "frame_delay_ms": 20,
+        "client_closed_first": true,
+        "has_mark": true,
+        "assistant_messages": 0,
+        "assistant_marker_counts": {},
+        "carries_partial": false,
+        "carries_tag": false,
+        "trailing_role": "user",
+        "partial_flag": false
+      }
+    ],
+    "final": {
+      "complete": true
+    },
+    "next_request": {
+      "seq": 87,
+      "carries_tag": false,
+      "assistant_messages": 0,
+      "assistant_marker_counts": {},
+      "full_present": false,
+      "duplicated": false
+    },
+    "invalid": null
+  }
+}

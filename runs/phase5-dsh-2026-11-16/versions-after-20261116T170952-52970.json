@@ -1,0 +1,87 @@
+{
+  "tools": {
+    "dsh-cc": {
+      "launcher": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/.bin/dsh",
+      "realpath": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/@deepseek-ai/dsh/lib/bin.js",
+      "realpath_sha256": "36f86742e0c3cc1c3b2dbaa6582ee00b0c37bc4f5a190f7531b5303bf3efb6d9",
+      "realpath_stat": {
+        "size": 1182,
+        "mtime_ns": 1794818930501850311
+      },
+      "shebang": "/usr/bin/env node",
+      "native": null,
+      "version": "0.2.2-rc.3",
+      "expected": "0.2.2-rc.3",
+      "expected_ok": true
+    },
+    "dsh-resp": {
+      "launcher": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/.bin/dsh",
+      "realpath": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/@deepseek-ai/dsh/lib/bin.js",
+      "realpath_sha256": "36f86742e0c3cc1c3b2dbaa6582ee00b0c37bc4f5a190f7531b5303bf3efb6d9",
+      "realpath_stat": {
+        "size": 1182,
+        "mtime_ns": 1794818930501850311
+      },
+      "shebang": "/usr/bin/env node",
+      "native": null,
+      "version": "0.2.2-rc.3",
+      "expected": "0.2.2-rc.3",
+      "expected_ok": true
+    },
+    "dsh-anth": {
+      "launcher": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/.bin/dsh",
+      "realpath": "<HOME>/Desktop/metacodes/.notes-verify/phase5-2026-11-16/dsh-0.2.2-rc.3/node_modules/@deepseek-ai/dsh/lib/bin.js",
+      "realpath_sha256": "36f86742e0c3cc1c3b2dbaa6582ee00b0c37bc4f5a190f7531b5303bf3efb6d9",
+      "realpath_stat": {
+        "size": 1182,
+        "mtime_ns": 1794818930501850311
+      },
+      "shebang": "/usr/bin/env node",
+      "native": null,
+      "version": "0.2.2-rc.3",
+      "expected": "0.2.2-rc.3",
+      "expected_ok": true
+    }
+  },
+  "files": {
+    "harness:mock.mjs": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/mock.mjs",
+      "sha256": "49440ba1a9daf4922d77d9a613a94f8f28211f53ab78f626c896e0c7adaf6485"
+    },
+    "harness:content.json": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/content.json",
+      "sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763"
+    },
+    "harness:runner.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/runner.py",
+      "sha256": "d9e312344eaf9caee070ff6091dd6913634f41a0327c274faa01730ea3f7511b"
+    },
+    "harness:grading.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/grading.py",
+      "sha256": "cd9b4f7a6d74fc509c566dd8fce71cec9562f3a13d593b70cd90957fa2e99eee"
+    },
+    "harness:version_witness.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/version_witness.py",
+      "sha256": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1"
+    },
+    "harness:rawtap.py": {
+      "path": "<HOME>/repo-quake/witness/stream-retry/rawtap.py",
+      "sha256": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+    },
+    "card": {
+      "path": "<EVIDENCE_ROOT>/card-frozen.json",
+      "sha256": "41d9989a08fbd0a6108086c946498df44146637f2dcd04a9cf067c07f882da7d"
+    }
+  },
+  "runtime": {
+    "node": {
+      "path": "/opt/homebrew/Cellar/node/25.4.0/bin/node",
+      "sha256": "d8c9ba1203a4026fb18277599eb5ed328d48bb7feae9c26cd4b80d9bf68b85cf",
+      "version": "v25.4.0"
+    },
+    "tmux": {
+      "path": "/opt/homebrew/bin/tmux",
+      "version": "tmux 3.5a"
+    }
+  }
+}

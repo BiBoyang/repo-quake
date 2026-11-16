@@ -1,0 +1,16 @@
+{"t_ms": 1794819072171, "tag_on_screen": 0, "distinct_markers": 0, "total_markers": 0, "first_partial_count": 0, "max_marker": null, "notices": []}
+{"t_ms": 1794819072381, "tag_on_screen": 5, "distinct_markers": 5, "total_markers": 5, "first_partial_count": 1, "max_marker": "P05", "notices": []}
+{"t_ms": 1794819072505, "tag_on_screen": 10, "distinct_markers": 10, "total_markers": 10, "first_partial_count": 1, "max_marker": "P10", "notices": []}
+{"t_ms": 1794819072595, "tag_on_screen": 12, "distinct_markers": 15, "total_markers": 15, "first_partial_count": 1, "max_marker": "P15", "notices": []}
+{"t_ms": 1794819072678, "tag_on_screen": 12, "distinct_markers": 20, "total_markers": 20, "first_partial_count": 1, "max_marker": "P20", "notices": []}
+{"t_ms": 1794819072803, "tag_on_screen": 12, "distinct_markers": 25, "total_markers": 25, "first_partial_count": 1, "max_marker": "Q01", "notices": []}
+{"t_ms": 1794819072890, "tag_on_screen": 12, "distinct_markers": 30, "total_markers": 30, "first_partial_count": 1, "max_marker": "Q06", "notices": []}
+{"t_ms": 1794819073014, "tag_on_screen": 12, "distinct_markers": 35, "total_markers": 35, "first_partial_count": 1, "max_marker": "Q11", "notices": []}
+{"t_ms": 1794819073096, "tag_on_screen": 12, "distinct_markers": 40, "total_markers": 40, "first_partial_count": 1, "max_marker": "Q16", "notices": []}
+{"t_ms": 1794819073230, "tag_on_screen": 12, "distinct_markers": 45, "total_markers": 45, "first_partial_count": 1, "max_marker": "Q21", "notices": []}
+{"t_ms": 1794819073358, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 48, "first_partial_count": 1, "max_marker": "Q24", "notices": []}
+{"t_ms": 1794819073533, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 53, "first_partial_count": 2, "max_marker": "Q24", "notices": []}
+{"t_ms": 1794819073625, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 58, "first_partial_count": 2, "max_marker": "Q24", "notices": []}
+{"t_ms": 1794819073755, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 63, "first_partial_count": 2, "max_marker": "Q24", "notices": []}
+{"t_ms": 1794819073849, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 68, "first_partial_count": 2, "max_marker": "Q24", "notices": []}
+{"t_ms": 1794819073977, "tag_on_screen": 12, "distinct_markers": 48, "total_markers": 72, "first_partial_count": 2, "max_marker": "Q24", "notices": []}

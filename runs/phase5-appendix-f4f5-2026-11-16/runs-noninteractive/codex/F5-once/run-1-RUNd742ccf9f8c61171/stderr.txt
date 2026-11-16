@@ -1,0 +1,26 @@
+Reading additional input from stdin...
+OpenAI Codex v0.169.0
+--------
+workdir: <EVIDENCE_ROOT>/cwd/codex
+model: mock-model
+provider: mock
+approval: never
+sandbox: read-only
+reasoning effort: none
+reasoning summaries: none
+session id: 01a1e396-375e-70a1-ad0d-ea832e8a925a
+--------
+user
+RUNd742ccf9f8c61171 写一份三节分析报告，主题：流式输出的完整性判定。直接输出报告全文，不要调用任何工具。
+warning: Model metadata for `mock-model` not found. Defaulting to fallback metadata; this can degrade performance and cause issues.
+【R01】让我想想这份报告的结构应该先搭骨架再填肉。 〔xd9f953〕
+【R02】骨架分两翼：内容证人一翼，终止证人一翼。 〔xd9f953〕
+【R03】填肉时注意每个段落都要带编号，方便事后定位截断点。 〔xd9f953〕
+【R04】再检查一下各协议的终止方言是否写对，不能一套字节打天下。 〔xd9f953〕
+【R05】最后确认阳性对照是否覆盖所有故障形态，防止假阴性。 〔xd9f953〕
+【R06】思考完毕，接下来本该输出正文——但本故障形态下正文永远不会到来。 〔xd9f953〕
+
+ERROR: Incomplete response returned, reason: max_output_tokens
+ERROR: Incomplete response returned, reason: max_output_tokens
+tokens used
+1,066

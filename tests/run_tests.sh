@@ -99,6 +99,12 @@ if [ "$rc" -eq 0 ] && grep -q "DRY-RUN GREEN" <<<"$out"; then echo "ok   [factor
 # Here: the frozen phase-4 card validates, and the mock parses.
 out=$(python3 skills/repo-quake/scripts/validate_card.py examples/experiment-card-phase4-stream-retry.json 2>&1); rc=$?
 if [ "$rc" -eq 0 ] && grep -q "planned_runs=36" <<<"$out"; then echo "ok   [stream-retry-card]"; else echo "FAIL [stream-retry-card]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
+# phase5 cards (metacodes, the 2026-09 appendix re-check, deepseek-harness) stay valid as frozen
+for pair in "experiment-card-phase5-metacodes.json:108" "experiment-card-phase5-appendix-f4f5.json:60" "experiment-card-phase5-dsh.json:72"; do
+  card=${pair%%:*}; want=${pair##*:}
+  out=$(python3 skills/repo-quake/scripts/validate_card.py "examples/$card" 2>&1); rc=$?
+  if [ "$rc" -eq 0 ] && grep -q "planned_runs=$want" <<<"$out"; then echo "ok   [stream-retry-card-$card]"; else echo "FAIL [stream-retry-card-$card]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
+done
 if command -v node >/dev/null 2>&1; then
   out=$(node --check witness/stream-retry/mock.mjs 2>&1); rc=$?
   if [ "$rc" -eq 0 ]; then echo "ok   [stream-retry-mock-parses]"; else echo "FAIL [stream-retry-mock-parses]"; echo "$out"; fails=$((fails+1)); fi

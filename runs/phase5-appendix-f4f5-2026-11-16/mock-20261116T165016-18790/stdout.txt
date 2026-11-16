@@ -1,0 +1,187 @@
+[mock] ready {"port":61736,"pid":18795,"instance":"1a98c408f5785cd7","host":"127.0.0.1","content_sha256":"1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763","continuation":"restart","delay_ms":20,"long_delay_ms":150}
+[mock] control -> always=F0 profile=short once=none
+[mock] #1 anthropic fault=F0(always) stream=true aux=true bytes=815 events=7 ending=clean cont=-
+[mock] #2 anthropic fault=F0(always) stream=true aux=false bytes=6181 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #3 anthropic fault=F0(always) stream=true aux=false bytes=790 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #4 anthropic fault=F0(always) stream=true aux=true bytes=815 events=7 ending=clean cont=-
+[mock] #5 anthropic fault=F0(always) stream=true aux=false bytes=6181 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #6 anthropic fault=F0(always) stream=true aux=false bytes=790 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #7 anthropic fault=F0(always) stream=true aux=true bytes=815 events=7 ending=clean cont=-
+[mock] #8 anthropic fault=F0(always) stream=true aux=false bytes=6181 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #9 anthropic fault=F0(always) stream=true aux=false bytes=790 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #10 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #11 anthropic fault=F0(once) stream=true aux=false bytes=6350 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #12 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #13 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #14 anthropic fault=F0(once) stream=true aux=false bytes=6350 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #15 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #16 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #17 anthropic fault=F0(once) stream=true aux=false bytes=6350 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #18 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #19 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #20 anthropic fault=F4(once) stream=true aux=false bytes=11878 events=54 ending=clean cont=-
+[mock] #21 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #22 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #23 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #24 anthropic fault=F4(once) stream=true aux=false bytes=11878 events=54 ending=clean cont=-
+[mock] #25 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #26 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #27 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #28 anthropic fault=F4(once) stream=true aux=false bytes=11878 events=54 ending=clean cont=-
+[mock] #29 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #30 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #31 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #32 anthropic fault=F5(once) stream=true aux=false bytes=1972 events=11 ending=clean cont=-
+[mock] #33 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #34 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #35 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #36 anthropic fault=F5(once) stream=true aux=false bytes=1972 events=11 ending=clean cont=-
+[mock] #37 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #38 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #39 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #40 anthropic fault=F5(once) stream=true aux=false bytes=1972 events=11 ending=clean cont=-
+[mock] #41 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #42 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #43 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #44 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #45 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #46 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #47 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #48 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #49 anthropic fault=F0(always) stream=true aux=true bytes=816 events=7 ending=clean cont=-
+[mock] #50 anthropic fault=F0(always) stream=true aux=false bytes=6182 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #51 anthropic fault=F0(always) stream=true aux=false bytes=791 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #53 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #52 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #54 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #56 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #55 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #57 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #59 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #58 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #60 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #62 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #61 responses fault=F0(once) stream=true aux=false bytes=16738 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #63 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #65 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #64 responses fault=F0(once) stream=true aux=false bytes=16738 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #66 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F0
+[mock] #68 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #67 responses fault=F0(once) stream=true aux=false bytes=16738 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #69 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #71 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #70 responses fault=F4(once) stream=true aux=false bytes=31433 events=54 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #72 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #74 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #73 responses fault=F4(once) stream=true aux=false bytes=31433 events=54 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #75 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F4
+[mock] #77 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #76 responses fault=F4(once) stream=true aux=false bytes=31433 events=54 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #78 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #80 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #79 responses fault=F5(once) stream=true aux=false bytes=7021 events=12 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #81 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #83 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #82 responses fault=F5(once) stream=true aux=false bytes=7021 events=12 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #84 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=F5
+[mock] #86 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #85 responses fault=F5(once) stream=true aux=false bytes=7021 events=12 ending=clean cont=-
+[mock] control -> always=F0 profile=ack once=none
+[mock] #87 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #89 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #88 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #90 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #92 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #91 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #93 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none
+[mock] control -> always=F0 profile=short once=none
+[mock] #95 responses fault=F0(always) stream=true aux=true bytes=1755 events=7 ending=clean cont=-
+[mock] #94 responses fault=F0(always) stream=true aux=false bytes=16066 events=30 ending=clean cont=none
+[mock] control -> always=F0 profile=ack once=none
+[mock] #96 responses fault=F0(always) stream=true aux=false bytes=1655 events=7 ending=clean cont=none
+[mock] control -> always=F0 profile=short once=none

@@ -1,0 +1,211 @@
+{
+  "label": "20261116T161918-90843",
+  "started_at": "2026-11-16T08:19:18.463+00:00",
+  "argv": [
+    "runner.py",
+    "matrix",
+    "--out",
+    "<EVIDENCE_ROOT>",
+    "--tools",
+    "metacodes",
+    "--runs",
+    "3",
+    "--bin",
+    "metacodes=<HOME>/Desktop/metacodes/.notes-verify/phase5-mc-main/zig-out/bin/metacodes",
+    "--expect",
+    "metacodes=0.12.1-dev+1707da0c6768",
+    "--path-env",
+    "/usr/bin:/bin:/usr/sbin:/sbin",
+    "--conditions",
+    "F0-pre,F0-tag,F0T-tag,F1-once,F6-once,FLONG-once,FTHINK1-once,FTHINK6-once,F0-post",
+    "--card",
+    "<EVIDENCE_ROOT>/card-frozen.json"
+  ],
+  "mode": "interactive",
+  "tools": [
+    "metacodes"
+  ],
+  "conditions": [
+    "F0-pre",
+    "F0-tag",
+    "F0T-tag",
+    "F1-once",
+    "F6-once",
+    "FLONG-once",
+    "FTHINK1-once",
+    "FTHINK6-once",
+    "F0-post"
+  ],
+  "runs": 3,
+  "harness_sha256": {
+    "mock.mjs": "d9115c9385ccc48a3dfe7bc54d68eff6faf994bab5a6a004dc9a948a1bef7ac8",
+    "content.json": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "runner.py": "0bd3acf518be7e0b5cf6f068d6445cef604fd8417eec959696d869512692d471",
+    "grading.py": "1cc52258b4c28563a4d48a442cbd5a3850a3fdc0fec1cddeed83fa1565b7608e",
+    "version_witness.py": "c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1",
+    "rawtap.py": "dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750"
+  },
+  "mock": {
+    "port": 58179,
+    "pid": 90847,
+    "instance": "88cb6325e8cb735e",
+    "host": "127.0.0.1",
+    "content_sha256": "1e7aa28970310b2c2388e8bf4d33ce57c74190dee0d0e79d5bc10c8e70dfe763",
+    "continuation": "restart",
+    "delay_ms": 20,
+    "long_delay_ms": 150
+  },
+  "tmux": [
+    110,
+    400
+  ],
+  "sandbox": true,
+  "quiet_s": 60.0,
+  "settle_s": 3.0,
+  "poll_s": 0.03,
+  "slow_poll_s": 0.3,
+  "followup": true,
+  "card": "<EVIDENCE_ROOT>/card-frozen.json",
+  "card_sha256": "32f1bc2846dfc2303c47a712df44b3fec9c3c2619f61a7ed477cb6da9725eb98",
+  "ended_at": "2026-11-16T08:26:31.120+00:00",
+  "versions_equal": true,
+  "version_diff": [],
+  "pids": [
+    {
+      "pid": 90853,
+      "tool": "metacodes",
+      "run": "run-1-RUN3e31e4bf560fd798"
+    },
+    {
+      "pid": 91099,
+      "tool": "metacodes",
+      "run": "run-2-RUN5df22ece2ce69205"
+    },
+    {
+      "pid": 91365,
+      "tool": "metacodes",
+      "run": "run-3-RUN818deccc5d39ebbc"
+    },
+    {
+      "pid": 91542,
+      "tool": "metacodes",
+      "run": "run-1-RUN16d084b4861e3ad2"
+    },
+    {
+      "pid": 91780,
+      "tool": "metacodes",
+      "run": "run-2-RUNf87216d87eb461bd"
+    },
+    {
+      "pid": 92038,
+      "tool": "metacodes",
+      "run": "run-3-RUN84894175c4b3f6b5"
+    },
+    {
+      "pid": 92302,
+      "tool": "metacodes",
+      "run": "run-1-RUN4f899397e22d1780"
+    },
+    {
+      "pid": 92511,
+      "tool": "metacodes",
+      "run": "run-2-RUN81de79de7b005a3c"
+    },
+    {
+      "pid": 92750,
+      "tool": "metacodes",
+      "run": "run-3-RUNb3591dc392bdb7ae"
+    },
+    {
+      "pid": 93039,
+      "tool": "metacodes",
+      "run": "run-1-RUN7d18b82a5479f9d7"
+    },
+    {
+      "pid": 93360,
+      "tool": "metacodes",
+      "run": "run-2-RUNfb01c247b86591bd"
+    },
+    {
+      "pid": 93605,
+      "tool": "metacodes",
+      "run": "run-3-RUNf54284c0a87f3c78"
+    },
+    {
+      "pid": 93816,
+      "tool": "metacodes",
+      "run": "run-1-RUNc6820fb16305736b"
+    },
+    {
+      "pid": 94227,
+      "tool": "metacodes",
+      "run": "run-2-RUN4457c2c6904a25cb"
+    },
+    {
+      "pid": 94526,
+      "tool": "metacodes",
+      "run": "run-3-RUNce02e8ec38452d8b"
+    },
+    {
+      "pid": 95022,
+      "tool": "metacodes",
+      "run": "run-1-RUN802374228d864a9f"
+    },
+    {
+      "pid": 97762,
+      "tool": "metacodes",
+      "run": "run-2-RUN3f4dd07d522a5290"
+    },
+    {
+      "pid": 195,
+      "tool": "metacodes",
+      "run": "run-3-RUN8640d6fba906e248"
+    },
+    {
+      "pid": 2395,
+      "tool": "metacodes",
+      "run": "run-1-RUN38a602d613812073"
+    },
+    {
+      "pid": 2597,
+      "tool": "metacodes",
+      "run": "run-2-RUN63be5eb86c050cb6"
+    },
+    {
+      "pid": 2792,
+      "tool": "metacodes",
+      "run": "run-3-RUNc45bf755ab718947"
+    },
+    {
+      "pid": 3150,
+      "tool": "metacodes",
+      "run": "run-1-RUN5d2eaad4ebb9997f"
+    },
+    {
+      "pid": 3399,
+      "tool": "metacodes",
+      "run": "run-2-RUN99675ad54e773cb3"
+    },
+    {
+      "pid": 3716,
+      "tool": "metacodes",
+      "run": "run-3-RUNe5019a8c2f62bbb2"
+    },
+    {
+      "pid": 4024,
+      "tool": "metacodes",
+      "run": "run-1-RUN7e0ae3511c84a307"
+    },
+    {
+      "pid": 4213,
+      "tool": "metacodes",
+      "run": "run-2-RUNf50b5106cdcd1a04"
+    },
+    {
+      "pid": 4455,
+      "tool": "metacodes",
+      "run": "run-3-RUNde4093bc249b322b"
+    }
+  ],
+  "status": 0
+}
