@@ -86,4 +86,4 @@
 - [x] skill-up：#253、#263 已关、修复已合，本期只复验；#280、#281 状态没有变化，没有写入。
 - [x] 每个数字都对照了一手来源（`runs.jsonl`、`runs-noninteractive.jsonl`、逐次 `record.json`、送达日志、会话文件）。
 - [x] 公开副本用 `export_public.py` 导出（源目录导出前后哈希清单一致），禁用串扫描和 `audit_artifacts.py` 都通过。私有禁用词清单在仓库外。
-- [ ] 推送与远端 SHA 核对：本期提交只在本地分支 `feat/phase5-stream-retest`，没有推送。
+- [ ] 推送与远端 SHA 核对：本期提交随 repo-quake v0.3.0 一起推送（2026-11-16）；本文件在推送前定稿，所以推送后的本地与远端 SHA 核对不在这里，按 `reporting.md` 在推送之后单独做。
