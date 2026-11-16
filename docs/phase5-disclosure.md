@@ -78,7 +78,7 @@
 
 ## 7. Posting gate 记录
 
-- [ ] 第三方发现先在上游报：dsh 的"长度截断后光秃秃的退出码 1"。上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。Discussion 草稿（General 分类，标题带 `[Bug]`）在工作区根目录（`dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`），发不发由负责人定。在此之前，本期报告只在本地提交，不公开。
+- [ ] 第三方发现先在上游报：dsh 的"长度截断后光秃秃的退出码 1"。上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。Discussion 草稿（Ideas 分类，按 feature request 写；README 的 Exit mapping 写明这是设计如此）在工作区根目录（`dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`），发不发由负责人定。在此之前，本期报告只在本地提交，不公开。
 - [ ] metacodes 的 TUI 留屏：[#465](https://github.com/metask-ai/metacodes/pull/465) 正文已写明这是取舍（不是新缺陷）。本期的实测和补充（只有思考时也留屏、屏上那段模型没见过、原始字节零提示）要不要写成 enhancement、是否指派，由负责人定；enhancement 草稿 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`。
 - [x] codex 的 F4/F5 行为变化：不是缺陷（报告写明了原因、不再重试），不需要上游动作。
 - [x] Claude Code `-p` 续写后只打印最后一条消息：写成待验证的观察，没有报上游。

@@ -177,7 +177,7 @@
 ## 还没做的、要你定的
 
 - **metacodes TUI 留屏**：#465 已写明这是取舍，是否在它之上开一个 enhancement（标出被丢弃的那次、第一次重发也给提示）由负责人定，指派也由负责人定（TUI 归他本人管）。enhancement 草稿在工作区根目录 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`，没有发。
-- **dsh 的"光秃秃的退出码 1"**：上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。发不发由负责人定。Discussion 草稿（General 分类，标题带 `[Bug]`）是 `dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`，没有发。按 posting gate，第三方的发现要先在上游报过，本报告才能公开。
+- **dsh 的"光秃秃的退出码 1"**：上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。发不发由负责人定。Discussion 草稿（Ideas 分类，按 feature request 写；README 的 Exit mapping 写明这是设计如此）是 `dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`，没有发。按 posting gate，第三方的发现要先在上游报过，本报告才能公开。
 - **#12347 那边的退出码**：要核实"0.2.1-rc.2 退出看起来正常、0.2.2-rc.3 退出码 1"是不是版本差别，需要另装 0.2.1-rc.2 跑一次；要下载，没做。
 - **Claude `-p` 续写后只打印最后一条消息**：要不要补一个"回答中途长度截断 + 续写分支 mock"的小实验来验证。
 - **推送**：repo-quake 的改动只在本地分支 `feat/phase5-stream-retest` 提交，没有推送。
