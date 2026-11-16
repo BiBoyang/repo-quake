@@ -13,10 +13,11 @@
   - skill-up：用本地克隆里已有的 v0.15.0 和 #281 head（8c9e12b）源码，`git archive` 到证据目录后构建；经用户同意，从 proxy.golang.org 下载了一个缺的 Go 模块（`github.com/openai/openai-go/v3 v3.86.0`，2,356,710 字节），它进了本机的 Go 模块缓存。
   - GitHub 上 alibaba/skill-up 的 issue、PR、发布页，deepseek-ai/deepseek-harness 的发布页，npm 的包元数据：只读查询。
   - 报告写完后补查（只读）：metask-ai/metacodes 的 PR #465 正文；deepseek-ai/deepseek-harness 的仓库设置（issue 已关、Discussions 开着）、CONTRIBUTING.md、Discussions #12347、#11298、#10743 和近期讨论的标题。
+  - 上游写入只有一次：2026-11-16 10:14:53Z 经负责人同意，在 deepseek-ai/deepseek-harness 的 Discussions（Ideas 分类）发了 [#13496](https://github.com/deepseek-ai/deepseek-harness/discussions/13496)，作者 BiBoyang，由派出本会话的会话发出；本会话只读回读，标题和正文与草稿逐字一致。
 - **没碰过的：**
   - 任何真实的模型端点。没有付费调用，也没有任何凭据：metacodes 用 `METASK_API_KEY=dummy`，dsh 用 `MOCK_API_KEY=mock`，Claude Code、codex 用 `mock`。
   - 用户真实的 `~/.claude`、`~/.codex`、`~/.metacodes`、`~/.skill-up`、dsh 的默认 home：每次运行都是新的临时 HOME。
-  - 任何上游的写入：本期没有发 issue、评论或 PR。
+  - 除上面那一次 Discussion 之外的任何上游写入：没有发 issue、评论或 PR。
 - **隔离：**`env -i` 白名单、每次运行一个新的临时 HOME（dsh 另有新的 `DSH_HOME`）、`sandbox-exec` 只放行到 localhost 的出站连接、tmux 用独立的服务器和空配置；Claude Code 关掉自动更新和 deep link 注册，codex 关掉启动时查更新，metacodes 关掉 Jev 查询（它启动时不查更新），dsh 关掉遥测。
 - **事后审计：**
   - 沙箱拦下的外连：metacodes 矩阵 0 次；附录矩阵 55 次，全部是 codex 启动时的域名解析，Claude Code 0 次；dsh 矩阵 0 次。
@@ -78,7 +79,7 @@
 
 ## 7. Posting gate 记录
 
-- [ ] 第三方发现先在上游报：dsh 的"长度截断后光秃秃的退出码 1"。上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。Discussion 草稿（Ideas 分类，按 feature request 写；README 的 Exit mapping 写明这是设计如此）在工作区根目录（`dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`），发不发由负责人定。在此之前，本期报告只在本地提交，不公开。
+- [x] 第三方发现先在上游报：dsh 的"长度截断后光秃秃的退出码 1"。上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。2026-11-16 10:14:53Z 经负责人同意，以 feature request 发在 Ideas 分类：[#13496](https://github.com/deepseek-ai/deepseek-harness/discussions/13496)（作者 BiBoyang；README 的 Exit mapping 写明这是设计如此，所以按 feature request 写）。读回逐字一致：标题与草稿标题行相同，正文与草稿从 `## Summary` 到结尾相同（3043 字符）。
 - [ ] metacodes 的 TUI 留屏：[#465](https://github.com/metask-ai/metacodes/pull/465) 正文已写明这是取舍（不是新缺陷）。本期的实测和补充（只有思考时也留屏、屏上那段模型没见过、原始字节零提示）要不要写成 enhancement、是否指派，由负责人定；enhancement 草稿 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`。
 - [x] codex 的 F4/F5 行为变化：不是缺陷（报告写明了原因、不再重试），不需要上游动作。
 - [x] Claude Code `-p` 续写后只打印最后一条消息：写成待验证的观察，没有报上游。

@@ -1529,7 +1529,7 @@
       "phase": "phase5",
       "class": "target-finding",
       "title": "deepseek-harness 0.2.2-rc.3 headless：长度截断（F4）与只有思考的截断（F5）以退出码 1 结束、stderr 没有一句 dsh 诊断，会话日志却记 max-tokens：三种协议 × 两种故障 18/18；F1、F2、F3、F6（首测）静默重发恢复 36/36",
-      "status": "open",
+      "status": "reported",
       "target": {
         "repo": "deepseek-ai/deepseek-harness",
         "artifact": "dsh-headless 运行器的结束诊断（README：失败时 stderr 打 dsh: <code>: <message>；以 max-tokens 结束的一轮不走这条路）",
@@ -1575,8 +1575,9 @@
           "安装时没跑 5 个包的安装脚本（用户选择）",
           "只测非交互",
           "2026-09 的对照是从源码经 pnpm 运行",
-          "上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖'退出码 1、stderr 无诊断'",
-          "#12347（0.2.1-rc.2）说退出'看起来正常'而没写退出码；与本期退出码 1 的差别是否来自版本，没有核实"
+          "#12347（0.2.1-rc.2）说退出'看起来正常'而没写退出码；与本期退出码 1 的差别是否来自版本，没有核实",
+          "上游关了 issue，按 CONTRIBUTING 走 Discussions：2026-11-16 以 feature request 发在 Ideas 分类 https://github.com/deepseek-ai/deepseek-harness/discussions/13496（作者 BiBoyang，读回标题与正文逐字一致）；相近的 #12347、#11298、#10743 没覆盖'退出码 1、stderr 无诊断'",
+          "status 记 reported：SCHEMA 的释义是'已提 issue / PR，等待处理'，这次是按上游 CONTRIBUTING 指定的唯一渠道（Discussions）提的，同样在等处理；upstream[].kind 只收 issue/pr，所以讨论链接写在这里，没有改 schema 或校验器"
         ]
       },
       "observation": {

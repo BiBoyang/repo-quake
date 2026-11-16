@@ -133,6 +133,8 @@
 - [#11298](https://github.com/deepseek-ai/deepseek-harness/discussions/11298)（General，0.1.2-rc.1）：max-tokens 走正常完成路径，turn 被标成完成，界面显示"完成"。
 - [#10743](https://github.com/deepseek-ai/deepseek-harness/discussions/10743)（Ideas，0.2.1-rc.2）：长度截断后自动续写的需求，界面只有一个手动 Continue 按钮。
 
+已在 Ideas 分类发帖 [#13496](https://github.com/deepseek-ai/deepseek-harness/discussions/13496)（2026-11-16，负责人同意后发出，按 feature request 写：max-tokens 结束时也在 stderr 说明原因）。
+
 ## 第四部分：skill-up 修复复验
 
 - **版本**：v0.15.0（11-09 发布的最新版）。经用户同意，用本地克隆里已有的 v0.15.0 源码构建（`git archive` 到证据目录，`go build`）；只下载了一个缺的 Go 模块 `github.com/openai/openai-go/v3 v3.86.0`（2,356,710 字节，proxy.golang.org，go.sum 校验），它进了本机的 Go 模块缓存。二进制 sha256 `031e5cfd…`，版本字符串是 `dev`（没注入 ldflags）。上游 main 在 v0.15.0 之后还有提交，没测。
@@ -177,7 +179,7 @@
 ## 还没做的、要你定的
 
 - **metacodes TUI 留屏**：#465 已写明这是取舍，是否在它之上开一个 enhancement（标出被丢弃的那次、第一次重发也给提示）由负责人定，指派也由负责人定（TUI 归他本人管）。enhancement 草稿在工作区根目录 `metacodes-issue-draft-tui-retry-fork-2026-11-16.md`，没有发。
-- **dsh 的"光秃秃的退出码 1"**：上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。发不发由负责人定。Discussion 草稿（Ideas 分类，按 feature request 写；README 的 Exit mapping 写明这是设计如此）是 `dsh-issue-draft-length-stop-bare-exit-2026-11-16.md`，没有发。按 posting gate，第三方的发现要先在上游报过，本报告才能公开。
+- **dsh 的"光秃秃的退出码 1"：已发。**上游关了 issue，按 CONTRIBUTING 走 Discussions；相近的 #12347、#11298、#10743 没覆盖这一点。2026-11-16 经负责人同意，以 feature request 发在 Ideas 分类：[#13496](https://github.com/deepseek-ai/deepseek-harness/discussions/13496)，读回逐字一致。
 - **#12347 那边的退出码**：要核实"0.2.1-rc.2 退出看起来正常、0.2.2-rc.3 退出码 1"是不是版本差别，需要另装 0.2.1-rc.2 跑一次；要下载，没做。
 - **Claude `-p` 续写后只打印最后一条消息**：要不要补一个"回答中途长度截断 + 续写分支 mock"的小实验来验证。
 - **推送**：repo-quake 的改动只在本地分支 `feat/phase5-stream-retest` 提交，没有推送。
