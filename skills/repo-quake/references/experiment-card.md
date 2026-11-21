@@ -34,6 +34,29 @@ is true, the prompt actually has that hash, or the witness is well designed.
 - `ethics.production_contact` and `ethics.human_subjects` are explicit because
   fault injection and human studies have different consent and blast-radius needs.
 
+## Schema 1.1: what the freeze must name
+
+`schema_version: "1.1"` is for new cards; `examples/experiment-card.json` uses it.
+Frozen `1.0` cards stay valid and keep their meaning. 1.1 adds three required fields,
+because a card that only names a claim and a rubric still lets the result choose the
+verdict:
+
+- `grading.decision_rule`: which result supports the claim, which refutes it, and
+  what counts as inconclusive, written before the first run. Say it in terms of the
+  one-sided Wilson bound (`references/measurement.md`), not the point estimate.
+- `sampling.stopping_rule`: when the matrix stops. Fixed N is the default; say so,
+  and say that a striking result is neither a reason to stop early nor a reason to run
+  more.
+- `arms[].path_relation` on every treatment arm: one of `blocks-path`,
+  `redundant-backstop`, `future-use`, `weak-reference`, `on-path-no-gap`, `unknown`
+  (the `ledger/SCHEMA.md` vocabulary). Declaring it before dispatch is what keeps
+  "blocking wounds get detected" from being true by definition: a relation classified
+  after seeing whether the host noticed is an explanation, not a prediction.
+
+`sampling.invalid_reruns` (optional, any version, default 1) is how many times one
+planned run may be replaced after an INVALID verdict. Every frozen 1.0 card says
+"invalid, rerun once" in prose; this is the same rule in a form a runner can count.
+
 ## Source, template and delivered hashes
 
 These hashes answer different questions and are not expected to match:

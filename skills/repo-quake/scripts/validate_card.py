@@ -9,6 +9,13 @@ REQUIRED = (
     "schema_version", "id", "claim", "target", "task", "hosts", "arms", "controls",
     "witness", "grading", "sampling", "invalid_rules", "budget", "isolation", "ethics",
 )
+# 1.0 stays valid so frozen cards keep their meaning; 1.1 adds the fields that make
+# the freeze checkable: a decision rule, a stopping rule, and a path relation per
+# treatment arm declared before dispatch instead of classified from the outcome.
+SCHEMA_VERSIONS = ("1.0", "1.1")
+# Same vocabulary as ledger/SCHEMA.md `fault.path_relation`, minus `n-a` (that one
+# only marks an invalid experiment, which a card cannot plan).
+PATH_RELATIONS = ("blocks-path", "redundant-backstop", "future-use", "weak-reference", "on-path-no-gap", "unknown")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -30,8 +37,10 @@ def validate(card):
     errors = []
     if not require_fields(card, REQUIRED, "card", errors):
         return errors, 0
-    if card.get("schema_version") != "1.0":
-        errors.append("schema_version must be '1.0'")
+    version = card.get("schema_version")
+    if version not in SCHEMA_VERSIONS:
+        errors.append("schema_version must be one of " + ", ".join(f"'{v}'" for v in SCHEMA_VERSIONS))
+    v11 = version == "1.1"
     if not text(card.get("id")):
         errors.append("id must be non-empty text")
     if not text(card.get("claim")):
@@ -83,6 +92,8 @@ def validate(card):
                 errors.append(f"{where}.id and fault must be non-empty text")
             if arm.get("role") not in {"treatment", "negative_control", "positive_control"}:
                 errors.append(f"{where}.role has an unknown value")
+            if v11 and arm.get("role") == "treatment" and arm.get("path_relation") not in PATH_RELATIONS:
+                errors.append(f"{where}.path_relation must be declared before dispatch, one of: {', '.join(PATH_RELATIONS)}")
     if len(set(arm_ids)) != len(arm_ids):
         errors.append("arm ids must be unique")
     if "treatment" not in roles:
@@ -108,18 +119,28 @@ def validate(card):
         if not isinstance(blind, list) or not blind or not all(text(item) for item in blind):
             errors.append("witness.blind_spots must be a non-empty array (use 'none known after calibration' if appropriate)")
 
-    if require_fields(card.get("grading"), {"rubric", "primary_metric"}, "grading", errors):
+    grading_required = {"rubric", "primary_metric"} | ({"decision_rule"} if v11 else set())
+    if require_fields(card.get("grading"), grading_required, "grading", errors):
         for field in ("rubric", "primary_metric"):
             if not text(card["grading"].get(field)):
                 errors.append(f"grading.{field} must be non-empty text")
+        if v11 and "decision_rule" in card["grading"] and not text(card["grading"]["decision_rule"]):
+            errors.append("grading.decision_rule must say which result supports or refutes the claim")
 
     runs_per_cell = None
-    if require_fields(card.get("sampling"), {"runs_per_cell"}, "sampling", errors):
-        runs_per_cell = card["sampling"].get("runs_per_cell")
+    sampling = card.get("sampling") if isinstance(card.get("sampling"), dict) else {}
+    sampling_required = {"runs_per_cell"} | ({"stopping_rule"} if v11 else set())
+    if require_fields(card.get("sampling"), sampling_required, "sampling", errors):
+        runs_per_cell = sampling.get("runs_per_cell")
         if not isinstance(runs_per_cell, int) or isinstance(runs_per_cell, bool) or runs_per_cell < 1:
             errors.append("sampling.runs_per_cell must be a positive integer")
             runs_per_cell = None
-    overrides = card["sampling"].get("runs_overrides", {})
+        if v11 and "stopping_rule" in sampling and not text(sampling["stopping_rule"]):
+            errors.append("sampling.stopping_rule must say when the matrix stops")
+        reruns = sampling.get("invalid_reruns", 1)
+        if not isinstance(reruns, int) or isinstance(reruns, bool) or reruns < 0:
+            errors.append("sampling.invalid_reruns must be a non-negative integer when present")
+    overrides = sampling.get("runs_overrides", {})
     if not isinstance(overrides, dict):
         errors.append("sampling.runs_overrides must be an object when present")
         overrides = {}
@@ -173,6 +194,19 @@ def validate(card):
             errors.append("ethics.consent is required when human_subjects is true")
     return errors, planned
 
+
+
+def runs_per_arm(card):
+    """Planned runs per host for each arm. Only meaningful for a card that validated."""
+    sampling = card["sampling"]
+    overrides = sampling.get("runs_overrides", {})
+    return {arm["id"]: overrides.get(arm["id"], sampling["runs_per_cell"]) for arm in card["arms"]}
+
+
+def invalid_reruns(card):
+    """Replacements allowed per planned run after an INVALID verdict. Defaults to 1, the
+    'invalid, rerun once' that every frozen 1.0 card states in prose."""
+    return card["sampling"].get("invalid_reruns", 1)
 
 
 def nonnegative_number(value):

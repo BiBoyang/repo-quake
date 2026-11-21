@@ -91,6 +91,67 @@ class ValidateCardTests(unittest.TestCase):
         errors, _ = validator.validate(card)
         self.assertTrue(any("not positive_control" in error for error in errors))
 
+    def test_template_is_schema_1_1(self):
+        self.assertEqual(self.card["schema_version"], "1.1")
+
+    def test_schema_1_1_requires_decision_stopping_and_path_relation(self):
+        card = copy.deepcopy(self.card)
+        del card["grading"]["decision_rule"]
+        del card["sampling"]["stopping_rule"]
+        del card["arms"][1]["path_relation"]
+        joined = "\n".join(validator.validate(card)[0])
+        self.assertIn("grading.decision_rule is required", joined)
+        self.assertIn("sampling.stopping_rule is required", joined)
+        self.assertIn("arms[1].path_relation must be declared before dispatch", joined)
+
+    def test_schema_1_1_rejects_blank_rules_and_unknown_path_relation(self):
+        card = copy.deepcopy(self.card)
+        card["grading"]["decision_rule"] = " "
+        card["sampling"]["stopping_rule"] = ""
+        card["arms"][1]["path_relation"] = "n-a"
+        joined = "\n".join(validator.validate(card)[0])
+        self.assertIn("grading.decision_rule must say", joined)
+        self.assertIn("sampling.stopping_rule must say", joined)
+        self.assertIn("arms[1].path_relation", joined)
+
+    def test_path_relation_is_only_required_on_treatment_arms(self):
+        card = copy.deepcopy(self.card)
+        self.assertNotIn("path_relation", card["arms"][0])  # C0
+        self.assertNotIn("path_relation", card["arms"][2])  # R3
+        self.assertEqual(validator.validate(card)[0], [])
+
+    def test_schema_1_0_does_not_need_the_new_fields(self):
+        card = copy.deepcopy(self.card)
+        card["schema_version"] = "1.0"
+        del card["grading"]["decision_rule"]
+        del card["sampling"]["stopping_rule"]
+        del card["arms"][1]["path_relation"]
+        errors, planned = validator.validate(card)
+        self.assertEqual(errors, [])
+        self.assertEqual(planned, 6)
+
+    def test_unknown_schema_version_is_rejected(self):
+        card = copy.deepcopy(self.card)
+        card["schema_version"] = "2.0"
+        self.assertTrue(any("schema_version must be one of" in e for e in validator.validate(card)[0]))
+
+    def test_invalid_reruns_must_be_a_nonnegative_integer(self):
+        for bad in (-1, 1.5, True, "1"):
+            card = copy.deepcopy(self.card)
+            card["sampling"]["invalid_reruns"] = bad
+            self.assertTrue(any("invalid_reruns" in e for e in validator.validate(card)[0]), bad)
+        card = copy.deepcopy(self.card)
+        card["sampling"]["invalid_reruns"] = 0
+        self.assertEqual(validator.validate(card)[0], [])
+
+    def test_runs_per_arm_and_invalid_reruns_helpers(self):
+        card = copy.deepcopy(self.card)
+        card["sampling"]["runs_overrides"] = {"C0": 3}
+        self.assertEqual(validator.runs_per_arm(card), {"C0": 3, "T1": 2, "R3": 2})
+        self.assertEqual(validator.invalid_reruns(card), 1)
+        del card["sampling"]["invalid_reruns"]
+        self.assertEqual(validator.invalid_reruns(card), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

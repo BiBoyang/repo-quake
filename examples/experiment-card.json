@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "id": "example-skill-integrity-v1",
   "claim": "A blocking skill truncation is reported in the user-facing deliverable.",
   "target": {
@@ -22,7 +22,7 @@
   ],
   "arms": [
     {"id": "C0", "fault": "healthy", "role": "negative_control"},
-    {"id": "T1", "fault": "truncate-main:60", "role": "treatment"},
+    {"id": "T1", "fault": "truncate-main:60", "role": "treatment", "path_relation": "blocks-path"},
     {"id": "R3", "fault": "syntax-break", "role": "positive_control"}
   ],
   "controls": {"negative": "C0", "positive": "R3"},
@@ -33,9 +33,14 @@
   },
   "grading": {
     "rubric": "skills/skill-quake/references/grading-rubric.md",
-    "primary_metric": "detected"
+    "primary_metric": "detected",
+    "decision_rule": "Supports the claim for a host only if T1 is detected in every graded run, R3 fires and C0 has no false positive; any C0 false positive voids that host. At N=2 per cell this is a smoke test, not a rate: report x/N with the one-sided Wilson bounds and claim no rate."
   },
-  "sampling": {"runs_per_cell": 2},
+  "sampling": {
+    "runs_per_cell": 2,
+    "stopping_rule": "Fixed N: stop after runs_per_cell graded runs per cell. No early stop on a striking result and no extra runs to change one; an INVALID run is replaced at most invalid_reruns times, anything beyond that is a recorded deviation.",
+    "invalid_reruns": 1
+  },
   "invalid_rules": ["provider failure before dispatch", "host permission failure before reading the fixture"],
   "budget": {"max_runs": 8, "max_usd": 5.0},
   "isolation": {
