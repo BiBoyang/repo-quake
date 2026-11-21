@@ -212,11 +212,20 @@
   - Metask 设备会话每次启动都同步拉模型目录、不走缓存（`src/app.zig:1084-1125`）。
 - **被测路径在跑矩阵时没变。** 跑矩阵时 upstream/main 是 `de9193ac`。从 53b3e285 到它，这些路径上的文件只有 `src/repl/loop.zig` 改过，改的是粘贴处理（#649/#650、#657），不在本期测的代码路径上。
 
-## 还没做的、要你定的
+## 上游与还没做的
 
-- **先提 metacodes 的 issue，再公开这一期。** 这是 posting gate 的第一条：上游的环要先打开。7 份英文草稿在 metacodes 工作区的 `.verify/codex-lag-check/issue-draft-1…7-*.md`，标题已按仓库惯例写好，都还没有发。提了之后，把台账 RQ-F-025 到 RQ-F-032 的 `upstream` 补上，`status` 改成 `reported`。
-- **推送。** 本期的提交在本地分支 `feat/phase6-stall` 上，没有推送。实验卡的冻结时间因此只由本地提交担保：`manifest` 里 `card.pushed` 是 null。
-- **跨程序附录**（以后再说）：同样的假服务器，可以跑 Claude Code 和 codex 的几种通用场景：挂住的 stdio MCP、不回的 DELETE、握手卡住、不回的收集端、每次工具调用的固定开销。
+- **metacodes 的 issue 已提（2026-11-21，不指派）**：
+  - [#666](https://github.com/metask-ai/metacodes/issues/666)：启动时等 `/v1/models`；
+  - [#667](https://github.com/metask-ai/metacodes/issues/667)：TinyKG 35 s；
+  - [#668](https://github.com/metask-ai/metacodes/issues/668)：`/model` 冻住输入框；
+  - [#669](https://github.com/metask-ai/metacodes/issues/669)：LSP 诊断等待；
+  - [#670](https://github.com/metask-ai/metacodes/issues/670)：Bash 固定开销和索引过期；
+  - [#671](https://github.com/metask-ai/metacodes/issues/671)：HTTP MCP 的 DELETE 和 HTTPS 握手；
+  - [#672](https://github.com/metask-ai/metacodes/issues/672)：OTLP 退出等待。
+
+  这 7 个都读回核对过：标题、正文与草稿逐字一致，标签正确，没有指派。正文里的复现步骤不依赖本仓库，也不依赖本机路径（posting gate：公开的仓库要先于引用它的 issue；这里反过来，issue 不引用本仓库）。台账 RQ-F-025 至 RQ-F-031 已改成 reported。RQ-F-032（第一条消息等 MCP）是有意的取舍，没有单独上报；关闭时每台 200 ms 的固定睡眠写进了 #671 的附带建议。
+- **推送。** 本期的提交在本地分支 `feat/phase6-stall` 上，等负责人点头再推送。实验卡的冻结时间只由本地提交担保：`manifest` 里 `card.pushed` 是 null。
+- **跨程序附录**（以后再说）：用同样的假服务器，跑 Claude Code 和 codex 的几种通用场景：挂住的 stdio MCP、不回的 DELETE、握手卡住、不回的收集端、每次工具调用的固定开销。
 
 ## 证据
 

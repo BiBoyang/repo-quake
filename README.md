@@ -64,6 +64,7 @@ MoonshotAI/kimi-code [#4012](https://github.com/MoonshotAI/kimi-code/issues/4012
 [#4964](https://github.com/MoonshotAI/kimi-code/issues/4964);
 openai/codex [#47538](https://github.com/openai/codex/issues/47538#issuecomment-6905066983) (comment with a repro);
 deepseek-ai/deepseek-harness [#13496](https://github.com/deepseek-ai/deepseek-harness/discussions/13496) (discussion, feature request);
+metask-ai/metacodes [#666](https://github.com/metask-ai/metacodes/issues/666)–[#672](https://github.com/metask-ai/metacodes/issues/672) (phase 6, unassigned);
 anthropics/skills [#1949](https://github.com/anthropics/skills/pull/1949);
 microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 (drafts in `docs/pr-drafts/`).
