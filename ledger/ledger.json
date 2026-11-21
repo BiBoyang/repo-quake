@@ -2339,6 +2339,131 @@
         "docs/phase6-report.md"
       ],
       "lesson": "夹具的状态也是条件：复制出来的仓库和原地生成的仓库，在 git 眼里不是同一种仓库"
+    },
+    {
+      "id": "RQ-F-033",
+      "created": "2026-11-21",
+      "phase": "phase3",
+      "class": "target-finding",
+      "title": "metacodes 0.5.0 把缺了终止事件的流当成正常结束：三种协议各扣下终止事件（openai_chat 的 finish_reason 末块、openai_responses 的 response.completed、anthropic_messages 的 message_stop），headless -p 都是 exit 0、stop_reason end_turn、stderr 为空，max_tokens 续写兜底不触发（cc 2/2、resp 2/2、anth 1/1，快速探测，只证存在）",
+      "status": "fixed",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "流结束判定：src/api/openai_client.zig:712、:697，src/api/stream.zig:1099（0.5.1-dev 行号）",
+        "version": "0.5.0 发布二进制（aarch64-macos tarball sha256 beecc5fc…facb39，commit c4b0af79）；源码对照 0.5.1-dev（4e826ce）"
+      },
+      "fault": {
+        "type": "missing-terminator",
+        "spec": "mock 送完全部内容，只扣下流的终止事件：openai_chat 发了 [DONE] 却不发带 finish_reason 的末块；openai_responses 不发 response.completed；anthropic_messages 不发 message_stop。对照：中途 FIN 与半个事件后 FIN 都走 ReadFailed → 自动重发 → 完整送达，重发机制本身正常，漏掉的只是缺终止事件这一种形态",
+        "delivery": "本地 mock（truncation-detection-benchmark 的 mock.mjs，只监听 127.0.0.1）的送达日志逐端点记录事件数和终止事件是否发出；headless -p，--state-dir 隔离；--record 录像目录为空，证人全靠 mock 侧日志",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock-model（本地 mock，openai_chat）",
+          "runs": 2,
+          "detected": 0,
+          "notes": "exit 0、stop_reason end_turn、stderr 为空、transcript 无标记"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock-model（本地 mock，openai_responses）",
+          "runs": 2,
+          "detected": 0,
+          "notes": "同上"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock-model（本地 mock，anthropic_messages）",
+          "runs": 1,
+          "detected": 0,
+          "notes": "同上"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "willing-to-report",
+        "explanation": "故障在必经的回答流上，证人在场（mock 字节日志）。客户端把缺终止事件的流归成 end_turn，于是续写兜底、提示、重发都没走：缺的是产品一侧的检测本身",
+        "confidence": "confirmed",
+        "caveats": [
+          "快速探测：每格 N=1–2，只证存在，不给比率；没有实验卡（第 4 期起才有）",
+          "原始运行记录没有归档进本仓库（本机 runs/phase3-metacodes/ 只剩一个空目录）；数字出自披露文件和 #269 正文",
+          "#269 随 #272 合入关闭，本仓库没有复验修复"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false
+      },
+      "evidence": [
+        "docs/phase3-disclosure.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/metask-ai/metacodes/issues/269",
+          "status": "closed-fixed"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/metask-ai/metacodes/pull/272",
+          "status": "merged"
+        }
+      ],
+      "lesson": "缺终止事件和缺 finish_reason: length 是同一个洞：内容碰巧完整时无害，丢的若正好是 length 标记，截断的回答就和完整的分不开"
+    },
+    {
+      "id": "RQ-F-034",
+      "created": "2026-11-21",
+      "phase": "skill-up-main",
+      "class": "target-finding",
+      "title": "skill-up validate 接受只有空白的 input.prompt 和 input.turns[].content，同一命令却拒绝空串：上游 main ad5f533 上两种空白输入都 exit 0（eval.yaml is valid），打上后来的 #338 补丁后都 exit 1；健康、空串、缺 case、空 cases 四个对照不变（确定性检查，每种配置 1 次）",
+      "status": "fixed",
+      "target": {
+        "repo": "alibaba/skill-up",
+        "artifact": "skill-up validate 对 input.prompt、input.turns[].content 的必填校验",
+        "version": "main ad5f533（2026-10-24），同一 checkout 自建的二进制（binary-manifest.json）"
+      },
+      "fault": {
+        "type": "validator-blind-spot",
+        "spec": "单轮 input.prompt: \"   \"、多轮 input.turns[0].content 只有空白：validate 都输出 eval.yaml is valid、exit 0；input.prompt: \"\" 报 input.prompt or input.turns is required、exit 1。补丁 fix(config): reject whitespace-only prompt and turn content 之后，两种空白输入分别报 input.prompt or input.turns is required、input.turns[0].content is required unless respond is set，exit 1；健康配置仍 exit 0",
+        "delivery": "deterministic-config-matrix/ 下每种配置一份 evals/，修补前后各跑一次 validate，退出码与日志逐份归档；不跑模型、不用凭据、不写第三方"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "确定性配置边界矩阵（健康、空串、空白 prompt、空白 turn、缺 case、空 cases）比对退出码发现，非宿主检出；修补前后对照说明补丁只改变两种空白输入的结果",
+        "confidence": "confirmed",
+        "caveats": [
+          "validate 是确定性的，每种配置只跑一次",
+          "修补后的二进制是本地自建的，不是官方发布包"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reverified": true
+      },
+      "evidence": [
+        "runs/skill-up-main-2026-10-24/whitespace-validation-issue-draft.md",
+        "runs/skill-up-main-2026-10-24/deterministic-config-matrix/whitespace-prompt.validate.log",
+        "runs/skill-up-main-2026-10-24/deterministic-config-matrix/whitespace-prompt.patched.log",
+        "runs/skill-up-main-2026-10-24/deterministic-config-matrix/whitespace-turn.validate.log",
+        "runs/skill-up-main-2026-10-24/deterministic-config-matrix/whitespace-turn.patched.log",
+        "runs/skill-up-main-2026-10-24/pr/issue-body.md",
+        "runs/skill-up-main-2026-10-24/pr/pr-body.md"
+      ],
+      "upstream": [
+        {
+          "kind": "issue",
+          "url": "https://github.com/alibaba/skill-up/issues/337",
+          "status": "closed-fixed"
+        },
+        {
+          "kind": "pr",
+          "url": "https://github.com/alibaba/skill-up/pull/338",
+          "status": "merged"
+        }
+      ],
+      "lesson": "空串被拒不等于空白也被拒：边界矩阵要把只有空白的输入单列一格"
     }
   ]
 }

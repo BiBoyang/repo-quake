@@ -4,7 +4,8 @@
 
 台账是 `docs/` 各期报告与 `docs/eval-evidence-guide.md` 的**结构化聚合层**：把散落在叙事里的
 故障、仪器缺陷、实验效度事件各落成一条可校验的记录，让 x/N 数字可跨期累积、可比较、可追溯。
-它不改写 `docs/` 原文，也不改写 `results/`、`runs/` 原始产物；每条记录都指回这些原始证据。
+它不改写 `docs/` 原文，也不改写 `runs/` 原始产物；每条记录都指回这些原始证据。有上游动作（issue、PR）的发现都要有条目，
+README 的上游结果列表从各条目的 `upstream[]` 汇总（早于本仓库的 kimi-code #4012 除外）。
 
 术语以 `docs/eval-evidence-guide.md` 为准：三本账（产品 / 夹具 / 判分器）、五字段观察
 （detected / reported / contained / recovered / reverified）、挡路词汇
@@ -43,7 +44,7 @@
 |---|---|---|---|
 | `id` | string | 是 | `^RQ-[FIX]-\d{3}$`，字母与 `class` 对应，全局唯一，只增不改 |
 | `created` | string | 是 | `YYYY-MM-DD`，条目**入账**日期（事件日期见 `phase` 与证据） |
-| `phase` | string | 是 | `phase0` / `phase1` / `phase1p` / `phase2` / `e2e` / …；小写字母、数字、连字符 |
+| `phase` | string | 是 | 期号 `phase0`–`phase6`、`phase1p`；旁支实验用运行目录的主题，如 `e2e`、`skill-up-main`；未开跑的实验包用它的标签，如 `factorial`。小写字母、数字、连字符 |
 | `class` | string | 是 | `target-finding` / `instrument-defect` / `experiment-invalid` |
 | `title` | string | 是 | 一行中文，含关键数字（x/N、行数、发次） |
 | `status` | string | 是 | `open` / `reported` / `acknowledged` / `fixed` / `wontfix` / `superseded` / `n-a`；`experiment-invalid` 必须且只能用 `n-a` |
