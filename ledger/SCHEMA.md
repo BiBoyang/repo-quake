@@ -5,7 +5,7 @@
 台账是 `docs/` 各期报告与 `docs/eval-evidence-guide.md` 的**结构化聚合层**：把散落在叙事里的
 故障、仪器缺陷、实验效度事件各落成一条可校验的记录，让 x/N 数字可跨期累积、可比较、可追溯。
 它不改写 `docs/` 原文，也不改写 `runs/` 原始产物；每条记录都指回这些原始证据。有上游动作（issue、PR）的发现都要有条目，
-README 的上游结果列表从各条目的 `upstream[]` 汇总（早于本仓库的 kimi-code #4012 除外）。
+README 的上游结果列表从各条目的 `upstream[]` 汇总（早于本仓库的 kimi-code #4012 除外），`tests/test_layout.py` 核对两边一致。
 
 术语以 `docs/eval-evidence-guide.md` 为准：三本账（产品 / 夹具 / 判分器）、五字段观察
 （detected / reported / contained / recovered / reverified）、挡路词汇

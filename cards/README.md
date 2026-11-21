@@ -4,7 +4,8 @@ One frozen card per counted matrix. A card is written, checked with
 `skills/repo-quake/scripts/validate_card.py` and committed before the first
 counted run. `skills/repo-quake/scripts/card_gate.py` then refuses any matrix
 the card does not cover. After the runs, the public evidence copy carries the
-same bytes as `card-frozen.json`.
+same bytes as `card-frozen.json`. `tests/test_layout.py` checks that every card
+here validates, is listed below and matches that copy.
 
 | card | id | planned runs | evidence | report |
 |---|---|---|---|---|

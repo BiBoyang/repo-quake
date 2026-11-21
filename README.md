@@ -113,11 +113,12 @@ this repository. The states shown were read on 2026-11-21.
 | `ledger/` | the fault ledger and its schema (below) |
 | `docs/` | phase reports, notes and disclosures; method articles; upstream PR drafts; process records; skill-quake snapshots ([index](docs/README.md)) |
 | `examples/` | templates and samples: `experiment-card.json` and its design variants, the `greeting-card` skill, prompts ([index](examples/README.md)) |
-| `tests/` | `bash tests/run_tests.sh`: guard fixtures, collectors, cards, witnesses, the factorial dry-run and the ledger |
+| `tests/` | `bash tests/run_tests.sh`: guard fixtures, collectors, cards, witnesses, the factorial dry-run, the ledger and this layout |
 
 ## Adding a phase
 
-The layout phases 4–6 follow:
+The layout phases 4–6 follow. `tests/test_layout.py` fails when an index, the
+upstream list or a relative link falls behind:
 
 1. Instrument in `witness/<name>/`, with a README, tests in `tests/`, and a row in
    `witness/README.md`.
