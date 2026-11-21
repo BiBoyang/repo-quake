@@ -16,7 +16,7 @@
 
 测试在 `tests/test_stall.py`，`tests/run_tests.sh` 会自动发现它。校准用的假 TUI 在 `tests/fixtures/stall/fake_subject.py`：它按参数推迟画输入框，或者在草稿变成某个字符串时停住若干秒再回显。测试用它证明两把时钟读得回已知的延迟：一把是“启动到输入框”，一把是“输入线程被卡住时的回显延迟”。
 
-开跑门槛直接用 `witness/stream-retry/card_gate.py`（见 `skills/repo-quake/references/experiment-card.md`“开跑门槛”）：卡片要通过校验、已经提交，计划和预算要覆盖这次矩阵。
+开跑门槛直接用 `skills/repo-quake/scripts/card_gate.py`（见 `skills/repo-quake/references/experiment-card.md`“开跑门槛”）：卡片要通过校验、已经提交，计划和预算要覆盖这次矩阵。
 
 ## 一次运行做什么
 

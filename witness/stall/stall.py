@@ -119,7 +119,7 @@ def write_json(path: Path, obj) -> None:
 
 
 def load_card_gate():
-    spec = importlib.util.spec_from_file_location("quake_card_gate", HERE.parent / "stream-retry" / "card_gate.py")
+    spec = importlib.util.spec_from_file_location("quake_card_gate", REPO / "skills" / "repo-quake" / "scripts" / "card_gate.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

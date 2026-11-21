@@ -12,7 +12,7 @@
 | `content.json` | 共享内容夹具，mock 和判定共用。P01–P24 与前两轮逐字相同；长回答完整形态是 L001–L200，半截是前 160 段。 |
 | `grading.py` | 纯判定逻辑，不碰网络和终端。也负责请求体分析、会话文件分析，以及原始字节分析（去转义、备用屏幕、失败标记、提示原话、字节到时间的对齐）。 |
 | `runner.py` | 矩阵执行器：`probe`、`matrix`、`regrade`、`summarize`、`egress`、`lsregister`。 |
-| `card_gate.py` | `matrix` 开跑前的门槛：实验卡要通过校验、已经提交，计划和预算要覆盖这次矩阵（见下文"开跑门槛"）。 |
+| `skills/repo-quake/scripts/card_gate.py` | 不在本目录（2026-11-21 起和 `validate_card.py` 放在一起，第 6 期的 `stall.py` 也用它）。`matrix` 开跑前的门槛：实验卡要通过校验、已经提交，计划和预算要覆盖这次矩阵（见下文"开跑门槛"）。 |
 | `rawtap.py` | 接在 `tmux pipe-pane` 上：把终端收到的原始字节写进 `raw.bin`，并给每一块记下收到的时刻（`raw-index.jsonl`）。 |
 | `version_witness.py` | 前后各记一次版本和 sha256。对象是实际执行的文件：codex 要从 `codex.js` 追到它 execve 的原生二进制；运行 `codex.js` 的 node，以及 mock、夹具和装置本身，也都要算。 |
 | `export_public.py` | 把要公开的证据复制一份、在副本上脱敏、扫描禁用串，再用 `skills/repo-quake/scripts/audit_artifacts.py` 审计。前后核对源目录的哈希清单，确认一个字节都没改。 |
@@ -114,7 +114,7 @@ python3 witness/stream-retry/runner.py lsregister --out "$OUT"
 python3 witness/stream-retry/export_public.py --src "$OUT" --dst runs/<本期目录>
 ```
 
-### 开跑门槛（`card_gate.py`）
+### 开跑门槛（`skills/repo-quake/scripts/card_gate.py`）
 
 `matrix` 必须二选一：`--card <实验卡>`，或者 `--exploratory "<理由>"`。两个都不给，或者两个都给，直接拒绝，什么都不写。带卡时，开跑前依次检查：
 

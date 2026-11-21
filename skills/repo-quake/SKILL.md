@@ -203,5 +203,7 @@ form. Grading is judgment; that is why it lives here and not in the witness.
   `examples/disclosure-phase3-metacodes.md` is a filled instance
 - `scripts/audit_artifacts.py` — pre-archive audit for symlinks, runtime trees,
   browser/PID files and high-confidence credential shapes
+- `scripts/card_gate.py` — pre-dispatch gate for a counted matrix: the card
+  validates and is committed, and its plan and budget cover the runs about to start
 - Bundled specialization: `skills/skill-quake/` — the file/skill-layer specialization with
   ready-made mutation scripts and host adapters

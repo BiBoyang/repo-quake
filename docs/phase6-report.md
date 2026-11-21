@@ -78,7 +78,7 @@
   - 从不发诊断的语言服务器。
 
   每次运行前复制进那次运行自己的目录，改成 `a.py`、`b.py`、`c.py` 这种不含故障类型的名字。
-- **判定**：冻结在 `stall.py` 里，规则写在 README（判定）。开跑门槛直接用 `witness/stream-retry/card_gate.py`：
+- **判定**：冻结在 `stall.py` 里，规则写在 README（判定）。开跑门槛直接用 `card_gate.py`（当时在 `witness/stream-retry/`，2026-11-21 起在 `skills/repo-quake/scripts/`）：
   - 卡片要通过校验、已经提交；
   - 预算要覆盖这次矩阵；
   - 每一格不能超过计划次数。

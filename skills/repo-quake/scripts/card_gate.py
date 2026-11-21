@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-dispatch gate for `runner.py matrix`: the experiment card is the contract.
+"""Pre-dispatch gate for a counted matrix (witness/stream-retry, witness/stall): the experiment card is the contract.
 
 A matrix starts only with a committed, valid card whose plan and budget cover it, or
 with an explicit `--exploratory REASON` that the manifest records. Accounting reads
@@ -17,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-VALIDATOR = HERE.parent.parent / "skills" / "repo-quake" / "scripts" / "validate_card.py"
+VALIDATOR = HERE / "validate_card.py"
 
 
 class GateError(Exception):

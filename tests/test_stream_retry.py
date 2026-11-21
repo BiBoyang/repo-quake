@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SR = ROOT / "witness" / "stream-retry"
 FIX = ROOT / "tests" / "fixtures" / "stream-retry"
 sys.path.insert(0, str(SR))
+sys.path.insert(1, str(ROOT / "skills" / "repo-quake" / "scripts"))
 
 import card_gate  # noqa: E402
 import grading  # noqa: E402

@@ -36,7 +36,9 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+SCRIPTS = HERE.parent.parent / "skills" / "repo-quake" / "scripts"
 sys.path.insert(0, str(HERE))
+sys.path.insert(1, str(SCRIPTS))
 import card_gate  # noqa: E402
 import grading  # noqa: E402
 import version_witness  # noqa: E402
@@ -1055,9 +1057,15 @@ def probe(ctx: Context, tool: Tool) -> dict:
     return result
 
 
+HARNESS = ("mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py", "card_gate.py")
+
+
+def harness_file(name: str) -> Path:
+    return SCRIPTS / name if name == "card_gate.py" else HERE / name
+
+
 def harness_hashes() -> dict:
-    files = ["mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py", "card_gate.py"]
-    return {name: version_witness.sha256_file(HERE / name) for name in files}
+    return {name: version_witness.sha256_file(harness_file(name)) for name in HARNESS}
 
 
 def start_mock(ctx: Context, label: str) -> None:
@@ -1174,7 +1182,7 @@ def tools_spec(ctx: Context) -> list[dict]:
 
 
 def extra_files(ctx: Context) -> dict:
-    files = {f"harness:{k}": str(HERE / k) for k in ("mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py", "card_gate.py")}
+    files = {f"harness:{k}": str(harness_file(k)) for k in HARNESS}
     if ctx.args.card:
         files["card"] = ctx.args.card
     return files
