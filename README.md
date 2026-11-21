@@ -83,8 +83,8 @@ microsoft/eval-guide [#16](https://github.com/microsoft/eval-guide/pull/16)
 - `docs/` — phase reports, PR drafts; `docs/skill-quake/` — labeled snapshots of
   the bundle's docs (`REPLICATION.md`, article, upstream issue drafts); the living
   copies stay in the skill-quake repo
-- `results/` — skill-quake era result summaries; `runs/` — raw per-run artifacts
-  (gitignored except summaries)
+- `runs/` — raw per-run artifacts (gitignored except summaries), including the
+  skill-quake era results of 2026-09-25 in `runs/skill-quake-2026-09-25/`
 - `tests/` — guard fixtures plus collector, metadata, card and fake-host matrix tests (`bash tests/run_tests.sh`)
 - `examples/` — sample targets, prompts and `experiment-card.json`
 - `skills/repo-quake/scripts/validate_card.py` — stdlib experiment-card validator
