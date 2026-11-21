@@ -7,9 +7,10 @@ description: "Fault-injection + measurement-discipline methodology for attacking
 
 Generalized fault-injection methodology for one question: **pick an open-source
 project, find where it silently breaks, and prove it with evidence an upstream
-maintainer cannot dismiss.** Born from a 7-part eval series and three phases of
-live experiments (see `docs/phase*-report.md`). The bundled `skill-quake` skill
-is the file/skill-layer specialization; this skill is the umbrella method.
+maintainer cannot dismiss.** Born from a 7-part eval series and the numbered
+experiment phases of the repo-quake repository (`docs/phase*-report.md` there).
+The bundled `skill-quake` skill is the file/skill-layer specialization; this
+skill is the umbrella method.
 
 ## The one-screen model
 
@@ -79,7 +80,10 @@ Before the first paid run, copy `examples/experiment-card.json`, replace its exa
 values, and validate it with `skills/repo-quake/scripts/validate_card.py`. The card
 freezes the claim, arms, controls, witnesses, invalid rules, budget, isolation and
 ethics. It complements — never replaces — delivery proof and calibrated witnesses.
-See `references/experiment-card.md`.
+See `references/experiment-card.md`. Commit the card before the first counted run;
+`scripts/card_gate.py` refuses a matrix the card does not cover. Inside the
+repo-quake repository, a phase files its witness, card, public evidence copy,
+report, disclosure and ledger entries as the README's "Adding a phase" says.
 
 ## The eight-step playbook
 
@@ -117,7 +121,7 @@ Full per-step checklists: `references/playbook.md`.
 | surface | core weapon | mature tooling |
 |---|---|---|
 | files / supply chain | integrity fault injection; witness = mechanical guard | `skills/skill-quake` + `bin/skill-guard` |
-| protocol / stream | mock provider trilogy: protocol endpoints + fault-as-parameter + delivery proof | `references/fault-catalog.md` §stream |
+| protocol / stream | mock provider trilogy: protocol endpoints + fault-as-parameter + delivery proof | `references/fault-catalog.md` §stream, `witness/stream-retry/` |
 | behavior / contrast | with/without control, in-domain smuggling, adversarial pressure | `references/fault-catalog.md` §behavior |
 | concurrency / timing | real re-runs (replay physically erases races), retry history, stderr tails | `references/fault-catalog.md` §concurrency |
 | env / config | "which code did CI actually test", worst-induced-behavior isolation | `references/fault-catalog.md` §env |
