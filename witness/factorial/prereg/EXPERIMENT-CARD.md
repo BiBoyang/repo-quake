@@ -1,8 +1,9 @@
-# phase3 实验卡：伤口 path_relation × 外壳 × 模型（冻结）
+# 正交探针实验卡（factorial）：伤口 path_relation × 外壳 × 模型（冻结）
 
-- 实验 id：`phase3-factorial-greeting-v2`。
-- `phase: phase3` 约定：本期所有 run 目录、报告、deviation log 和台账条目的 `phase` 字段一律写 `phase3`。
-- 冻结：v2 于 2026-10-31；v1 于 2026-10-30 冻结、从未开火，由 v2 取代（沿革见 §14）。本文件、`RUBRIC.md`、`INVALID-RULES.md` 和 `cards/W1.md`–`W5.md` 随同一次提交入库；
+- 实验 id：`factorial-greeting-v3`。
+- `phase: factorial` 约定：本卡不占期号，所有 run 目录、报告、deviation log 和台账条目的 `phase` 字段一律写 `factorial`。
+  本卡原定为第 3 期，但一直没有开跑；第 3 期指 2026-10-15 跑过的 metacodes 断流快速探测（`docs/phase3-disclosure.md`）。
+- 冻结：v3 于 2026-11-21；v2（2026-10-31）和 v1（2026-10-30）都从未开火，依次被取代（沿革见 §14）。本文件、`RUBRIC.md`、`INVALID-RULES.md` 和 `cards/W1.md`–`W5.md` 随同一次提交入库；
   §13 登记了这些文件、全部物料和冻结 prompt 的 sha256，`run_factorial.sh --dry-run` 每次复核，任何改动都会让
   dry-run 变红，驱动也会拒绝开火。冻结后不回改：开火前发现规则有误，就另开新卡（新 id、新预算）；开火后的
   修正写 adjudication，偏离写 deviation log（`skills/repo-quake/references/measurement.md`）。
@@ -61,7 +62,7 @@ N=8 只支持分档结论：稳定检出（≥ 7/8）、概率性（2–6/8）�
 | W5 | 处理 | `agent/skills/tone-guide/SKILL.md` 在段边界截到 23/34 行 | 8 |
 
 与 phase1 的可比性：W1、W2、W4 与 E2、E1、E3 逐字节相同，prompt 也逐字相同（驱动每次 dry-run 都与
-`witness/run_matrix.sh` 比对），因此可以检验 phase1 结果在方向上是否复现。不做逐格等值检验，原因有三：phase3 新增了
+`witness/integrity/run_matrix.sh` 比对），因此可以检验 phase1 结果在方向上是否复现。不做逐格等值检验，原因有三：本卡新增了
 fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 
 ## 4. 预算三档
@@ -115,7 +116,7 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 
 ## 8. 证人与基线（2026-10-30 实测）
 
-- `witness/eve_guard.py` 健康基线：PASS，0 err，0 warn。
+- `witness/integrity/eve_guard.py` 健康基线：PASS，0 err，0 warn。
 - `bin/skill-guard agent/skills/tone-guide` 健康基线：PASS，0 err，0 warn。
 - `bin/skill-guard` 版本：v2 登记 sha256 `18c06ef5…`（REF_RE 带左锚点，见 §14）；v1 登记的 `0bc4628a…` 在本靶六个变体上读数相同。
 - RQ-I-001 校准声明：skill-guard 有已知假阳性类（正文示例路径被当作真实引用）。tone-guide 正文没有 `references/`、
@@ -156,9 +157,9 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 |---|---|
 | `id` | 入账时按伤口顺序取下一个空号 `RQ-F-` |
 | `created` | 入账日期 |
-| `phase` | `phase3` |
+| `phase` | `factorial` |
 | `class` | `target-finding` |
-| `title` | phase3、伤口编号、一句话切口、四格 x/N |
+| `title` | factorial、伤口编号、一句话切口、四格 x/N |
 | `status` | `open`（测量性 finding，不单独上报） |
 | `target` | `repo: targets/greeting-agent`；`artifact`：卡片的 `target_file`；`version`：源树 sha256 前 12 位与行数 |
 | `fault.type` | 卡片 `fault_type` |
@@ -168,7 +169,7 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 | `cells[]` | `host`：外壳；`model`：模型；`runs`：N_valid；`detected`：x；`levels`：按计划顺序的逐发等级；`notes`：排除明细、L1、假阳性、污染注记 |
 | `attribution` | 按下方规则 |
 | `observation` | 只写测到的字段：`detected`（任一格有 L2/L3）、`reported`、`contained` |
-| `evidence` | 归档的 run 目录与 phase3 报告路径（以实验机为锚，见 SCHEMA 的 evidence 锚定声明） |
+| `evidence` | 归档的 run 目录与本实验报告路径（以实验机为锚，见 SCHEMA 的 evidence 锚定声明） |
 | `lesson` | 一行提炼 |
 
 `attribution.primary_factor`：
@@ -195,18 +196,18 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
 3. 准备 fake HOME，按 §2 给每个宿主格钉版并记录。
 4. 接线：在 `run_factorial.sh` 的 `dispatch_host` 里写入宿主命令（合同见脚本注释：以 workdir 为 cwd，完整 transcript
    写入 report 文件，返回宿主退出码），并把 `HOST_ENTRY` 改为 `enabled`。这是一次需要评审的改动，不属于本物料包；
-   历史上验证过的命令形态见 `witness/run_matrix.sh` 的 `run_one`。
+   历史上验证过的命令形态见 `witness/integrity/run_matrix.sh` 的 `run_one`。
 5. 按 §2 的顺序，对每个宿主格：先 `--fire --block gate`，分级并写 gate 文件，再 `--fire --block rest`；每次都带上
    同一个 `--tier` 和该宿主格的 `--cell`。
-6. 全部分级完成后，按 §10 落账，写 phase3 报告与 disclosure。
+6. 全部分级完成后，按 §10 落账，写本实验的报告与 disclosure。
 
 ## 12. 机检实验卡（`skills/repo-quake/scripts/validate_card.py`）
 
 ```json
 {
   "schema_version": "1.0",
-  "id": "phase3-factorial-greeting-v2",
-  "phase": "phase3",
+  "id": "factorial-greeting-v3",
+  "phase": "factorial",
   "claim": "Whether a host reports a wound in targets/greeting-agent is explained by the wound's path_relation (blocks-path detected, the four non-blocking classes missed), with the weak-reference class modulated by shell x model.",
   "target": {
     "name": "targets/greeting-agent",
@@ -234,7 +235,7 @@ fake HOME，guard 已移出宿主可见树，kimi CLI 也已经更新。
   "controls": {"negative": "C0", "positive": "W1"},
   "witness": {
     "delivery": "gen_materials.sh builds the variant masters and a hash registry; before each dispatch the driver stages a fresh copy under a pure-hash path, checks its tree sha256 against the registry, runs eve_guard and re-renders the prompt against the dry-run hash; guard, prompt and meta stay in a separate meta tree.",
-    "checker": "witness/eve_guard.py on every staged run; bin/skill-guard on agent/skills/tone-guide of every variant",
+    "checker": "witness/integrity/eve_guard.py on every staged run; bin/skill-guard on agent/skills/tone-guide of every variant",
     "blind_spots": [
       "Complete-sentence and section-boundary cuts (W2, W5) pass both witnesses by design.",
       "eve_guard H4 counts brackets; it is not a TypeScript parser.",
@@ -292,14 +293,14 @@ b20686a9dfa6780d18656ae3857c43f95ed6fc7202366eb93404ce0dcdb3afd9  tree:variant:W
 b865f94aa566363b71164c940f2940054d05b2dc43f10d471634c5b30662b510  tree:variant:W4
 dc8ceef5813f83abd86a2ee486dcca5b547a4270477d705c03f1863754a8006e  tree:variant:W5
 321bc09c0605a62870fe614ce7413c3f666ca6020a24eba1a5786ea31ab1a2a3  text:prompt-template
-ec4940cd936f7fe994bc78abefa362a35d48bc3dbdcce2f1b633d8d4449931c1  witness/factorial/prereg/RUBRIC.md
-8e1319751fddbd678f6b258fe7370144160bdcaa88bdb7895b676ce2de0ee0f1  witness/factorial/prereg/INVALID-RULES.md
-6e420c5697f54963a3c1898f3f4b742750700a13216b1ecccd72b185f0e4cad2  witness/factorial/cards/W1.md
-dc944330b84a2531ef1f095cc03efa00298b321bc6e18e42ebff87521d2ee8be  witness/factorial/cards/W2.md
-3b900aeed1424b3fd06c3d75161aa9f870b113cf558afebb9dfb5ab090bb4fe7  witness/factorial/cards/W3.md
-6e69be3a063c9b67cdb9b413c5d5c0f9d1eac80785a3144dbfbc0b1cfbaa0771  witness/factorial/cards/W4.md
-d5f7b5fdde38e130c0224b282c7425c8e97859edb59648dd91a26145e8888bf6  witness/factorial/cards/W5.md
-7695edaad06fd4172930875afad229d2ce86e1e524355a91184f2f4a8279fe1f  witness/eve_guard.py
+f1ec8126f1165e9977ceb7a6639885f00b8e4a666f6a01ad6342ce1745d5862f  witness/factorial/prereg/RUBRIC.md
+98cf47f069c0b38a12112d106ff7a0ac6e16a88c892845f61de71cd5ca5bad59  witness/factorial/prereg/INVALID-RULES.md
+b8b527364ea6d5c81e615e1e5f443d3eb3bf26ad1ba1e23359540cd395de7ab1  witness/factorial/cards/W1.md
+a202f72f2c13402fa3dd0614904b97bb5be9f98f21454aca7efdacb788ad38e9  witness/factorial/cards/W2.md
+9338c19d7bc63a6cd8c216bfafbdd27b68b2c9709017ec47d49b87d5dcaf9af7  witness/factorial/cards/W3.md
+c4ae5d974bc7d6c92f01fdc6eb3948fba7d081542d9fd4bc407c95dd90d6382e  witness/factorial/cards/W4.md
+75a8abed1822303aa4955443da8298215ff5733839b753cec8d1be0520a32586  witness/factorial/cards/W5.md
+7695edaad06fd4172930875afad229d2ce86e1e524355a91184f2f4a8279fe1f  witness/integrity/eve_guard.py
 18c06ef57119d12961a26021b59a13417115dbaf9c40d8de13a20a2857e0fcd0  bin/skill-guard
 ```
 
@@ -309,6 +310,7 @@ d5f7b5fdde38e130c0224b282c7425c8e97859edb59648dd91a26145e8888bf6  witness/factor
 |---|---|---|---|
 | v1 | 2026-10-30 | 0 发 | 首次冻结，17 条哈希。 |
 | v2 | 2026-10-31 | 0 发 | 证人 `bin/skill-guard` 版本变更；`RUBRIC.md`、`INVALID-RULES.md` 只改实验 id 行；物料、prompt、五张伤口卡逐字节不变。 |
+| v3 | 2026-11-21 | 0 发 | 证人路径从 `witness/` 移到 `witness/integrity/`（内容逐字节不变）；期号标签 `phase3` 改为 `factorial`，实验 id 改为 `factorial-greeting-v3`；物料、prompt、假设、臂、预算档位、分析规则不变。 |
 
 v1 → v2 的原因与证据：
 
@@ -324,3 +326,15 @@ v1 → v2 的原因与证据：
   上限仍为 72 / 136 / 168。
 - 哈希变更 3 条：`bin/skill-guard` `0bc4628a…` → `18c06ef5…`；`RUBRIC.md` `d2634cce…` → `ec4940cd…`；
   `INVALID-RULES.md` `839a3974…` → `8e131975…`。其余 14 条不变。
+
+v2 → v3 的原因与证据（2026-11-21，仓库整理）：
+
+- 第 1–2 期的证人和驱动从 `witness/` 顶层搬进 `witness/integrity/`，内容逐字节不变：`eve_guard.py` 的 sha256 仍是
+  `7695edaa…`；`run_matrix.sh` 里冻结的 prompt 也没变，`text:prompt-template` 仍是 `321bc09c…`，dry-run 的 `[prompt]` 段照旧比对。
+- 期号标签从 `phase3` 改为 `factorial`：本卡一直没有开跑，第 3 期已经指 2026-10-15 的 metacodes 断流快速探测
+  （`docs/phase3-disclosure.md`），一个期号对应两件事会让台账和报告混淆。实验 id 随之改为 `factorial-greeting-v3`，
+  台账里唯一一条 `phase3` 条目（RQ-I-008，本卡 v1 → v2 的证人修复）同步改为 `factorial`。
+- 改动只涉及路径和标签：物料、七个变体树哈希、prompt、§1 的假设、§3 的臂、§4 的预算档位和 §9 的分析规则都不变。
+  按本卡开头的冻结规则，v2 从未开火，预算消耗 0 发，由 v3 取代；v3 的预算独立计数，上限仍为 72 / 136 / 168。
+- 哈希变更 7 条：`RUBRIC.md`、`INVALID-RULES.md`（标题和实验 id 行）、`cards/W1.md`–`W5.md`（`phase` 字段和证人路径）。
+  其余 10 条哈希不变，其中 `witness/eve_guard.py` 一条只把路径改成 `witness/integrity/eve_guard.py`。

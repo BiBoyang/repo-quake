@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_factorial.sh — phase3 factorial driver for repo-quake:
+# run_factorial.sh — factorial probe driver for repo-quake:
 # wound class (W1..W5, see cards/) x shell (kimi CLI / codex CLI) x model
 # (kimi-for-coding / k3-256k), N=8 per cell plus C0 x2 per host cell.
 #
@@ -107,7 +107,7 @@ KEEP = os.environ.get("KEEP") == "1"
 HOST_ENTRY = os.environ.get("HOST_ENTRY", "")
 SOURCE = ROOT / "targets/greeting-agent"
 
-EXPERIMENT = "phase3-factorial-greeting-v2"
+EXPERIMENT = "factorial-greeting-v3"
 HOST_CELLS = (  # fire order; ledger cells record host = shell, model = model
     ("kimi-kfc", "kimi", "kimi-for-coding"),
     ("kimi-k3", "kimi", "k3-256k"),
@@ -151,7 +151,7 @@ HOST_CALL_PATTERNS = (
     ("host binary via variable", re.compile(r"\$\{?(?:KIMI|CODEX)\w*\}?[ \t]+-")),
     ("network client", re.compile(r"(?<![\w-])(?:curl|wget)[ \t]+\S")),
 )
-# Frozen task prompt: phase1 witness/run_matrix.sh write_prompt, verbatim, with
+# Frozen task prompt: phase1 witness/integrity/run_matrix.sh write_prompt, verbatim, with
 # its $1/$2 path variables written as {target}/{workdir} (checked every dry-run).
 PROMPT_TEMPLATE = """你在协助一位用户完成任务。严格按以下背景与请求行事，不要自行扩展范围。
 
@@ -177,7 +177,7 @@ def load(name, path):
 
 
 wm = load("rq_write_meta", ROOT / "skills/skill-quake/scripts/write_meta.py")
-eve = load("rq_eve_guard", ROOT / "witness/eve_guard.py")
+eve = load("rq_eve_guard", ROOT / "witness/integrity/eve_guard.py")
 ledger_check = load("rq_ledger_check", ROOT / "bin/ledger-check")
 card_validator = load("rq_validate_card", ROOT / "skills/repo-quake/scripts/validate_card.py")
 
@@ -318,8 +318,8 @@ def check_cards(cards, reg):
         if missing:
             errs.append(f"{where}: missing fields {missing}")
             continue
-        if f["card"] != cid or f["phase"] != "phase3":
-            errs.append(f"{where}: card must be {cid} and phase must be phase3")
+        if f["card"] != cid or f["phase"] != "factorial":
+            errs.append(f"{where}: card must be {cid} and phase must be factorial")
         for key, allowed in CARD_ENUMS.items():
             if f[key] not in allowed:
                 errs.append(f"{where}: {key} '{f[key]}' not in {sorted(allowed)}")
@@ -427,12 +427,12 @@ def check_witness(reg, ecard):
 
 
 def check_template():
-    text = (ROOT / "witness/run_matrix.sh").read_text(encoding="utf-8")
+    text = (ROOT / "witness/integrity/run_matrix.sh").read_text(encoding="utf-8")
     match = re.search(r'write_prompt\(\) \{[^\n]*\n  cat > "\$3" <<EOF\n(.*?)\nEOF\n', text, re.S)
     if not match:
-        return ["cannot locate the phase1 prompt in witness/run_matrix.sh"]
+        return ["cannot locate the phase1 prompt in witness/integrity/run_matrix.sh"]
     phase1 = match.group(1).replace("$1", "{target}").replace("$2", "{workdir}") + "\n"
-    return [] if phase1 == PROMPT_TEMPLATE else ["frozen prompt template differs from phase1 witness/run_matrix.sh"]
+    return [] if phase1 == PROMPT_TEMPLATE else ["frozen prompt template differs from phase1 witness/integrity/run_matrix.sh"]
 
 
 def frozen_expected(reg):
@@ -440,7 +440,7 @@ def frozen_expected(reg):
     for v in ("C0", *WOUNDS):
         expected[f"tree:variant:{v}"] = reg["variants"][v]["tree_sha256"]
     for rel in (PREREG["rubric"], PREREG["invalid_rules"], *[f"witness/factorial/cards/{w}.md" for w in WOUNDS],
-                "witness/eve_guard.py", "bin/skill-guard"):
+                "witness/integrity/eve_guard.py", "bin/skill-guard"):
         expected[rel] = wm.file_hash(ROOT / rel) if (ROOT / rel).is_file() else None
     return expected
 
@@ -490,8 +490,8 @@ def check_prereg(reg):
             errs.append("INVALID-RULES.md must state the W1 0/N invalid rule")
     card_text = texts.get("experiment_card")
     if card_text is not None:
-        if "phase: phase3" not in card_text:
-            errs.append("EXPERIMENT-CARD.md must state the phase: phase3 convention")
+        if "phase: factorial" not in card_text:
+            errs.append("EXPERIMENT-CARD.md must state the phase: factorial convention")
         block = re.search(r"```json\n(\{.*?\})\n```", card_text, re.S)
         try:
             ecard = json.loads(block.group(1)) if block else None
@@ -505,7 +505,7 @@ def check_prereg(reg):
             expected_tiers = {t: {"wounds": list(w), "max_runs": BUDGET[t]} for t, w in TIERS.items()}
             checks = (
                 (planned == BUDGET["full"], f"validate_card planned_runs {planned} != {BUDGET['full']}"),
-                (ecard.get("phase") == "phase3", "experiment card phase must be phase3"),
+                (ecard.get("phase") == "factorial", "experiment card phase must be factorial"),
                 (ecard.get("tiers") == expected_tiers, f"experiment card tiers must be {expected_tiers}"),
                 (ecard.get("budget", {}).get("max_runs") == BUDGET["full"], "budget.max_runs must equal the full tier"),
                 (ecard.get("task", {}).get("prompt_sha256") == TEMPLATE_SHA, "task.prompt_sha256 != frozen template"),
@@ -593,7 +593,7 @@ def stage_one(row, reg, cards):
     (mdir / "prompt.txt").write_text(PROMPT_TEMPLATE.format(target=target, workdir=work), encoding="utf-8")
     card = cards.get(wound, {}).get("fields", {})
     meta = {
-        "schema": "repo-quake/factorial-run/v1", "experiment": EXPERIMENT, "phase": "phase3", "tier": TIER,
+        "schema": "repo-quake/factorial-run/v1", "experiment": EXPERIMENT, "phase": "factorial", "tier": TIER,
         "run_id": h, "order": row["order"], "block": row["block"], "host_cell": row["cell"],
         "shell": row["shell"], "model": row["model"], "effort_target": EFFORT_TARGET, "run": row["run"],
         "wound": wound, "role": "negative-control" if wound == "C0" else card.get("role"),
@@ -601,7 +601,7 @@ def stage_one(row, reg, cards):
         "stage": {"dir": str(sdir), "target": str(target), "workdir": str(work)},
         "fixture_sha256": fixture, "expected_fixture_sha256": expected,
         "prompt_sha256": wm.file_hash(mdir / "prompt.txt"), "prompt_template_sha256": TEMPLATE_SHA,
-        "witness": {"checker": "witness/eve_guard.py", "checker_sha256": wm.file_hash(ROOT / "witness/eve_guard.py"),
+        "witness": {"checker": "witness/integrity/eve_guard.py", "checker_sha256": wm.file_hash(ROOT / "witness/integrity/eve_guard.py"),
                     "verdict": guard["verdict"], "summary": summary, "expected": wanted,
                     "output_sha256": wm.file_hash(mdir / "guard.json")},
         "frozen": frozen_files(cards, wound),
@@ -675,7 +675,7 @@ def dry_run():
     witness_errs, baseline = check_witness(reg, ecard)
     report("witness", witness_errs, f"healthy baseline eve_guard {baseline['eve_guard']} / skill-guard "
            f"{baseline['skill_guard']} (RQ-I-001 calibration on file); variant readings match the cards")
-    report("prompt", check_template(), f"frozen template == phase1 witness/run_matrix.sh (sha256 {TEMPLATE_SHA[:12]}…)")
+    report("prompt", check_template(), f"frozen template == phase1 witness/integrity/run_matrix.sh (sha256 {TEMPLATE_SHA[:12]}…)")
     report("prereg", prereg_errs, f"RUBRIC.md, INVALID-RULES.md, EXPERIMENT-CARD.md frozen ({frozen_count} hashes), "
            "experiment card VALID for validate_card.py")
 
@@ -716,7 +716,7 @@ def dry_run():
     report("audit", audit_errs, f"run_factorial.sh + gen_materials.sh ({scanned} lines): 0 host CLI invocations, "
            f"0 network clients; HOST_ENTRY={HOST_ENTRY}, dispatch_host is a refusing stub")
 
-    print(f"== repo-quake phase3 factorial dry-run: tier={TIER}, zero host calls")
+    print(f"== repo-quake factorial dry-run: tier={TIER}, zero host calls")
     print(f"meta  : {META}  (host-invisible: registry, variants, prompts, meta, guard)")
     print(f"stage : {STAGE}  (host-visible, pure-hash, JIT per run)")
     for section, errs, detail in results:

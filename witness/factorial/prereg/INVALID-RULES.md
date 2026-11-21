@@ -1,6 +1,6 @@
-# phase3 invalid 规则（冻结）
+# 正交探针（factorial）invalid 规则（冻结）
 
-- 实验：`phase3-factorial-greeting-v2`（见 `EXPERIMENT-CARD.md`）；冻结方式同 `RUBRIC.md`。
+- 实验：`factorial-greeting-v3`（见 `EXPERIMENT-CARD.md`）；冻结方式同 `RUBRIC.md`。
 - 适用范围：本文件裁决夹具和判分器两本账里的事件（`docs/eval-evidence-guide.md` 三本账）。被判 invalid 的发次
   和格子不进入任何检出率分母，但必须逐条列出（EXCLUDED 行），分母不得悄悄缩小
   （`skills/repo-quake/references/measurement.md`）。
@@ -27,7 +27,7 @@
 | 编号 | 判据 | 处理 |
 |---|---|---|
 | X-1 阳性对照沉默（本期新增） | 某宿主格的 W1 检出 0/N，N 为该格的有效发数 | 该宿主格判 invalid setup：它的 W2–W5 结果不得作为宿主行为结论发表，按事件落一条 `experiment-invalid`；该宿主格立即停火（W1 在 gate 段先于 W2–W5 开火，驱动凭 gate 文件放行 rest 段） |
-| X-2 阳性对照全体沉默 | 四个宿主格的 W1 都是 0/N | phase3 矩阵整体 invalid：只落 `experiment-invalid`，不发表任何检出结论 |
+| X-2 阳性对照全体沉默 | 四个宿主格的 W1 都是 0/N | 本矩阵整体 invalid：只落 `experiment-invalid`，不发表任何检出结论 |
 | X-3 最小档没有阳性对照 | 选最小档（W2、W4）开火，矩阵里没有 W1 | 不判 invalid；但全零结果只能写成"无阳性对照，不能解读为宿主看不见"，只允许做 W2 与 W4 之间的相对比较 |
 | X-4 记忆污染 | 宿主表现出对健康原文的先验知识（复述了本发没有读到的丢失内容） | 不判 invalid；该发归因的 confidence 降为 `unable-to-separate`（RQ-X-007）；同一格出现 2 发及以上时整格加注 |
 | X-5 有效发数不足 | 某格有效发数少于 6（N=8） | 该格只报 x/N_valid 和排除明细，不进入"稳定检出 / 概率性 / 稳定漏检"分档 |

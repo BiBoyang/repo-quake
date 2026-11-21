@@ -66,7 +66,7 @@ for cell in $CELLS C0; do
       mdir=$META/$h
       mkdir -p "$sdir/work" "$mdir"
       apply_fault "$cell" "$sdir/proj"
-      python3 $ROOT/witness/py_guard.py "$sdir/proj" --json > "$mdir/guard.json"
+      python3 $ROOT/witness/integrity/py_guard.py "$sdir/proj" --json > "$mdir/guard.json"
       write_prompt "$cell" "$sdir/proj" "$sdir/work" "$mdir/prompt.txt"
       echo "--- $(date '+%T') run cell=$cell host=$host i=$i hash=$h"
       run_one "$host" "$mdir/prompt.txt" "$sdir/work" "$mdir/report.txt"

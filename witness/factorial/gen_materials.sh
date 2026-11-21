@@ -1,5 +1,5 @@
 #!/bin/bash
-# gen_materials.sh — phase3 factorial materials for repo-quake.
+# gen_materials.sh — factorial probe materials for repo-quake (prepared, not run).
 # Builds one mutated copy per wound card (C0 + W1..W5) of the healthy
 # targets/greeting-agent inside a host-invisible meta tree under a pure-hash
 # /tmp path (X-003, X-005), reads both witnesses on every copy and on the
@@ -63,7 +63,7 @@ cut_head() { # <file> <keep_lines> — tail truncation in place (keeps inode and
 }
 
 # The wound table. One branch per card in witness/factorial/cards/; W1, W2 and
-# W4 reproduce phase1 E2, E1 and E3 byte for byte (witness/run_matrix.sh).
+# W4 reproduce phase1 E2, E1 and E3 byte for byte (witness/integrity/run_matrix.sh).
 apply_wound() { # <variant> <copy_root>
   local a="$2/agent"
   case "$1" in
@@ -79,7 +79,7 @@ apply_wound() { # <variant> <copy_root>
 
 read_witnesses() { # <agent_project_root> <out_dir> — FAIL is data; only a missing verdict is a crash
   local rc=0
-  python3 -B "$ROOT/witness/eve_guard.py" "$1" --json > "$2/eve_guard.json" || rc=$?
+  python3 -B "$ROOT/witness/integrity/eve_guard.py" "$1" --json > "$2/eve_guard.json" || rc=$?
   echo "$rc" > "$2/eve_guard.exit"
   rc=0
   python3 -B "$ROOT/bin/skill-guard" --json "$1/agent/skills/tone-guide" > "$2/skill_guard.json" || rc=$?
@@ -124,7 +124,7 @@ spec = importlib.util.spec_from_file_location("rq_write_meta", root / "skills/sk
 wm = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(wm)
 SOURCE_REL = "targets/greeting-agent"
-TOOLS = ("witness/factorial/gen_materials.sh", "witness/eve_guard.py", "bin/skill-guard",
+TOOLS = ("witness/factorial/gen_materials.sh", "witness/integrity/eve_guard.py", "bin/skill-guard",
          "skills/skill-quake/scripts/write_meta.py")
 CALIBRATION = (
     "skill-guard has a known false-positive class (RQ-I-001: example paths in prose are taken as real "

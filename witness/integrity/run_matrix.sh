@@ -65,7 +65,7 @@ for cell in $CELLS C0; do
       stage=$RUNS/stage/$h
       mkdir -p "$stage/work"
       apply_fault "$cell" "$stage/greeting-agent"
-      python3 $ROOT/witness/eve_guard.py "$stage/greeting-agent" --json > "$stage/guard.json"
+      python3 $ROOT/witness/integrity/eve_guard.py "$stage/greeting-agent" --json > "$stage/guard.json"
       write_prompt "$stage/greeting-agent" "$stage/work" "$stage/prompt.txt"
       echo "--- $(date '+%T') run cell=$cell host=$host i=$i hash=$h"
       run_one "$host" "$stage/prompt.txt" "$stage/work" "$stage/report.txt"

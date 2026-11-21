@@ -17,7 +17,7 @@ vercel/eve 仓库 clone 失败（本机代理 127.0.0.1:1082 未运行），版�
 eve 结构依据 vercel.com/docs/eve 与官方博客（2026-09-30 检索）。TODO: 补 clone 后
 把 commit hash 写入本节。
 
-## 证人（witness/eve_guard.py）
+## 证人（witness/integrity/eve_guard.py）
 
 硬错误：H1 instructions.md 缺失/空；H2 instructions 引用的路径不存在；H3 skill
 frontmatter name/description 空；H4 tools/*.ts 括号不平衡（语法伤代理）。

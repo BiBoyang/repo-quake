@@ -1,4 +1,4 @@
-"""phase3 factorial materials (witness/factorial/): dry-run coverage, zero host calls.
+"""factorial probe materials (witness/factorial/): dry-run coverage, zero host calls.
 
 The dry-run is the pre-fire gate: it must be green on the live repo, refuse to
 fire, never write under targets/, and turn red on a drifted card, an edited
@@ -23,7 +23,7 @@ SALT = "0123456789abcdef0123456789abcdef"
 WOUNDS = ("W1", "W2", "W3", "W4", "W5")
 HOST_CELLS = ("kimi-kfc", "kimi-k3", "codex-kfc", "codex-k3")
 WORKSPACE = (
-    "targets/greeting-agent", "witness/eve_guard.py", "witness/run_matrix.sh", "witness/factorial",
+    "targets/greeting-agent", "witness/integrity/eve_guard.py", "witness/integrity/run_matrix.sh", "witness/factorial",
     "bin/skill-guard", "bin/ledger-check", "ledger/ledger.json",
     "skills/skill-quake/scripts/write_meta.py", "skills/repo-quake/scripts/validate_card.py",
 )
@@ -71,7 +71,7 @@ def front_matter(path):
 
 
 def phase1_prompt():
-    text = (REPO / "witness/run_matrix.sh").read_text(encoding="utf-8")
+    text = (REPO / "witness/integrity/run_matrix.sh").read_text(encoding="utf-8")
     body = re.search(r'cat > "\$3" <<EOF\n(.*?)\nEOF\n', text, re.S).group(1)
     return body + "\n"
 
@@ -198,7 +198,7 @@ class FactorialMaterialsTests(unittest.TestCase):
         self.assertEqual({t: v["max_runs"] for t, v in card["tiers"].items()},
                          {"minimal": 72, "standard": 136, "full": 168})
         self.assertEqual([h["id"] for h in card["hosts"]], list(HOST_CELLS))
-        self.assertEqual(card["phase"], "phase3")
+        self.assertEqual(card["phase"], "factorial")
 
     def test_broken_inputs_turn_the_dry_run_red(self):
         def drift_card(ws):

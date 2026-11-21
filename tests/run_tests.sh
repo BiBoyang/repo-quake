@@ -86,7 +86,7 @@ fi
 out=$(python3 bin/ledger-check ledger/ledger.json 2>&1); rc=$?
 if [ "$rc" -eq 0 ]; then echo "ok   [ledger-check]"; else echo "FAIL [ledger-check]: exit=$rc"; echo "$out"; fails=$((fails+1)); fi
 
-# factorial materials (phase3, witness/factorial/): the dry-run is the pre-fire
+# factorial materials (prepared, not run; witness/factorial/): the dry-run is the pre-fire
 # gate (material tree, recomputable hash registry, card field checks, witness
 # baseline, frozen prereg, no-host-call audit) and never dispatches a host.
 # Unit tests for the driver live in tests/test_factorial_materials.py (above).
