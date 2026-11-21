@@ -1712,7 +1712,7 @@
         "explanation": "工具链在 skill 内容这一层没有任何检查：eval 配置层会硬失败，skill 层一律放行。#281 提供了显式的 --skill 检查，但默认只给警告，也不在 eval 校验时自动运行",
         "confidence": "confirmed",
         "caveats": [
-          "#281 未合入，结论按其当前 head"
+          "#281 于 2026-11-19 合入；这里的结论测的是它当时的 head 8c9e12b，合入后的版本没有复测；#280 仍开着"
         ]
       },
       "observation": {
@@ -1732,7 +1732,7 @@
         {
           "kind": "pr",
           "url": "https://github.com/alibaba/skill-up/pull/281",
-          "status": "open"
+          "status": "merged"
         }
       ],
       "lesson": "配置层的校验再严，也挡不住内容层的损坏；要查就要单独查 skill 本身"
