@@ -188,5 +188,5 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
 - 探索性补跑公开副本：`runs/phase4-codex-retries-exhausted-2026-11-16/`。逐次份数在 `retries-exhausted-counts.json`；`upstream-repro/` 里是最小复现、发出的评论原文和最小复现的截屏。
 - 装置与测试：`witness/stream-retry/`、`tests/test_stream_retry.py`
 - 披露文件：`docs/phase4-disclosure.md`
-- 执行提示词模板：`plans/TASK-stream-retry-display.md`
+- 执行提示词模板：`docs/process/plans/TASK-stream-retry-display.md`
 - 台账：`ledger/ledger.json` 的 RQ-F-014 至 RQ-F-017、RQ-I-009、RQ-I-010、RQ-X-011 至 RQ-X-014

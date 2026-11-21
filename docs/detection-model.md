@@ -59,7 +59,7 @@ ABC 按审计对象分类、三因子按供给方分类，类别层面对应（�
 
 - RQ-X-003：红线 7 早已成文，staging 根目录照样对宿主可见，4 发反推出实验性质。
 - RQ-X-005：guard.json 回归进宿主可见树；教训"隔离规则要进校验器，不只进文档"就是转换器的定义。
-- RQ-X-006：phase2 无本轮阳性对照，0/64 只能事后认定为设计失误；正交实验包（factorial，原定第 3 期）计划把"W1（blocks-path）检出 0/N 即 invalid"写进预注册（`plans/TASK-factorial-probes.md`）。
+- RQ-X-006：phase2 无本轮阳性对照，0/64 只能事后认定为设计失误；正交实验包（factorial，原定第 3 期）计划把"W1（blocks-path）检出 0/N 即 invalid"写进预注册（`docs/process/plans/TASK-factorial-probes.md`）。
 - RQ-X-009：夹具漏传 `{retryable}`，目标错误变成 `TypeError`；送达证明充当 harness 层哨兵，把假 finding 拦在 issue 之前（`invalid setup`，另开新卡）。
 
 产品侧同理：RQ-F-001 的修复 PR 先证明新测试在 main 上失败（`docs/eval-evidence-guide.md`），把"测试照绿、报告缺字段"钉成 CI 上的必不过哨兵。
@@ -92,4 +92,4 @@ ABC 与 repo-quake 打同一组因子，站位相反：
 
 两面互为输入：清单告诉注入器先打哪里，注入结果回流成清单条目——phase2 的 0/64 给 fault menu 补了路径触达性前置检查（RQ-X-006），零检出的考官矩阵催生了把完整性检查放进 CLI 层的上游提案（skill-up #280/#281，`skills/repo-quake/references/reporting.md`）。
 
-正交探针（factorial，原定第 3 期，至今未开跑）按 `plans/TASK-factorial-probes.md` 设计，把三因子从解释变量变成可测变量：伤口按 `path_relation` 五类（W1–W5，W1 = blocks-path 阳性对照）操纵挡路，外壳（kimi CLI / codex CLI）操纵读到，模型（kimi-for-coding / k3-256k）操纵愿意报，正交交叉，输出边际检出率与交互效应；物料按 72 / 136 / 168 发三档构建，开火前冻结预注册，本轮零宿主调用。可证伪推论：W1 各格接近满检出、与外壳和模型无关；非挡路伤只在"外壳会读 × 模型肯报"的格里有检出；无签名的 `on-path-no-gap`（schema v1.1 新增）各格接近 0。任一推论被推翻，就轮到三因子模型自己进台账。
+正交探针（factorial，原定第 3 期，至今未开跑）按 `docs/process/plans/TASK-factorial-probes.md` 设计，把三因子从解释变量变成可测变量：伤口按 `path_relation` 五类（W1–W5，W1 = blocks-path 阳性对照）操纵挡路，外壳（kimi CLI / codex CLI）操纵读到，模型（kimi-for-coding / k3-256k）操纵愿意报，正交交叉，输出边际检出率与交互效应；物料按 72 / 136 / 168 发三档构建，开火前冻结预注册，本轮零宿主调用。可证伪推论：W1 各格接近满检出、与外壳和模型无关；非挡路伤只在"外壳会读 × 模型肯报"的格里有检出；无签名的 `on-path-no-gap`（schema v1.1 新增）各格接近 0。任一推论被推翻，就轮到三因子模型自己进台账。
