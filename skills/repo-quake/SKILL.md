@@ -122,6 +122,7 @@ Full per-step checklists: `references/playbook.md`.
 | concurrency / timing | real re-runs (replay physically erases races), retry history, stderr tails | `references/fault-catalog.md` §concurrency |
 | env / config | "which code did CI actually test", worst-induced-behavior isolation | `references/fault-catalog.md` §env |
 | extension / plugin lifecycle | installer + version pin + mount witness; install failure is data | `references/fault-catalog.md` §extension |
+| stalled dependencies | loopback fakes that answer late or never + a timestamped pty; does the client bound the wait and say what it waits for | `references/fault-catalog.md` §stall, `witness/stall/` |
 
 ## Beyond fault matrices
 

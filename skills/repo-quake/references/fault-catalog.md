@@ -205,3 +205,39 @@ Rules that keep this surface honest:
   not by the task's intent.
 - A version bump is not a re-run, it is a new experiment: re-baseline by hand
   and keep the old numbers labeled with their version.
+
+## §stall — stalled dependencies (accept, then answer late or never)
+
+For interactive clients that wait on something else while the user waits on
+them: a model gateway's side endpoints, MCP servers, a local memory service, a
+telemetry collector, a language server. The question is not whether the client
+notices damage in content but whether it bounds the wait itself, and whether
+the screen says what it is waiting for (phase 6, `witness/stall/`).
+
+| fault | shape |
+|---|---|
+| late | the dependency answers after a fixed delay (5 s) — the client either waits it out in-line or not |
+| silent | the dependency accepts the TCP connection, reads, and never answers — the only way to see whether the client has a deadline of its own |
+| silent handshake | an `https://` URL on a silent listener: the TLS handshake stalls inside the connect, before most request-level deadlines are armed |
+| silent close | the dependency answers everything except the request sent at shutdown (an MCP session DELETE): an exit that waits on the network |
+| silent publisher | a language server that initializes and never publishes diagnostics: any wait keyed to "the next diagnostics" runs to its limit |
+
+Lessons burned in:
+
+- Measure a timeout from where the product starts its clock. An MCP startup
+  timeout runs from process start, not from the first message; measured from
+  Enter it looked 0.6 s too short and the arm misgraded in the smoke run.
+- Shorten configurable timeouts and cap unbounded waits, then say so: a 5 s
+  startup timeout proves "waits the configured timeout" as well as the 30 s
+  default, and "no exit within 35 s" is the honest form of "never".
+- A fault-free "fixed cost" arm needs an in-run reference: alternate the cheap
+  and the expensive call in the same run instead of comparing across arms.
+- SIGSTOP is not a neutral freeze: a client that re-enters raw mode on SIGCONT
+  (TCSAFLUSH) drops the keys typed while it was stopped, so a stop-based
+  positive control measures input loss, not echo lag. Calibrate the echo clock
+  against a fake TUI instead.
+- Fixture repositories copied per run need `gc.auto=0`: git's background
+  repack after a large commit deletes loose-object directories mid-copy.
+- A development-layout build may lack the helpers a release bundles (rg): the
+  feature that needs them is skipped silently and its cost reads as zero. Pin
+  the helper paths explicitly.
