@@ -1,0 +1,43 @@
+{
+ "arm": "P-splash",
+ "index": 1,
+ "run_id": "1023c0802f59",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/P-splash/run-1-1023c0802f59/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:58887/v1/messages"
+   ],
+   "t0": 202944.498
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 1.557,
+ "gateway_events": [
+  [
+   0.037,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.038,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "startup_floor_seen",
+ "level": null,
+ "started": "2026-11-21T17:51:06",
+ "wall_s": 2.551,
+ "observation": {}
+}

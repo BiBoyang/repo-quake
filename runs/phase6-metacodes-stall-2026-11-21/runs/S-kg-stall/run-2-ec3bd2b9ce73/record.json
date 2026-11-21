@@ -1,0 +1,54 @@
+{
+ "arm": "S-kg-stall",
+ "index": 2,
+ "run_id": "ec3bd2b9ce73",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/S-kg-stall/run-2-ec3bd2b9ce73/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59010/v1/messages"
+   ],
+   "t0": 203023.868
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 35.045,
+ "kg_accepts_s": [
+  0.018
+ ],
+ "kg_bytes_in": 413,
+ "banner_names_kg": true,
+ "exit_s": 0.013,
+ "gateway_events": [
+  [
+   0.017,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.017,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "startup_waited_kg",
+ "level": "L1",
+ "started": "2026-11-21T17:52:25",
+ "wall_s": 36.092,
+ "observation": {
+  "detected": true,
+  "reported": false,
+  "contained": false,
+  "recovered": true
+ }
+}

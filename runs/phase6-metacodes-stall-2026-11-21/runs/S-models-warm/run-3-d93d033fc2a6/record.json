@@ -1,0 +1,69 @@
+{
+ "arm": "S-models-warm",
+ "index": 3,
+ "run_id": "d93d033fc2a6",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/S-models-warm/run-3-d93d033fc2a6/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59069/v1/messages"
+   ],
+   "t0": 203070.398
+  },
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/S-models-warm/run-3-d93d033fc2a6/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59069/v1/messages"
+   ],
+   "t0": 203071.183
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "setup_box_s": 0.082,
+ "setup_events": [
+  [
+   0.04,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.04,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "box_s": 0.04,
+ "models_get_s": 0.019,
+ "exit_s": 0.011,
+ "gateway_events": [
+  [
+   0.019,
+   "GET",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "no_wait",
+ "level": null,
+ "started": "2026-11-21T17:53:12",
+ "wall_s": 1.81,
+ "observation": {
+  "contained": true,
+  "recovered": true
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "arm": "S-models-stall",
+ "index": 1,
+ "run_id": "ad666abb9fa0",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/S-models-stall/run-1-ad666abb9fa0/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:58915/v1/messages"
+   ],
+   "t0": 202969.345
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "models_delay": null,
+ "box_s": null,
+ "models_get_s": 0.03,
+ "ctrl_c_exit_s": 0.01,
+ "gateway_events": [
+  [
+   0.03,
+   "GET",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "startup_blocked",
+ "level": "L0",
+ "started": "2026-11-21T17:51:31",
+ "wall_s": 35.099,
+ "observation": {
+  "detected": false,
+  "reported": false,
+  "contained": false,
+  "recovered": false
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "arm": "P-stdio5-exit",
+ "index": 1,
+ "run_id": "77e62b2c7470",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/P-stdio5-exit/run-1-77e62b2c7470/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:58889/v1/messages"
+   ],
+   "t0": 202947.047
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.047,
+ "exit_s": 1.045,
+ "gateway_events": [
+  [
+   0.024,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.024,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   2.436,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "exit_paid_per_server",
+ "level": null,
+ "started": "2026-11-21T17:51:09",
+ "wall_s": 4.444,
+ "observation": {}
+}

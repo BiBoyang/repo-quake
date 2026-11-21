@@ -1,0 +1,117 @@
+{
+ "arm": "T-bash-mixed-20k",
+ "index": 1,
+ "run_id": "a997596cf124",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/T-bash-mixed-20k/run-1-a997596cf124/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59201/v1/messages"
+   ],
+   "t0": 203188.286
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "posts_s": [
+  0.982,
+  1.11,
+  3.542,
+  3.651,
+  4.686,
+  4.796,
+  5.646
+ ],
+ "gaps_s": [
+  0.128,
+  2.432,
+  0.109,
+  1.035,
+  0.11,
+  0.85
+ ],
+ "box_s": 0.088,
+ "reply_s": 5.647,
+ "files": 20000,
+ "gateway_events": [
+  [
+   0.02,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.02,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.982,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.11,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   3.542,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   3.651,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   4.686,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   4.796,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   5.646,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "echo_gaps_s": [
+  0.128,
+  0.109,
+  0.11
+ ],
+ "touch_gaps_s": [
+  2.432,
+  1.035,
+  0.85
+ ],
+ "floor_s": 0.109,
+ "touch_minus_echo_s": 0.925,
+ "bash_fc_lines": [
+  "[DEBUG bash_fc] before: files=20001 unobserved=0 git=false dirty_copies=0 ms=2239",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=20002 unobserved=0 git=true dirty_copies=1 ms=837",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=20003 unobserved=0 git=true dirty_copies=2 ms=645",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1"
+ ],
+ "invalid_reason": null,
+ "verdict": "observation_paid",
+ "level": null,
+ "started": "2026-11-21T17:54:43",
+ "wall_s": 36.283,
+ "observation": {}
+}

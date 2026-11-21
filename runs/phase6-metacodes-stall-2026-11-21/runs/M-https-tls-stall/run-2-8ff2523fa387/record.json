@@ -1,0 +1,55 @@
+{
+ "arm": "M-https-tls-stall",
+ "index": 2,
+ "run_id": "8ff2523fa387",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/M-https-tls-stall/run-2-8ff2523fa387/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59041/v1/messages"
+   ],
+   "t0": 203039.982
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.077,
+ "post_within_15s": false,
+ "interrupted_after_esc_s": 0.142,
+ "exit_s": null,
+ "accepts_s": [
+  0.052
+ ],
+ "bytes_in": 1609,
+ "gateway_events": [
+  [
+   0.053,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.053,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "unbounded",
+ "level": "L1",
+ "started": "2026-11-21T17:52:41",
+ "wall_s": 52.192,
+ "observation": {
+  "detected": false,
+  "reported": true,
+  "contained": false,
+  "recovered": false
+ }
+}

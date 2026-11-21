@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-11-16",
+  "updated": "2026-11-21",
   "entries": [
     {
       "id": "RQ-F-001",
@@ -1845,6 +1845,450 @@
         "docs/phase5-report.md"
       ],
       "lesson": "复测要把'这一期和上一期哪里不一样'写在最前面：口径、版本、安装方式，任何一项变了，旧数字都只能并排放，不能直接比"
+    },
+    {
+      "id": "RQ-F-025",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes（main 53b3e285）启动时缓存未命中就在 App.init 里同步等 /v1/models，自己没有时限：对方拖 5 s，输入框就在 5.05 s 出现（3/3）；对方不回，35 s 内都不出输入框（3/3）；有 24 h 缓存时不等（3/3，0.04 s）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "App.init 的 loadModelCatalog（src/app.zig:1149-1155、2494-2532）与没有任何时限的 GET（getModelsPage，src/client.zig:1606-1650）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "S-models-5s：/v1/models 5 s 后回答，状态目录为空；S-models-stall：接受后永不回答，等输入框 35 s；S-models-warm：先用健康网关填满缓存，再拖 5 s。输入框 5.053/5.045/5.049 s；stall 3/3 没有输入框，Ctrl+C 0.01 s 退出；warm 0.040–0.045 s",
+        "delivery": "网关事件：GET /v1/models 在启动后 0.02–0.03 s 到达，warm 的第二次启动也发了一次后台刷新；每次启动 lsof 核对执行的二进制",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "S-models-5s：startup_waited 3/3"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "S-models-stall：startup_blocked 3/3"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "产品在缓存未命中的路径上同步等依赖，不划上限；有缓存时同一个慢请求被挪到后台（S-models-warm 3/3 不等），所以只在未命中那一次露出来。数字来自独立证人：送达日志和终端字节的时刻",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "伪终端只回答 DA1",
+          "Metask 设备会话每次启动同步拉目录（src/app.zig:1084-1125）只读了代码"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false,
+        "contained": false
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "缓存会把慢请求藏到后台，只有冷启动那一次才露出同步等待；测启动要专门造一个空的状态目录"
+    },
+    {
+      "id": "RQ-F-026",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 启动时同步等本机 TinyKG：服务只收不答时，输入框等满传输层的 35 s 时限才出现（3/3，35.05 s），等的时候屏上什么都没有，之后横幅才写 KG unavailable",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "App.init 里同步运行的 initKg（src/app.zig:1179、4692-4740，注释自记“P2 待办：移到后台线程”）与 KG Web 传输的 35 s 默认时限（src/kg/transport.zig:22）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "METACODES_KG_URL/_API_KEY/_EXPECTED_BUILD_ID 指向只收不答的回环端口；输入框 35.057/35.045/35.050 s；横幅事后写 KG unavailable 3/3",
+        "delivery": "只收不答的监听在启动后 0.02–0.03 s 被连上（每次 1 个连接）",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L1,L1,L1",
+          "notes": "S-kg-stall：startup_waited_kg 3/3，有上限但等待期间不说"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "上限来自传输层的 35 s 时限，产品自己没有为启动另设上限，也没有提示；代码注释承认这是待办",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "生成期 KG 召回不看 Esc（src/kg/client.zig:3074）只读了代码"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false,
+        "contained": false,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "本机常驻服务也是网络依赖：它卡住时，启动等的是传输层的时限，不是产品自己的"
+    },
+    {
+      "id": "RQ-F-027",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 在 Metask key 线路上第一次打出 /model 时，在读键盘的那条线程上同步拉账号 key 列表：对方拖 5 s，打的字晚 4.59 s 才显示（3/3）；对方不回，Ctrl+C 无效，SIGTERM 后要 45.01 s 才被看门狗结束（3/3）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "输入框重画（src/repl/loop.zig:1943-1951）→ ensureApiKeyCatalog（src/app.zig:2435-2462）→ 没有时限的 GET（src/api/api_keys.zig:187-217）；SIGTERM/SIGHUP 只置标志并 alarm(45)（src/app.zig:5936、5944-5955）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "METACODE_API_KEYS_URL 指向网关，key 列表拖 5 s 或永不回答；逐字打 /mode，0.4 s 后打 l，再打 ' zq'。回显延迟 4.589/4.592/4.596 s；stall：无回显 3/3，Ctrl+C 两下后 5 s 仍活着 3/3，SIGTERM 后 45.012/45.014/45.012 s 由 SIGALRM 结束",
+        "delivery": "key 列表请求在 l 敲下后 0–6 ms 内到达网关；阴性对照 K-keys-0s 回显 3/3 在 1 ms 内",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "K-keys-5s：prompt_frozen 3/3"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "K-keys-stall：frozen_until_watchdog 3/3"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "网络请求放在输入线程的重画路径上，没有时限；原始模式下 Ctrl+C 只是一个字节，SIGTERM/SIGHUP 的处理只置标志，所以只有看门狗能结束它。与 Codex 根因 1（主循环内联 await）同型，触发点不同",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "触发条件：Metask key 线路、探测开着、有账号凭据或 METACODE_API_KEYS_URL；每个会话只发生一次",
+          "/models 选 key 时的同步重新探测只读了代码",
+          "修法要动 TUI 显示，样式由负责人定"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "reported": false,
+        "contained": false
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "画面函数里藏着的网络请求，比主循环里的更难发现：只有打出特定草稿时才触发，而一旦触发连退出都退不了"
+    },
+    {
+      "id": "RQ-F-028",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 的 HTTP MCP 有两个请求不受任何时限管：退出时结束会话的 DELETE 不回，/exit 后 35 s 都没退出（3/3）；HTTPS 的 TLS 握手卡住时，配的 5 s 启动超时不起作用，第一条消息 15 s 都没发出、/exit 后 35 s 都没退出（3/3）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "HttpTransport.close 的 deleteSession（src/mcp/transport_http.zig:191-196、421-434，没登记中断和时限）；openMethod 在 client.request 里完成 DNS/TCP/TLS 之后才 registerMonitored（同文件 560-575）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "M-http-delete-stall：带 MCP-Session-Id 的 Streamable HTTP 服务器，DELETE 永不回答，跑一轮后 /exit 等 35 s，再 Ctrl+C 两下；M-https-tls-stall：https:// 地址指向只收不答的端口，startupTimeoutMs 5000，发一轮等 15 s，Esc，再 /exit 等 35 s",
+        "delivery": "DELETE 在 /exit 后马上到达服务器（3/3）；HTTPS 监听在启动后 0.02–0.05 s 被连上，收到 1,609 字节握手数据（3/3）；Esc 0.14 s 取消这一轮",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L0,L0,L0",
+          "notes": "M-http-delete-stall：exit_blocked 3/3，Ctrl+C 后 5 s 仍活着"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L1,L1,L1",
+          "notes": "M-https-tls-stall：unbounded 3/3，第一条消息等待时 spinner 写 Connecting to MCP servers"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "两个请求都绕开了 MCP 传输自己的中断与时限登记，所以一个卡住的服务器就能让退出无限等；Codex 根因 3（退出时同步等网络）在 metacodes 里真正对得上的是这一条，而且没有上限",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "“没有时限”来自源码，矩阵证明的是“35 s 内没有恢复”",
+          "默认导入 Claude Code、Codex 的 MCP 配置，别家配置里的服务器也会触发",
+          "SIGHUP 后 45 s 由看门狗结束（试跑与冒烟）"
+        ]
+      },
+      "observation": {
+        "detected": false,
+        "contained": false,
+        "recovered": false
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "退出路径也是请求路径：“出于礼貌”发的收尾请求一样需要时限"
+    },
+    {
+      "id": "RQ-F-029",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 的 Edit/Write 写前、写后各等一次语言服务器诊断：服务器从不发诊断时，每次 Edit 用 14.89–14.94 s（3/3）；真 gopls 只有第一次 Edit 多 0.57–0.80 s（3/3）；不开 LSP 时 0.005–0.009 s（3/3）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "lsp/service.zig 的 BASELINE_WAIT_MS 8000、DIAGNOSTICS_WAIT_MS 6000（34-35 行）与 Edit 的调用点（src/tools/edit.zig:367、390、450）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "PATH 最前面一个初始化后从不发诊断的 gopls；临时 git 仓库（go.mod、main.go），脚本化回答先 Read 再 Edit 一次；Edit 间隔 14.892/14.911/14.939 s",
+        "delivery": "模型请求之间的间隔来自网关事件；假 gopls 由被测自己拉起",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L1,L1,L1",
+          "notes": "T-edit-silent-lsp：edit_waited_both_limits 3/3，有上限但等待期间不说"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "等待在“下一条诊断到来”或时限之间取先到者；服务器沉默时每次都等满两个时限。正常发诊断的服务器只付第一次的启动成本",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "只测了 gopls 一种真实服务器",
+          "Write 的同一路径（src/tools/write.zig:127、196）只读了代码"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false,
+        "contained": false,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "以“等下一条消息”为条件的等待，要先问对方会不会发；沉默的对端让每一次都等满"
+    },
+    {
+      "id": "RQ-F-030",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 每个前台 Bash 至少 0.106–0.128 s（等结束的循环先睡 100 ms）；会写文件的命令前后各扫一遍工作区：1 个文件的仓库里比 echo 多 0.06–0.08 s，2 万个文件、git 索引过期的仓库里多 0.93–1.08 s（各 3/3）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "Bash 前台等待的 sleepMs(100)（src/tools/bash.zig:910-916）；文件变化观察的快照（src/core/command_file_changes.zig:52-58、771 起，git --no-optional-locks status）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "fixed-cost",
+        "spec": "无故障：脚本化回答交替跑 echo（只读、不观察）和 touch（观察）各 3 次；echo 0.106–0.128 s；touch 第一次 0.17–0.51 s（1 个文件）、2.39–2.43 s（2 万个文件），之后 0.17–0.20 s、0.85–1.19 s",
+        "delivery": "模型请求之间的间隔来自网关事件；调试日志里 bash_fc 行确认观察跑了",
+        "path_relation": "unknown"
+      },
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "100 ms 是固定的睡眠，没有在子进程结束时提前唤醒；观察的成本随仓库大小增长，而 --no-optional-locks 让刷新后的索引不写回，索引过期时每次观察都重算整个工作树（见 RQ-X-016）",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "2 万文件那组的大小受夹具索引过期影响（RQ-X-016）",
+          "没有测 10 万文件的上限"
+        ]
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "固定开销要和同一次运行里的便宜调用交替测，并且要问夹具的状态（比如 git 索引）是不是现实里常见的那种"
+    },
+    {
+      "id": "RQ-F-031",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 开了 OTLP 导出、收集端只收不答时，/exit 等满导出超时（配 2 s，退出 2.01–2.02 s，3/3；默认 10 s，试跑 10.02 s）；导出默认关",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "telemetry.release → Exporter.shutdown 先发完队列再 join（src/telemetry/telemetry.zig:118-128、exporter.zig:128-133），时限是 OTEL_EXPORTER_OTLP_TIMEOUT（config.zig:43，默认 10 s）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "OTEL_EXPORTER_OTLP_ENDPOINT 指向只收不答的端口，OTEL_EXPORTER_OTLP_TIMEOUT=2000；跑一轮后 0.2 s 退出",
+        "delivery": "收集端在启动后约 1.8 s 被连上（3/3）",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 0,
+          "levels": "L1,L1,L1",
+          "notes": "E-otlp-stall：exit_waited_export 3/3，有上限但不说"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "遵循 OTLP 的默认导出超时，交互退出没有另设更短的上限；对应 Codex 根因 3 的旧行为（Codex 新版 TUI 是 0.5 s）",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "导出默认不开，影响面小",
+          "默认 10 s 的数字来自试跑，不是计数矩阵"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": false,
+        "contained": false,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "协议的默认时限是给后台导出的，不是给一个正在等退出的人的"
+    },
+    {
+      "id": "RQ-F-032",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "target-finding",
+      "title": "metacodes 的 MCP 不挡输入框、挡第一条消息：stdio 服务器不回 initialize 时，输入框 0.04 s 出现，第一条消息等满启动超时（配 5 s，启动后 5.37–5.42 s 发出，3/3），spinner 写明 Connecting to MCP servers，Esc 0.14 s 取消（3/3）；关闭 stdio 服务器每台固定睡 200 ms（5 台退出 1.03–1.05 s，3/3）",
+      "status": "open",
+      "target": {
+        "repo": "metask-ai/metacodes",
+        "artifact": "交互 TUI 的 mcp_connect = first_request（src/main.zig:1603）与第一条消息前的等待（src/repl/loop.zig:1009-1028）；PipeChild.terminate 的 200 ms 睡眠（src/platform/process.zig:452-469）",
+        "version": "0.13.1-dev+53b3e2857ae3（upstream/main 53b3e285，ReleaseSmall，二进制 sha256 ab1f7bdf…af08）"
+      },
+      "fault": {
+        "type": "stall",
+        "spec": "M-stdio-stall：stdio MCP 永不回答 initialize，startupTimeoutMs 5000；M-stdio-stall-esc：回车 1.5 s 后 Esc；P-stdio5-exit（阳性对照）：5 台马上回答的 stdio MCP",
+        "delivery": "网关收到 /v1/messages 的时刻；spinner 文字在回车后约 0.1 s 上屏；Esc 后 2 s 内网关没收到请求",
+        "path_relation": "blocks-path"
+      },
+      "cells": [
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L3,L3,L3",
+          "notes": "M-stdio-stall：first_message_waited_timeout 3/3"
+        },
+        {
+          "host": "metacodes",
+          "model": "mock（本地回环）",
+          "runs": 3,
+          "detected": 3,
+          "levels": "L3,L3,L3",
+          "notes": "M-stdio-stall-esc：interruptible 3/3"
+        }
+      ],
+      "attribution": {
+        "primary_factor": "witness",
+        "explanation": "有意的取舍：等齐了才一次生成工具列表和系统提示，模型看到的字节不随连接快慢变化；有上限、有提示、能打断。Codex 根因 2（启动时 join_all）在 metacodes 里被挪到了第一条消息。每台 200 ms 的关闭睡眠是固定开销，10 台就是 2 s",
+        "confidence": "confirmed",
+        "caveats": [
+          "每格 3 次",
+          "启动超时配小（默认 30 s，试跑第一条消息等了 29.28 s）",
+          "默认导入 Claude Code、Codex 的 MCP 配置",
+          "是否改成不等慢服务器由负责人定，不打算单独上报"
+        ]
+      },
+      "observation": {
+        "detected": true,
+        "reported": true,
+        "contained": true,
+        "recovered": true
+      },
+      "evidence": [
+        "docs/phase6-report.md",
+        "docs/phase6-disclosure.md",
+        "runs/phase6-metacodes-stall-2026-11-21/summary.md",
+        "examples/experiment-card-phase6-metacodes-stall.json"
+      ],
+      "lesson": "同一个“等全部 MCP”，挪到第一条消息、加上限和提示，就从卡顿变成了一个说得清的取舍"
+    },
+    {
+      "id": "RQ-X-016",
+      "created": "2026-11-21",
+      "phase": "phase6",
+      "class": "experiment-invalid",
+      "title": "phase6 的诚实清单：冻结前试跑 46 次、冒烟 23 次（未计入）参考了预测和判定窗口；冒烟里改好三处证人错误（MCP 等待的起点、夹具 git 后台打包、SIGSTOP 阳性对照因被测在 SIGCONT 后丢掉停住期间的按键而弃用）；MCP 与 OTLP 超时配小、卡住的组只等 35 s；T-bash-mixed-20k 的夹具用 cp -cR 复制、git 索引属性过期，touch 比 echo 多 0.93–1.08 s（原地生成时约 0.24 s），判定不变；等待型的组 5 个并行；卡片提交开跑时没推送",
+      "status": "n-a",
+      "evidence": [
+        "docs/phase6-disclosure.md",
+        "docs/phase6-report.md"
+      ],
+      "lesson": "夹具的状态也是条件：复制出来的仓库和原地生成的仓库，在 git 眼里不是同一种仓库"
     }
   ]
 }

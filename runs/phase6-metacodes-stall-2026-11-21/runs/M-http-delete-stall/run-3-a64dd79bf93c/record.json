@@ -1,0 +1,77 @@
+{
+ "arm": "M-http-delete-stall",
+ "index": 3,
+ "run_id": "a64dd79bf93c",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/M-http-delete-stall/run-3-a64dd79bf93c/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59095/v1/messages"
+   ],
+   "t0": 203093.898
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.054,
+ "exit_s": null,
+ "mcp_events": [
+  [
+   0.028,
+   "POST server/discover"
+  ],
+  [
+   0.028,
+   "POST initialize"
+  ],
+  [
+   0.029,
+   "POST notifications/initialized"
+  ],
+  [
+   0.029,
+   "POST tools/list"
+  ],
+  [
+   1.638,
+   "DELETE"
+  ]
+ ],
+ "alive_5s_after_ctrl_c": true,
+ "gateway_events": [
+  [
+   0.028,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.028,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.947,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "exit_blocked",
+ "level": "L0",
+ "started": "2026-11-21T17:53:35",
+ "wall_s": 42.136,
+ "observation": {
+  "detected": false,
+  "reported": false,
+  "contained": false,
+  "recovered": false
+ }
+}

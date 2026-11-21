@@ -1,0 +1,5 @@
+d4cf565d20b658e35f58cc71d96355dc99ea2a7c3e57cdacbe679a555b2981e6  witness/stall/fakes.py
+4199683d367736c9f2674cdb3715ffa713e56290cffcedca5915062697be7fbb  witness/stall/srv/ok_mcp.py
+4aa72bfb362c94bfb5d9bb5903d9d23712f1834d8b57c84f8c5fccafc0ab92d0  witness/stall/srv/quiet_lsp.py
+319721c5f599d609d0fe474b47e4b97138eac469f66d36a58fac1a6f9f14688f  witness/stall/srv/quiet_mcp.py
+2b816465ae85edd1d0dee0f161ac0ff2b2a70ea517f36466cec04968697f4317  witness/stall/stall.py

@@ -1,0 +1,117 @@
+{
+ "arm": "T-bash-mixed-1",
+ "index": 1,
+ "run_id": "e7e98036cb8d",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/T-bash-mixed-1/run-1-e7e98036cb8d/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59161/v1/messages"
+   ],
+   "t0": 203158.194
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "posts_s": [
+  0.93,
+  1.044,
+  1.553,
+  1.664,
+  1.858,
+  1.966,
+  2.142
+ ],
+ "gaps_s": [
+  0.114,
+  0.509,
+  0.111,
+  0.195,
+  0.108,
+  0.175
+ ],
+ "box_s": 0.043,
+ "reply_s": 2.142,
+ "files": 1,
+ "gateway_events": [
+  [
+   0.019,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.019,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.93,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.044,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.553,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.664,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.858,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.966,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   2.142,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "echo_gaps_s": [
+  0.114,
+  0.111,
+  0.108
+ ],
+ "touch_gaps_s": [
+  0.509,
+  0.195,
+  0.175
+ ],
+ "floor_s": 0.108,
+ "touch_minus_echo_s": 0.084,
+ "bash_fc_lines": [
+  "[DEBUG bash_fc] before: files=2 unobserved=0 git=true dirty_copies=0 ms=385",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=3 unobserved=0 git=true dirty_copies=1 ms=73",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=4 unobserved=0 git=true dirty_copies=2 ms=54",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1"
+ ],
+ "invalid_reason": null,
+ "verdict": "floor_seen",
+ "level": null,
+ "started": "2026-11-21T17:54:40",
+ "wall_s": 3.279,
+ "observation": {}
+}

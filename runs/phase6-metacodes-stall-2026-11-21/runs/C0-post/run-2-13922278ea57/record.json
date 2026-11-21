@@ -1,0 +1,52 @@
+{
+ "arm": "C0-post",
+ "index": 2,
+ "run_id": "13922278ea57",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/C0-post/run-2-13922278ea57/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59399/v1/messages"
+   ],
+   "t0": 203258.977
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.056,
+ "reply_after_enter_s": 0.004,
+ "exit_s": 0.013,
+ "gateway_events": [
+  [
+   0.024,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.024,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.936,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "models_gets": 1,
+ "posts": 1,
+ "invalid_reason": null,
+ "verdict": "healthy",
+ "level": null,
+ "started": "2026-11-21T17:56:21",
+ "wall_s": 1.941,
+ "observation": {}
+}

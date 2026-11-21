@@ -1,0 +1,72 @@
+{
+ "arm": "T-edit-nolsp",
+ "index": 1,
+ "run_id": "4e857c03b22d",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/T-edit-nolsp/run-1-4e857c03b22d/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59140/v1/messages",
+    "--no-lsp"
+   ],
+   "t0": 203152.897
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "posts_s": [
+  0.931,
+  0.936,
+  0.945
+ ],
+ "gaps_s": [
+  0.005,
+  0.009
+ ],
+ "box_s": 0.043,
+ "reply_s": 0.946,
+ "gateway_events": [
+  [
+   0.019,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.019,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.931,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   0.936,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   0.945,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "no_wait",
+ "level": null,
+ "started": "2026-11-21T17:54:34",
+ "wall_s": 2.034,
+ "observation": {
+  "contained": true,
+  "recovered": true
+ }
+}

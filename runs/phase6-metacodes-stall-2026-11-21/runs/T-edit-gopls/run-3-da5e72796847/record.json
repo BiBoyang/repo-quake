@@ -1,0 +1,75 @@
+{
+ "arm": "T-edit-gopls",
+ "index": 3,
+ "run_id": "da5e72796847",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/T-edit-gopls/run-3-da5e72796847/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59297/v1/messages"
+   ],
+   "t0": 203232.256
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "posts_s": [
+  0.941,
+  0.943,
+  1.747,
+  1.752
+ ],
+ "gaps_s": [
+  0.003,
+  0.804,
+  0.005
+ ],
+ "box_s": 0.056,
+ "reply_s": 1.753,
+ "gateway_events": [
+  [
+   0.019,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.019,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.941,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   0.943,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.747,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.752,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "first_edit_pays",
+ "level": null,
+ "started": "2026-11-21T17:55:54",
+ "wall_s": 3.371,
+ "observation": {}
+}

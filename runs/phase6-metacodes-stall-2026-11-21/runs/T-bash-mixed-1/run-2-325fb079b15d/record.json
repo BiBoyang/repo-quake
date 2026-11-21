@@ -1,0 +1,117 @@
+{
+ "arm": "T-bash-mixed-1",
+ "index": 2,
+ "run_id": "325fb079b15d",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/T-bash-mixed-1/run-2-325fb079b15d/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59238/v1/messages"
+   ],
+   "t0": 203205.657
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "posts_s": [
+  0.926,
+  1.035,
+  1.202,
+  1.311,
+  1.483,
+  1.591,
+  1.76
+ ],
+ "gaps_s": [
+  0.109,
+  0.167,
+  0.108,
+  0.172,
+  0.108,
+  0.169
+ ],
+ "box_s": 0.043,
+ "reply_s": 1.761,
+ "files": 1,
+ "gateway_events": [
+  [
+   0.02,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.02,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.926,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.035,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.202,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.311,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.483,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.591,
+   "POST",
+   "/v1/messages"
+  ],
+  [
+   1.76,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "echo_gaps_s": [
+  0.109,
+  0.108,
+  0.108
+ ],
+ "touch_gaps_s": [
+  0.167,
+  0.172,
+  0.169
+ ],
+ "floor_s": 0.108,
+ "touch_minus_echo_s": 0.061,
+ "bash_fc_lines": [
+  "[DEBUG bash_fc] before: files=2 unobserved=0 git=true dirty_copies=0 ms=46",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=3 unobserved=0 git=true dirty_copies=1 ms=55",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1",
+  "[DEBUG bash_fc] before: files=4 unobserved=0 git=true dirty_copies=2 ms=50",
+  "[DEBUG bash_fc] after: changes=1 examined=1 published=1"
+ ],
+ "invalid_reason": null,
+ "verdict": "floor_seen",
+ "level": null,
+ "started": "2026-11-21T17:55:27",
+ "wall_s": 2.789,
+ "observation": {}
+}

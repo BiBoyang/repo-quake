@@ -1,0 +1,51 @@
+{
+ "arm": "S-models-5s",
+ "index": 1,
+ "run_id": "59058d216bff",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/S-models-5s/run-1-59058d216bff/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:58914/v1/messages"
+   ],
+   "t0": 202969.341
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "models_delay": 5.0,
+ "box_s": 5.053,
+ "models_get_s": 0.03,
+ "exit_s": 0.012,
+ "gateway_events": [
+  [
+   0.03,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   5.031,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "startup_waited",
+ "level": "L0",
+ "started": "2026-11-21T17:51:31",
+ "wall_s": 6.044,
+ "observation": {
+  "detected": false,
+  "reported": false,
+  "contained": false,
+  "recovered": true
+ }
+}

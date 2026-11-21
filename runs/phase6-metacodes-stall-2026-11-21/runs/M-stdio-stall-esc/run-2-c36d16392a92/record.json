@@ -1,0 +1,53 @@
+{
+ "arm": "M-stdio-stall-esc",
+ "index": 2,
+ "run_id": "c36d16392a92",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/M-stdio-stall-esc/run-2-c36d16392a92/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59031/v1/messages"
+   ],
+   "t0": 203034.436
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.039,
+ "enter_s": 0.917,
+ "spinner_s": 1.019,
+ "esc_s": 2.428,
+ "interrupted_after_esc_s": 0.143,
+ "post_s": null,
+ "gateway_events": [
+  [
+   0.019,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.019,
+   "ANSWERED",
+   "/v1/models"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "interruptible",
+ "level": "L3",
+ "started": "2026-11-21T17:52:36",
+ "wall_s": 5.533,
+ "observation": {
+  "detected": true,
+  "reported": true,
+  "contained": true,
+  "recovered": true
+ }
+}

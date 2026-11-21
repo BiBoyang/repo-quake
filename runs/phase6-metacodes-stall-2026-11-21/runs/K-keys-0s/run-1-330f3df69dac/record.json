@@ -1,0 +1,60 @@
+{
+ "arm": "K-keys-0s",
+ "index": 1,
+ "run_id": "330f3df69dac",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/K-keys-0s/run-1-330f3df69dac/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59136/v1/messages"
+   ],
+   "t0": 203149.911
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "keys_delay": 0.0,
+ "box_s": 0.057,
+ "l_written_s": 1.388,
+ "keys_get_s": 1.394,
+ "q_written_s": 1.801,
+ "echo_s": 1.802,
+ "echo_lag_s": 0.0,
+ "exit_s": 0.013,
+ "gateway_events": [
+  [
+   0.029,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.029,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   1.394,
+   "GET",
+   "/api/v1/keys"
+  ],
+  [
+   1.395,
+   "ANSWERED",
+   "/api/v1/keys"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "responsive",
+ "level": null,
+ "started": "2026-11-21T17:54:31",
+ "wall_s": 2.899,
+ "observation": {}
+}

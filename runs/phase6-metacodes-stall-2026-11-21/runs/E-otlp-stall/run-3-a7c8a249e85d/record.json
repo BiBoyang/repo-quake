@@ -1,0 +1,58 @@
+{
+ "arm": "E-otlp-stall",
+ "index": 3,
+ "run_id": "a7c8a249e85d",
+ "host": "metacodes",
+ "mode": "tui",
+ "launches": [
+  {
+   "argv_tail": [
+    "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+    "--state-dir",
+    "<EVIDENCE_ROOT>/runs/E-otlp-stall/run-3-a7c8a249e85d/state",
+    "--permission",
+    "bypassPermissions",
+    "--base-url",
+    "http://127.0.0.1:59107/v1/messages"
+   ],
+   "t0": 203101.093
+  }
+ ],
+ "lsof_executable": [
+  "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes"
+ ],
+ "box_s": 0.061,
+ "exit_s": 2.021,
+ "collector_accepts_s": [
+  1.846
+ ],
+ "collector_bytes_in": 1618,
+ "gateway_events": [
+  [
+   0.036,
+   "GET",
+   "/v1/models"
+  ],
+  [
+   0.036,
+   "ANSWERED",
+   "/v1/models"
+  ],
+  [
+   0.949,
+   "POST",
+   "/v1/messages"
+  ]
+ ],
+ "invalid_reason": null,
+ "verdict": "exit_waited_export",
+ "level": "L1",
+ "started": "2026-11-21T17:53:43",
+ "wall_s": 3.966,
+ "observation": {
+  "detected": true,
+  "reported": false,
+  "contained": false,
+  "recovered": true
+ }
+}

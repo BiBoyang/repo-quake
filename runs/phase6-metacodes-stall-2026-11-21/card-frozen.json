@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.1",
+  "id": "phase6-stall-metacodes-v1",
+  "claim": "In metacodes 0.13.1-dev built from upstream main 53b3e285 (ReleaseSmall), a dependency that accepts the connection and then answers late or never is waited for in-line, with no time limit of the product's own, at four points; at four more the wait is bounded but silent. Predicted per arm (3/3 each): S-models-5s startup_waited (the input box appears after the 5 s /v1/models delay, because App.init fetches the list synchronously on a cache miss); S-models-stall startup_blocked (no input box within 35 s); S-models-warm no_wait (a fresh cached list makes the stalled fetch a background refresh); S-kg-stall startup_waited_kg (a TinyKG endpoint that never answers holds the first input box for its 35 s transport deadline); K-keys-5s prompt_frozen (once the draft reads /model, the redraw fetches the Metask key list on the input thread: keys typed after it echo only when the list answers); K-keys-stall frozen_until_watchdog (with no answer, Ctrl+C does nothing and SIGTERM ends the process only by the 45 s SIGALRM watchdog); M-stdio-stall first_message_waited_timeout (the prompt is not blocked, the first request waits for the configured MCP startup timeout, with a spinner naming MCP); M-stdio-stall-esc interruptible; M-http-delete-stall exit_blocked (a classic Streamable HTTP session's DELETE at close has no deadline); M-https-tls-stall unbounded (a stalled TLS handshake is outside the startup deadline: the first request never leaves and /exit never ends); E-otlp-stall exit_waited_export (the final OTLP flush waits its full export timeout); T-edit-silent-lsp edit_waited_both_limits (an Edit waits 8 s before and 6 s after the write for diagnostics that never come); T-edit-gopls first_edit_pays; T-bash-mixed-1 floor_seen (every foreground Bash call takes at least 100 ms); T-bash-mixed-20k observation_paid (a command the read-only classifier does not accept pays two workspace scans, at least 0.15 s more than echo in a 20,000-file repository). Predictions come from reading the source at 53b3e285 and from uncounted pilot runs on 2026-11-21 against a Debug build of the same commit (N=1 to 3 per cell, plus one exploratory smoke run of every arm with this witness), both disclosed.",
+  "target": {
+    "name": "metacodes (Zig) interactive TUI: in-line waits on stalled dependencies",
+    "version": "metacodes 0.13.1-dev+53b3e2857ae3 (upstream/main 53b3e2857ae3b8c539ab974a02652087e25cb6df, zig 0.16.0, ReleaseSmall, aarch64-macos, layout development); executed binary sha256 ab1f7bdf4c3e57168dce57ccfef0d981384994977f5d850c4006e3d64343af08",
+    "source_sha256": "ab1f7bdf4c3e57168dce57ccfef0d981384994977f5d850c4006e3d64343af08"
+  },
+  "task": {
+    "prompt_sha256": "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
+    "path_reachability": "No file is mutated: every fault is a loopback dependency that the subject must reach on the observed path, and the dependency's own log proves the request or connection arrived. Startup: with the probe on and an empty state dir App.init requests /v1/models before the first prompt; the TinyKG client is configured explicitly (METACODES_KG_URL, _API_KEY, a well-formed _EXPECTED_BUILD_ID) and App.init's initKg asks it for store-info. Prompt: the session is on the Metask key route (METASK_API_KEY with --base-url ending in /v1/messages) and METACODE_API_KEYS_URL names the gateway, so the first draft equal to /model makes ensureApiKeyCatalog request the key list. MCP: the servers are in <state root>/config.json; the interactive TUI connects them in the background and joins them before the first request (mcp_connect = first_request); a classic session (MCP-Session-Id, revision 2025-06-18) is closed with a DELETE at exit. OTLP: OTEL_EXPORTER_OTLP_ENDPOINT turns the exporter on and the turn produces spans. LSP: a gopls on PATH, a git workspace with go.mod and a .go file make Edit open the file with the server. Bash: the scripted calls run in the foreground, and touch is outside the read-only list (observed), echo inside it (not observed). The prompt typed in every turn is the two bytes 'hi'; the scripted gateway decides every tool call."
+  },
+  "hosts": [
+    {"id": "metacodes-tui", "name": "metacodes", "version": "0.13.1-dev+53b3e2857ae3 ReleaseSmall", "model": "claude-sonnet-4-20250514 as named by the client (loopback fake gateway answers)", "effort": "not applicable (fake gateway)"}
+  ],
+  "arms": [
+    {"id": "C0-pre", "fault": "healthy gateway, one turn, /exit; before the fault series", "role": "negative_control"},
+    {"id": "P-splash", "fault": "startup animation on (known 1.5 s): the startup clock must read 1.4-3.5 s", "role": "positive_control"},
+    {"id": "P-stdio5-exit", "fault": "five healthy stdio MCP servers (known fixed 200 ms per server at close, one after another): the exit clock must read 0.95-2.0 s", "role": "positive_control"},
+    {"id": "S-models-5s", "fault": "/v1/models answers after 5 s; empty state dir", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "S-models-stall", "fault": "/v1/models accepted and never answered; empty state dir; input box awaited 35 s", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "S-models-warm", "fault": "/v1/models answers after 5 s, but a healthy start just filled the 24 h cache", "role": "treatment", "path_relation": "redundant-backstop"},
+    {"id": "S-kg-stall", "fault": "TinyKG endpoint accepts and never answers", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "K-keys-0s", "fault": "Metask key list answers at once (echo-lag negative control)", "role": "negative_control"},
+    {"id": "K-keys-5s", "fault": "Metask key list answers after 5 s", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "K-keys-stall", "fault": "Metask key list accepted and never answered; then Ctrl+C twice, then SIGTERM", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "M-stdio-stall", "fault": "stdio MCP server that never answers initialize, startupTimeoutMs 5000", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "M-stdio-stall-esc", "fault": "same server; Esc 1.5 s after the first Enter", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "M-http-delete-stall", "fault": "Streamable HTTP MCP server, classic session; DELETE accepted and never answered", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "M-https-tls-stall", "fault": "https:// MCP URL on a listener that accepts TCP and never answers (TLS handshake stalls), startupTimeoutMs 5000", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "E-otlp-stall", "fault": "OTLP collector accepts and never answers, OTEL_EXPORTER_OTLP_TIMEOUT 2000", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "T-edit-silent-lsp", "fault": "gopls on PATH that initializes and never publishes diagnostics; Read then one Edit", "role": "treatment", "path_relation": "blocks-path"},
+    {"id": "T-edit-nolsp", "fault": "same repository and edits with --no-lsp (tool-gap negative control)", "role": "negative_control"},
+    {"id": "T-edit-gopls", "fault": "no fault: the installed gopls; Read then two Edits (what a healthy server costs)", "role": "treatment", "path_relation": "unknown"},
+    {"id": "T-bash-mixed-1", "fault": "no fault: echo/touch alternated six times in a 1-file git repository (fixed per-call cost)", "role": "treatment", "path_relation": "unknown"},
+    {"id": "T-bash-mixed-20k", "fault": "no fault: echo/touch alternated six times in a 20,000-file git repository (observation cost)", "role": "treatment", "path_relation": "unknown"},
+    {"id": "C0-post", "fault": "healthy gateway, one turn, /exit; after the fault series", "role": "negative_control"}
+  ],
+  "controls": {"negative": "C0-pre", "positive": "P-splash"},
+  "witness": {
+    "delivery": "Per run, the fake dependencies' own logs with monotonic times relative to the fork: the gateway's GET /v1/models, GET key list, POST /v1/messages and ANSWERED events; the silent listeners' accepted connections and bytes received (KG, HTTPS MCP, OTLP); the classic MCP server's POST methods and DELETE. The executed binary is checked by lsof on the subject's pid at every launch (it must be the pinned binary) and hashed before and after the matrix.",
+    "checker": "witness/stall at the hashes in frozen-sha256.txt: a pseudo-terminal driver that timestamps every output chunk and every key (fakes.Pty), the frozen verdicts in stall.py (README.md, 判定), and the two clocks calibrated in tests/test_stall.py against a fake TUI with known delays (start delay 1.0 s read back within 1.0-1.6 s; a 2.0 s blocked prompt read back as 1.6-2.5 s of echo lag).",
+    "blind_spots": [
+      "The pty answers only DA1, so the subject runs with legacy key encodings; a real terminal answers more queries and may end the start-up probe sooner.",
+      "Times are byte-arrival times on the pty, not when a person could see a complete frame.",
+      "Only accept-and-stall and answer-late stalls are injected; a dropped SYN, a black-holed route and a hung DNS lookup cannot be produced on loopback (the DNS case is read in the source only).",
+      "The gateway answers /v1/messages at once; real streaming timing is not exercised.",
+      "MCP startup and OTLP export timeouts are configured shorter than their defaults (5 s, 2 s) and the unbounded arms are capped at 35 s; the defaults (30 s, 10 s) come from the source and the pilot, and 'unbounded' is stated as 'not within 35 s'.",
+      "Only the interactive TUI is driven; -p, serve, --web and the C ABI hosts are not measured.",
+      "macOS only; Linux and Windows paths are not exercised.",
+      "Concurrent pool arms share the machine with each other and with unrelated sessions' builds; arms whose verdict depends on sub-second timing run alone, after the pool."
+    ]
+  },
+  "grading": {
+    "rubric": "witness/stall/README.md (判定) as implemented by the arm functions and VERDICTS in witness/stall/stall.py",
+    "primary_metric": "per run: the arm's verdict label; the four observation fields (detected, reported, contained, recovered) and the L0-L3 level from the frozen VERDICTS table, for treatment verdicts only",
+    "decision_rule": "An arm supports its predicted verdict only if every valid run shows it (3/3; one-sided Wilson lower bound 0.53, reported as the stable tier, not a rate) while its controls pass: C0-pre, C0-post, P-splash and P-stdio5-exit 3/3 each for every arm, K-keys-0s 3/3 for the K arms, T-edit-nolsp 3/3 for the T-edit arms. 0/3 or 1/3 of the predicted verdict refutes that arm's prediction; 2/3 is inconclusive (probabilistic tier). A failed baseline control stops the matrix before any fault arm; a failed family control voids that family's arms. INVALID runs leave every denominator."
+  },
+  "sampling": {
+    "runs_per_cell": 3,
+    "stopping_rule": "Fixed N: 3 graded runs per arm. No early stop on a striking result and no extra runs to change one. An INVALID run is replaced at most invalid_reruns times; anything beyond that runs only with --deviation and is reported as a deviation.",
+    "invalid_reruns": 1
+  },
+  "invalid_rules": [
+    "the input box an arm requires before its action never appears",
+    "lsof does not show the pinned binary as the subject's executable within 3 s of the launch",
+    "the fault was not delivered: the dependency logged no request or connection where the arm requires one",
+    "the scripted tool calls did not all run",
+    "harness exception",
+    "subject or witness sha256 differs between the before and after witnesses: the whole matrix is invalid"
+  ],
+  "budget": {"max_runs": 90},
+  "isolation": {
+    "mode": "env -i allowlist (PATH, TERM, LANG, a fresh HOME per run, METASK_API_KEY=dummy, METACODES_KG_AUTOSTART=0, METACODES_JEV_URL=off, METACODES_NO_STARTUP_ANIMATION=1, RG_BIN to the staged ripgrep; per-arm additions are listed in README.md), sandbox-exec allowing outbound connections to localhost only, a fresh --state-dir and working directory per run inside the evidence root, fake dependencies as threads of the executor on ephemeral loopback ports; helper scripts are copied into each run under neutral names (a.py, b.py, c.py)",
+    "pristine_original_unreachable": false,
+    "contamination": "No mutated copy exists in this design: the faults are on the wire and the subject binary is unmodified. The subject runs as the experimenter's user and could read the evidence root, but it is a deterministic client that only acts on the scripted gateway's tool calls, which read and edit files in its own working directory. Pilot and smoke runs (uncounted, 2026-11-21, Debug build of the same commit) informed the predictions and the timing windows and are disclosed. Other sessions on this machine run builds and test suites during the matrix; sub-second arms run alone after the pool."
+  },
+  "ethics": {
+    "production_contact": false,
+    "human_subjects": false,
+    "blast_radius": "Loopback fakes only; no model provider, no paid call, outbound traffic blocked by the sandbox; temporary HOMEs, state dirs and repositories inside the evidence root; the metacodes checkout is only built (detached worktree at 53b3e285), never modified; LaunchServices registrations under the evidence root audited after the matrix."
+  }
+}

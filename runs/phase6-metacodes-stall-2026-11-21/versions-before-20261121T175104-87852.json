@@ -1,0 +1,34 @@
+{
+ "at": "2026-11-21T17:51:04+0800",
+ "tag": "before",
+ "subject": {
+  "path": "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/metacodes",
+  "sha256": "ab1f7bdf4c3e57168dce57ccfef0d981384994977f5d850c4006e3d64343af08",
+  "version": "metacodes 0.13.1-dev+53b3e2857ae3\ncommit 53b3e2857ae3b8c539ab974a02652087e25cb6df\nzig 0.16.0\ntarget aarch64-macos-none ReleaseSmall\nagentcore-abi v1 revision 29\nconfig-schema 1\nripgrep 15.2.0 (e89fff89ac) expected sha256 a326a1fb48074202e9ad41e4cd1e389eeea372c8c6f7d7e80da81176d5d9430e\ntinykg 0.3.0 (0b04014ba8d0bcb1f9f73c63c12e49f3c2ee1ece) expected sha256 dd53db2aa5219e899daac3caac2332648ac392550fa6f431b5900a1d495688e1\nlayout development"
+ },
+ "rg": {
+  "path": "<HOME>/Desktop/metacodes/.verify/codex-lag-check/phase6/prefix/bin/rg",
+  "sha256": "a326a1fb48074202e9ad41e4cd1e389eeea372c8c6f7d7e80da81176d5d9430e"
+ },
+ "gopls": {
+  "path": "<HOME>/go/bin/gopls",
+  "sha256": "6c4297a35573a2b7c4a2c1e63636bf5adb6c5ea35d2839971a73dbcda97d4b7c",
+  "version": "golang.org/x/tools/gopls v0.21.1"
+ },
+ "go": {
+  "path": "/opt/homebrew/bin/go",
+  "sha256": "cd864b57eef970002eadd9d4f35ce4026265d3fe7f4c030a8b5d69373f9a4bc2"
+ },
+ "python": {
+  "path": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+  "version": "3.14.7"
+ },
+ "witness": {
+  "witness/stall/fakes.py": "d4cf565d20b658e35f58cc71d96355dc99ea2a7c3e57cdacbe679a555b2981e6",
+  "witness/stall/srv/ok_mcp.py": "4199683d367736c9f2674cdb3715ffa713e56290cffcedca5915062697be7fbb",
+  "witness/stall/srv/quiet_lsp.py": "4aa72bfb362c94bfb5d9bb5903d9d23712f1834d8b57c84f8c5fccafc0ab92d0",
+  "witness/stall/srv/quiet_mcp.py": "319721c5f599d609d0fe474b47e4b97138eac469f66d36a58fac1a6f9f14688f",
+  "witness/stall/stall.py": "2b816465ae85edd1d0dee0f161ac0ff2b2a70ea517f36466cec04968697f4317"
+ },
+ "sandbox_profile_sha256": "0e50c559fe8a054a0f02351576f95a568a773f013980bf2a68a730b527448852"
+}
