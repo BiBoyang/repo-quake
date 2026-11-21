@@ -23,6 +23,7 @@ import time
 import unittest
 import urllib.error
 import urllib.request
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +33,7 @@ sys.path.insert(0, str(SR))
 
 import card_gate  # noqa: E402
 import grading  # noqa: E402
+import summarize  # noqa: E402
 
 C = grading.Content(SR / "content.json")
 TAG = "〔xabc123〕"
@@ -1030,6 +1032,56 @@ class CardGate(unittest.TestCase):
         self.assertIn("card gate:", r.stderr)
         self.assertIn("hosts[].name: fake", r.stderr)
         self.assertEqual(list(self.out.glob("manifest-*.json")), [])
+
+
+class Summary(unittest.TestCase):
+    """summary.md prints the one-sided Wilson bounds next to every count and says whether
+    the matrix was pre-registered."""
+
+    def test_wilson_matches_the_numbers_in_measurement_md(self):
+        self.assertAlmostEqual(summarize.wilson(9, 10)[0], 0.65, places=2)  # measurement.md example
+        self.assertAlmostEqual(summarize.wilson(3, 3)[0], 0.526, places=3)
+        self.assertEqual(summarize.wilson(3, 3)[1], 1.0)
+        self.assertEqual(summarize.wilson(0, 8)[0], 0.0)
+        self.assertAlmostEqual(summarize.wilson(0, 8)[1], 0.253, places=3)
+
+    def test_invalid_and_na_leave_the_denominator(self):
+        counts = Counter({"retracted": 2, "invalid": 1, "n/a": 1})
+        self.assertEqual(summarize.bounds_text(counts, 4), "retracted 2/2：0.42–1.00")
+        self.assertEqual(summarize.bounds_text(Counter({"invalid": 3}), 3), "—")
+
+    def write_root(self, root: Path, manifest: dict) -> str:
+        (root / "manifest-m1.json").write_text(json.dumps(manifest), encoding="utf-8")
+        rows = [{"tool": "claude", "condition": "F1-once", "run_index": i, "verdict": v, "verdict_reason": "x",
+                 "requests": [], "fields": {}} for i, v in enumerate(["retracted", "retracted", "invalid"], 1)]
+        (root / "runs.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+        self.assertEqual(summarize.main([str(root)]), 0)
+        return (root / "summary.md").read_text(encoding="utf-8")
+
+    def test_exploratory_matrix_is_marked_not_preregistered(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            text = self.write_root(Path(tmp), {"label": "m1", "preregistered": False, "exploratory": "calibration",
+                                               "dispatched": {CELL: 3}, "invalid": {CELL: 1}})
+        self.assertIn("预注册：否，探索性运行（calibration）", text)
+        self.assertIn("retracted 2/2：0.42–1.00", text)
+
+    def test_preregistered_matrix_shows_card_commit_budget_and_deviation(self):
+        manifest = {"label": "m1", "preregistered": True, "deviation": "supplementary F1 run",
+                    "card_git": {"path": "examples/card.json", "commit": "ab" * 20, "committed_at": "2026-11-21T09:00:00+08:00",
+                                 "pushed": False},
+                    "gate": {"dispatched_before": 3, "this_matrix": 3, "max_runs": 48, "beyond_plan": [f"{CELL}: 3 + 3 > 3"]},
+                    "dispatched": {CELL: 3}}
+        with tempfile.TemporaryDirectory() as tmp:
+            text = self.write_root(Path(tmp), manifest)
+        self.assertIn("commit abababababab", text)
+        self.assertIn("没有推送到上游", text)
+        self.assertIn("此前 3 次，本矩阵 3 次（最多 3 次），预算 max_runs 48", text)
+        self.assertIn("偏离：supplementary F1 run", text)
+
+    def test_legacy_manifest_says_it_has_no_record(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            text = self.write_root(Path(tmp), {"label": "m1"})
+        self.assertIn("预注册：manifest 没有记录", text)
 
 
 # ---------------- end to end against the fake TUI (needs node, tmux, sandbox-exec) ----------------

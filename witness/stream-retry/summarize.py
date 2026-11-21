@@ -9,9 +9,15 @@ probes/*.json, egress.json and lsregister.json when present. Never edits them.
 from __future__ import annotations
 
 import json
+import math
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+# One-sided 95% Wilson bounds: the gate in skills/repo-quake/references/measurement.md.
+Z = 1.645
+# Verdicts that say the run could not be graded for its condition; they leave the denominator.
+OUTSIDE_DENOMINATOR = ("invalid", "n/a")
 
 ORDER = ["F0-pre", "F0-tag", "F0T-tag", "F1-once", "F2-once", "F3-once", "F4-once", "F5-once", "F6-once",
          "FLONG-once", "FTHINK1-once", "FTHINK6-once", "F1-always", "F0-post"]
@@ -28,6 +34,43 @@ def load_jsonl(path: Path) -> list[dict]:
 
 def cond_key(c: str) -> int:
     return ORDER.index(c) if c in ORDER else len(ORDER)
+
+
+def wilson(k: int, n: int, z: float = Z) -> tuple[float, float]:
+    """Wilson score bounds for k/n; with z=1.645 each side is a one-sided 95% bound."""
+    p = k / n
+    denom = 1 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, center - half), min(1.0, center + half)
+
+
+def bounds_text(counts: Counter, total: int) -> str:
+    n = total - sum(counts.get(v, 0) for v in OUTSIDE_DENOMINATOR)
+    parts = []
+    for v in VERDICT_ORDER:
+        if n > 0 and v not in OUTSIDE_DENOMINATOR and counts.get(v):
+            lo, hi = wilson(counts[v], n)
+            parts.append(f"{v} {counts[v]}/{n}：{lo:.2f}–{hi:.2f}")
+    return "，".join(parts) or "—"
+
+
+def prereg_lines(m: dict) -> list[str]:
+    if "preregistered" not in m:
+        return ["- 预注册：manifest 没有记录（开跑门槛之前的 runner）"]
+    dispatched = sum((m.get("dispatched") or {}).values())
+    if not m["preregistered"]:
+        return [f"- 预注册：否，探索性运行（{m.get('exploratory')}），不查卡和预算；派发 {dispatched} 次"]
+    git = m.get("card_git") or {}
+    pushed = {True: "已推送到上游", False: "没有推送到上游", None: "没有上游分支"}.get(git.get("pushed"), "未知")
+    gate = m.get("gate") or {}
+    lines = [f"- 预注册：是。卡 `{git.get('path')}`，commit {str(git.get('commit'))[:12]}，提交于 {git.get('committed_at')}，{pushed}",
+             f"- 派发：这张卡在本证据目录下此前 {gate.get('dispatched_before')} 次，本矩阵 {dispatched} 次"
+             f"（最多 {gate.get('this_matrix')} 次），预算 max_runs {gate.get('max_runs')}"]
+    if m.get("deviation"):
+        beyond = "；".join(gate.get("beyond_plan") or []) or "没有超出计划的格"
+        lines.append(f"- 偏离：{m['deviation']}（{beyond}）")
+    return lines
 
 
 def fields_text(fields: dict) -> str:
@@ -50,7 +93,7 @@ def verdict_table(rows: list[dict], mode: str) -> list[str]:
     cells = defaultdict(list)
     for r in rows:
         cells[(r["tool"], r["condition"])].append(r)
-    out = [f"| 工具 | 条件 | N | 判定 | 五字段 | 带 mark 请求数（正式/辅助） |", "|---|---|---:|---|---|---|"]
+    out = [f"| 工具 | 条件 | N | 判定 | 单侧 95% 界（Wilson） | 五字段 | 带 mark 请求数（正式/辅助） |", "|---|---|---:|---|---|---|---|"]
     for (tool, cond) in sorted(cells, key=lambda k: (k[0], cond_key(k[1]))):
         group = cells[(tool, cond)]
         counts = Counter(r["verdict"] for r in group)
@@ -60,7 +103,7 @@ def verdict_table(rows: list[dict], mode: str) -> list[str]:
         mains = [sum(1 for q in r.get("requests") or [] if not q.get("aux")) for r in group]
         auxes = [sum(1 for q in r.get("requests") or [] if q.get("aux")) for r in group]
         rng = lambda xs: f"{min(xs)}–{max(xs)}" if xs and min(xs) != max(xs) else (str(xs[0]) if xs else "—")
-        out.append(f"| {tool} | {cond} | {len(group)} | {verdicts} | {fields} | {rng(mains)} / {rng(auxes)} |")
+        out.append(f"| {tool} | {cond} | {len(group)} | {verdicts} | {bounds_text(counts, len(group))} | {fields} | {rng(mains)} / {rng(auxes)} |")
     return out
 
 
@@ -101,7 +144,8 @@ def main(argv=None) -> int:
     inter = load_jsonl(root / "runs.jsonl")
     nonint = load_jsonl(root / "runs-noninteractive.jsonl")
     lines = ["# 流中途断开、自动重发之后的显示：汇总", "",
-             "由 `witness/stream-retry/summarize.py` 生成；判定规则见 `witness/stream-retry/README.md`。时间都是毫秒，相对于该次运行重发请求开始的时刻（负数在重发之前）。", ""]
+             "由 `witness/stream-retry/summarize.py` 生成；判定规则见 `witness/stream-retry/README.md`。时间都是毫秒，相对于该次运行重发请求开始的时刻（负数在重发之前）。", "",
+             "\"单侧 95% 界\"一列是每个判定的 Wilson 下界–上界（z=1.645，即 `skills/repo-quake/references/measurement.md` 的门槛），分母不含 invalid 和 n/a。下结论看下界，不看点估计：3/3 的下界只有 0.53。", ""]
     for path in sorted(root.glob("manifest-*.json")):
         m = json.loads(path.read_text(encoding="utf-8"))
         lines += [f"## 矩阵 `{m['label']}`", "",
@@ -110,7 +154,7 @@ def main(argv=None) -> int:
                   f"- tmux：{m.get('tmux')}；沙箱：{m.get('sandbox')}；静默窗口 {m.get('quiet_s')} s；稳定判据 {m.get('settle_s')} s；截屏间隔 {m.get('poll_s')} s",
                   f"- 前后版本和哈希一致：{m.get('versions_equal')}" + (f"（差异：{m.get('version_diff')}）" if m.get("version_diff") else ""),
                   f"- 装置哈希：" + "，".join(f"`{k}` {v[:16]}" for k, v in (m.get('harness_sha256') or {}).items()),
-                  f"- 实验卡 sha256：{(m.get('card_sha256') or '—')[:16]}", ""]
+                  f"- 实验卡 sha256：{(m.get('card_sha256') or '—')[:16]}"] + prereg_lines(m) + [""]
         before = root / f"versions-before-{m['label']}.json"
         if before.exists():
             b = json.loads(before.read_text(encoding="utf-8"))

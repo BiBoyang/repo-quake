@@ -69,6 +69,19 @@ class CollectTests(unittest.TestCase):
             self.assertEqual(summary["cell-a"]["graded"], 0)
             self.assertEqual(summary["cell-a"]["excluded"], 1)
             self.assertEqual(summary["cell-a"]["ungraded"], 1)
+            self.assertIsNone(summary["cell-a"]["detected_bounds"])
+
+    def test_detected_carries_one_sided_wilson_bounds_over_graded_runs(self):
+        row = collect.summarize_cell([
+            ("run-1", {}, {"level": "L2", "detected": True}),
+            ("run-2", {}, {"level": "L2", "detected": True}),
+            ("run-3", {}, {"level": "L2", "detected": True}),
+            ("run-4", {}, {"level": "INVALID", "detected": False}),
+        ])
+        self.assertEqual(row["detected"], 3)
+        self.assertAlmostEqual(row["detected_bounds"][0], 0.526, places=3)  # 3/3, not 3/4
+        self.assertEqual(row["detected_bounds"][1], 1.0)
+        self.assertAlmostEqual(collect.wilson(0, 16)[1], 0.145, places=3)
 
 
 if __name__ == "__main__":

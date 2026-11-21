@@ -14,7 +14,10 @@ quality–cost rejection rules). This file supplies their shared controls.
 - Gate on the confidence-interval bound, not the point estimate. One-sided
   Wilson (z=1.645): a 9/10 point estimate of 0.9 has a lower bound near 0.65;
   small samples do not get to claim compliance. Halving the error bar costs
-  4x the samples.
+  4x the samples. `witness/stream-retry/summarize.py` and
+  `skills/skill-quake/scripts/collect.py` print both bounds next to every
+  count (INVALID and n/a outside the denominator), so a report quotes the
+  bound instead of computing it by hand.
 - pass@k and pass^k tell opposite stories (p=0.75: pass@10 ≈ 1.0, pass^10 ≈
   0.056). Estimate with unbiased combinatorial estimators
   (1 - C(n-c,k)/C(n,k) and C(c,k)/C(n,k)); the plug-in forms are biased.

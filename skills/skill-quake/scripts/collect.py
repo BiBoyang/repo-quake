@@ -9,10 +9,22 @@ with their own denominator and an unknown count; missing fields are never
 backfilled from L-levels.
 """
 import json
+import math
 import os
 import sys
 
 OPTIONAL_METRICS = ("reported", "contained", "recovered", "reverified")
+# One-sided 95% Wilson bounds: the gate in skills/repo-quake/references/measurement.md.
+Z = 1.645
+
+
+def wilson(k, n, z=Z):
+    """Wilson score bounds for k/n; with z=1.645 each side is a one-sided 95% bound."""
+    p = k / n
+    denom = 1 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, center - half), min(1.0, center + half)
 
 
 def read_json(path):
@@ -50,6 +62,7 @@ def summarize_cell(runs):
         "excluded": invalid,
         "ungraded": ungraded,
         "detected": detected["x"],
+        "detected_bounds": [round(b, 4) for b in wilson(detected["x"], detected["n"])] if detected["n"] else None,
         "levels": ",".join("?" if grade is None else str(grade.get("level", "?")) for _, _, grade in runs) or "-",
         "metrics": metrics,
     }
@@ -81,13 +94,16 @@ def main(argv=None):
     cells = load_cells(results_dir)
     summary = {cell: summarize_cell(runs) for cell, runs in cells.items()}
 
-    print("| cell | runs | graded | excluded | ungraded | detected | levels |")
-    print("|---|---|---|---|---|---|---|")
+    print("| cell | runs | graded | excluded | ungraded | detected | detected one-sided 95% (Wilson) | levels |")
+    print("|---|---|---|---|---|---|---|---|")
     for cell, row in summary.items():
+        bounds = row["detected_bounds"]
+        bounds_text = f"{bounds[0]:.2f}–{bounds[1]:.2f}" if bounds else "-"
         print(
             f"| {cell} | {row['runs']} | {row['graded']} | {row['excluded']} "
-            f"| {row['ungraded']} | {row['detected']}/{row['graded'] or '-'} | {row['levels']} |"
+            f"| {row['ungraded']} | {row['detected']}/{row['graded'] or '-'} | {bounds_text} | {row['levels']} |"
         )
+    print("\nGate a claim on the lower bound, not on x/n (skills/repo-quake/references/measurement.md).")
     output = os.path.join(results_dir, "summary.json")
     with open(output, "w", encoding="utf-8") as handle:
         json.dump(summary, handle, ensure_ascii=False, indent=2)
