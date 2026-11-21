@@ -200,7 +200,7 @@ form. Grading is judgment; that is why it lives here and not in the witness.
 - `references/reporting.md` — upstream issues, PRs, public retraction,
   disclosure files, the posting gate
 - `references/disclosure-template.md` — per-phase disclosure file to fill;
-  `examples/disclosure-phase3-metacodes.md` is a filled instance
+  `docs/phase3-disclosure.md` through `docs/phase6-disclosure.md` are filled instances
 - `scripts/audit_artifacts.py` — pre-archive audit for symlinks, runtime trees,
   browser/PID files and high-confidence credential shapes
 - `scripts/card_gate.py` — pre-dispatch gate for a counted matrix: the card
