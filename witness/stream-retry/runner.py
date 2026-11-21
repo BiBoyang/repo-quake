@@ -7,7 +7,9 @@ this runner; see README.md for the decision table and the verifier fixes.
 
 Subcommands:
   probe      start each TUI once, gate-check the first screen, exit
-  matrix     run tool x condition x N (interactive via tmux, or non-interactive)
+  matrix     run tool x condition x N (interactive via tmux, or non-interactive);
+             needs --card (committed, valid, plan and budget cover the matrix, see
+             card_gate.py) or --exploratory REASON
   regrade    re-grade every run from its evidence files into regrade.jsonl
   summarize  write summary.md from runs.jsonl
   egress     list sandbox-denied outbound connections of subject processes
@@ -35,6 +37,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import card_gate  # noqa: E402
 import grading  # noqa: E402
 import version_witness  # noqa: E402
 
@@ -1053,7 +1056,7 @@ def probe(ctx: Context, tool: Tool) -> dict:
 
 
 def harness_hashes() -> dict:
-    files = ["mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py"]
+    files = ["mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py", "card_gate.py"]
     return {name: version_witness.sha256_file(HERE / name) for name in files}
 
 
@@ -1065,6 +1068,35 @@ def start_mock(ctx: Context, label: str) -> None:
                     a.continuation, label)
 
 
+def preregistration(ctx: Context, conditions: list[str]) -> dict:
+    """Refuse a matrix the experiment card does not cover, or record why it runs without one."""
+    a = ctx.args
+    if a.card and a.exploratory is not None:
+        raise SystemExit("matrix: --card and --exploratory are mutually exclusive")
+    if a.exploratory is not None:
+        if not a.exploratory.strip():
+            raise SystemExit("matrix: --exploratory needs a reason")
+        print(json.dumps({"EXPLORATORY": a.exploratory}, ensure_ascii=False), flush=True)
+        return {"preregistered": False, "exploratory": a.exploratory}
+    if not a.card:
+        raise SystemExit("matrix needs --card CARD (a committed experiment card) or --exploratory REASON")
+    path = Path(a.card)
+    try:
+        card = json.loads(path.read_text(encoding="utf-8"))
+        provenance = card_gate.card_provenance(path)
+        gate = card_gate.check(card, version_witness.sha256_file(path), ctx.out, a.tools, a.mode, conditions,
+                               a.runs, a.deviation)
+    except (OSError, json.JSONDecodeError, card_gate.GateError) as exc:
+        raise SystemExit(f"card gate: {exc}")
+    if provenance["pushed"] is not True:
+        print(json.dumps({"WARNING": "the card's commit is not on an upstream branch; only a push dates the freeze",
+                          "card_git": provenance}, ensure_ascii=False), file=sys.stderr, flush=True)
+    if gate["beyond_plan"]:
+        print(json.dumps({"DEVIATION": a.deviation, "beyond_plan": gate["beyond_plan"]}, ensure_ascii=False),
+              flush=True)
+    return {"preregistered": True, "card_git": provenance, "gate": gate, "deviation": a.deviation}
+
+
 def matrix(ctx: Context) -> int:
     a = ctx.args
     label = dt.datetime.now().strftime("%Y%m%dT%H%M%S") + f"-{os.getpid()}"
@@ -1072,6 +1104,7 @@ def matrix(ctx: Context) -> int:
     conditions = a.conditions.split(",") if a.conditions else DEFAULT_CONDITIONS
     for c in conditions:
         grading.split_condition(c)
+    prereg = preregistration(ctx, conditions)
     manifest_path = ctx.out / f"manifest-{label}.json"
     before = version_witness.collect(tools_spec(ctx), a.path_env, a.node, extra_files(ctx))
     write_json(ctx.out / f"versions-before-{label}.json", before)
@@ -1084,7 +1117,8 @@ def matrix(ctx: Context) -> int:
                 "mock": ctx.mock.ready, "tmux": [a.tmux_width, a.tmux_height] if ctx.tmux else None,
                 "sandbox": a.sandbox, "quiet_s": a.quiet_s, "settle_s": a.settle_s, "poll_s": a.poll_s,
                 "slow_poll_s": a.slow_poll_s,
-                "followup": a.followup, "card": a.card, "card_sha256": version_witness.sha256_file(Path(a.card)) if a.card else None}
+                "followup": a.followup, "card": a.card, "card_sha256": version_witness.sha256_file(Path(a.card)) if a.card else None,
+                **prereg, "dispatched": {}, "invalid": {}}
     write_json(manifest_path, manifest)
     status = 0
     try:
@@ -1102,8 +1136,15 @@ def matrix(ctx: Context) -> int:
                     print(json.dumps({"tool": tool.name, "condition": condition, "skipped": "baseline failed"}), flush=True)
                     continue
                 for i in range(1, a.runs + 1):
+                    # Count before dispatch, so a runner that dies mid-run is still charged for it.
+                    key = card_gate.cell_key(tool.name, a.mode, condition)
+                    manifest["dispatched"][key] = manifest["dispatched"].get(key, 0) + 1
+                    write_json(manifest_path, manifest)
                     run = run_interactive if a.mode == "interactive" else run_noninteractive
                     rec = run(ctx, tool, condition, i)
+                    if rec.get("verdict") == "invalid":
+                        manifest["invalid"][key] = manifest["invalid"].get(key, 0) + 1
+                        write_json(manifest_path, manifest)
                     if condition in BASELINE and rec["verdict"] not in ("healthy", "tag_visible"):
                         baseline_ok = False
                     print(json.dumps({"tool": tool.name, "condition": condition, "run": i, "verdict": rec["verdict"],
@@ -1133,7 +1174,7 @@ def tools_spec(ctx: Context) -> list[dict]:
 
 
 def extra_files(ctx: Context) -> dict:
-    files = {f"harness:{k}": str(HERE / k) for k in ("mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py")}
+    files = {f"harness:{k}": str(HERE / k) for k in ("mock.mjs", "content.json", "runner.py", "grading.py", "version_witness.py", "rawtap.py", "card_gate.py")}
     if ctx.args.card:
         files["card"] = ctx.args.card
     return files
@@ -1262,7 +1303,12 @@ def main(argv=None) -> int:
     p.add_argument("--followup-s", type=float, default=60.0)
     p.add_argument("--no-followup", dest="followup", action="store_false")
     p.add_argument("--no-sandbox", dest="sandbox", action="store_false")
-    p.add_argument("--card", default=None, help="experiment card to hash into the manifest")
+    p.add_argument("--card", default=None, help="matrix: committed experiment card; refused if it does not validate, "
+                   "is not committed, or its plan and budget do not cover this matrix (card_gate.py)")
+    p.add_argument("--exploratory", default=None, metavar="REASON",
+                   help="matrix: run without a card; the reason goes into the manifest and the summary")
+    p.add_argument("--deviation", default=None, metavar="REASON",
+                   help="matrix: allow cells beyond the card's plan, never beyond budget.max_runs; recorded in the manifest")
     p.add_argument("--fake-mode", default="retract")
     p.add_argument("--start", help="egress: window start (local time, `log show` format)")
     p.add_argument("--end", help="egress: window end")

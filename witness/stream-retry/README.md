@@ -12,6 +12,7 @@
 | `content.json` | 共享内容夹具，mock 和判定共用。P01–P24 与前两轮逐字相同；长回答完整形态是 L001–L200，半截是前 160 段。 |
 | `grading.py` | 纯判定逻辑，不碰网络和终端。也负责请求体分析、会话文件分析，以及原始字节分析（去转义、备用屏幕、失败标记、提示原话、字节到时间的对齐）。 |
 | `runner.py` | 矩阵执行器：`probe`、`matrix`、`regrade`、`summarize`、`egress`、`lsregister`。 |
+| `card_gate.py` | `matrix` 开跑前的门槛：实验卡要通过校验、已经提交，计划和预算要覆盖这次矩阵（见下文"开跑门槛"）。 |
 | `rawtap.py` | 接在 `tmux pipe-pane` 上：把终端收到的原始字节写进 `raw.bin`，并给每一块记下收到的时刻（`raw-index.jsonl`）。 |
 | `version_witness.py` | 前后各记一次版本和 sha256。对象是实际执行的文件：codex 要从 `codex.js` 追到它 execve 的原生二进制；运行 `codex.js` 的 node，以及 mock、夹具和装置本身，也都要算。 |
 | `export_public.py` | 把要公开的证据复制一份、在副本上脱敏、扫描禁用串，再用 `skills/repo-quake/scripts/audit_artifacts.py` 审计。前后核对源目录的哈希清单，确认一个字节都没改。 |
@@ -112,6 +113,17 @@ python3 witness/stream-retry/runner.py summarize --out "$OUT"
 python3 witness/stream-retry/runner.py lsregister --out "$OUT"
 python3 witness/stream-retry/export_public.py --src "$OUT" --dst runs/<本期目录>
 ```
+
+### 开跑门槛（`card_gate.py`）
+
+`matrix` 必须二选一：`--card <实验卡>`，或者 `--exploratory "<理由>"`。两个都不给，或者两个都给，直接拒绝，什么都不写。带卡时，开跑前依次检查：
+
+1. **卡本身**：通过 `validate_card.py`，被 git 跟踪，而且没有未提交的改动。manifest 里记下最后一次改动这张卡的 commit、提交时间，以及这个 commit 是否已经在上游分支上。没推送也能跑，但会在 stderr 警告：commit 时间是自己填的，只有推送才留下实验者改不了的时间。
+2. **范围**：`--tools` 的每个名字都要是卡里某个 `hosts[].name`，每个条件都要是某个 `arms[].id`；同一个工具跑的模式数（交互、非交互）不能超过卡里同名 host 的个数。
+3. **总预算**：同一个证据目录下、同一张卡（按 sha256 认）之前所有 manifest 的派发数，加上这次最多派发的次数，不能超过 `budget.max_runs`。这一条没有开关：要多跑，就冻结一张新卡。
+4. **单格计划**：每一格（工具 × 模式 × 条件）累计次数不能超过卡里的计划次数。判为 `invalid` 的运行，每次可以补跑一次，补跑次数最多是 `sampling.invalid_reruns`（默认 1）乘以计划次数。超出时必须带 `--deviation "<理由>"`，理由会写进 manifest。这样补测是记录在案的偏离，不会悄悄发生。
+
+计数写在 manifest 的 `dispatched` 和 `invalid` 里。每次运行开始前先加一，所以中途死掉的进程也照样记账。门槛出现之前写的旧 manifest 没有计数，按它整个计划算。`--exploratory` 不查卡，但 manifest 会记下 `preregistered: false` 和理由，`summary.md` 也会标成"未预注册"。
 
 ## 已知盲区
 

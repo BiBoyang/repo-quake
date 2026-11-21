@@ -30,6 +30,7 @@ SR = ROOT / "witness" / "stream-retry"
 FIX = ROOT / "tests" / "fixtures" / "stream-retry"
 sys.path.insert(0, str(SR))
 
+import card_gate  # noqa: E402
 import grading  # noqa: E402
 
 C = grading.Content(SR / "content.json")
@@ -861,6 +862,176 @@ class PublicExport(unittest.TestCase):
             self.assertEqual(export_public.main(["--src", str(src), "--dst", str(dst)]), 2)
 
 
+# ---------------- the pre-dispatch card gate (card_gate.py, runner.py matrix) ----------------
+PHASE4_CARD = ROOT / "examples" / "experiment-card-phase4-stream-retry.json"
+CELL = "claude|interactive|F1-once"
+
+
+def git(cwd: Path, *args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", "-C", str(cwd), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+                           "-c", "commit.gpgsign=false", *args], capture_output=True, text=True, check=True)
+
+
+class CardGate(unittest.TestCase):
+    """A matrix starts only when a committed card's plan and budget cover it. The frozen
+    phase-4 card is the fixture: hosts claude and codex, six arms x 3 runs, max_runs 48."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="rq-gate-"))
+        self.repo = self.tmp / "repo"
+        self.repo.mkdir()
+        git(self.repo, "init", "-q")
+        self.card = json.loads(PHASE4_CARD.read_text(encoding="utf-8"))
+        self.card_path = self.repo / "card.json"
+        self.card_path.write_text(json.dumps(self.card), encoding="utf-8")
+        git(self.repo, "add", "card.json")
+        git(self.repo, "commit", "-q", "-m", "freeze card")
+        self.sha = hashlib.sha256(self.card_path.read_bytes()).hexdigest()
+        self.out = self.tmp / "out"
+        self.out.mkdir()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def manifest(self, name: str, **fields) -> None:
+        body = {"label": name, "mode": "interactive", "tools": ["claude"], "conditions": ["F1-once"], "runs": 3,
+                "card_sha256": self.sha}
+        body.update(fields)
+        (self.out / f"manifest-{name}.json").write_text(json.dumps(body), encoding="utf-8")
+
+    def check(self, tools=("claude",), conditions=("F1-once",), runs=3, mode="interactive", deviation=None, card=None):
+        return card_gate.check(card or self.card, self.sha, self.out, list(tools), mode, list(conditions), runs,
+                               deviation)
+
+    def run_runner(self, *extra: str) -> subprocess.CompletedProcess:
+        return subprocess.run([sys.executable, str(SR / "runner.py"), "matrix", "--out", str(self.out),
+                               "--tools", "fake", "--bin", f"fake={FIX / 'fake_tui.py'}", *extra],
+                              capture_output=True, text=True, timeout=60)
+
+    # provenance: git dates the freeze
+    def test_committed_card_records_its_commit(self):
+        prov = card_gate.card_provenance(self.card_path)
+        self.assertEqual(prov["path"], "card.json")
+        self.assertRegex(prov["commit"], r"^[0-9a-f]{40}$")
+        self.assertIsNone(prov["upstream"])
+        self.assertIsNone(prov["pushed"])
+
+    def test_uncommitted_change_is_refused(self):
+        self.card_path.write_text(self.card_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+        with self.assertRaisesRegex(card_gate.GateError, "not committed"):
+            card_gate.card_provenance(self.card_path)
+
+    def test_untracked_or_loose_card_is_refused(self):
+        draft = self.repo / "draft.json"
+        draft.write_text("{}", encoding="utf-8")
+        loose = self.tmp / "loose.json"
+        loose.write_text("{}", encoding="utf-8")
+        for path in (draft, loose):
+            with self.assertRaisesRegex(card_gate.GateError, "not tracked"):
+                card_gate.card_provenance(path)
+
+    def test_pushed_tracks_whether_upstream_has_the_card_commit(self):
+        remote = self.tmp / "remote.git"
+        subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+        git(self.repo, "remote", "add", "origin", str(remote))
+        git(self.repo, "push", "-q", "-u", "origin", "HEAD")
+        self.assertTrue(card_gate.card_provenance(self.card_path)["pushed"])
+        self.card_path.write_text(json.dumps(self.card, indent=1), encoding="utf-8")
+        git(self.repo, "commit", "-q", "-am", "edit the card after the push")
+        self.assertFalse(card_gate.card_provenance(self.card_path)["pushed"])
+
+    # plan and budget
+    def test_a_fresh_plan_inside_the_card_passes(self):
+        gate = self.check(tools=("claude", "codex"), conditions=("F0-pre", "F0-tag", "F1-once"))
+        self.assertEqual((gate["dispatched_before"], gate["this_matrix"], gate["max_runs"]), (0, 18, 48))
+        self.assertEqual(gate["beyond_plan"], [])
+        self.assertRegex(gate["validator_sha256"], r"^[0-9a-f]{64}$")
+
+    def test_an_invalid_card_is_refused(self):
+        broken = json.loads(json.dumps(self.card))
+        del broken["budget"]
+        with self.assertRaisesRegex(card_gate.GateError, "does not validate"):
+            self.check(card=broken)
+
+    def test_tools_and_conditions_must_be_in_the_card(self):
+        with self.assertRaisesRegex(card_gate.GateError, r"hosts\[\]\.name: kimi"):
+            self.check(tools=("kimi",))
+        with self.assertRaisesRegex(card_gate.GateError, r"arms\[\]\.id: F2-once"):
+            self.check(conditions=("F2-once",))
+
+    def test_runs_beyond_the_plan_need_a_recorded_deviation(self):
+        with self.assertRaisesRegex(card_gate.GateError, "--deviation"):
+            self.check(runs=4)
+        gate = self.check(runs=4, deviation="supplementary run after the FLONG fix")
+        self.assertEqual(len(gate["beyond_plan"]), 1)
+        self.assertIn(CELL, gate["beyond_plan"][0])
+
+    def test_earlier_manifests_count_toward_the_cell(self):
+        self.manifest("a", dispatched={CELL: 3})
+        with self.assertRaisesRegex(card_gate.GateError, "beyond the card's plan"):
+            self.check(runs=1)
+        self.check(conditions=("F6-once",), runs=3)
+
+    def test_an_invalid_run_buys_one_replacement(self):
+        self.manifest("a", dispatched={CELL: 3}, invalid={CELL: 1})
+        self.check(runs=1)
+        with self.assertRaises(card_gate.GateError):
+            self.check(runs=2)
+        strict = json.loads(json.dumps(self.card))
+        strict["sampling"]["invalid_reruns"] = 0
+        with self.assertRaises(card_gate.GateError):
+            self.check(runs=1, card=strict)
+
+    def test_replacements_stop_at_one_per_planned_run(self):
+        self.manifest("a", dispatched={CELL: 6}, invalid={CELL: 6})
+        with self.assertRaisesRegex(card_gate.GateError, "beyond the card's plan"):
+            self.check(runs=1)
+
+    def test_budget_spans_invocations_and_a_deviation_cannot_lift_it(self):
+        self.manifest("a", tools=["codex"], conditions=["F0-pre"], dispatched={"codex|interactive|F0-pre": 46})
+        with self.assertRaisesRegex(card_gate.GateError, "budget.max_runs=48: 46"):
+            self.check(runs=3, deviation="just this once")
+        self.assertEqual(self.check(runs=2)["dispatched_before"], 46)
+
+    def test_a_manifest_without_counts_is_charged_its_whole_plan(self):
+        self.manifest("legacy")
+        with self.assertRaisesRegex(card_gate.GateError, "beyond the card's plan"):
+            self.check(runs=1)
+
+    def test_manifests_of_another_card_are_not_counted(self):
+        self.manifest("other", card_sha256="0" * 64, dispatched={CELL: 40})
+        self.check(runs=3)
+
+    def test_a_tool_runs_in_no_more_modes_than_the_card_has_hosts(self):
+        self.manifest("a", dispatched={CELL: 3})
+        with self.assertRaisesRegex(card_gate.GateError, "2 modes"):
+            self.check(mode="noninteractive")
+
+    def test_an_unreadable_manifest_stops_the_accounting(self):
+        (self.out / "manifest-bad.json").write_text("{", encoding="utf-8")
+        with self.assertRaisesRegex(card_gate.GateError, "manifest-bad.json"):
+            self.check()
+
+    # the runner applies the gate before anything is started or written
+    def test_runner_refuses_a_matrix_without_card_or_reason(self):
+        r = self.run_runner()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("needs --card", r.stderr)
+        self.assertEqual(list(self.out.glob("manifest-*.json")), [])
+
+    def test_runner_refuses_card_and_exploratory_together(self):
+        r = self.run_runner("--card", str(self.card_path), "--exploratory", "calibration")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("mutually exclusive", r.stderr)
+
+    def test_runner_refuses_a_card_that_does_not_cover_the_matrix(self):
+        r = self.run_runner("--card", str(self.card_path), "--conditions", "F1-once")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("card gate:", r.stderr)
+        self.assertIn("hosts[].name: fake", r.stderr)
+        self.assertEqual(list(self.out.glob("manifest-*.json")), [])
+
+
 # ---------------- end to end against the fake TUI (needs node, tmux, sandbox-exec) ----------------
 @unittest.skipUnless(NODE and TMUX and Path("/usr/bin/sandbox-exec").exists(), "node/tmux/sandbox-exec not available")
 class FakeTuiEndToEnd(unittest.TestCase):
@@ -885,11 +1056,17 @@ class FakeTuiEndToEnd(unittest.TestCase):
                                capture_output=True, text=True, timeout=120)
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         r = subprocess.run(self.base + ["matrix", "--out", str(out), "--fake-mode", mode, "--mode", ui,
-                                        "--conditions", conditions, "--runs", "1"] + self.common,
+                                        "--conditions", conditions, "--runs", "1",
+                                        "--exploratory", "fake-TUI calibration"] + self.common,
                            capture_output=True, text=True, timeout=300)
         self.assertIn(r.returncode, (0, 3), r.stdout + r.stderr)
         name = "runs.jsonl" if ui == "interactive" else "runs-noninteractive.jsonl"
-        return [json.loads(x) for x in (out / name).read_text().splitlines()]
+        rows = [json.loads(x) for x in (out / name).read_text().splitlines()]
+        manifest = json.loads(sorted(out.glob("manifest-*.json"))[-1].read_text())
+        self.assertFalse(manifest["preregistered"])
+        self.assertEqual(manifest["exploratory"], "fake-TUI calibration")
+        self.assertEqual(sum(manifest["dispatched"].values()), len(rows))
+        return rows
 
     def test_retract_keep_double(self):
         rows = self.run_matrix(self.tmp / "retract", "retract", "F0-pre,F0-tag,F1-once")

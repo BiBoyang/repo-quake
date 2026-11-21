@@ -57,6 +57,28 @@ verdict:
 planned run may be replaced after an INVALID verdict. Every frozen 1.0 card says
 "invalid, rerun once" in prose; this is the same rule in a form a runner can count.
 
+## Dispatch gate (`witness/stream-retry/runner.py matrix`)
+
+The stream-retry runner refuses to start a matrix unless it gets either `--card` or
+`--exploratory REASON`. With a card it checks, before any dispatch:
+
+- the card validates, is tracked by git and has no uncommitted change. The manifest
+  records the commit that last touched the card and whether that commit is on the
+  upstream branch. Only a push gives a timestamp the experimenter does not control,
+  so an unpushed card is dispatched with a warning;
+- every `--tools` name is a `hosts[].name`, every condition is an `arms[].id`, and a
+  tool is not run in more modes than the card has hosts with that name;
+- cumulative dispatches for this card in the evidence root, counted from the
+  manifests by card sha256, plus this matrix stay within `budget.max_runs`. This one
+  has no override: to spend more, freeze a new card;
+- no cell (tool × mode × condition) goes past its planned runs plus the INVALID
+  replacements `invalid_reruns` allows, unless `--deviation REASON` is given. The
+  reason is written into the manifest, so a supplementary run is a recorded deviation
+  rather than a silent one.
+
+`--exploratory REASON` runs without a card. The manifest records the reason, and
+`summarize.py` marks the matrix as not pre-registered.
+
 ## Source, template and delivered hashes
 
 These hashes answer different questions and are not expected to match:
