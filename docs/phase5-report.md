@@ -188,7 +188,7 @@
 ## 证据
 
 - 公开副本（`export_public.py` 导出、`audit_artifacts.py` 审计通过）：`runs/phase5-metacodes-2026-11-16/`、`runs/phase5-appendix-f4f5-2026-11-16/`、`runs/phase5-dsh-2026-11-16/`。请求体、会话文件、终端原始字节没有公开（见各目录的 `EXPORT.md`）。
-- 实验卡（冻结）：`examples/experiment-card-phase5-metacodes.json`、`examples/experiment-card-phase5-appendix-f4f5.json`、`examples/experiment-card-phase5-dsh.json`。
+- 实验卡（冻结）：`cards/phase5-metacodes.json`、`cards/phase5-appendix-f4f5.json`、`cards/phase5-dsh.json`。
 - 装置与测试：`witness/stream-retry/`、`tests/test_stream_retry.py`。
 - 披露：`docs/phase5-disclosure.md`。
 - 台账：`ledger/ledger.json` 的 RQ-F-018 至 RQ-F-024、RQ-I-011、RQ-I-012、RQ-X-015。

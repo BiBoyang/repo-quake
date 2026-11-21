@@ -44,7 +44,7 @@
 | `grading.py` | `506b8d112f11be4c6d773193910373ef1e85a33cda9bbb398be89cb2dbb0f8b9` | 冻结；变异检查后用副本恢复，`cmp` 一致 |
 | `rawtap.py` | `dadfc1666abe8b4bccf794e1d0a90899dfb40a311f0ab0f3e033b14180091750` | 冻结 |
 | `version_witness.py` | `c7db93d903d63c077a22e590c5955e4e1d587f9f4f77fff24a61c146e14e97b1` | 冻结 |
-| 实验卡 `examples/experiment-card-phase4-stream-retry.json` | `66fcde0a3c5741cb66719fd1fa13a98fa39ebb3ffef6c33d718b231fbb037562` | 证据目录里的冻结副本，与仓库里的逐字节相同 |
+| 实验卡 `cards/phase4-stream-retry.json`（冻结时在 `examples/experiment-card-phase4-stream-retry.json`） | `66fcde0a3c5741cb66719fd1fa13a98fa39ebb3ffef6c33d718b231fbb037562` | 证据目录里的冻结副本，与仓库里的逐字节相同 |
 | 提示词模板 | `2294655f1a14a801b1ad597692250341b2d915a70b486e383ac11153f89cfb65` | 跟进那一轮的提示词是 `2377dffeecfdc44ba3259a34b1ab2c66b2afa6f1bbe7fe4d27397ebe2c1ee113` |
 
 补测前后各记了一次版本和哈希，三个工具、node 和装置文件都一致（`runs/phase4-stream-retry-2026-11-15/versions-before-*.json` 和 `versions-after-*.json`）。

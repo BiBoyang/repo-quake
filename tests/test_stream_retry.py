@@ -866,7 +866,7 @@ class PublicExport(unittest.TestCase):
 
 
 # ---------------- the pre-dispatch card gate (card_gate.py, runner.py matrix) ----------------
-PHASE4_CARD = ROOT / "examples" / "experiment-card-phase4-stream-retry.json"
+PHASE4_CARD = ROOT / "cards" / "phase4-stream-retry.json"
 CELL = "claude|interactive|F1-once"
 
 

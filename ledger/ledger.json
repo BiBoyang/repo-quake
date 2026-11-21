@@ -1184,7 +1184,7 @@
         "docs/phase4-disclosure.md",
         "runs/phase4-stream-retry-2026-11-15/summary.md",
         "runs/phase4-stream-retry-2026-11-15/runs.jsonl",
-        "examples/experiment-card-phase4-stream-retry.json"
+        "cards/phase4-stream-retry.json"
       ],
       "lesson": "'最后只剩一份'可以经由很不一样的过程：断开即收、或者重发期间两份同屏；收回要用失败那次独有的标记和完整画面来证，不能只看最终画面",
       "upstream": [
@@ -1447,7 +1447,7 @@
         "docs/phase5-report.md",
         "docs/phase5-disclosure.md",
         "runs/phase5-metacodes-2026-11-16/summary.md",
-        "examples/experiment-card-phase5-metacodes.json"
+        "cards/phase5-metacodes.json"
       ],
       "lesson": "写明了的取舍也要实测：'半截留在 scrollback' 一句话背后，是屏上上文和模型上文的长期不一致，只有思考时更看不出来",
       "upstream": [
@@ -1588,7 +1588,7 @@
         "docs/phase5-report.md",
         "docs/phase5-disclosure.md",
         "runs/phase5-dsh-2026-11-16/summary.md",
-        "examples/experiment-card-phase5-dsh.json"
+        "cards/phase5-dsh.json"
       ],
       "lesson": "退出码不是说明：机器那边记得清清楚楚的原因，要原样说给跑命令的人听"
     },
@@ -1901,7 +1901,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "缓存会把慢请求藏到后台，只有冷启动那一次才露出同步等待；测启动要专门造一个空的状态目录",
       "upstream": [
@@ -1959,7 +1959,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "本机常驻服务也是网络依赖：它卡住时，启动等的是传输层的时限，不是产品自己的",
       "upstream": [
@@ -2026,7 +2026,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "画面函数里藏着的网络请求，比主循环里的更难发现：只有打出特定草稿时才触发，而一旦触发连退出都退不了",
       "upstream": [
@@ -2093,7 +2093,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "退出路径也是请求路径：“出于礼貌”发的收尾请求一样需要时限",
       "upstream": [
@@ -2152,7 +2152,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "以“等下一条消息”为条件的等待，要先问对方会不会发；沉默的对端让每一次都等满",
       "upstream": [
@@ -2195,7 +2195,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "固定开销要和同一次运行里的便宜调用交替测，并且要问夹具的状态（比如 git 索引）是不是现实里常见的那种",
       "upstream": [
@@ -2254,7 +2254,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "协议的默认时限是给后台导出的，不是给一个正在等退出的人的",
       "upstream": [
@@ -2323,7 +2323,7 @@
         "docs/phase6-report.md",
         "docs/phase6-disclosure.md",
         "runs/phase6-metacodes-stall-2026-11-21/summary.md",
-        "examples/experiment-card-phase6-metacodes-stall.json"
+        "cards/phase6-metacodes-stall.json"
       ],
       "lesson": "同一个“等全部 MCP”，挪到第一条消息、加上限和提示，就从卡顿变成了一个说得清的取舍"
     },

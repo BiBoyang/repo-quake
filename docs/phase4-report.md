@@ -183,7 +183,7 @@ Kimi 平台的 Partial Mode 文档写的是：要让模型从给定文本接着�
 
 ## 证据
 
-- 实验卡（冻结）：`examples/experiment-card-phase4-stream-retry.json`
+- 实验卡（冻结）：`cards/phase4-stream-retry.json`
 - 补测公开副本：`runs/phase4-stream-retry-2026-11-15/`。包括 `summary.md`、逐次 `record.json`、截屏、原始字节分析和送达日志；请求体、会话文件和原始字节没有公开（见该目录的 `EXPORT.md`）。
 - 探索性补跑公开副本：`runs/phase4-codex-retries-exhausted-2026-11-16/`。逐次份数在 `retries-exhausted-counts.json`；`upstream-repro/` 里是最小复现、发出的评论原文和最小复现的截屏。
 - 装置与测试：`witness/stream-retry/`、`tests/test_stream_retry.py`

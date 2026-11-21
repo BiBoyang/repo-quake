@@ -38,7 +38,7 @@
 
 ## 3. 预注册与偏离
 
-**预注册。** 实验卡 `examples/experiment-card-phase6-metacodes-stall.json` 在第一次计数运行前冻结，提交为 `3ec9c31`。提交在本地分支 `feat/phase6-stall` 上，开跑时没有推送，所以执行器记了一条警告：冻结时间只由本地提交担保（`manifest-*.json` 的 `card.pushed`）。证人 `witness/stall` 在同一分支的 `a870152` 提交，开跑时的文件哈希写进了 `frozen-sha256.txt`。
+**预注册。** 实验卡 `cards/phase6-metacodes-stall.json`（冻结时在 `examples/experiment-card-phase6-metacodes-stall.json`）在第一次计数运行前冻结，提交为 `3ec9c31`。提交在本地分支 `feat/phase6-stall` 上，开跑时没有推送，所以执行器记了一条警告：冻结时间只由本地提交担保（`manifest-*.json` 的 `card.pushed`）。证人 `witness/stall` 在同一分支的 `a870152` 提交，开跑时的文件哈希写进了 `frozen-sha256.txt`。
 
 **冻结前的试跑（不计入）：**
 - 2026-11-21 16:30–17:05，用同一提交的 Debug 构建和一个更早的探针，共 46 次。结果写在 metacodes 工作区的对照报告里。

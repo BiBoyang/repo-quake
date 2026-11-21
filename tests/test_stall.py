@@ -19,7 +19,7 @@ import fakes  # noqa: E402
 import stall  # noqa: E402
 
 FAKE = ROOT / "tests" / "fixtures" / "stall" / "fake_subject.py"
-CARD = ROOT / "examples" / "experiment-card-phase6-metacodes-stall.json"
+CARD = ROOT / "cards" / "phase6-metacodes-stall.json"
 
 
 class PlanTests(unittest.TestCase):

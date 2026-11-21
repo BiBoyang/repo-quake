@@ -116,7 +116,7 @@
 ```bash
 python3 witness/stall/stall.py probe  --out EVIDENCE --bin BIN --rg RG --gopls GOPLS
 python3 witness/stall/stall.py matrix --out EVIDENCE --bin BIN --rg RG --gopls GOPLS \
-    --card examples/experiment-card-phase6-metacodes-stall.json --runs 3 --parallel 5
+    --card cards/phase6-metacodes-stall.json --runs 3 --parallel 5
 python3 witness/stall/stall.py summarize --out EVIDENCE
 python3 witness/stall/stall.py egress --out EVIDENCE --start "…" --end "…"
 python3 witness/stall/stall.py lsregister --out EVIDENCE

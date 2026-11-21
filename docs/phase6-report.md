@@ -230,7 +230,7 @@
 ## 证据
 
 - 公开副本（`stall.py export` 导出，`audit_artifacts.py` 审计通过）：`runs/phase6-metacodes-stall-2026-11-21/`。终端原始字节、调试日志、临时 HOME 没有公开，见那里的 `EXPORT.md`。
-- 实验卡（冻结）：`examples/experiment-card-phase6-metacodes-stall.json`（sha256 `752ef537…cb77`，与证据里的 `card-frozen.json` 逐字节相同）。
+- 实验卡（冻结）：`cards/phase6-metacodes-stall.json`（sha256 `752ef537…cb77`，与证据里的 `card-frozen.json` 逐字节相同）。
 - 装置与测试：`witness/stall/`、`tests/test_stall.py`、`tests/fixtures/stall/fake_subject.py`。
 - 方法：`skills/repo-quake/references/fault-catalog.md` 新增 §stall。
 - 披露：`docs/phase6-disclosure.md`。
