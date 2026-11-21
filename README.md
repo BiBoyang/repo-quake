@@ -49,7 +49,7 @@ without deleting or rewriting evidence.
 
 | phase | target | headline | report |
 |---|---|---|---|
-| 1 | Vercel eve agent dir | blocking wounds 8/8, non-blocking 0/8; detection = f(read, report, path) | [docs/phase1-report.md](docs/phase1-report.md) |
+| 1 | Vercel eve agent dir | blocking wound (E2) 8/8 on both hosts; non-blocking: E1 0/8 on both, E3 kimi 0/8 vs codex 5/8 (codex opened the truncated file); detection = f(read, report, path) | [docs/phase1-report.md](docs/phase1-report.md) |
 | 1′ | pydantic-ai greeter | loud faults 8/8, stealth 0/16; byte-level payload proof | [docs/phase1p-report.md](docs/phase1p-report.md) |
 | 2 | three examiner skills | 0/64 — redundancy, conditionality, and future-tense wounds don't block paths | [docs/phase2-report.md](docs/phase2-report.md) |
 | 4 | Claude Code / codex / Kimi Code: display after a mid-stream retry | Kimi Code takes a terminator-less stream as a finished turn (TUI 3/3, `-p` 3/3; [#4964](https://github.com/MoonshotAI/kimi-code/issues/4964)); its retry sends the partial back without `partial` 12/12 (consequence unverified, not reported); Claude Code and codex end with one answer 18/18 (codex shows both copies while retrying, and keeps all six attempts on screen when the retries run out, 6/6 exploratory; [#47538](https://github.com/openai/codex/issues/47538)) | [docs/phase4-report.md](docs/phase4-report.md) |
